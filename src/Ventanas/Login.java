@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import proyectoyapur.ConnectarBD;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 /**
@@ -141,6 +142,11 @@ public class Login extends javax.swing.JFrame implements FocusListener {
                 jPasswordFieldContraseñaActionPerformed(evt);
             }
         });
+        jPasswordFieldContraseña.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPasswordFieldContraseñaKeyPressed(evt);
+            }
+        });
         getContentPane().add(jPasswordFieldContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 410, 150, 30));
 
         jTextFieldUsuario.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -158,6 +164,11 @@ public class Login extends javax.swing.JFrame implements FocusListener {
                 jButtonLoguearActionPerformed(evt);
             }
         });
+        jButtonLoguear.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButtonLoguearKeyPressed(evt);
+            }
+        });
         getContentPane().add(jButtonLoguear, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 470, 110, 30));
 
         jLabelLogoYapur.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/logo-yapur.png"))); // NOI18N
@@ -167,14 +178,14 @@ public class Login extends javax.swing.JFrame implements FocusListener {
         jLabelError.setForeground(new java.awt.Color(255, 51, 51));
         getContentPane().add(jLabelError, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 370, -1, 20));
 
-        jLabelFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Imagen-login_1.jpg"))); // NOI18N
+        jLabelFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Imagen-login_2.png"))); // NOI18N
         getContentPane().add(jLabelFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jPasswordFieldContraseñaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordFieldContraseñaActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_jPasswordFieldContraseñaActionPerformed
 
     private void jButtonLoguearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoguearActionPerformed
@@ -219,6 +230,18 @@ public class Login extends javax.swing.JFrame implements FocusListener {
 
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldUsuarioActionPerformed
+
+    private void jButtonLoguearKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonLoguearKeyPressed
+        
+    }//GEN-LAST:event_jButtonLoguearKeyPressed
+
+    /* Metodo para que loggee al presionar enter*/
+    private void jPasswordFieldContraseñaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordFieldContraseñaKeyPressed
+        char car=(char) evt.getKeyCode();
+        if (car == evt.VK_ENTER) {
+            jButtonLoguearActionPerformed(null);
+        }
+    }//GEN-LAST:event_jPasswordFieldContraseñaKeyPressed
 
     /**
      * @param args the command line arguments
