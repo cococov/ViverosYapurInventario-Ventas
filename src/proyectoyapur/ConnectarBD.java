@@ -32,7 +32,7 @@ public class ConnectarBD {
     }
     
     public Connection getConnection(){
-        return connection;
+        return connection; 
     }
     
     public void desconectar(){
