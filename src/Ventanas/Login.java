@@ -191,9 +191,10 @@ public class Login extends javax.swing.JFrame implements FocusListener {
     private void jButtonLoguearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoguearActionPerformed
         String sql;
         String datos[] = new String[5];
+        boolean bloqueado= true;
         Statement st;
         try {
-            sql = "SELECT u.rutusuario, u.nombreusuario,u.apellidopaterno,u.apellidomaterno, u.passwd FROM usuario u WHERE u.rutusuario=" + "\"" + jTextFieldUsuario.getText() + "\"";
+            sql = "SELECT u.rutusuario, u.nombreusuario,u.apellidopaterno,u.apellidomaterno, u.passwd, u.bloqueadoS_N FROM usuario u WHERE u.rutusuario=" + "\"" + jTextFieldUsuario.getText() + "\"";
             Statement st2 = conexion.getConnection().createStatement();
             ResultSet rst2 = st2.executeQuery(sql);
             boolean esta = false;
@@ -204,6 +205,9 @@ public class Login extends javax.swing.JFrame implements FocusListener {
                 datos[2] = rst2.getString(3);
                 datos[3] = rst2.getString(4);
                 datos[4] = rst2.getString(5);
+                bloqueado= rst2.getBoolean(6);
+                if(!bloqueado){
+                    
                 if (jPasswordFieldContraseña.getText().equals(datos[4])) {
                     esta2 = true;
                     PanelMenu panel = new PanelMenu(conexion, datos);
@@ -212,6 +216,10 @@ public class Login extends javax.swing.JFrame implements FocusListener {
                 } else {
                     esta = true;
                     JOptionPane.showMessageDialog(null, "Contraseña incorrecta!");
+                }
+                }else{
+                    esta2=true;
+                    JOptionPane.showMessageDialog(null, "Usuario bloqueado!");
                 }
             }
             if (!esta && !esta2) {
