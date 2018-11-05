@@ -6,6 +6,7 @@
 package Ventanas;
 
 import Ventanas.Login;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.sql.SQLException;
@@ -15,13 +16,17 @@ import java.util.logging.Logger;
 import proyectoyapur.ConnectarBD;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import proyectoyapur.ColorRender;
 import proyectoyapur.Render;
 
 /**
@@ -45,13 +50,21 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         this.jLabelNombreUsuario.setText(datos[1] + " " + datos[2] + " " + datos[3]);
         this.jTableEditarUsuario.setDefaultRenderer(Object.class, new Render());
         this.jTableBloquearUsuario.setDefaultRenderer(Object.class, new Render());
+        this.jTableEditarCheques.setDefaultRenderer(Object.class, new Render());
         this.jPanel4.setVisible(false);
         this.jPanel7.setVisible(false);
         this.jPanel6.setVisible(false);
         this.jPanel9.setVisible(false);
         this.jPanel12.setVisible(false);
-        this.jTextFieldRutAgregarU2.setEditable(false);
-        this.jTextFieldRutAgregarU2.setEnabled(false);
+        this.jTextFieldRutEditarUsuario.setEditable(false);
+        this.jTextFieldRutEditarUsuario.setEnabled(false);
+        validarSoloNumeros(jTextFieldNumeroChequeAgregar);
+        validarSoloNumeros(jTextFieldMontoCheque);
+        validarSoloNumeros(jTextFieldNumeroChequeEditar);
+        validarSoloNumeros(jTextFieldMontoEditarCheque);
+        validarSoloNumeros(jTextFieldCantidadProdAgregaProducto);
+        validarSoloNumeros(jTextFieldCantidadVentaAgregarProducto);
+        validarSoloNumeros(jTextFieldDescuentoVenta);
         if (datos[5].equals("2")) {
             this.jTabbedPane1.remove(3);
             this.jTabbedPane1.remove(2);
@@ -99,28 +112,60 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
                 if (rs2.getBoolean(6)) {
                     if (datos[0].equals(this.datos[0])) {
-                        JButton elMismo1= new JButton("Desbloquear");
+                        JButton elMismo1 = new JButton("Desbloquear");
                         elMismo1.setEnabled(false);
-                        datos[5]= elMismo1;
-                    }else{
-                    datos[5] = desbloquear;
+                        datos[5] = elMismo1;
+                    } else {
+                        datos[5] = desbloquear;
                     }
                 } else {
                     if (datos[0].equals(this.datos[0])) {
-                        JButton elMismo=  new JButton("Bloquear");
+                        JButton elMismo = new JButton("Bloquear");
                         elMismo.setEnabled(false);
-                        datos[5]=elMismo;
+                        datos[5] = elMismo;
 
-                    }else{
+                    } else {
                         datos[5] = bloquear;
                     }
-                    
+
                 }
                 modelo.addRow(datos);
 
             }
             jTableBloquearUsuario.setModel(modelo);
 
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void refrescarTablaEditarCheque() {
+        Clear_Table1(jTableEditarCheques);
+        JButton detalles = new JButton("Detalles");
+        String sql1;
+        Statement st2;
+        ResultSet rs2;
+        sql1 = "SELECT `numerocheque`, `nombresemisor`, `apellidosemisor`, `fecharecepcion`, `fechavencimiento`, `montocheque` FROM `cheques`";
+        DefaultTableModel modelo = (DefaultTableModel) jTableEditarCheques.getModel();
+        //editar lo de abajo
+        try {
+            st2 = conexion.getConnection().createStatement();
+            rs2 = st2.executeQuery(sql1);
+            Object[] datos = new Object[7];
+
+            while (rs2.next()) {
+
+                datos[0] = rs2.getInt(1);
+                datos[1] = rs2.getString(2);
+                datos[2] = rs2.getString(3);
+                datos[3] = rs2.getDate(4);
+                datos[4] = rs2.getDate(5);
+                datos[5] = rs2.getInt(6);
+                datos[6] = detalles;
+                modelo.addRow(datos);
+            }
+            jTableEditarCheques.setModel(modelo);
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -148,6 +193,17 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             modelo.removeRow(i);
             i -= 1;
         }
+    }
+
+    public void validarSoloNumeros(JTextField jtext) {
+        jtext.addKeyListener(new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                }
+            }
+        });
     }
 
     public boolean validarRut(String rut) {
@@ -208,27 +264,28 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jButtonBloquearUsuario = new javax.swing.JButton();
         jButtonEditarUsuairo = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        jPanelEditarUsuario = new javax.swing.JPanel();
+        jPanelListaUsuarios = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableEditarUsuario = new javax.swing.JTable();
         jLabel20 = new javax.swing.JLabel();
-        jPanelEditarUsuario2 = new javax.swing.JPanel();
+        jPanelEditarUsuario = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        jPasswordFieldContraseña3 = new javax.swing.JPasswordField();
-        jPasswordFieldConstraseña2 = new javax.swing.JPasswordField();
+        jPasswordFieldContraseña2EditarUsuario = new javax.swing.JPasswordField();
+        jPasswordFieldContraseñaEditarUsuario = new javax.swing.JPasswordField();
         jLabel13 = new javax.swing.JLabel();
         jButtonConfirmarAgregar1 = new javax.swing.JButton();
-        jComboBoxTipoUsuarioAgregar1 = new javax.swing.JComboBox<>();
-        jTextFieldApellidoMaternoAgregarU2 = new javax.swing.JTextField();
-        jTextFieldApellidoPaternoAgregarU2 = new javax.swing.JTextField();
-        jTextFieldRutAgregarU2 = new javax.swing.JTextField();
-        jTextFieldNombresAgregarU2 = new javax.swing.JTextField();
+        jComboBoxTipoEditarUsuario = new javax.swing.JComboBox<>();
+        jTextFieldApellidoMaternoEditarUsuario = new javax.swing.JTextField();
+        jTextFieldApellidoPaternoEditarUsuario = new javax.swing.JTextField();
+        jTextFieldRutEditarUsuario = new javax.swing.JTextField();
+        jTextFieldNombresEditarUsuario = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
+        jRadioButtonHabilitarEdicionUsuario = new javax.swing.JRadioButton();
         jPanelBloquearUsuario = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableBloquearUsuario = new javax.swing.JTable();
@@ -303,8 +360,14 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jPanel12 = new javax.swing.JPanel();
         jPanelListaCheque = new javax.swing.JPanel();
         jScrollPane12 = new javax.swing.JScrollPane();
-        jTableEditarUsuario3 = new javax.swing.JTable();
+        jTableEditarCheques = new javax.swing.JTable();
         jLabel52 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        jLabel51 = new javax.swing.JLabel();
+        jLabel53 = new javax.swing.JLabel();
+        jLabel54 = new javax.swing.JLabel();
+        jLabel55 = new javax.swing.JLabel();
         jPanelEditarCheque = new javax.swing.JPanel();
         jLabel72 = new javax.swing.JLabel();
         jLabel74 = new javax.swing.JLabel();
@@ -315,12 +378,15 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jTextFieldNombresEditarCheque = new javax.swing.JTextField();
         jTextFieldNumeroChequeEditar = new javax.swing.JTextField();
         jTextFieldApellidosEditarCheque = new javax.swing.JTextField();
-        jTextFieldFechaEmisionEditarCheque1 = new javax.swing.JTextField();
-        jButtonConfirmarAgregar4 = new javax.swing.JButton();
+        jButtonConfirmarEditarCheque = new javax.swing.JButton();
         jLabel79 = new javax.swing.JLabel();
-        jTextFieldFechaVencimientoEditar = new javax.swing.JTextField();
         jScrollPane16 = new javax.swing.JScrollPane();
         jTextPaneDescripcionEditarCheque = new javax.swing.JTextPane();
+        jDateChooserFechaEmisionEditarCheque = new com.toedter.calendar.JDateChooser();
+        jDateChooserFechaVencEditarCheque = new com.toedter.calendar.JDateChooser();
+        jLabel56 = new javax.swing.JLabel();
+        jTextFieldMontoEditarCheque = new javax.swing.JTextField();
+        jRadioButtonHabilitarEditarCheque = new javax.swing.JRadioButton();
         jPanelCobrarCheque = new javax.swing.JPanel();
         jScrollPane13 = new javax.swing.JScrollPane();
         jTableCobrarCheque = new javax.swing.JTable();
@@ -342,6 +408,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jTextPaneDescripcionAgregarCheque = new javax.swing.JTextPane();
         jDateChooserFechaEmisionAgregarCheque = new com.toedter.calendar.JDateChooser();
         jDateChooserFechaVencAgregarCheque = new com.toedter.calendar.JDateChooser();
+        jLabel1 = new javax.swing.JLabel();
+        jTextFieldMontoCheque = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jPanelAgregarProveedor = new javax.swing.JPanel();
@@ -400,7 +468,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         jLabel36 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jTextFieldDescuentoVenta = new javax.swing.JTextField();
         jLabel38 = new javax.swing.JLabel();
         CalcularIVA = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
@@ -431,7 +499,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             }
         });
 
-        jButtonEditarUsuairo.setText("Editar usuario");
+        jButtonEditarUsuairo.setText("Lista usuarios");
         jButtonEditarUsuairo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEditarUsuairoActionPerformed(evt);
@@ -446,7 +514,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
             },
             new String [] {
-                "Rut", "Nombre", "Apellido Paterno", "Apellido Materno", "Permisos", "Editar"
+                "Rut", "Nombre", "Apellido Paterno", "Apellido Materno", "Permisos", "Detalles"
             }
         ) {
             Class[] types = new Class [] {
@@ -474,22 +542,22 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel20.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel20.setText("Lista de usuarios");
 
-        javax.swing.GroupLayout jPanelEditarUsuarioLayout = new javax.swing.GroupLayout(jPanelEditarUsuario);
-        jPanelEditarUsuario.setLayout(jPanelEditarUsuarioLayout);
-        jPanelEditarUsuarioLayout.setHorizontalGroup(
-            jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelEditarUsuarioLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanelListaUsuariosLayout = new javax.swing.GroupLayout(jPanelListaUsuarios);
+        jPanelListaUsuarios.setLayout(jPanelListaUsuariosLayout);
+        jPanelListaUsuariosLayout.setHorizontalGroup(
+            jPanelListaUsuariosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelListaUsuariosLayout.createSequentialGroup()
                 .addContainerGap(82, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 682, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(110, 110, 110))
-            .addGroup(jPanelEditarUsuarioLayout.createSequentialGroup()
+            .addGroup(jPanelListaUsuariosLayout.createSequentialGroup()
                 .addGap(319, 319, 319)
                 .addComponent(jLabel20)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanelEditarUsuarioLayout.setVerticalGroup(
-            jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelEditarUsuarioLayout.createSequentialGroup()
+        jPanelListaUsuariosLayout.setVerticalGroup(
+            jPanelListaUsuariosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelListaUsuariosLayout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jLabel20)
                 .addGap(40, 40, 40)
@@ -497,10 +565,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
-        jPanel4.add(jPanelEditarUsuario, "card3");
+        jPanel4.add(jPanelListaUsuarios, "card3");
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel12.setText("Editar usuario");
+        jLabel12.setText("Detalles de usuario");
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel13.setText("Confirma contraseña:");
@@ -513,10 +581,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             }
         });
 
-        jComboBoxTipoUsuarioAgregar1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Vendedor", "Inventario" }));
-        jComboBoxTipoUsuarioAgregar1.addActionListener(new java.awt.event.ActionListener() {
+        jComboBoxTipoEditarUsuario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Vendedor", "Inventario" }));
+        jComboBoxTipoEditarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxTipoUsuarioAgregar1ActionPerformed(evt);
+                jComboBoxTipoEditarUsuarioActionPerformed(evt);
             }
         });
 
@@ -538,15 +606,22 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel19.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel19.setText("Nombres:");
 
-        javax.swing.GroupLayout jPanelEditarUsuario2Layout = new javax.swing.GroupLayout(jPanelEditarUsuario2);
-        jPanelEditarUsuario2.setLayout(jPanelEditarUsuario2Layout);
-        jPanelEditarUsuario2Layout.setHorizontalGroup(
-            jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelEditarUsuario2Layout.createSequentialGroup()
-                .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelEditarUsuario2Layout.createSequentialGroup()
+        jRadioButtonHabilitarEdicionUsuario.setText("Habilitar edición");
+        jRadioButtonHabilitarEdicionUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonHabilitarEdicionUsuarioActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelEditarUsuarioLayout = new javax.swing.GroupLayout(jPanelEditarUsuario);
+        jPanelEditarUsuario.setLayout(jPanelEditarUsuarioLayout);
+        jPanelEditarUsuarioLayout.setHorizontalGroup(
+            jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelEditarUsuarioLayout.createSequentialGroup()
+                .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelEditarUsuarioLayout.createSequentialGroup()
                         .addGap(252, 252, 252)
-                        .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel17)
                             .addComponent(jLabel19)
                             .addComponent(jLabel18)
@@ -555,65 +630,69 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                             .addComponent(jLabel14)
                             .addComponent(jLabel13))
                         .addGap(21, 21, 21)
-                        .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextFieldRutAgregarU2)
-                                .addComponent(jTextFieldNombresAgregarU2)
-                                .addComponent(jTextFieldApellidoPaternoAgregarU2)
-                                .addComponent(jTextFieldApellidoMaternoAgregarU2)
-                                .addComponent(jComboBoxTipoUsuarioAgregar1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jPasswordFieldConstraseña2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jPasswordFieldContraseña3, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanelEditarUsuario2Layout.createSequentialGroup()
+                        .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jTextFieldRutEditarUsuario)
+                                .addComponent(jTextFieldNombresEditarUsuario)
+                                .addComponent(jTextFieldApellidoPaternoEditarUsuario)
+                                .addComponent(jTextFieldApellidoMaternoEditarUsuario)
+                                .addComponent(jComboBoxTipoEditarUsuario, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPasswordFieldContraseñaEditarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPasswordFieldContraseña2EditarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanelEditarUsuarioLayout.createSequentialGroup()
                         .addGap(334, 334, 334)
                         .addComponent(jLabel12))
-                    .addGroup(jPanelEditarUsuario2Layout.createSequentialGroup()
+                    .addGroup(jPanelEditarUsuarioLayout.createSequentialGroup()
                         .addGap(272, 272, 272)
-                        .addComponent(jButtonConfirmarAgregar1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(308, Short.MAX_VALUE))
+                        .addComponent(jButtonConfirmarAgregar1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(53, 53, 53)
+                        .addComponent(jRadioButtonHabilitarEdicionUsuario)))
+                .addContainerGap(173, Short.MAX_VALUE))
         );
-        jPanelEditarUsuario2Layout.setVerticalGroup(
-            jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelEditarUsuario2Layout.createSequentialGroup()
+        jPanelEditarUsuarioLayout.setVerticalGroup(
+            jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelEditarUsuarioLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanelEditarUsuario2Layout.createSequentialGroup()
-                        .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextFieldRutAgregarU2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelEditarUsuarioLayout.createSequentialGroup()
+                        .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldRutEditarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18))
-                    .addGroup(jPanelEditarUsuario2Layout.createSequentialGroup()
+                    .addGroup(jPanelEditarUsuarioLayout.createSequentialGroup()
                         .addComponent(jLabel12)
                         .addGap(88, 88, 88)))
-                .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldNombresAgregarU2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldNombresEditarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel19))
                 .addGap(18, 18, 18)
-                .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldApellidoPaternoAgregarU2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldApellidoPaternoEditarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18))
                 .addGap(18, 18, 18)
-                .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldApellidoMaternoAgregarU2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldApellidoMaternoEditarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel17))
                 .addGap(18, 18, 18)
-                .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordFieldConstraseña2, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jPasswordFieldContraseñaEditarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16))
                 .addGap(18, 18, 18)
-                .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordFieldContraseña3, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jPasswordFieldContraseña2EditarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(jLabel13))
                 .addGap(18, 18, 18)
-                .addGroup(jPanelEditarUsuario2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBoxTipoUsuarioAgregar1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxTipoEditarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14))
                 .addGap(18, 18, 18)
-                .addComponent(jButtonConfirmarAgregar1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelEditarUsuarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonConfirmarAgregar1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRadioButtonHabilitarEdicionUsuario))
                 .addContainerGap())
         );
 
-        jPanel4.add(jPanelEditarUsuario2, "card4");
+        jPanel4.add(jPanelEditarUsuario, "card4");
 
         jTableBloquearUsuario.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jTableBloquearUsuario.setModel(new javax.swing.table.DefaultTableModel(
@@ -1203,7 +1282,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
         jTabbedPane1.addTab("Inventario", jPanel5);
 
-        jButtonEditarCheque.setText("Editar cheque");
+        jButtonEditarCheque.setText("Lista cheques");
         jButtonEditarCheque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEditarChequeActionPerformed(evt);
@@ -1226,20 +1305,20 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
         jPanel12.setLayout(new java.awt.CardLayout());
 
-        jTableEditarUsuario3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTableEditarUsuario3.setModel(new javax.swing.table.DefaultTableModel(
+        jTableEditarCheques.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jTableEditarCheques.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Numero", "Nombres", "Apellidos", "Fecha recepcion", "Fecha vencimiento", "Editar"
+                "Numero", "Nombres", "Apellidos", "Fecha recepcion", "Fecha vencimiento", "Monto", "Detalles"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, true, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -1250,43 +1329,83 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 return canEdit [columnIndex];
             }
         });
-        jTableEditarUsuario3.addMouseListener(new java.awt.event.MouseAdapter() {
+        jTableEditarCheques.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTableEditarUsuario3MouseClicked(evt);
+                jTableEditarChequesMouseClicked(evt);
             }
         });
-        jScrollPane12.setViewportView(jTableEditarUsuario3);
+        jScrollPane12.setViewportView(jTableEditarCheques);
 
         jLabel52.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel52.setText("Lista de cheques");
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/rojo.png"))); // NOI18N
+
+        jLabel32.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/amarillo.png"))); // NOI18N
+
+        jLabel51.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/verde.png"))); // NOI18N
+
+        jLabel53.setText("Vencido");
+
+        jLabel54.setText("Menos de 10 días");
+
+        jLabel55.setText("Más de 10 días");
 
         javax.swing.GroupLayout jPanelListaChequeLayout = new javax.swing.GroupLayout(jPanelListaCheque);
         jPanelListaCheque.setLayout(jPanelListaChequeLayout);
         jPanelListaChequeLayout.setHorizontalGroup(
             jPanelListaChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelListaChequeLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(88, Short.MAX_VALUE)
                 .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 682, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(110, 110, 110))
-            .addGroup(jPanelListaChequeLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelListaChequeLayout.createSequentialGroup()
                 .addGap(319, 319, 319)
                 .addComponent(jLabel52)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanelListaChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel51, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelListaChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel53)
+                    .addComponent(jLabel54)
+                    .addComponent(jLabel55))
+                .addGap(47, 47, 47))
         );
         jPanelListaChequeLayout.setVerticalGroup(
             jPanelListaChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelListaChequeLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jLabel52)
-                .addGap(40, 40, 40)
+                .addGroup(jPanelListaChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelListaChequeLayout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel52))
+                    .addGroup(jPanelListaChequeLayout.createSequentialGroup()
+                        .addGroup(jPanelListaChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelListaChequeLayout.createSequentialGroup()
+                                .addGap(23, 23, 23)
+                                .addGroup(jPanelListaChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel53, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelListaChequeLayout.createSequentialGroup()
+                                .addGap(43, 43, 43)
+                                .addComponent(jLabel54, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelListaChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel51, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel55))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addGap(44, 44, 44))
         );
 
         jPanel12.add(jPanelListaCheque, "card3");
 
         jLabel72.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel72.setText("Editar Cheque");
+        jLabel72.setText("Detalles de Cheque");
 
         jLabel74.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel74.setText("Nombres:");
@@ -1303,24 +1422,28 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel78.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel78.setText("Numero:");
 
-        jButtonConfirmarAgregar4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jButtonConfirmarAgregar4.setText("Editar cheque");
-        jButtonConfirmarAgregar4.addActionListener(new java.awt.event.ActionListener() {
+        jButtonConfirmarEditarCheque.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButtonConfirmarEditarCheque.setText("Editar cheque");
+        jButtonConfirmarEditarCheque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonConfirmarAgregar4ActionPerformed(evt);
+                jButtonConfirmarEditarChequeActionPerformed(evt);
             }
         });
 
         jLabel79.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel79.setText("Descripcion:");
 
-        jTextFieldFechaVencimientoEditar.addActionListener(new java.awt.event.ActionListener() {
+        jScrollPane16.setViewportView(jTextPaneDescripcionEditarCheque);
+
+        jLabel56.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel56.setText("Monto:");
+
+        jRadioButtonHabilitarEditarCheque.setText("Habilitar edición");
+        jRadioButtonHabilitarEditarCheque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldFechaVencimientoEditarActionPerformed(evt);
+                jRadioButtonHabilitarEditarChequeActionPerformed(evt);
             }
         });
-
-        jScrollPane16.setViewportView(jTextPaneDescripcionEditarCheque);
 
         javax.swing.GroupLayout jPanelEditarChequeLayout = new javax.swing.GroupLayout(jPanelEditarCheque);
         jPanelEditarCheque.setLayout(jPanelEditarChequeLayout);
@@ -1329,7 +1452,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             .addGroup(jPanelEditarChequeLayout.createSequentialGroup()
                 .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelEditarChequeLayout.createSequentialGroup()
-                        .addGap(248, 248, 248)
+                        .addGap(52, 52, 52)
                         .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel76)
                             .addComponent(jLabel74)
@@ -1338,22 +1461,27 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                             .addComponent(jLabel77)
                             .addComponent(jLabel79))
                         .addGap(21, 21, 21)
-                        .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextFieldNumeroChequeEditar, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                                .addComponent(jTextFieldNombresEditarCheque)
-                                .addComponent(jTextFieldApellidosEditarCheque)
-                                .addComponent(jTextFieldFechaEmisionEditarCheque1))
-                            .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jScrollPane16, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                                .addComponent(jTextFieldFechaVencimientoEditar, javax.swing.GroupLayout.Alignment.LEADING))))
+                        .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextFieldNumeroChequeEditar, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                            .addComponent(jTextFieldNombresEditarCheque)
+                            .addComponent(jTextFieldApellidosEditarCheque)
+                            .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                            .addComponent(jDateChooserFechaEmisionEditarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jDateChooserFechaVencEditarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(83, 83, 83)
+                        .addComponent(jLabel56)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextFieldMontoEditarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE))
                     .addGroup(jPanelEditarChequeLayout.createSequentialGroup()
                         .addGap(322, 322, 322)
-                        .addComponent(jLabel72))
-                    .addGroup(jPanelEditarChequeLayout.createSequentialGroup()
-                        .addGap(272, 272, 272)
-                        .addComponent(jButtonConfirmarAgregar4, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(331, Short.MAX_VALUE))
+                        .addComponent(jLabel72)))
+                .addGap(198, 198, 198))
+            .addGroup(jPanelEditarChequeLayout.createSequentialGroup()
+                .addGap(272, 272, 272)
+                .addComponent(jButtonConfirmarEditarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55)
+                .addComponent(jRadioButtonHabilitarEditarCheque)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelEditarChequeLayout.setVerticalGroup(
             jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1363,7 +1491,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 .addGap(34, 34, 34)
                 .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldNumeroChequeEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel78, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel78, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel56)
+                    .addComponent(jTextFieldMontoEditarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldNombresEditarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1373,21 +1503,23 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     .addComponent(jTextFieldApellidosEditarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel75))
                 .addGap(18, 18, 18)
-                .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldFechaEmisionEditarCheque1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel76))
-                .addGap(18, 18, 18)
-                .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldFechaVencimientoEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel77))
-                .addGap(18, 18, 18)
+                .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel76)
+                    .addComponent(jDateChooserFechaEmisionEditarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel77)
+                    .addComponent(jDateChooserFechaVencEditarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelEditarChequeLayout.createSequentialGroup()
                         .addComponent(jLabel79)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane16, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonConfirmarAgregar4, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 106, Short.MAX_VALUE))
+                    .addComponent(jScrollPane16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonConfirmarEditarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRadioButtonHabilitarEditarCheque))
                 .addGap(25, 25, 25))
         );
 
@@ -1487,6 +1619,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
         jScrollPane15.setViewportView(jTextPaneDescripcionAgregarCheque);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel1.setText("Monto:");
+
         javax.swing.GroupLayout jPanelAgregarChequeLayout = new javax.swing.GroupLayout(jPanelAgregarCheque);
         jPanelAgregarCheque.setLayout(jPanelAgregarChequeLayout);
         jPanelAgregarChequeLayout.setHorizontalGroup(
@@ -1494,33 +1629,45 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
                 .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
-                        .addGap(248, 248, 248)
-                        .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel69)
-                            .addComponent(jLabel67)
-                            .addComponent(jLabel68)
-                            .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel70)
-                            .addComponent(jLabel73))
-                        .addGap(21, 21, 21)
-                        .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(52, 52, 52)
+                        .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
-                                .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextFieldNumeroChequeAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldNombresAgregarCheque)
-                                    .addComponent(jTextFieldApellidosAgregarCheque))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabelErrorRut3))
-                            .addComponent(jScrollPane15, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jDateChooserFechaEmisionAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jDateChooserFechaVencAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel70)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jDateChooserFechaVencAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
+                                .addComponent(jLabel69)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jDateChooserFechaEmisionAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
+                                .addComponent(jLabel68)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextFieldApellidosAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelAgregarChequeLayout.createSequentialGroup()
+                                .addComponent(jLabel67)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextFieldNombresAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
+                                .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(76, 76, 76)
+                                .addComponent(jTextFieldNumeroChequeAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
+                                .addComponent(jLabel73)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane15, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(83, 83, 83)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextFieldMontoCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelErrorRut3))
                     .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
                         .addGap(322, 322, 322)
                         .addComponent(jLabel66))
                     .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
                         .addGap(272, 272, 272)
                         .addComponent(jButtonConfirmarAgregar3, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(321, Short.MAX_VALUE))
+                .addContainerGap(212, Short.MAX_VALUE))
         );
         jPanelAgregarChequeLayout.setVerticalGroup(
             jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1531,7 +1678,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldNumeroChequeAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelErrorRut3))
+                    .addComponent(jLabelErrorRut3)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextFieldMontoCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldNombresAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1540,17 +1689,14 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldApellidosAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel68))
-                .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel69))
-                    .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jDateChooserFechaEmisionAgregarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jDateChooserFechaEmisionAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel69))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel70)
-                    .addComponent(jDateChooserFechaVencAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jDateChooserFechaVencAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel70))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
@@ -2115,7 +2261,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                                 .addGap(44, 44, 44)
                                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(CalcularIVA)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextFieldDescuentoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabelCalcularNeto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(145, 145, 145)))
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2165,7 +2311,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     .addComponent(CalcularIVA))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldDescuentoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel36))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2316,17 +2462,17 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTableBloquearUsuarioMouseClicked
 
-    private void jComboBoxTipoUsuarioAgregar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoUsuarioAgregar1ActionPerformed
+    private void jComboBoxTipoEditarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoEditarUsuarioActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxTipoUsuarioAgregar1ActionPerformed
+    }//GEN-LAST:event_jComboBoxTipoEditarUsuarioActionPerformed
 
     private void jButtonConfirmarAgregar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregar1ActionPerformed
 
-        String nombresEditar = jTextFieldNombresAgregarU2.getText();
-        String apellidoMEditar = jTextFieldApellidoMaternoAgregarU2.getText();
-        String apellidoPEditar = jTextFieldApellidoPaternoAgregarU2.getText();
-        String contraseñaEditar = jPasswordFieldConstraseña2.getText();
-        String contraseñaEditar2 = jPasswordFieldContraseña3.getText();
+        String nombresEditar = jTextFieldNombresEditarUsuario.getText();
+        String apellidoMEditar = jTextFieldApellidoMaternoEditarUsuario.getText();
+        String apellidoPEditar = jTextFieldApellidoPaternoEditarUsuario.getText();
+        String contraseñaEditar = jPasswordFieldContraseñaEditarUsuario.getText();
+        String contraseñaEditar2 = jPasswordFieldContraseña2EditarUsuario.getText();
 
         if (contraseñaEditar.equals(contraseñaEditar2)) {
             int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro de editar estos datos?");
@@ -2339,8 +2485,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     st.setString(2, contraseñaEditar);
                     st.setString(3, apellidoPEditar);
                     st.setString(4, apellidoMEditar);
-                    st.setInt(5, jComboBoxTipoUsuarioAgregar1.getSelectedIndex() + 1);
-                    st.setString(6, jTextFieldRutAgregarU2.getText());
+                    st.setInt(5, jComboBoxTipoEditarUsuario.getSelectedIndex() + 1);
+                    st.setString(6, jTextFieldRutEditarUsuario.getText());
                     if (st.executeUpdate() > 0) {
 
                         JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
@@ -2367,7 +2513,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             if (value instanceof JButton) {
                 ((JButton) value).doClick();
                 JButton boton = (JButton) value;
-                if (boton.getText().equals("Editar")) {
+                if (boton.getText().equals("Detalles")) {
                     rutAeditar = String.valueOf(jTableEditarUsuario.getValueAt(jTableEditarUsuario.getSelectedRow(), 0));
                     String sql;
                     Statement st;
@@ -2379,21 +2525,21 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                         rs = st.executeQuery(sql);
 
                         while (rs.next()) {
-
-                            jTextFieldNombresAgregarU2.setText(rs.getString(1));
-                            jTextFieldApellidoPaternoAgregarU2.setText(rs.getString(2));
-                            jTextFieldApellidoMaternoAgregarU2.setText(rs.getString(3));
-                            jPasswordFieldConstraseña2.setText(rs.getString(4));
-                            jPasswordFieldContraseña3.setText(rs.getString(4));
+                            jTextFieldRutEditarUsuario.setText(rutAeditar);
+                            jTextFieldNombresEditarUsuario.setText(rs.getString(1));
+                            jTextFieldApellidoPaternoEditarUsuario.setText(rs.getString(2));
+                            jTextFieldApellidoMaternoEditarUsuario.setText(rs.getString(3));
+                            jPasswordFieldContraseñaEditarUsuario.setText(rs.getString(4));
+                            jPasswordFieldContraseña2EditarUsuario.setText(rs.getString(4));
 
                             if (rs.getString(5).equals("1")) {
-                                jComboBoxTipoUsuarioAgregar1.setSelectedIndex(0);
+                                jComboBoxTipoEditarUsuario.setSelectedIndex(0);
 
                             } else {
                                 if (rs.getString(5).equals("2")) {
-                                    jComboBoxTipoUsuarioAgregar1.setSelectedIndex(1);
+                                    jComboBoxTipoEditarUsuario.setSelectedIndex(1);
                                 } else {
-                                    jComboBoxTipoUsuarioAgregar1.setSelectedIndex(2);
+                                    jComboBoxTipoEditarUsuario.setSelectedIndex(2);
                                 }
                             }
 
@@ -2401,10 +2547,23 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    jTextFieldRutAgregarU2.setText(rutAeditar);
-                    jPanelEditarUsuario.show(false);
+
+                    jTextFieldNombresEditarUsuario.setEditable(false);
+                    jTextFieldNombresEditarUsuario.setEnabled(false);
+                    jTextFieldApellidoPaternoEditarUsuario.setEditable(false);
+                    jTextFieldApellidoPaternoEditarUsuario.setEnabled(false);
+                    jTextFieldApellidoMaternoEditarUsuario.setEditable(false);
+                    jTextFieldApellidoMaternoEditarUsuario.setEnabled(false);
+                    jPasswordFieldContraseñaEditarUsuario.setEditable(false);
+                    jPasswordFieldContraseñaEditarUsuario.setEnabled(false);
+                    jPasswordFieldContraseña2EditarUsuario.setEditable(false);
+                    jPasswordFieldContraseña2EditarUsuario.setEnabled(false);
+                    jComboBoxTipoEditarUsuario.setEditable(false);
+                    jComboBoxTipoEditarUsuario.setEnabled(false);
+
+                    jPanelListaUsuarios.show(false);
                     jPanelAgregarUsuario.show(false);
-                    jPanelEditarUsuario2.show(true);
+                    jPanelEditarUsuario.show(true);
                 }
             }
         }
@@ -2475,10 +2634,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private void jButtonEditarUsuairoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarUsuairoActionPerformed
         jPanel4.setVisible(true);
         jPanelAgregarUsuario.show(false);
-        jPanelEditarUsuario2.show(false);
+        jPanelEditarUsuario.show(false);
         jPanelBloquearUsuario.show(false);
         Clear_Table1(jTableEditarUsuario);
-        JButton editar = new JButton("Editar");
+        JButton editar = new JButton("Detalles");
         //Rellenar tabla con usuarios
         String sql;
         Statement st;
@@ -2507,7 +2666,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        jPanelEditarUsuario.show(true);
+        jPanelListaUsuarios.show(true);
 
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonEditarUsuairoActionPerformed
@@ -2515,8 +2674,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private void jButtonBloquearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBloquearUsuarioActionPerformed
         jPanel4.setVisible(true);
         jPanelAgregarUsuario.show(false);
+        jPanelListaUsuarios.show(false);
         jPanelEditarUsuario.show(false);
-        jPanelEditarUsuario2.show(false);
 
         refrescarTablaBloquearUsuario();
 
@@ -2527,8 +2686,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     private void jButtonAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarUsuarioActionPerformed
         jPanel4.setVisible(true);
+        jPanelListaUsuarios.show(false);
         jPanelEditarUsuario.show(false);
-        jPanelEditarUsuario2.show(false);
         jPanelBloquearUsuario.show(false);
         jPanelAgregarUsuario.show(true);
 
@@ -2612,10 +2771,12 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     private void jButtonEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarChequeActionPerformed
         jPanel12.setVisible(true);
-        jPanelListaCheque.show(false);
         jPanelCobrarCheque.show(false);
         jPanelAgregarCheque.show(false);
-        jPanelEditarCheque.show(true);
+        jPanelEditarCheque.show(false);
+        refrescarTablaEditarCheque();
+        jTableEditarCheques.setDefaultRenderer(Object.class, new ColorRender());
+        jPanelListaCheque.show(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonEditarChequeActionPerformed
 
@@ -2638,34 +2799,181 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonCobrarChequeActionPerformed
 
-    private void jTableEditarUsuario3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEditarUsuario3MouseClicked
+    private void jTableEditarChequesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEditarChequesMouseClicked
+        int column = jTableEditarCheques.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableEditarCheques.getRowHeight();
+        if (row < jTableEditarCheques.getRowCount() && row >= 0 && column < jTableEditarCheques.getColumnCount() && column >= 0) {
+            Object value = jTableEditarCheques.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                if (boton.getText().equals("Detalles")) {
+                    String numeroCheque = String.valueOf(jTableEditarCheques.getValueAt(jTableEditarCheques.getSelectedRow(), 0));
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT c.numerocheque, c.nombresemisor, c.apellidosemisor, c.fecharecepcion, c.fechavencimiento, c.montocheque, c.descripcioncheque FROM cheques c where c.numerocheque=" + "\"" + numeroCheque + "\"";
+                    try {
+                        st = conexion.getConnection().createStatement();
+                        rs = st.executeQuery(sql);
+
+                        while (rs.next()) {
+                            jTextFieldNumeroChequeEditar.setText(rs.getString(1));
+                            jTextFieldNombresEditarCheque.setText(rs.getString(2));
+                            jTextFieldApellidosEditarCheque.setText(rs.getString(3));
+                            jDateChooserFechaEmisionEditarCheque.setDate(rs.getDate(4));
+                            jDateChooserFechaVencEditarCheque.setDate(rs.getDate(5));
+                            jTextFieldMontoEditarCheque.setText(rs.getString(6));
+                            jTextPaneDescripcionEditarCheque.setText(rs.getString(7));
+
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    jTextFieldNumeroChequeEditar.setEditable(false);
+                    jTextFieldNumeroChequeEditar.setEnabled(false);
+                    jTextFieldNombresEditarCheque.setEditable(false);
+                    jTextFieldNombresEditarCheque.setEnabled(false);
+                    jTextFieldApellidosEditarCheque.setEditable(false);
+                    jTextFieldApellidosEditarCheque.setEnabled(false);
+                    jDateChooserFechaEmisionEditarCheque.setEnabled(false);
+                    jDateChooserFechaVencEditarCheque.setEnabled(false);
+                    jTextFieldMontoEditarCheque.setEditable(false);
+                    jTextFieldMontoEditarCheque.setEnabled(false);
+                    jTextPaneDescripcionEditarCheque.setEditable(false);
+                    jTextPaneDescripcionEditarCheque.setEnabled(false);
+                    jButtonConfirmarEditarCheque.setEnabled(false);
+
+                    jPanelAgregarCheque.show(false);
+                    jPanelListaCheque.show(false);
+                    jPanelEditarCheque.show(true);
+
+                }
+            }
+        }
+
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTableEditarUsuario3MouseClicked
+    }//GEN-LAST:event_jTableEditarChequesMouseClicked
 
     private void jTableCobrarChequeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableCobrarChequeMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_jTableCobrarChequeMouseClicked
 
     private void jButtonConfirmarAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregar3ActionPerformed
-        String numeroCheque = jTextFieldNumeroChequeAgregar.getText();
+        int numeroCheque = Integer.parseInt(jTextFieldNumeroChequeAgregar.getText());
         String nombresCheque = jTextFieldNombresAgregarCheque.getText();
-        Date fechaEmisionCheque = (Date) jDateChooserFechaEmisionAgregarCheque.getDate();
-        Date fechaVencCheque = (Date) jDateChooserFechaVencAgregarCheque.getDate();
+        java.util.Date fechaEmisionCheque = jDateChooserFechaEmisionAgregarCheque.getDate();
+        java.sql.Date sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
+        java.util.Date fechaVencCheque = jDateChooserFechaVencAgregarCheque.getDate();
+        java.sql.Date sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
         String apellidosCheque = jTextFieldApellidosAgregarCheque.getText();
         String descripcion = jTextPaneDescripcionAgregarCheque.getText();
+        int monto = Integer.parseInt(jTextFieldMontoCheque.getText());
 
-        String sql = "INSERT INTO `usuario`(`rutusuario`, `nombreusuario`, `passwd`, `apellidopaterno`, `apellidomaterno`, `bloqueadoS_N`,`idrol`) VALUES (?,?,?,?,?,?,?)";
+        if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
+            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este cheque?");
+            if (confirmar == JOptionPane.YES_OPTION) {
+                try {
+                    String sql = "INSERT INTO `cheques`(`numerocheque`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `descripcioncheque`, `nombresemisor`, `apellidosemisor`, `chequescobrados_n`) VALUES (?,?,?,?,?,?,?,?)";
+                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
 
-        // TODO add your handling code here:
+                    st.setInt(1, numeroCheque);
+                    st.setDate(2, sqlEmision);
+                    st.setDate(3, sqlVencimiento);
+                    st.setInt(4, monto);
+                    st.setString(5, descripcion);
+                    st.setString(6, nombresCheque);
+                    st.setString(7, apellidosCheque);
+                    st.setBoolean(8, false);
+                    st.executeUpdate();
+
+                    // TODO add your handling code here:
+                } catch (SQLException ex) {
+                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                jTextFieldNumeroChequeAgregar.setText("");
+                jTextFieldNombresAgregarCheque.setText("");
+                jDateChooserFechaEmisionAgregarCheque.setToolTipText("");
+                jDateChooserFechaVencAgregarCheque.setToolTipText("");
+                jTextFieldApellidosAgregarCheque.setText("");
+                jTextPaneDescripcionAgregarCheque.setText("");
+                jTextFieldMontoCheque.setText("");
+
+            } else {
+                JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
+            }
+        }
     }//GEN-LAST:event_jButtonConfirmarAgregar3ActionPerformed
 
-    private void jButtonConfirmarAgregar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregar4ActionPerformed
+    private void jButtonConfirmarEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarChequeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonConfirmarAgregar4ActionPerformed
+    }//GEN-LAST:event_jButtonConfirmarEditarChequeActionPerformed
 
-    private void jTextFieldFechaVencimientoEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldFechaVencimientoEditarActionPerformed
+    private void jRadioButtonHabilitarEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonHabilitarEditarChequeActionPerformed
+        if (jRadioButtonHabilitarEditarCheque.isSelected()) {
+            jTextFieldNumeroChequeEditar.setEditable(true);
+            jTextFieldNumeroChequeEditar.setEnabled(true);
+            jTextFieldNombresEditarCheque.setEditable(true);
+            jTextFieldNombresEditarCheque.setEnabled(true);
+            jTextFieldApellidosEditarCheque.setEditable(true);
+            jTextFieldApellidosEditarCheque.setEnabled(true);
+            jDateChooserFechaEmisionEditarCheque.setEnabled(true);
+            jDateChooserFechaVencEditarCheque.setEnabled(true);
+            jTextFieldMontoEditarCheque.setEditable(true);
+            jTextFieldMontoEditarCheque.setEnabled(true);
+            jTextPaneDescripcionEditarCheque.setEditable(true);
+            jTextPaneDescripcionEditarCheque.setEnabled(true);
+            jButtonConfirmarEditarCheque.setEnabled(true);
+        } else {
+            jTextFieldNumeroChequeEditar.setEditable(false);
+            jTextFieldNumeroChequeEditar.setEnabled(false);
+            jTextFieldNombresEditarCheque.setEditable(false);
+            jTextFieldNombresEditarCheque.setEnabled(false);
+            jTextFieldApellidosEditarCheque.setEditable(false);
+            jTextFieldApellidosEditarCheque.setEnabled(false);
+            jDateChooserFechaEmisionEditarCheque.setEnabled(false);
+            jDateChooserFechaVencEditarCheque.setEnabled(false);
+            jTextFieldMontoEditarCheque.setEditable(false);
+            jTextFieldMontoEditarCheque.setEnabled(false);
+            jTextPaneDescripcionEditarCheque.setEditable(false);
+            jTextPaneDescripcionEditarCheque.setEnabled(false);
+            jButtonConfirmarEditarCheque.setEnabled(false);
+        }
+
+    }//GEN-LAST:event_jRadioButtonHabilitarEditarChequeActionPerformed
+
+    private void jRadioButtonHabilitarEdicionUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonHabilitarEdicionUsuarioActionPerformed
+        if (jRadioButtonHabilitarEdicionUsuario.isSelected()) {
+            jTextFieldNombresEditarUsuario.setEditable(true);
+            jTextFieldNombresEditarUsuario.setEnabled(true);
+            jTextFieldApellidoPaternoEditarUsuario.setEditable(true);
+            jTextFieldApellidoPaternoEditarUsuario.setEnabled(true);
+            jTextFieldApellidoMaternoEditarUsuario.setEditable(true);
+            jTextFieldApellidoMaternoEditarUsuario.setEnabled(true);
+            jPasswordFieldContraseñaEditarUsuario.setEditable(true);
+            jPasswordFieldContraseñaEditarUsuario.setEnabled(true);
+            jPasswordFieldContraseña2EditarUsuario.setEditable(true);
+            jPasswordFieldContraseña2EditarUsuario.setEnabled(true);
+            jComboBoxTipoEditarUsuario.setEditable(true);
+            jComboBoxTipoEditarUsuario.setEnabled(true);
+        } else {
+
+            jTextFieldNombresEditarUsuario.setEditable(false);
+            jTextFieldNombresEditarUsuario.setEnabled(false);
+            jTextFieldApellidoPaternoEditarUsuario.setEditable(false);
+            jTextFieldApellidoPaternoEditarUsuario.setEnabled(false);
+            jTextFieldApellidoMaternoEditarUsuario.setEditable(false);
+            jTextFieldApellidoMaternoEditarUsuario.setEnabled(false);
+            jPasswordFieldContraseñaEditarUsuario.setEditable(false);
+            jPasswordFieldContraseñaEditarUsuario.setEnabled(false);
+            jPasswordFieldContraseña2EditarUsuario.setEditable(false);
+            jPasswordFieldContraseña2EditarUsuario.setEnabled(false);
+            jComboBoxTipoEditarUsuario.setEditable(false);
+            jComboBoxTipoEditarUsuario.setEnabled(false);
+
+        }
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldFechaVencimientoEditarActionPerformed
+    }//GEN-LAST:event_jRadioButtonHabilitarEdicionUsuarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2726,9 +3034,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JButton jButtonConfirmarAgregar;
     private javax.swing.JButton jButtonConfirmarAgregar1;
     private javax.swing.JButton jButtonConfirmarAgregar3;
-    private javax.swing.JButton jButtonConfirmarAgregar4;
     private javax.swing.JButton jButtonConfirmarAgregarProducto;
     private javax.swing.JButton jButtonConfirmarAgregarProveedor2;
+    private javax.swing.JButton jButtonConfirmarEditarCheque;
     private javax.swing.JButton jButtonConfirmarEditarProveedor3;
     private javax.swing.JButton jButtonConfirmarVenta;
     private javax.swing.JButton jButtonEditarCheque;
@@ -2745,12 +3053,15 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JComboBox<String> jComboBoxFiltrarTipo1;
     private javax.swing.JComboBox<String> jComboBoxMetodoPago;
     private javax.swing.JComboBox<String> jComboBoxTipoAgregarProducto;
+    private javax.swing.JComboBox<String> jComboBoxTipoEditarUsuario;
     private javax.swing.JComboBox<String> jComboBoxTipoListaProductos;
     private javax.swing.JComboBox<String> jComboBoxTipoUsuarioAgregar;
-    private javax.swing.JComboBox<String> jComboBoxTipoUsuarioAgregar1;
     private javax.swing.JComboBox<String> jComboBoxTipoespecieAgregarProducto;
     private com.toedter.calendar.JDateChooser jDateChooserFechaEmisionAgregarCheque;
+    private com.toedter.calendar.JDateChooser jDateChooserFechaEmisionEditarCheque;
     private com.toedter.calendar.JDateChooser jDateChooserFechaVencAgregarCheque;
+    private com.toedter.calendar.JDateChooser jDateChooserFechaVencEditarCheque;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -2772,8 +3083,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
@@ -2794,7 +3107,12 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel50;
+    private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel52;
+    private javax.swing.JLabel jLabel53;
+    private javax.swing.JLabel jLabel54;
+    private javax.swing.JLabel jLabel55;
+    private javax.swing.JLabel jLabel56;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel60;
     private javax.swing.JLabel jLabel61;
@@ -2849,18 +3167,20 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JPanel jPanelEditarProducto;
     private javax.swing.JPanel jPanelEditarProveedor;
     private javax.swing.JPanel jPanelEditarUsuario;
-    private javax.swing.JPanel jPanelEditarUsuario2;
     private javax.swing.JPanel jPanelEliminarProducto;
     private javax.swing.JPanel jPanelEliminarProveedor;
     private javax.swing.JPanel jPanelListaCheque;
     private javax.swing.JPanel jPanelListaProveedor;
+    private javax.swing.JPanel jPanelListaUsuarios;
     private javax.swing.JPanel jPanelRealizarVenta;
     private javax.swing.JPasswordField jPasswordFieldConstraseña;
-    private javax.swing.JPasswordField jPasswordFieldConstraseña2;
     private javax.swing.JPasswordField jPasswordFieldContraseña2;
-    private javax.swing.JPasswordField jPasswordFieldContraseña3;
+    private javax.swing.JPasswordField jPasswordFieldContraseña2EditarUsuario;
+    private javax.swing.JPasswordField jPasswordFieldContraseñaEditarUsuario;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButtonHabilitarEdicionUsuario;
+    private javax.swing.JRadioButton jRadioButtonHabilitarEditarCheque;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane12;
@@ -2879,18 +3199,17 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTableBloquearUsuario;
     private javax.swing.JTable jTableCobrarCheque;
+    private javax.swing.JTable jTableEditarCheques;
     private javax.swing.JTable jTableEditarProveedor1;
     private javax.swing.JTable jTableEditarUsuario;
-    private javax.swing.JTable jTableEditarUsuario3;
     private javax.swing.JTable jTableEliminarProveedor2;
     private javax.swing.JTable jTableVenta;
     private javax.swing.JTextArea jTextAreaProveedor;
     private javax.swing.JTextArea jTextAreaProveedor1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextFieldApellidoMaternoAgregarU;
-    private javax.swing.JTextField jTextFieldApellidoMaternoAgregarU2;
+    private javax.swing.JTextField jTextFieldApellidoMaternoEditarUsuario;
     private javax.swing.JTextField jTextFieldApellidoPaternoAgregarU;
-    private javax.swing.JTextField jTextFieldApellidoPaternoAgregarU2;
+    private javax.swing.JTextField jTextFieldApellidoPaternoEditarUsuario;
     private javax.swing.JTextField jTextFieldApellidosAgregarCheque;
     private javax.swing.JTextField jTextFieldApellidosEditarCheque;
     private javax.swing.JTextField jTextFieldApellidosProveedor;
@@ -2901,22 +3220,23 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JTextField jTextFieldContactoProveedor1;
     private javax.swing.JTextField jTextFieldCorreoProveedor;
     private javax.swing.JTextField jTextFieldCorreoProveedor1;
-    private javax.swing.JTextField jTextFieldFechaEmisionEditarCheque1;
-    private javax.swing.JTextField jTextFieldFechaVencimientoEditar;
+    private javax.swing.JTextField jTextFieldDescuentoVenta;
     private javax.swing.JTextField jTextFieldFiltrarPorLetras;
     private javax.swing.JTextField jTextFieldFiltrarPorLetras1;
+    private javax.swing.JTextField jTextFieldMontoCheque;
+    private javax.swing.JTextField jTextFieldMontoEditarCheque;
     private javax.swing.JTextField jTextFieldNombreAgregarProducto;
     private javax.swing.JTextField jTextFieldNombresAgregarCheque;
     private javax.swing.JTextField jTextFieldNombresAgregarP1;
     private javax.swing.JTextField jTextFieldNombresAgregarP2;
     private javax.swing.JTextField jTextFieldNombresAgregarU;
-    private javax.swing.JTextField jTextFieldNombresAgregarU2;
     private javax.swing.JTextField jTextFieldNombresEditarCheque;
+    private javax.swing.JTextField jTextFieldNombresEditarUsuario;
     private javax.swing.JTextField jTextFieldNumeroChequeAgregar;
     private javax.swing.JTextField jTextFieldNumeroChequeEditar;
     private javax.swing.JTextField jTextFieldPrecioAgregarProducto;
     private javax.swing.JTextField jTextFieldRutAgregarU;
-    private javax.swing.JTextField jTextFieldRutAgregarU2;
+    private javax.swing.JTextField jTextFieldRutEditarUsuario;
     private javax.swing.JTextPane jTextPaneDescripcionAgregarCheque;
     private javax.swing.JTextPane jTextPaneDescripcionEditarCheque;
     // End of variables declaration//GEN-END:variables

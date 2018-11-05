@@ -9,6 +9,7 @@ package proyectoyapur;
  *
  * @author maick
  */
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
