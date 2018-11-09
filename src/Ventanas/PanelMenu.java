@@ -453,7 +453,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jButtonEditarProveedor = new javax.swing.JButton();
         jButtonBloquearProveedor = new javax.swing.JButton();
         jButtonAgregarProveedor = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
+        JPanelVenta = new javax.swing.JPanel();
         jButtonRealizarVenta = new javax.swing.JButton();
         jButtonAgregarUsuario2 = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
@@ -2126,9 +2126,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
         jTabbedPane1.addTab("Proveedores", jPanel8);
 
-        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+        JPanelVenta.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jPanel1MouseClicked(evt);
+                JPanelVentaMouseClicked(evt);
             }
         });
 
@@ -2204,6 +2204,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabelPrecioAPagar.setText("PrecioAPagar");
 
         jButtonAgregarProductoAVenta.setText("Agregar Producto");
+        jButtonAgregarProductoAVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAgregarProductoAVentaActionPerformed(evt);
+            }
+        });
 
         jButtonConfirmarVenta.setText("Confirmar Venta");
 
@@ -2226,7 +2231,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabelCalcularNeto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabelCalcularNeto.setText("CalcularNeto");
 
-        jComboBoxMetodoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Credito", "Debito", "Cheque" }));
+        jComboBoxMetodoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Credito", "Debito", "Tarjeta de credito", "Cheque"}));
         jComboBoxMetodoPago.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxMetodoPagoActionPerformed(evt);
@@ -2299,7 +2304,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                         .addComponent(jComboBoxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(46, 46, 46)
                         .addComponent(jButtonConfirmarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 19, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2322,34 +2327,34 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
         jPanel7.add(jPanelRealizarVenta, "card2");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout JPanelVentaLayout = new javax.swing.GroupLayout(JPanelVenta);
+        JPanelVenta.setLayout(JPanelVentaLayout);
+        JPanelVentaLayout.setHorizontalGroup(
+            JPanelVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPanelVentaLayout.createSequentialGroup()
                 .addGap(50, 50, 50)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(JPanelVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonAgregarUsuario2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonRealizarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(100, 100, 100)
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        JPanelVentaLayout.setVerticalGroup(
+            JPanelVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(JPanelVentaLayout.createSequentialGroup()
                 .addGap(86, 86, 86)
                 .addComponent(jButtonRealizarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
                 .addComponent(jButtonAgregarUsuario2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(JPanelVentaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(80, 80, 80))
         );
 
-        jTabbedPane1.addTab("Ventas", jPanel1);
+        jTabbedPane1.addTab("Ventas", JPanelVenta);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 1210, 600));
 
@@ -2695,9 +2700,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonAgregarUsuarioActionPerformed
 
-    private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
+    private void JPanelVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JPanelVentaMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jPanel1MouseClicked
+    }//GEN-LAST:event_JPanelVentaMouseClicked
 
     private void jComboBoxMetodoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMetodoPagoActionPerformed
         // TODO add your handling code here:
@@ -2975,6 +2980,14 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButtonHabilitarEdicionUsuarioActionPerformed
 
+    private void jButtonAgregarProductoAVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoAVentaActionPerformed
+        SeleccionarProducto seleccionarProducto= new SeleccionarProducto();
+        seleccionarProducto.setTitle("Seleccionar producto");
+        seleccionarProducto.setLocationRelativeTo(null);
+        seleccionarProducto.setResizable(false);       
+        seleccionarProducto.setVisible(true);
+    }//GEN-LAST:event_jButtonAgregarProductoAVentaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -3020,6 +3033,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel CalcularIVA;
+    private javax.swing.JPanel JPanelVenta;
     private javax.swing.JButton jButtonAgregarCheque;
     private javax.swing.JButton jButtonAgregarMerma;
     private javax.swing.JButton jButtonAgregarProducto;
@@ -3147,7 +3161,6 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JLabel jLabelPrecioAPagar;
     private javax.swing.JLabel jLabelTipoEspecieAgregarProducto;
     private javax.swing.JLabel jLabelUsuario;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

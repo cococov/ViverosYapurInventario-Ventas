@@ -2986,9 +2986,9 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="jPanel1">
+        <Container class="javax.swing.JPanel" name="JPanelVenta">
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jPanel1MouseClicked"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="JPanelVentaMouseClicked"/>
           </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
@@ -3134,7 +3134,7 @@
                                       <Component id="jComboBoxMetodoPago" min="-2" pref="37" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                                       <Component id="jButtonConfirmarVenta" min="-2" pref="39" max="-2" attributes="0"/>
-                                      <EmptySpace min="0" pref="19" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                                   <Component id="jScrollPane5" pref="0" max="32767" attributes="0"/>
                               </Group>
@@ -3258,6 +3258,9 @@
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Agregar Producto"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAgregarProductoAVentaActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="jButtonConfirmarVenta">
                       <Properties>
@@ -3318,13 +3321,8 @@
                     </Component>
                     <Component class="javax.swing.JComboBox" name="jComboBoxMetodoPago">
                       <Properties>
-                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                          <StringArray count="4">
-                            <StringItem index="0" value="Efectivo"/>
-                            <StringItem index="1" value="Credito"/>
-                            <StringItem index="2" value="Debito"/>
-                            <StringItem index="3" value="Cheque"/>
-                          </StringArray>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                          <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Efectivo&quot;, &quot;Credito&quot;, &quot;Debito&quot;, &quot;Tarjeta de credito&quot;, &quot;Cheque&quot;})" type="code"/>
                         </Property>
                       </Properties>
                       <Events>
