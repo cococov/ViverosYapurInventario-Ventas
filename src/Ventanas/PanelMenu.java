@@ -84,7 +84,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }
 
     public PanelMenu() {
-        initComponents();
+        initComponents();        
         this.setLocationRelativeTo(null);
     }
 
@@ -258,6 +258,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        BoletaOFactura = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jButtonAgregarUsuario = new javax.swing.JButton();
@@ -2212,8 +2213,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
         jButtonConfirmarVenta.setText("Confirmar Venta");
 
+        BoletaOFactura.add(jRadioButton1);
         jRadioButton1.setText("Boleta");
 
+        BoletaOFactura.add(jRadioButton2);
         jRadioButton2.setText("Factura");
 
         jLabel36.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -2715,6 +2718,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private void jButtonRealizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealizarVentaActionPerformed
         jPanel7.setVisible(true);
         jPanelRealizarVenta.show(true);
+        this.jRadioButton1.setSelected(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonRealizarVentaActionPerformed
 
@@ -2981,7 +2985,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jRadioButtonHabilitarEdicionUsuarioActionPerformed
 
     private void jButtonAgregarProductoAVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoAVentaActionPerformed
-        SeleccionarProducto seleccionarProducto= new SeleccionarProducto();
+        SeleccionarProducto seleccionarProducto= new SeleccionarProducto(this.conexion, null);
         seleccionarProducto.setTitle("Seleccionar producto");
         seleccionarProducto.setLocationRelativeTo(null);
         seleccionarProducto.setResizable(false);       
@@ -3032,6 +3036,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup BoletaOFactura;
     private javax.swing.JLabel CalcularIVA;
     private javax.swing.JPanel JPanelVenta;
     private javax.swing.JButton jButtonAgregarCheque;

@@ -6,6 +6,7 @@
 package Ventanas;
 
 import javax.swing.WindowConstants;
+import proyectoyapur.ConnectarBD;
 
 /**
  *
@@ -16,6 +17,11 @@ public class SeleccionarProducto extends javax.swing.JFrame {
     /**
      * Creates new form SeleccionarProducto
      */
+    public SeleccionarProducto(ConnectarBD conexion, String datos[]) {
+        initComponents();
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    }
+
     public SeleccionarProducto() {
         initComponents();
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -201,12 +207,12 @@ public class SeleccionarProducto extends javax.swing.JFrame {
 
     private void jComboBoxProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxProductoActionPerformed
         String producto = this.jComboBoxProducto.getSelectedItem().toString();
-        
-        if(producto.equals("Planta")){
+
+        if (producto.equals("Planta")) {
             this.jPanelTipo.setVisible(true);
-        }else if(producto.equals("Accesorio")){
+        } else if (producto.equals("Accesorio")) {
             this.jPanelTipo.setVisible(false);
-        }else{
+        } else {
             this.jPanelTipo.setVisible(false);
         }
     }//GEN-LAST:event_jComboBoxProductoActionPerformed
