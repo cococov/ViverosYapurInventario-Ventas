@@ -1647,9 +1647,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                         .addGap(18, 18, 18)
                         .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jTextFieldMontoEditarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                            .addGroup(jPanelEditarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextFieldBancoEditarCheque)
-                                .addComponent(jTextFieldNumeroCuentaEditarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldBancoEditarCheque)
+                            .addComponent(jTextFieldNumeroCuentaEditarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)))
                     .addGroup(jPanelEditarChequeLayout.createSequentialGroup()
                         .addGap(322, 322, 322)
                         .addComponent(jLabel72))
@@ -1861,9 +1860,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                             .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextFieldBancoAgregarCheque)
-                                .addComponent(jTextFieldNumeroCuentaAgregarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
+                            .addComponent(jTextFieldBancoAgregarCheque)
+                            .addComponent(jTextFieldNumeroCuentaAgregarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
                             .addComponent(jTextFieldMontoCheque, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabelErrorRut3))
@@ -2574,7 +2572,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabelUsuario.setText("Usuario:");
         getContentPane().add(jLabelUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, -1, -1));
 
-        jButtonCambioUsuario.setText("Cambiar Usuario");
+        jButtonCambioUsuario.setText("Cerrar Sesión");
         jButtonCambioUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonCambioUsuarioActionPerformed(evt);
