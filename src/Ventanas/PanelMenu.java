@@ -5,6 +5,7 @@
  */
 package Ventanas;
 
+import Clases.Producto;
 import Ventanas.Login;
 import java.awt.Component;
 import java.awt.Image;
@@ -41,6 +42,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private String datos[];
     private ConnectarBD conexion;
     private String rutAeditar;
+    public static Producto [] productos;
 
     public PanelMenu(ConnectarBD conexion, String datos[]) {
         initComponents();
