@@ -3087,7 +3087,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         java.sql.Date sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
         String apellidosCheque = jTextFieldApellidosAgregarCheque.getText();
         String descripcion = jTextPaneDescripcionAgregarCheque.getText();
-        int monto = Integer.parseInt(jTextFieldMontoCheque.getText());
+        String monto = jTextFieldMontoCheque.getText();
         int numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaAgregarCheque.getText());
         String banco = jTextFieldBancoAgregarCheque.getText();
 
@@ -3101,7 +3101,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     st.setInt(1, numeroCheque);
                     st.setDate(2, sqlEmision);
                     st.setDate(3, sqlVencimiento);
-                    st.setInt(4, monto);
+                    st.setString(4, monto);
                     st.setString(5, descripcion);
                     st.setString(6, nombresCheque);
                     st.setString(7, apellidosCheque);
