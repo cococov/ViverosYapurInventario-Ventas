@@ -5,12 +5,14 @@
  */
 package Ventanas;
 
+import Clases.Producto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
@@ -24,6 +26,8 @@ import proyectoyapur.Render;
 public class SeleccionarProducto extends javax.swing.JFrame {
 
     private ConnectarBD conexion;
+    private int column;
+    private int row;
 
     /**
      * Creates new form SeleccionarProducto
@@ -33,6 +37,7 @@ public class SeleccionarProducto extends javax.swing.JFrame {
         this.conexion = conexion;
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.jTableproductos.setDefaultRenderer(Object.class, new Render());
+        refrescarTipo();
         refrescarTabla();
 
     }
@@ -42,15 +47,85 @@ public class SeleccionarProducto extends javax.swing.JFrame {
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
+    public void refrescarTipo() {
+        this.jComboBoxTipo.removeAllItems();
+        this.jComboBoxTipo.addItem("--Seleccionar tipo--");
+        String sql;
+        Statement st;
+        ResultSet rs;
+        sql = "SELECT t.nombretipo "
+                + "FROM tipo t";
+        try {
+            st = conexion.getConnection().createStatement();
+            rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+                this.jComboBoxTipo.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void refrescarEspecie() {
+        this.jComboBoxEspecie.removeAllItems();
+        this.jComboBoxEspecie.addItem("--Seleccionar especie--");
+        String sql;
+        Statement st;
+        ResultSet rs;
+        String tipo = this.jComboBoxTipo.getSelectedItem().toString();
+        sql = "SELECT e.nombreespecie "
+                + "FROM tipo t, especie e "
+                + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo = e.codtipo";
+        try {
+            st = conexion.getConnection().createStatement();
+            rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+                this.jComboBoxEspecie.addItem(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void refrescarTabla() {
         Clear_Table1(jTableproductos);
         JButton info = new JButton("Info");
         String sql1;
         Statement st2;
         ResultSet rs2;
-        sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                + "FROM producto P, preciohistoricoproducto PH "
-                + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+        String producto = this.jComboBoxProducto.getSelectedItem().toString();
+        String tipo = this.jComboBoxTipo.getSelectedItem().toString();
+        String especie = "";
+        if (producto.equals("Planta")) {
+            if (this.jComboBoxEspecie.getSelectedItem() != null) {
+                especie = this.jComboBoxEspecie.getSelectedItem().toString();
+            } else {
+                especie = "--Seleccionar especie--";
+            }
+            if (tipo.equals("--Seleccionar tipo--")) {
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                        + "FROM producto P, preciohistoricoproducto PH, planta pl "
+                        + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+            } else if (especie.equals("--Seleccionar especie--")) {
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                        + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
+                        + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+            } else {
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                        + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
+                        + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+            }
+        } else if (producto.equals("Accesorio")) {
+            sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                    + "FROM producto P, preciohistoricoproducto PH, accesorio a "
+                    + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+        } else {
+            sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                    + "FROM producto P, preciohistoricoproducto PH "
+                    + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+        }
         DefaultTableModel modelo = (DefaultTableModel) jTableproductos.getModel();
         //editar lo de abajo
         try {
@@ -113,7 +188,7 @@ public class SeleccionarProducto extends javax.swing.JFrame {
         jTextFieldCantidad = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTextAreaInfoProducto = new javax.swing.JTextArea();
         jButtonCerrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -131,7 +206,7 @@ public class SeleccionarProducto extends javax.swing.JFrame {
 
         jLabel2.setText("Tipo:");
 
-        jComboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {}));
         jComboBoxTipo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxTipoActionPerformed(evt);
@@ -140,7 +215,12 @@ public class SeleccionarProducto extends javax.swing.JFrame {
 
         jLabel3.setText("Especie:");
 
-        jComboBoxEspecie.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxEspecie.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {}));
+        jComboBoxEspecie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxEspecieActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelEspecieLayout = new javax.swing.GroupLayout(jPanelEspecie);
         jPanelEspecie.setLayout(jPanelEspecieLayout);
@@ -148,8 +228,8 @@ public class SeleccionarProducto extends javax.swing.JFrame {
             jPanelEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEspecieLayout.createSequentialGroup()
                 .addComponent(jLabel3)
-                .addGap(213, 213, 213)
-                .addComponent(jComboBoxEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(167, 167, 167)
+                .addComponent(jComboBoxEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanelEspecieLayout.setVerticalGroup(
             jPanelEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,8 +251,9 @@ public class SeleccionarProducto extends javax.swing.JFrame {
                     .addComponent(jPanelEspecie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelTipoLayout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(229, 229, 229)
-                        .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(188, 188, 188)
+                        .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanelTipoLayout.setVerticalGroup(
             jPanelTipoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -218,6 +299,11 @@ public class SeleccionarProducto extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTableproductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableproductosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableproductos);
 
         jButtonAgregar.setText("Agregar");
@@ -227,6 +313,7 @@ public class SeleccionarProducto extends javax.swing.JFrame {
             }
         });
 
+        jTextFieldCantidad.setText("1");
         jTextFieldCantidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldCantidadActionPerformed(evt);
@@ -235,10 +322,10 @@ public class SeleccionarProducto extends javax.swing.JFrame {
 
         jLabel4.setText("Cantidad:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setEnabled(false);
-        jScrollPane2.setViewportView(jTextArea1);
+        jTextAreaInfoProducto.setColumns(20);
+        jTextAreaInfoProducto.setRows(5);
+        jTextAreaInfoProducto.setEnabled(false);
+        jScrollPane2.setViewportView(jTextAreaInfoProducto);
 
         jButtonCerrar.setText("Cerrar");
         jButtonCerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -309,7 +396,8 @@ public class SeleccionarProducto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoActionPerformed
-        // TODO add your handling code here:
+        refrescarTabla();
+        refrescarEspecie();
     }//GEN-LAST:event_jComboBoxTipoActionPerformed
 
     private void jTextFieldCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCantidadActionPerformed
@@ -317,7 +405,20 @@ public class SeleccionarProducto extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldCantidadActionPerformed
 
     private void jButtonAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarActionPerformed
-        // TODO add your handling code here:
+        if (row < this.jTableproductos.getRowCount() && row >= 0 && column < this.jTableproductos.getColumnCount() && column >= 0) {
+            int ID = Integer.parseInt(this.jTableproductos.getValueAt(row, 0).toString());
+            String nombre = this.jTableproductos.getValueAt(row, 1).toString();
+            int cantidadVentas = Integer.parseInt(this.jTableproductos.getValueAt(row, 2).toString());
+            int cantidadProduccion = Integer.parseInt(this.jTableproductos.getValueAt(row, 3).toString());
+            int precio = Integer.parseInt(this.jTableproductos.getValueAt(row, 4).toString());
+            int cantidad = Integer.parseInt(this.jTextFieldCantidad.getText());
+            if (cantidad <= (cantidadVentas + cantidadProduccion)) {
+                Producto p = new Producto(ID, nombre, cantidad, precio);
+                PanelMenu.agregarProductoCarrito(p);
+            } else {
+                JOptionPane.showMessageDialog(null, "Cantidad insuficiente del producto!");
+            }
+        }
     }//GEN-LAST:event_jButtonAgregarActionPerformed
 
     private void jComboBoxProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxProductoActionPerformed
@@ -330,11 +431,47 @@ public class SeleccionarProducto extends javax.swing.JFrame {
         } else {
             this.jPanelTipo.setVisible(false);
         }
+        refrescarTabla();
     }//GEN-LAST:event_jComboBoxProductoActionPerformed
 
     private void jButtonCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButtonCerrarActionPerformed
+
+    private void jTableproductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableproductosMouseClicked
+        column = this.jTableproductos.getColumnModel().getColumnIndexAtX(evt.getX());
+        row = evt.getY() / this.jTableproductos.getRowHeight();
+        if (row < this.jTableproductos.getRowCount() && row >= 0 && column < this.jTableproductos.getColumnCount() && column >= 0) {
+            Object value = this.jTableproductos.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                if (boton.getText().equals("Info")) {
+                    String ID = String.valueOf(this.jTableproductos.getValueAt(this.jTableproductos.getSelectedRow(), 0));
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT p.descripcionproducto "
+                            + "FROM producto p "
+                            + "WHERE p.codproducto=" + "\"" + ID + "\"";
+                    try {
+                        st = conexion.getConnection().createStatement();
+                        rs = st.executeQuery(sql);
+
+                        while (rs.next()) {
+                            this.jTextAreaInfoProducto.setText(rs.getString(1));
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_jTableproductosMouseClicked
+
+    private void jComboBoxEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEspecieActionPerformed
+        refrescarTabla();
+    }//GEN-LAST:event_jComboBoxEspecieActionPerformed
 
     /**
      * @param args the command line arguments
@@ -386,7 +523,7 @@ public class SeleccionarProducto extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTableproductos;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextAreaInfoProducto;
     private javax.swing.JTextField jTextFieldCantidad;
     // End of variables declaration//GEN-END:variables
 }

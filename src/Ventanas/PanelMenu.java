@@ -6,7 +6,6 @@
 package Ventanas;
 
 import Clases.Producto;
-import Ventanas.Login;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -22,6 +21,7 @@ import java.awt.event.KeyEvent;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -42,10 +42,12 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private String datos[];
     private ConnectarBD conexion;
     private String rutAeditar;
-    public static Producto[] productos;
+    public static Producto[] carrito;
+    public static int cantProductosCarrito;
 
     public PanelMenu(ConnectarBD conexion, String datos[]) {
         initComponents();
+        limpiarCarrito();
         this.setLocationRelativeTo(null);
         this.conexion = conexion;
         this.datos = datos;
@@ -93,7 +95,42 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-
+    
+    public static void limpiarCarrito(){
+        carrito = new Producto [1000];
+        cantProductosCarrito = 0;
+    }
+    
+    public static void agregarProductoCarrito(Producto p){
+        boolean encontrado = false;
+        for(int i = 0; i<cantProductosCarrito;i++){
+            if(carrito[i].getId() == p.getId()){
+                carrito[i].setCantidad(carrito[i].getCantidad() + p.getCantidad());
+                encontrado = true;
+            }
+        }
+        if(!encontrado){
+        carrito[cantProductosCarrito] = p;
+        cantProductosCarrito++;
+        }
+        refrescarTablaVenta();
+    }
+    
+    public static void refrescarTablaVenta() {
+        Clear_Table1(jTableVenta);
+        DefaultTableModel modelo = (DefaultTableModel) jTableVenta.getModel();
+        Object[] datos = new Object[7];
+        for(int i = 0; i<cantProductosCarrito; i++){
+            datos[0] = carrito[i].getNombre();
+            datos[1] = carrito[i].getPrecio();
+            datos[3] = carrito[i].getCantidad();
+            int total = carrito[i].getCantidad() * carrito[i].getPrecio(); 
+            datos[5] = total;
+            modelo.addRow(datos);
+        }
+        jTableVenta.setModel(modelo);
+    }
+    
     public void refrescarTablaBloquearUsuario() {
         Clear_Table1(jTableBloquearUsuario);
         JButton bloquear = new JButton("Bloquear");
@@ -270,7 +307,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
     }
 
-    private void Clear_Table1(JTable tabla) {
+    private static void Clear_Table1(JTable tabla) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
         for (int i = 0; i < tabla.getRowCount(); i++) {
             modelo.removeRow(i);
@@ -3215,7 +3252,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         seleccionarProducto.setTitle("Seleccionar producto");
         seleccionarProducto.setLocationRelativeTo(null);
         seleccionarProducto.setResizable(false);
-        seleccionarProducto.setVisible(true);
+        seleccionarProducto.setVisible(true);        
     }//GEN-LAST:event_jButtonAgregarProductoAVentaActionPerformed
 
     private void jComboBoxAgregarEspeciePlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAgregarEspeciePlantaActionPerformed
@@ -3511,7 +3548,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JTable jTableEditarProveedor1;
     private javax.swing.JTable jTableEditarUsuario;
     private javax.swing.JTable jTableEliminarProveedor2;
-    private javax.swing.JTable jTableVenta;
+    private static javax.swing.JTable jTableVenta;
     private javax.swing.JTextArea jTextAreaProveedor;
     private javax.swing.JTextArea jTextAreaProveedor1;
     private javax.swing.JTextField jTextFieldAgregarEspeciePlanta;
