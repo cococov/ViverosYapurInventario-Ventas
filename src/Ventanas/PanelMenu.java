@@ -56,6 +56,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         this.jTableEditarUsuario.setDefaultRenderer(Object.class, new Render());
         this.jTableBloquearUsuario.setDefaultRenderer(Object.class, new Render());
         this.jTableEditarCheques.setDefaultRenderer(Object.class, new Render());
+        this.jTableVenta.setDefaultRenderer(Object.class, new Render());
+        this.jTableListaProductos.setDefaultRenderer(Object.class, new Render());
         this.jPanel4.setVisible(false);
         this.jPanel7.setVisible(false);
         this.jPanel6.setVisible(false);
@@ -71,7 +73,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         validarSoloNumeros(jTextFieldCantidadVentaAgregarProducto);
         validarSoloNumeros(jTextFieldDescuentoVenta);
         this.jTextFieldMontoCheque.addFocusListener(this);
-
+        
         jPanelTipoPlanta.setVisible(false);
 
         if (datos[5].equals("2")) {
@@ -124,9 +126,15 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         for(int i = 0; i<cantProductosCarrito; i++){
             datos[0] = carrito[i].getNombre();
             datos[1] = carrito[i].getPrecio();
+            JButton menos = new JButton("-");
+            datos[2] = menos;
             datos[3] = carrito[i].getCantidad();
+            JButton mas = new JButton("+");
+            datos[4] = mas;
             int total = carrito[i].getCantidad() * carrito[i].getPrecio(); 
             datos[5] = total;
+            JButton eliminar = new JButton("x");
+            datos[6] = eliminar;
             modelo.addRow(datos);
         }
         jTableVenta.setModel(modelo);
@@ -475,6 +483,21 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
         jComboBoxAgregarTipoPlanta.setModel(modelo);
     }
+    
+    public void rellenarComboBoxTipoPlantaListado() throws SQLException {
+        Statement st = conexion.getConnection().createStatement();
+        String sql = "SELECT nombretipo FROM `tipo`";
+        ResultSet rs = st.executeQuery(sql);
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        modelo.addElement("--Seleccionar tipo--");
+        while (rs.next()) {
+            modelo.addElement(rs.getString(1));
+        }
+        jComboBoxTipoListaProductos.setModel(modelo);
+    }
+    
+    
+    
 
     public void rellenarComboBoxEspeciePlanta() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
@@ -488,6 +511,19 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
         jComboBoxAgregarEspeciePlanta.setModel(modelo);
     }
+    
+     public void rellenarComboBoxEspeciePlantaListado() throws SQLException {
+        Statement st = conexion.getConnection().createStatement();
+        String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxTipoListaProductos.getSelectedItem() + "'";
+        ResultSet rs = st.executeQuery(sql);
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        modelo.addElement("--Seleccionar especie--");
+        while (rs.next()) {
+            modelo.addElement(rs.getString(1));
+        }
+        jComboBoxEspecieProducto.setModel(modelo);
+    }
+
 
 
     public void validarSoloNumeros(JTextField jtext) {
@@ -635,11 +671,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jTableListaProductos = new javax.swing.JTable();
         jLabel28 = new javax.swing.JLabel();
         jComboBoxFiltrarProductoPlantaOAccesorio = new javax.swing.JComboBox<>();
-        jLabelEspeciePlantaLista = new javax.swing.JLabel();
+        jLabelTipoPlantaLista = new javax.swing.JLabel();
         jComboBoxTipoListaProductos = new javax.swing.JComboBox<>();
         jLabel29 = new javax.swing.JLabel();
         jTextFieldFiltrarPorLetras = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
+        jLabelEspecieListaProductos = new javax.swing.JLabel();
         jComboBoxEspecieProducto = new javax.swing.JComboBox<>();
         jPanelEliminarProducto = new javax.swing.JPanel();
         jLabel27 = new javax.swing.JLabel();
@@ -1446,10 +1482,15 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             }
         });
 
-        jLabelEspeciePlantaLista.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelEspeciePlantaLista.setText("Tipo:");
+        jLabelTipoPlantaLista.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelTipoPlantaLista.setText("Tipo:");
 
-        jComboBoxTipoListaProductos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxTipoListaProductos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccionar tipo--" }));
+        jComboBoxTipoListaProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxTipoListaProductosActionPerformed(evt);
+            }
+        });
 
         jLabel29.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel29.setText("Filtrar:");
@@ -1460,10 +1501,15 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setText("Especie:");
+        jLabelEspecieListaProductos.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelEspecieListaProductos.setText("Especie:");
 
-        jComboBoxEspecieProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxEspecieProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccionar especie--" }));
+        jComboBoxEspecieProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxEspecieProductoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelEditarProductoLayout = new javax.swing.GroupLayout(jPanelEditarProducto);
         jPanelEditarProducto.setLayout(jPanelEditarProductoLayout);
@@ -1481,11 +1527,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboBoxFiltrarProductoPlantaOAccesorio, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabelEspeciePlantaLista)
+                        .addComponent(jLabelTipoPlantaLista)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboBoxTipoListaProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel2)
+                        .addComponent(jLabelEspecieListaProductos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jComboBoxEspecieProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -1506,11 +1552,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 .addGroup(jPanelEditarProductoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel28)
                     .addComponent(jComboBoxFiltrarProductoPlantaOAccesorio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelEspeciePlantaLista)
+                    .addComponent(jLabelTipoPlantaLista)
                     .addComponent(jComboBoxTipoListaProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel29)
                     .addComponent(jTextFieldFiltrarPorLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
+                    .addComponent(jLabelEspecieListaProductos)
                     .addComponent(jComboBoxEspecieProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1606,7 +1652,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
         jButtonAgregarMerma.setText("Agregar Merma");
 
-        jButtonEditarMerma.setText("Editar Mera");
+        jButtonEditarMerma.setText("Editar Merma");
 
         jButtonEliminarMerma.setText("Eliminar Merma");
 
@@ -3148,6 +3194,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     private void jButtonEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarProductoActionPerformed
         refrescarTablaListaProductos();
+        try {
+            rellenarComboBoxTipoPlantaListado();
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         jPanelAgregarProducto.show(false);
         jPanelEliminarProducto.show(false);
         jPanel6.setVisible(true);
@@ -3504,8 +3555,46 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jTextFieldNumeroCuentaEditarChequeActionPerformed
 
     private void jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed
+         if(jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedIndex()==0){
+             try {
+                 rellenarComboBoxTipoPlantaListado();
+             } catch (SQLException ex) {
+                 Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+             }
+             jComboBoxTipoListaProductos.setSelectedIndex(0);
+             jComboBoxEspecieProducto.setSelectedIndex(0);
+             jLabelTipoPlantaLista.setVisible(true);
+             jLabelEspecieListaProductos.setVisible(true);
+             jComboBoxTipoListaProductos.setVisible(true);
+             jComboBoxEspecieProducto.setVisible(true);
+             
+         }else{
+             
+             jComboBoxTipoListaProductos.setSelectedIndex(0);
+             jComboBoxEspecieProducto.setSelectedIndex(0);
+             jLabelTipoPlantaLista.setVisible(false);
+             jLabelEspecieListaProductos.setVisible(false);
+             jComboBoxTipoListaProductos.setVisible(false);
+             jComboBoxEspecieProducto.setVisible(false);
+         }
+         refrescarTablaListaProductos();
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed
+
+    private void jComboBoxTipoListaProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoListaProductosActionPerformed
+        try {
+            rellenarComboBoxEspeciePlantaListado();
+            // TODO add your handling code here:
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        refrescarTablaListaProductos();
+    }//GEN-LAST:event_jComboBoxTipoListaProductosActionPerformed
+
+    private void jComboBoxEspecieProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEspecieProductoActionPerformed
+        refrescarTablaListaProductos();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxEspecieProductoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -3552,7 +3641,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     
     public void refrescarTablaListaProductos() {
         Clear_Table1(jTableListaProductos);
-        JButton info = new JButton("Info");
+        JButton info = new JButton("Editar");
         String sql1;
         Statement st2;
         ResultSet rs2;
@@ -3600,17 +3689,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 datos[1] = rs2.getString(2);
                 datos[2] = rs2.getInt(3);
                 datos[3] = rs2.getInt(4);
-                datos[4] = rs2.getInt(5);
+                datos[4] = rs2.getString(5);
                 datos[5] = info;
                 modelo.addRow(datos);
             }
-            jTableListaProductos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            jTableListaProductos.getColumnModel().getColumn(0).setPreferredWidth(27);
-            jTableListaProductos.getColumnModel().getColumn(1).setPreferredWidth(125);
-            jTableListaProductos.getColumnModel().getColumn(2).setPreferredWidth(80);
-            jTableListaProductos.getColumnModel().getColumn(3).setPreferredWidth(80);
-            jTableListaProductos.getColumnModel().getColumn(4).setPreferredWidth(60);
-            jTableListaProductos.getColumnModel().getColumn(5).setPreferredWidth(92);
             jTableListaProductos.setModel(modelo);
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -3675,7 +3757,6 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -3748,12 +3829,13 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JLabel jLabelErrorRut1;
     private javax.swing.JLabel jLabelErrorRut2;
     private javax.swing.JLabel jLabelErrorRut3;
+    private javax.swing.JLabel jLabelEspecieListaProductos;
     private javax.swing.JLabel jLabelEspeciePlanta;
-    private javax.swing.JLabel jLabelEspeciePlantaLista;
     private javax.swing.JLabel jLabelEspeciePlantaLista1;
     private javax.swing.JLabel jLabelNombreUsuario;
     private javax.swing.JLabel jLabelPrecioAPagar;
     private javax.swing.JLabel jLabelTipoPlanta;
+    private javax.swing.JLabel jLabelTipoPlantaLista;
     private javax.swing.JLabel jLabelUsuario;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;

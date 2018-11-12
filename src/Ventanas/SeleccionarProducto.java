@@ -149,7 +149,7 @@ public class SeleccionarProducto extends javax.swing.JFrame {
                 datos[1] = rs2.getString(2);
                 datos[2] = rs2.getInt(3);
                 datos[3] = rs2.getInt(4);
-                datos[4] = rs2.getInt(5);
+                datos[4] = rs2.getString(5);
                 datos[5] = info;
                 modelo.addRow(datos);
             }
