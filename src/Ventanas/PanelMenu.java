@@ -142,7 +142,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
         
         jTableVenta.setModel(modelo);
-        jLabelPrecioAPagar.setText(formatearAEntero(""+totalGlobal));
+        jLabelCalcularNeto.setText(formatearAEntero(""+totalGlobal));
+        int iva = (int)(totalGlobal * 0.19);
+        CalcularIVA.setText(formatearAEntero(""+iva));
+        int total = iva +totalGlobal;
+        jLabelPrecioAPagar.setText(formatearAEntero(""+total));
     }
     
     public void refrescarTablaBloquearUsuario() {
@@ -2701,13 +2705,13 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel38.setText("Iva:");
 
         CalcularIVA.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        CalcularIVA.setText("SacarIVA");
+        CalcularIVA.setText("0");
 
         jLabel40.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel40.setText("Total neto:");
 
         jLabelCalcularNeto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelCalcularNeto.setText("CalcularNeto");
+        jLabelCalcularNeto.setText("0");
 
         jComboBoxMetodoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Credito", "Debito", "Tarjeta de credito", "Cheque"}));
         jComboBoxMetodoPago.addActionListener(new java.awt.event.ActionListener() {
@@ -3707,7 +3711,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BoletaOFactura;
-    private javax.swing.JLabel CalcularIVA;
+    private static javax.swing.JLabel CalcularIVA;
     private javax.swing.JPanel JPanelVenta;
     private javax.swing.JButton jButtonAgregarCheque;
     private javax.swing.JButton jButtonAgregarMerma;
@@ -3829,7 +3833,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JLabel jLabel79;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLabelCalcularNeto;
+    private static javax.swing.JLabel jLabelCalcularNeto;
     private javax.swing.JLabel jLabelErrorRut;
     private javax.swing.JLabel jLabelErrorRut1;
     private javax.swing.JLabel jLabelErrorRut2;
