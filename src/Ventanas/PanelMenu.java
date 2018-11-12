@@ -283,6 +283,44 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
         return Integer.parseInt(resultado);
     }
+    
+    public void agregarProveedor() {
+        String sql;
+        PreparedStatement st;
+        try {
+            String nombres = jTextFieldNombresAgregarP1.getText();
+            String apellidos = jTextFieldApellidosProveedor.getText();
+            String descripcion = jTextAreaProveedor.getText();
+            String contacto = jTextFieldContactoProveedor.getText();
+            String correo = jTextFieldCorreoProveedor.getText();
+            if (nombres.equalsIgnoreCase("") || apellidos.equals("") || descripcion.equalsIgnoreCase("") || contacto.equalsIgnoreCase("") || correo.equalsIgnoreCase("")) {
+                JOptionPane.showMessageDialog(null, "algunos campos se encuentran vacios");
+                jTextFieldNombresAgregarP1.setText("");
+                jTextFieldApellidosProveedor.setText("");
+                jTextAreaProveedor.setText("");
+                jTextFieldContactoProveedor.setText("");
+                jTextFieldCorreoProveedor.setText("");
+            } else {
+                //if(validarSoloNumeros(jTextFieldContactoProveedor))
+                sql = "INSERT INTO proveedor(nombreproveedor,descripcionproveedor,apellidosproveedor,contactoproveedor,correoproveedor) values(?,?,?,?,?)";
+                st = conexion.getConnection().prepareStatement(sql);
+                st.setString(1, nombres);
+                st.setString(2, apellidos);
+                st.setString(3, descripcion);
+                st.setString(4, contacto);
+                st.setString(5, correo);
+                st.executeUpdate();
+                jTextFieldNombresAgregarP1.setText("");
+                jTextFieldApellidosProveedor.setText("");
+                jTextAreaProveedor.setText("");
+                jTextFieldContactoProveedor.setText("");
+                jTextFieldCorreoProveedor.setText("");
+                JOptionPane.showMessageDialog(null, "Proveedor ingresado exitosamente");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "ya hay un proveedor con ese rut");
+        }
+    }
 
     public void agregarProducto() throws SQLException {
         String nomProducto = jTextFieldNombreAgregarProducto.getText();
@@ -594,7 +632,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jPanelEditarProducto = new javax.swing.JPanel();
         jLabel26 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableListaProductos = new javax.swing.JTable();
         jLabel28 = new javax.swing.JLabel();
         jComboBoxFiltrarProductoPlantaOAccesorio = new javax.swing.JComboBox<>();
         jLabelEspeciePlantaLista = new javax.swing.JLabel();
@@ -602,7 +640,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel29 = new javax.swing.JLabel();
         jTextFieldFiltrarPorLetras = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBoxEspecieProducto = new javax.swing.JComboBox<>();
         jPanelEliminarProducto = new javax.swing.JPanel();
         jLabel27 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -1377,31 +1415,36 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel26.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel26.setText("Lista de productos");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableListaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Nombre de producto", "Cantidad en venta", "Cantidad en producción", "Tipo", "Editar"
+                "ID", "Nombre de producto", "Cantidad en venta", "Cantidad en producción", "Precio", "Editar"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                true, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(jTable1);
+        jScrollPane3.setViewportView(jTableListaProductos);
 
         jLabel28.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel28.setText("Producto:");
 
         jComboBoxFiltrarProductoPlantaOAccesorio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Planta", "Accesorio" }));
+        jComboBoxFiltrarProductoPlantaOAccesorio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed(evt);
+            }
+        });
 
         jLabelEspeciePlantaLista.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabelEspeciePlantaLista.setText("Tipo:");
@@ -1420,7 +1463,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Especie:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxEspecieProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout jPanelEditarProductoLayout = new javax.swing.GroupLayout(jPanelEditarProducto);
         jPanelEditarProducto.setLayout(jPanelEditarProductoLayout);
@@ -1444,7 +1487,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBoxEspecieProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel29)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1468,7 +1511,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     .addComponent(jLabel29)
                     .addComponent(jTextFieldFiltrarPorLetras, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBoxEspecieProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
@@ -3104,6 +3147,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jTextFieldFiltrarPorLetrasActionPerformed
 
     private void jButtonEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarProductoActionPerformed
+        refrescarTablaListaProductos();
         jPanelAgregarProducto.show(false);
         jPanelEliminarProducto.show(false);
         jPanel6.setVisible(true);
@@ -3144,6 +3188,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jButtonAgregarProveedorActionPerformed
 
     private void jButtonConfirmarAgregarProveedor2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregarProveedor2ActionPerformed
+        agregarProveedor();
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonConfirmarAgregarProveedor2ActionPerformed
 
@@ -3458,6 +3503,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldNumeroCuentaEditarChequeActionPerformed
 
+    private void jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -3500,6 +3549,74 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
         return retValue;
     }
+    
+    public void refrescarTablaListaProductos() {
+        Clear_Table1(jTableListaProductos);
+        JButton info = new JButton("Info");
+        String sql1;
+        Statement st2;
+        ResultSet rs2;
+        String producto = this.jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedItem().toString();
+        String tipo = this.jComboBoxTipoListaProductos.getSelectedItem().toString();
+        String especie = "";
+        if (producto.equals("Planta")) {
+            if (this.jComboBoxEspecieProducto.getSelectedItem() != null) {
+                especie = this.jComboBoxEspecieProducto.getSelectedItem().toString();
+            } else {
+                especie = "--Seleccionar especie--";
+            }
+            if (tipo.equals("--Seleccionar tipo--")) {
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                        + "FROM producto P, preciohistoricoproducto PH, planta pl "
+                        + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+            } else if (especie.equals("--Seleccionar especie--")) {
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                        + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
+                        + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+            } else {
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                        + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
+                        + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+            }
+        } else if (producto.equals("Accesorio")) {
+            sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                    + "FROM producto P, preciohistoricoproducto PH, accesorio a "
+                    + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+        } else {
+            sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                    + "FROM producto P, preciohistoricoproducto PH "
+                    + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+        }
+        DefaultTableModel modelo = (DefaultTableModel) jTableListaProductos.getModel();
+        //editar lo de abajo
+        try {
+            st2 = conexion.getConnection().createStatement();
+            rs2 = st2.executeQuery(sql1);
+            Object[] datos = new Object[6];
+
+            while (rs2.next()) {
+
+                datos[0] = rs2.getInt(1);
+                datos[1] = rs2.getString(2);
+                datos[2] = rs2.getInt(3);
+                datos[3] = rs2.getInt(4);
+                datos[4] = rs2.getInt(5);
+                datos[5] = info;
+                modelo.addRow(datos);
+            }
+            jTableListaProductos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            jTableListaProductos.getColumnModel().getColumn(0).setPreferredWidth(27);
+            jTableListaProductos.getColumnModel().getColumn(1).setPreferredWidth(125);
+            jTableListaProductos.getColumnModel().getColumn(2).setPreferredWidth(80);
+            jTableListaProductos.getColumnModel().getColumn(3).setPreferredWidth(80);
+            jTableListaProductos.getColumnModel().getColumn(4).setPreferredWidth(60);
+            jTableListaProductos.getColumnModel().getColumn(5).setPreferredWidth(92);
+            jTableListaProductos.setModel(modelo);
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BoletaOFactura;
@@ -3532,10 +3649,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JButton jButtonEliminarMerma;
     private javax.swing.JButton jButtonEliminarProducto;
     private javax.swing.JButton jButtonRealizarVenta;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBoxAgregarEspeciePlanta;
     private javax.swing.JComboBox<String> jComboBoxAgregarTipoPlanta;
     private javax.swing.JComboBox<String> jComboBoxEspecieListaProductos1;
+    private javax.swing.JComboBox<String> jComboBoxEspecieProducto;
     private javax.swing.JComboBox<String> jComboBoxFiltrarProductoPlantaOAccesorio;
     private javax.swing.JComboBox<String> jComboBoxFiltrarTipo1;
     private javax.swing.JComboBox<String> jComboBoxMetodoPago;
@@ -3686,7 +3803,6 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTableBloquearUsuario;
     private javax.swing.JTable jTableCobrarCheque;
@@ -3694,6 +3810,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JTable jTableEditarProveedor1;
     private javax.swing.JTable jTableEditarUsuario;
     private javax.swing.JTable jTableEliminarProveedor2;
+    private javax.swing.JTable jTableListaProductos;
     private static javax.swing.JTable jTableVenta;
     private javax.swing.JTextArea jTextAreaProveedor;
     private javax.swing.JTextArea jTextAreaProveedor1;
