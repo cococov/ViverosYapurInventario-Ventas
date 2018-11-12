@@ -45,6 +45,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private String rutAeditar;
     public static Producto[] carrito;
     public static int cantProductosCarrito;
+    public static int totalGlobal;
 
     public PanelMenu(ConnectarBD conexion, String datos[]) {
         initComponents();
@@ -123,21 +124,25 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         Clear_Table1(jTableVenta);
         DefaultTableModel modelo = (DefaultTableModel) jTableVenta.getModel();
         Object[] datos = new Object[7];
+        totalGlobal=0;
         for(int i = 0; i<cantProductosCarrito; i++){
             datos[0] = carrito[i].getNombre();
-            datos[1] = carrito[i].getPrecio();
+            datos[1] = formatearAEntero(""+carrito[i].getPrecio());
             JButton menos = new JButton("-");
             datos[2] = menos;
             datos[3] = carrito[i].getCantidad();
             JButton mas = new JButton("+");
             datos[4] = mas;
             int total = carrito[i].getCantidad() * carrito[i].getPrecio(); 
-            datos[5] = total;
+            datos[5] = formatearAEntero(""+total);
             JButton eliminar = new JButton("x");
             datos[6] = eliminar;
             modelo.addRow(datos);
+            totalGlobal = totalGlobal + total; 
         }
+        
         jTableVenta.setModel(modelo);
+        jLabelPrecioAPagar.setText(formatearAEntero(""+totalGlobal));
     }
     
     public void refrescarTablaBloquearUsuario() {
@@ -244,7 +249,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
     }
 
-    public String formatearAEntero(String n) {
+    public static String formatearAEntero(String n) {
         char[] vector = n.toCharArray();
         String resultado = "";
         int cont = 0;
@@ -281,10 +286,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     }
 
-    public int pasarAinteger(String entero) {
+    public static int pasarAinteger(String entero) {
         char[] numero = entero.toCharArray();
         String resultado = "";
-        for (int i = 0; i < numero.length - 1; i++) {
+        for (int i = 0; i < numero.length; i++) {
             if (numero[i] != '.') {
                 resultado = resultado + numero[i];
             }
@@ -2672,7 +2677,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel35.setText("Total:");
 
         jLabelPrecioAPagar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelPrecioAPagar.setText("PrecioAPagar");
+        jLabelPrecioAPagar.setText("0");
 
         jButtonAgregarProductoAVenta.setText("Agregar Producto");
         jButtonAgregarProductoAVenta.addActionListener(new java.awt.event.ActionListener() {
@@ -3689,7 +3694,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 datos[1] = rs2.getString(2);
                 datos[2] = rs2.getInt(3);
                 datos[3] = rs2.getInt(4);
-                datos[4] = rs2.getString(5);
+                datos[4] = formatearAEntero(rs2.getString(5));
                 datos[5] = info;
                 modelo.addRow(datos);
             }
@@ -3833,7 +3838,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JLabel jLabelEspeciePlanta;
     private javax.swing.JLabel jLabelEspeciePlantaLista1;
     private javax.swing.JLabel jLabelNombreUsuario;
-    private javax.swing.JLabel jLabelPrecioAPagar;
+    private static javax.swing.JLabel jLabelPrecioAPagar;
     private javax.swing.JLabel jLabelTipoPlanta;
     private javax.swing.JLabel jLabelTipoPlantaLista;
     private javax.swing.JLabel jLabelUsuario;

@@ -20,10 +20,11 @@ public class ProyectoYapur {
     /**
      * @param args the command line arguments
      */
+    
+    
     public static void main(String[] args) {
         
-        /*   Estilo segun el sistema operativo que se esté usando*/
-        try {
+       try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());//UI depende del sistema operativo
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ProyectoYapur.class.getName()).log(Level.SEVERE, null, ex);

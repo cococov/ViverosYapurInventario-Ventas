@@ -230,7 +230,7 @@
                 <Column editable="false" title="Nombre" type="java.lang.String"/>
                 <Column editable="false" title="Cant Ventas" type="java.lang.Integer"/>
                 <Column editable="false" title="Cant Produc" type="java.lang.Integer"/>
-                <Column editable="false" title="Precio" type="java.lang.Integer"/>
+                <Column editable="false" title="Precio" type="java.lang.String"/>
                 <Column editable="false" title="Descripcion" type="java.lang.Object"/>
               </Table>
             </Property>

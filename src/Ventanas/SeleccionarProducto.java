@@ -149,7 +149,7 @@ public class SeleccionarProducto extends javax.swing.JFrame {
                 datos[1] = rs2.getString(2);
                 datos[2] = rs2.getInt(3);
                 datos[3] = rs2.getInt(4);
-                datos[4] = rs2.getString(5);
+                datos[4] = PanelMenu.formatearAEntero(""+rs2.getString(5));
                 datos[5] = info;
                 modelo.addRow(datos);
             }
@@ -295,7 +295,7 @@ public class SeleccionarProducto extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
@@ -418,7 +418,7 @@ public class SeleccionarProducto extends javax.swing.JFrame {
             String nombre = this.jTableproductos.getValueAt(row, 1).toString();
             int cantidadVentas = Integer.parseInt(this.jTableproductos.getValueAt(row, 2).toString());
             int cantidadProduccion = Integer.parseInt(this.jTableproductos.getValueAt(row, 3).toString());
-            int precio = Integer.parseInt(this.jTableproductos.getValueAt(row, 4).toString());
+            int precio = PanelMenu.pasarAinteger(this.jTableproductos.getValueAt(row, 4).toString());
             int cantidad = Integer.parseInt(this.jTextFieldCantidad.getText());
             if (cantidad <= (cantidadVentas + cantidadProduccion)) {
                 Producto p = new Producto(ID, nombre, cantidad, precio);
