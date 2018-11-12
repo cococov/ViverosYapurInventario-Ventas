@@ -6,6 +6,8 @@
 package Ventanas;
 
 import Clases.Producto;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -87,6 +89,14 @@ public class SeleccionarProducto extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("Imagenes/logo-yapur.png"));
+
+        return retValue;
     }
 
     public void refrescarTabla() {
@@ -389,8 +399,6 @@ public class SeleccionarProducto extends javax.swing.JFrame {
                     .addComponent(jButtonCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14))
         );
-
-        getAccessibleContext().setAccessibleName("Seleccionar Producto");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
