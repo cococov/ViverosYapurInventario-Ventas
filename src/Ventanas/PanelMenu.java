@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javax.swing.DefaultComboBoxModel;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -285,8 +286,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     public void agregarProducto() throws SQLException {
         String nomProducto = jTextFieldNombreAgregarProducto.getText();
-        String cantidadVenta = jTextFieldCantidadVentaAgregarProducto.getText();
-        String cantidadProduccion = jTextFieldCantidadProdAgregaProducto.getText();
+        int cantidadVenta = Integer.parseInt(jTextFieldCantidadVentaAgregarProducto.getText());
+        int cantidadProduccion = Integer.parseInt(jTextFieldCantidadProdAgregaProducto.getText());
         String precioProducto = jTextFieldPrecioAgregarProducto.getText();
         int tipoProducto = jComboBoxTipoAgregarProducto.getSelectedIndex();
         int tipoPlanta = jComboBoxAgregarTipoPlanta.getSelectedIndex();
@@ -295,17 +296,125 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         String nuevaEspeciePlanta = jTextFieldAgregarEspeciePlanta.getText();
 
         if (tipoProducto == 1) {
+            //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
+            int codTipoPlanta = 0;
+            int codEspeciePlanta = 0;
             if (tipoPlanta == 1) {
+                //ingresar tipo de planta
                 String sql;
                 PreparedStatement st;
-                sql = "INSERT INTO `tipo`(`codtipo`, `nombretipo`) VALUES (?,?)";
+                sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
                 st = conexion.getConnection().prepareStatement(sql);
-                st.setInt(1, 1);
-                st.setString(2, nuevoTipoPlanta);
+                st.setString(1, nuevoTipoPlanta);
                 st.executeUpdate();
+                //obtener codigo de tipo de planta 
+                PreparedStatement st2;
+                ResultSet rs2;
+                sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
+                st2 = conexion.getConnection().prepareStatement(sql);
+                rs2 = st2.executeQuery(sql);
+                while (rs2.next()) {
+                    codTipoPlanta = rs2.getInt(1);
+                }
+                //INGRESAR ESPECIE DE PLANTA
+                PreparedStatement st3;
+                sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                st3 = conexion.getConnection().prepareStatement(sql);
+                st3.setInt(1, codTipoPlanta);
+                st3.setString(2, nuevaEspeciePlanta);
+                st3.executeUpdate();
+                //obtener codigo de especie de planta
+
+                PreparedStatement st4;
+                ResultSet rs4;
+                sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                st4 = conexion.getConnection().prepareStatement(sql);
+                rs4 = st4.executeQuery(sql);
+                while (rs4.next()) {
+                    codEspeciePlanta = rs4.getInt(1);
+                }
+
+            } else {
+                //SOLO AGREGAR ESPECIE DE PLANTA
+                if (especiePlanta == 1) {
+                    String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                    PreparedStatement st;
+                    ResultSet rs;
+                    String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                    st = conexion.getConnection().prepareStatement(sql);
+                    rs = st.executeQuery(sql);
+                    while (rs.next()) {
+                        codTipoPlanta = rs.getInt(1);
+                    }
+
+                    PreparedStatement st2;
+                    sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                    st2 = conexion.getConnection().prepareStatement(sql);
+                    st2.setInt(1, codTipoPlanta);
+                    st2.setString(2, nuevaEspeciePlanta);
+                    st2.executeUpdate();
+
+                    PreparedStatement st4;
+                    ResultSet rs4;
+                    sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                    st4 = conexion.getConnection().prepareStatement(sql);
+                    rs4 = st4.executeQuery(sql);
+                    while (rs4.next()) {
+                        codEspeciePlanta = rs4.getInt(1);
+                    }
+
+                } else {
+
+                    String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                    PreparedStatement st;
+                    ResultSet rs;
+                    String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                    st = conexion.getConnection().prepareStatement(sql);
+                    rs = st.executeQuery(sql);
+                    while (rs.next()) {
+                        codTipoPlanta = rs.getInt(1);
+                    }
+              
+                }
             }
+            //ESPECIE Y TIPO YA ESTAN EN LA LISTA
+
+            PreparedStatement st5;
+            String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`) VALUES (?,?,?,?)";
+            st5 = conexion.getConnection().prepareStatement(sql);
+            st5.setString(1, nomProducto);
+            st5.setInt(2, cantidadVenta);
+            st5.setInt(3, cantidadProduccion);
+            st5.setString(4, " prueba");
+            st5.executeUpdate();
+            
+            int codProduto=0;
+            PreparedStatement st;
+            ResultSet rs;
+            sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '"+ jTextFieldNombreAgregarProducto.getText()+"'";
+            st = conexion.getConnection().prepareStatement(sql);
+            rs = st.executeQuery(sql);
+            while (rs.next()) {
+                codProduto = rs.getInt(1);
+            }
+
+            PreparedStatement st6;
+            sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
+            st6 = conexion.getConnection().prepareStatement(sql);
+            st6.setInt(1, codProduto);
+            st6.setInt(2, codEspeciePlanta);
+            st6.executeUpdate();
+            
+            PreparedStatement st7;
+            sql= "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+            st7= conexion.getConnection().prepareStatement(sql);
+            st7.setInt(1, codProduto);
+            st7.setString(2, precioProducto);
+            st7.executeUpdate();
         }
     }
+
+
 
     private static void Clear_Table1(JTable tabla) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
@@ -314,6 +423,34 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             i -= 1;
         }
     }
+    
+    
+    public void rellenarComboBoxTipoPlanta() throws SQLException {
+        Statement st = conexion.getConnection().createStatement();
+        String sql = "SELECT nombretipo FROM `tipo`";
+        ResultSet rs = st.executeQuery(sql);
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        modelo.addElement("--Opciones--");
+        modelo.addElement("Agregar tipo");
+        while (rs.next()) {
+            modelo.addElement(rs.getString(1));
+        }
+        jComboBoxAgregarTipoPlanta.setModel(modelo);
+    }
+
+    public void rellenarComboBoxEspeciePlanta() throws SQLException {
+        Statement st = conexion.getConnection().createStatement();
+        String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxAgregarTipoPlanta.getSelectedItem() + "'";
+        ResultSet rs = st.executeQuery(sql);
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        modelo.addElement("--Opciones--");
+        modelo.addElement("Agregar especie");
+        while (rs.next()) {
+            modelo.addElement(rs.getString(1));
+        }
+        jComboBoxAgregarEspeciePlanta.setModel(modelo);
+    }
+
 
     public void validarSoloNumeros(JTextField jtext) {
         jtext.addKeyListener(new KeyAdapter() {
@@ -3272,6 +3409,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             jTextFieldAgregarEspeciePlanta.setEnabled(true);
 
         } else {
+            try {
+                rellenarComboBoxEspeciePlanta();
+            } catch (SQLException ex) {
+                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
             jComboBoxAgregarEspeciePlanta.setEnabled(true);
             jTextFieldAgregarTipoPlanta.setEnabled(false);
             jTextFieldAgregarEspeciePlanta.setEnabled(false);
@@ -3285,7 +3427,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     private void jComboBoxTipoAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoAgregarProductoActionPerformed
         if (jComboBoxTipoAgregarProducto.getSelectedIndex() == 1) {
-
+            try {
+                rellenarComboBoxTipoPlanta();
+            } catch (SQLException ex) {
+                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
             jPanelTipoPlanta.setVisible(true);
             jTextFieldAgregarTipoPlanta.setEnabled(false);
             jTextFieldAgregarEspeciePlanta.setEnabled(false);
