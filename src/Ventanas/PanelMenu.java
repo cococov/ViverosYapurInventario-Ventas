@@ -3274,12 +3274,14 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                      }catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                     
+                     jPanelAgregarProveedor.show(false);
+                    jPanelListaProveedor.show(false);
+                    jPanelEditarProveedor.show(true);   
                 }
             }
         }
-        jPanelAgregarProveedor.show(false);
-                    jPanelListaProveedor.show(false);
-                    jPanelEditarProveedor.show(true);       
+            
         // TODO add your handling code here:
     }//GEN-LAST:event_jTableEditarProveedor1MouseClicked
 
