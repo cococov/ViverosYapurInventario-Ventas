@@ -59,6 +59,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         this.jTableEditarCheques.setDefaultRenderer(Object.class, new Render());
         this.jTableVenta.setDefaultRenderer(Object.class, new Render());
         this.jTableListaProductos.setDefaultRenderer(Object.class, new Render());
+        this.jTableEditarProveedor1.setDefaultRenderer(Object.class, new Render());
         this.jPanel4.setVisible(false);
         this.jPanel7.setVisible(false);
         this.jPanel6.setVisible(false);
@@ -73,6 +74,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         validarSoloNumeros(jTextFieldCantidadProdAgregaProducto);
         validarSoloNumeros(jTextFieldCantidadVentaAgregarProducto);
         validarSoloNumeros(jTextFieldDescuentoVenta);
+        validarSoloNumeros(jTextFieldContactoProveedor1);
         this.jTextFieldMontoCheque.addFocusListener(this);
         
         jPanelTipoPlanta.setVisible(false);
@@ -222,7 +224,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 datos[2] = rs2.getString(3);
                 datos[3] = rs2.getDate(4);
                 datos[4] = rs2.getDate(5);
-                datos[5] = rs2.getInt(6);
+                datos[5] = rs2.getString(6);
                 datos[6] = detalles;
                 modelo.addRow(datos);
             }
@@ -322,8 +324,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 sql = "INSERT INTO proveedor(nombreproveedor,descripcionproveedor,apellidosproveedor,contactoproveedor,correoproveedor) values(?,?,?,?,?)";
                 st = conexion.getConnection().prepareStatement(sql);
                 st.setString(1, nombres);
-                st.setString(2, apellidos);
-                st.setString(3, descripcion);
+                st.setString(2, descripcion);
+                st.setString(3, apellidos);
                 st.setString(4, contacto);
                 st.setString(5, correo);
                 st.executeUpdate();
@@ -505,6 +507,35 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jComboBoxTipoListaProductos.setModel(modelo);
     }
     
+    public void refrescarTablaProveedores(){
+        Clear_Table1(jTableEditarProveedor1);
+        String sql;
+        Statement st;
+        ResultSet rs;
+        sql = "SELECT `nombreproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor` FROM `proveedor`";
+        DefaultTableModel modelo = (DefaultTableModel) jTableEditarProveedor1.getModel();
+        JButton detalles= new JButton("Detalles");
+        try {
+            st = conexion.getConnection().createStatement();
+            rs = st.executeQuery(sql);
+            Object[] datos = new Object[5];
+
+            while (rs.next()) {
+
+                datos[0] = rs.getString(1);
+                datos[1] = rs.getString(2);
+                datos[2] = rs.getString(3);
+                datos[3] = rs.getString(4);
+                datos[4] = detalles;
+                modelo.addRow(datos);
+
+            }
+            jTableEditarProveedor1.setModel(modelo);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     
 
@@ -1269,7 +1300,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             }
         });
 
-        jButtonEditarProducto.setText("Editar Producto");
+        jButtonEditarProducto.setText("Lista Productos");
         jButtonEditarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEditarProductoActionPerformed(evt);
@@ -2595,9 +2626,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                         .addGap(86, 86, 86)
                         .addComponent(jButtonAgregarProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
-                        .addComponent(jButtonBloquearProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonEditarProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
-                        .addComponent(jButtonEditarProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButtonBloquearProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -3216,6 +3247,39 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jButtonEditarProductoActionPerformed
 
     private void jTableEditarProveedor1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEditarProveedor1MouseClicked
+        int column = jTableEditarProveedor1.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableEditarProveedor1.getRowHeight();
+        if (row < jTableEditarProveedor1.getRowCount() && row >= 0 && column < jTableEditarProveedor1.getColumnCount() && column >= 0) {
+            Object value = jTableEditarProveedor1.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                if (boton.getText().equals("Detalles")) {
+                    String numeroCheque = String.valueOf(jTableEditarProveedor1.getValueAt(jTableEditarProveedor1.getSelectedRow(), 3));
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT `nombreproveedor`, `descripcionproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor` FROM `proveedor` WHERE correoproveedor= "+ "\"" + numeroCheque + "\"";
+                     try {
+                        st = conexion.getConnection().createStatement();
+                        rs = st.executeQuery(sql);
+
+                        while (rs.next()) {
+                            jTextFieldNombresAgregarP2.setText(rs.getString(1));
+                            jTextAreaProveedor1.setText(rs.getString(2));
+                            jTextFieldApellidosProveedor1.setText(rs.getString(3));
+                            jTextFieldContactoProveedor1.setText(rs.getString(4));
+                            jTextFieldCorreoProveedor1.setText(rs.getString(5));
+                        }
+                     }catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        jPanelAgregarProveedor.show(false);
+                    jPanelListaProveedor.show(false);
+                    jPanelEditarProveedor.show(true);       
         // TODO add your handling code here:
     }//GEN-LAST:event_jTableEditarProveedor1MouseClicked
 
@@ -3224,6 +3288,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jPanelEditarProveedor.show(false);
         jPanelAgregarProveedor.show(false);
         jPanelEliminarProveedor.show(false);
+        refrescarTablaProveedores();
         jPanelListaProveedor.show(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonEditarProveedorActionPerformed
@@ -3386,7 +3451,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     st.setString(9, banco);
                     st.setInt(10, numeroCuenta);
                     st.executeUpdate();
-
+                    JOptionPane.showMessageDialog(null, "Cheque agregado exitosamente");
                     // TODO add your handling code here:
                 } catch (SQLException ex) {
                     Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);

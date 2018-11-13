@@ -856,7 +856,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="jButtonEditarProducto">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Editar Producto"/>
+                <Property name="text" type="java.lang.String" value="Lista Productos"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonEditarProductoActionPerformed"/>
@@ -2531,9 +2531,9 @@
                               <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
                               <Component id="jButtonAgregarProveedor" min="-2" pref="36" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                              <Component id="jButtonBloquearProveedor" min="-2" pref="36" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                               <Component id="jButtonEditarProveedor" min="-2" pref="36" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                              <Component id="jButtonBloquearProveedor" min="-2" pref="36" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
