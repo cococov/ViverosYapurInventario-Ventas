@@ -1540,6 +1540,14 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 jTextFieldFiltrarPorLetrasActionPerformed(evt);
             }
         });
+        jTextFieldFiltrarPorLetras.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldFiltrarPorLetrasKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldFiltrarPorLetrasKeyReleased(evt);
+            }
+        });
 
         jLabelEspecieListaProductos.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabelEspecieListaProductos.setText("Especie:");
@@ -3672,6 +3680,17 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxEspecieProductoActionPerformed
 
+    private void jTextFieldFiltrarPorLetrasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasKeyPressed
+        
+        
+         // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasKeyPressed
+
+    private void jTextFieldFiltrarPorLetrasKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasKeyReleased
+    refrescarTablaListaProductos();   
+     // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -3724,6 +3743,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         String producto = this.jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedItem().toString();
         String tipo = this.jComboBoxTipoListaProductos.getSelectedItem().toString();
         String especie = "";
+        String filtroNombre= this.jTextFieldFiltrarPorLetras.getText();
         if (producto.equals("Planta")) {
             if (this.jComboBoxEspecieProducto.getSelectedItem() != null) {
                 especie = this.jComboBoxEspecieProducto.getSelectedItem().toString();
@@ -3733,24 +3753,24 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             if (tipo.equals("--Seleccionar tipo--")) {
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                         + "FROM producto P, preciohistoricoproducto PH, planta pl "
-                        + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+                        + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%"+ filtroNombre +"%'";
             } else if (especie.equals("--Seleccionar especie--")) {
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                         + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
-                        + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+                        + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%"+ filtroNombre +"%'";
             } else {
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                         + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
-                        + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+                        + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%"+ filtroNombre +"%'";
             }
         } else if (producto.equals("Accesorio")) {
             sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                     + "FROM producto P, preciohistoricoproducto PH, accesorio a "
-                    + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+                    + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%"+ filtroNombre +"%'";
         } else {
             sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                     + "FROM producto P, preciohistoricoproducto PH "
-                    + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto)";
+                    + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%"+ filtroNombre +"%'";
         }
         DefaultTableModel modelo = (DefaultTableModel) jTableListaProductos.getModel();
         //editar lo de abajo
