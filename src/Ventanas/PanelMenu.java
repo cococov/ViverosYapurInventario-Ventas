@@ -76,7 +76,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         validarSoloNumeros(jTextFieldDescuentoVenta);
         validarSoloNumeros(jTextFieldContactoProveedor1);
         this.jTextFieldMontoCheque.addFocusListener(this);
-        
+
         jPanelTipoPlanta.setVisible(false);
 
         if (datos[5].equals("2")) {
@@ -102,55 +102,74 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         this.setLocationRelativeTo(null);
     }
     
-    public static void limpiarCarrito(){
-        carrito = new Producto [1000];
-        cantProductosCarrito = 0;
+    public static boolean eliminarDelCarrito(Producto []carro, int x){
+        if(x<cantProductosCarrito && x>=0){
+            carrito[x]=null;
+            for(int i=x; i<=cantProductosCarrito-1; i++){
+                carrito[x]=carrito[x+1];
+            }
+            cantProductosCarrito--;
+            carrito[cantProductosCarrito]=null;
+            return true;
+        }else{
+            return false;
+        }
     }
     
-    public static void agregarProductoCarrito(Producto p){
+    public static void limpiarCarrito() {
+        carrito = new Producto[1000];
+        cantProductosCarrito = 0;
+        
+    }
+
+    public static void agregarProductoCarrito(Producto p) {
         boolean encontrado = false;
-        for(int i = 0; i<cantProductosCarrito;i++){
-            if(carrito[i].getId() == p.getId()){
+        for (int i = 0; i < cantProductosCarrito; i++) {
+            if (carrito[i].getId() == p.getId()) {
                 carrito[i].setCantidad(carrito[i].getCantidad() + p.getCantidad());
                 encontrado = true;
             }
         }
-        if(!encontrado){
-        carrito[cantProductosCarrito] = p;
-        cantProductosCarrito++;
+        if (!encontrado) {
+            carrito[cantProductosCarrito] = p;
+            cantProductosCarrito++;
         }
         refrescarTablaVenta();
     }
-    
+
     public static void refrescarTablaVenta() {
         Clear_Table1(jTableVenta);
         DefaultTableModel modelo = (DefaultTableModel) jTableVenta.getModel();
         Object[] datos = new Object[7];
-        totalGlobal=0;
-        for(int i = 0; i<cantProductosCarrito; i++){
+        totalGlobal = 0;
+        for (int i = 0; i < cantProductosCarrito; i++) {
             datos[0] = carrito[i].getNombre();
-            datos[1] = formatearAEntero(""+carrito[i].getPrecio());
+            datos[1] = formatearAEntero("" + carrito[i].getPrecio());
+            
             JButton menos = new JButton("-");
+            if(carrito[i].getCantidad()==1){
+                menos.setEnabled(false);
+            }
             datos[2] = menos;
             datos[3] = carrito[i].getCantidad();
             JButton mas = new JButton("+");
             datos[4] = mas;
-            int total = carrito[i].getCantidad() * carrito[i].getPrecio(); 
-            datos[5] = formatearAEntero(""+total);
-            JButton eliminar = new JButton("x");
+            int total = carrito[i].getCantidad() * carrito[i].getPrecio();
+            datos[5] = formatearAEntero("" + total);
+            JButton eliminar = new JButton("X");
             datos[6] = eliminar;
             modelo.addRow(datos);
-            totalGlobal = totalGlobal + total; 
+            totalGlobal = totalGlobal + total;
         }
-        
+
         jTableVenta.setModel(modelo);
-        jLabelCalcularNeto.setText(formatearAEntero(""+totalGlobal));
-        int iva = (int)(totalGlobal * 0.19);
-        CalcularIVA.setText(formatearAEntero(""+iva));
-        int total = iva +totalGlobal;
-        jLabelPrecioAPagar.setText(formatearAEntero(""+total));
+        jLabelCalcularNeto.setText(formatearAEntero("" + totalGlobal));
+        int iva = (int) (totalGlobal * 0.19);
+        CalcularIVA.setText(formatearAEntero("" + iva));
+        int total = iva + totalGlobal;
+        jLabelPrecioAPagar.setText(formatearAEntero("" + total));
     }
-    
+
     public void refrescarTablaBloquearUsuario() {
         Clear_Table1(jTableBloquearUsuario);
         JButton bloquear = new JButton("Bloquear");
@@ -302,7 +321,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
         return Integer.parseInt(resultado);
     }
-    
+
     public void agregarProveedor() {
         String sql;
         PreparedStatement st;
@@ -312,14 +331,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             String descripcion = jTextAreaProveedor.getText();
             String contacto = jTextFieldContactoProveedor.getText();
             String correo = jTextFieldCorreoProveedor.getText();
-            if (nombres.equalsIgnoreCase("") || apellidos.equals("") || descripcion.equalsIgnoreCase("") || contacto.equalsIgnoreCase("") || correo.equalsIgnoreCase("")) {
-                JOptionPane.showMessageDialog(null, "algunos campos se encuentran vacios");
-                jTextFieldNombresAgregarP1.setText("");
-                jTextFieldApellidosProveedor.setText("");
-                jTextAreaProveedor.setText("");
-                jTextFieldContactoProveedor.setText("");
-                jTextFieldCorreoProveedor.setText("");
-            } else {
+            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este proveedor?");
+            if (confirmar == JOptionPane.YES_OPTION) {
                 //if(validarSoloNumeros(jTextFieldContactoProveedor))
                 sql = "INSERT INTO proveedor(nombreproveedor,descripcionproveedor,apellidosproveedor,contactoproveedor,correoproveedor) values(?,?,?,?,?)";
                 st = conexion.getConnection().prepareStatement(sql);
@@ -334,8 +347,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 jTextAreaProveedor.setText("");
                 jTextFieldContactoProveedor.setText("");
                 jTextFieldCorreoProveedor.setText("");
-                JOptionPane.showMessageDialog(null, "Proveedor ingresado exitosamente");
+                JOptionPane.showMessageDialog(null, "El nuevo proveedor fue agregado con exito!");
             }
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "ya hay un proveedor con ese rut");
         }
@@ -352,64 +366,37 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         String nuevoTipoPlanta = jTextFieldAgregarTipoPlanta.getText();
         String nuevaEspeciePlanta = jTextFieldAgregarEspeciePlanta.getText();
 
-        if (tipoProducto == 1) {
-            //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
-            int codTipoPlanta = 0;
-            int codEspeciePlanta = 0;
-            if (tipoPlanta == 1) {
-                //ingresar tipo de planta
-                String sql;
-                PreparedStatement st;
-                sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
-                st = conexion.getConnection().prepareStatement(sql);
-                st.setString(1, nuevoTipoPlanta);
-                st.executeUpdate();
-                //obtener codigo de tipo de planta 
-                PreparedStatement st2;
-                ResultSet rs2;
-                sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
-                st2 = conexion.getConnection().prepareStatement(sql);
-                rs2 = st2.executeQuery(sql);
-                while (rs2.next()) {
-                    codTipoPlanta = rs2.getInt(1);
-                }
-                //INGRESAR ESPECIE DE PLANTA
-                PreparedStatement st3;
-                sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
-                st3 = conexion.getConnection().prepareStatement(sql);
-                st3.setInt(1, codTipoPlanta);
-                st3.setString(2, nuevaEspeciePlanta);
-                st3.executeUpdate();
-                //obtener codigo de especie de planta
-
-                PreparedStatement st4;
-                ResultSet rs4;
-                sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
-                st4 = conexion.getConnection().prepareStatement(sql);
-                rs4 = st4.executeQuery(sql);
-                while (rs4.next()) {
-                    codEspeciePlanta = rs4.getInt(1);
-                }
-
-            } else {
-                //SOLO AGREGAR ESPECIE DE PLANTA
-                if (especiePlanta == 1) {
-                    String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+        int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este producto?");
+        if (confirmar == JOptionPane.YES_OPTION) {
+            if (tipoProducto == 1) {
+                //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
+                int codTipoPlanta = 0;
+                int codEspeciePlanta = 0;
+                if (tipoPlanta == 1) {
+                    //ingresar tipo de planta
+                    String sql;
                     PreparedStatement st;
-                    ResultSet rs;
-                    String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                    sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
                     st = conexion.getConnection().prepareStatement(sql);
-                    rs = st.executeQuery(sql);
-                    while (rs.next()) {
-                        codTipoPlanta = rs.getInt(1);
-                    }
-
+                    st.setString(1, nuevoTipoPlanta);
+                    st.executeUpdate();
+                    //obtener codigo de tipo de planta 
                     PreparedStatement st2;
-                    sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                    ResultSet rs2;
+                    sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
                     st2 = conexion.getConnection().prepareStatement(sql);
-                    st2.setInt(1, codTipoPlanta);
-                    st2.setString(2, nuevaEspeciePlanta);
-                    st2.executeUpdate();
+                    rs2 = st2.executeQuery(sql);
+                    while (rs2.next()) {
+                        codTipoPlanta = rs2.getInt(1);
+                    }
+                    //INGRESAR ESPECIE DE PLANTA
+                    PreparedStatement st3;
+                    sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                    st3 = conexion.getConnection().prepareStatement(sql);
+                    st3.setInt(1, codTipoPlanta);
+                    st3.setString(2, nuevaEspeciePlanta);
+                    st3.executeUpdate();
+                    //obtener codigo de especie de planta
 
                     PreparedStatement st4;
                     ResultSet rs4;
@@ -421,57 +408,122 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     }
 
                 } else {
+                    //SOLO AGREGAR ESPECIE DE PLANTA
+                    if (especiePlanta == 1) {
+                        String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                        PreparedStatement st;
+                        ResultSet rs;
+                        String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                        st = conexion.getConnection().prepareStatement(sql);
+                        rs = st.executeQuery(sql);
+                        while (rs.next()) {
+                            codTipoPlanta = rs.getInt(1);
+                        }
 
-                    String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                        PreparedStatement st2;
+                        sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                        st2 = conexion.getConnection().prepareStatement(sql);
+                        st2.setInt(1, codTipoPlanta);
+                        st2.setString(2, nuevaEspeciePlanta);
+                        st2.executeUpdate();
+
+                        PreparedStatement st4;
+                        ResultSet rs4;
+                        sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                        st4 = conexion.getConnection().prepareStatement(sql);
+                        rs4 = st4.executeQuery(sql);
+                        while (rs4.next()) {
+                            codEspeciePlanta = rs4.getInt(1);
+                        }
+
+                    } else {
+
+                        String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                        PreparedStatement st;
+                        ResultSet rs;
+                        String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                        st = conexion.getConnection().prepareStatement(sql);
+                        rs = st.executeQuery(sql);
+                        while (rs.next()) {
+                            codTipoPlanta = rs.getInt(1);
+                        }
+
+                    }
+                }
+
+                //ESPECIE Y TIPO YA ESTAN EN LA LISTA
+                PreparedStatement st5;
+                String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`) VALUES (?,?,?,?)";
+                st5 = conexion.getConnection().prepareStatement(sql);
+                st5.setString(1, nomProducto);
+                st5.setInt(2, cantidadVenta);
+                st5.setInt(3, cantidadProduccion);
+                st5.setString(4, " prueba");
+                st5.executeUpdate();
+
+                int codProduto = 0;
+                PreparedStatement st;
+                ResultSet rs;
+                sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
+                st = conexion.getConnection().prepareStatement(sql);
+                rs = st.executeQuery(sql);
+                while (rs.next()) {
+                    codProduto = rs.getInt(1);
+                }
+
+                PreparedStatement st6;
+                sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
+                st6 = conexion.getConnection().prepareStatement(sql);
+                st6.setInt(1, codProduto);
+                st6.setInt(2, codEspeciePlanta);
+                st6.executeUpdate();
+
+                PreparedStatement st7;
+                sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                st7 = conexion.getConnection().prepareStatement(sql);
+                st7.setInt(1, codProduto);
+                st7.setString(2, precioProducto);
+                st7.executeUpdate();
+
+            } else {
+                if (tipoProducto == 2) {
+                    PreparedStatement st5;
+                    String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`) VALUES (?,?,?,?)";
+                    st5 = conexion.getConnection().prepareStatement(sql);
+                    st5.setString(1, nomProducto);
+                    st5.setInt(2, cantidadVenta);
+                    st5.setInt(3, cantidadProduccion);
+                    st5.setString(4, " prueba");
+                    st5.executeUpdate();
+
+                    int codProduto = 0;
                     PreparedStatement st;
                     ResultSet rs;
-                    String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                    sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
                     st = conexion.getConnection().prepareStatement(sql);
                     rs = st.executeQuery(sql);
                     while (rs.next()) {
-                        codTipoPlanta = rs.getInt(1);
+                        codProduto = rs.getInt(1);
                     }
-              
+
+                    PreparedStatement st6;
+                    sql = "INSERT INTO `accesorio`(`codproducto`) VALUES (?)";
+                    st6 = conexion.getConnection().prepareStatement(sql);
+                    st6.setInt(1, codProduto);
+                    st6.executeUpdate();
+
+                    PreparedStatement st7;
+                    sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                    st7 = conexion.getConnection().prepareStatement(sql);
+                    st7.setInt(1, codProduto);
+                    st7.setString(2, precioProducto);
+                    st7.executeUpdate();
+
                 }
             }
-            //ESPECIE Y TIPO YA ESTAN EN LA LISTA
-
-            PreparedStatement st5;
-            String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`) VALUES (?,?,?,?)";
-            st5 = conexion.getConnection().prepareStatement(sql);
-            st5.setString(1, nomProducto);
-            st5.setInt(2, cantidadVenta);
-            st5.setInt(3, cantidadProduccion);
-            st5.setString(4, " prueba");
-            st5.executeUpdate();
-            
-            int codProduto=0;
-            PreparedStatement st;
-            ResultSet rs;
-            sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '"+ jTextFieldNombreAgregarProducto.getText()+"'";
-            st = conexion.getConnection().prepareStatement(sql);
-            rs = st.executeQuery(sql);
-            while (rs.next()) {
-                codProduto = rs.getInt(1);
-            }
-
-            PreparedStatement st6;
-            sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
-            st6 = conexion.getConnection().prepareStatement(sql);
-            st6.setInt(1, codProduto);
-            st6.setInt(2, codEspeciePlanta);
-            st6.executeUpdate();
-            
-            PreparedStatement st7;
-            sql= "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-            st7= conexion.getConnection().prepareStatement(sql);
-            st7.setInt(1, codProduto);
-            st7.setString(2, precioProducto);
-            st7.executeUpdate();
+            JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
         }
     }
-
-
 
     private static void Clear_Table1(JTable tabla) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
@@ -480,8 +532,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             i -= 1;
         }
     }
-    
-    
+
     public void rellenarComboBoxTipoPlanta() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
         String sql = "SELECT nombretipo FROM `tipo`";
@@ -494,7 +545,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
         jComboBoxAgregarTipoPlanta.setModel(modelo);
     }
-    
+
     public void rellenarComboBoxTipoPlantaListado() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
         String sql = "SELECT nombretipo FROM `tipo`";
@@ -506,15 +557,15 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
         jComboBoxTipoListaProductos.setModel(modelo);
     }
-    
-    public void refrescarTablaProveedores(){
+
+    public void refrescarTablaProveedores() {
         Clear_Table1(jTableEditarProveedor1);
         String sql;
         Statement st;
         ResultSet rs;
         sql = "SELECT `nombreproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor` FROM `proveedor`";
         DefaultTableModel modelo = (DefaultTableModel) jTableEditarProveedor1.getModel();
-        JButton detalles= new JButton("Detalles");
+        JButton detalles = new JButton("Detalles");
         try {
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
@@ -536,8 +587,6 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
 
     public void rellenarComboBoxEspeciePlanta() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
@@ -551,8 +600,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
         jComboBoxAgregarEspeciePlanta.setModel(modelo);
     }
-    
-     public void rellenarComboBoxEspeciePlantaListado() throws SQLException {
+
+    public void rellenarComboBoxEspeciePlantaListado() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
         String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxTipoListaProductos.getSelectedItem() + "'";
         ResultSet rs = st.executeQuery(sql);
@@ -563,8 +612,6 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
         jComboBoxEspecieProducto.setModel(modelo);
     }
-
-
 
     public void validarSoloNumeros(JTextField jtext) {
         jtext.addKeyListener(new KeyAdapter() {
@@ -2714,6 +2761,16 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 return canEdit [columnIndex];
             }
         });
+        jTableVenta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableVentaMouseClicked(evt);
+            }
+        });
+        jTableVenta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTableVentaKeyPressed(evt);
+            }
+        });
         jScrollPane5.setViewportView(jTableVenta);
 
         jLabel35.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -2942,6 +2999,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             if (value instanceof JButton) {
                 ((JButton) value).doClick();
                 JButton boton = (JButton) value;
+
                 String rutBloqueo = String.valueOf(jTableBloquearUsuario.getValueAt(jTableBloquearUsuario.getSelectedRow(), 0));
                 String sql = "UPDATE `usuario` SET `bloqueadoS_N`=? WHERE rutusuario=?";
                 if (!rutBloqueo.equals(datos[0])) {
@@ -2952,10 +3010,12 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                             st.setBoolean(1, true);
                             st.setString(2, rutBloqueo);
                             if (st.executeUpdate() > 0) {
-                                refrescarTablaBloquearUsuario();
-                                JOptionPane.showMessageDialog(null, "El usuario a sido bloqueado", "Operación Exitosa",
-                                        JOptionPane.INFORMATION_MESSAGE);
-
+                                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea bloquear a este usuario?");
+                                if (confirmar == JOptionPane.YES_OPTION) {
+                                    refrescarTablaBloquearUsuario();
+                                    JOptionPane.showMessageDialog(null, "El usuario a sido bloqueado", "Operación Exitosa",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                                }
                             }
                         } else {
                             if (boton.getText().equals("Desbloquear")) {
@@ -2965,9 +3025,12 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                                 st.setString(2, rutBloqueo);
 
                                 if (st.executeUpdate() > 0) {
-                                    refrescarTablaBloquearUsuario();
-                                    JOptionPane.showMessageDialog(null, "El usuario a sido desbloqueado", "Operación Exitosa",
-                                            JOptionPane.INFORMATION_MESSAGE);
+                                    int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea desbloquear a este usuario?");
+                                    if (confirmar == JOptionPane.YES_OPTION) {
+                                        refrescarTablaBloquearUsuario();
+                                        JOptionPane.showMessageDialog(null, "El usuario a sido desbloqueado", "Operación Exitosa",
+                                                JOptionPane.INFORMATION_MESSAGE);
+                                    }
 
                                 }
 
@@ -2978,6 +3041,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     }
 
                 }
+
             }
         }
         // TODO add your handling code here:
@@ -3009,7 +3073,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     st.setInt(5, jComboBoxTipoEditarUsuario.getSelectedIndex() + 1);
                     st.setString(6, jTextFieldRutEditarUsuario.getText());
                     if (st.executeUpdate() > 0) {
-
+                        jTextFieldNombresEditarUsuario.setText("");
+                        jTextFieldApellidoMaternoEditarUsuario.setText("");
+                        jTextFieldApellidoPaternoEditarUsuario.setText("");
+                        jPasswordFieldContraseñaEditarUsuario.setText("");
+                        jPasswordFieldContraseña2EditarUsuario.setText("");
                         JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
                                 JOptionPane.INFORMATION_MESSAGE);
 
@@ -3116,24 +3184,27 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
             if (validarRut(FormatearRUT(rutUsuario))) {
                 if (contrasena.equals(contrasena2)) {
-                    sql = "INSERT INTO `usuario`(`rutusuario`, `nombreusuario`, `passwd`, `apellidopaterno`, `apellidomaterno`, `bloqueadoS_N`,`idrol`) VALUES (?,?,?,?,?,?,?)";
-                    st = conexion.getConnection().prepareStatement(sql);
+                    int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este usuario?");
+                    if (confirmar == JOptionPane.YES_OPTION) {
+                        sql = "INSERT INTO `usuario`(`rutusuario`, `nombreusuario`, `passwd`, `apellidopaterno`, `apellidomaterno`, `bloqueadoS_N`,`idrol`) VALUES (?,?,?,?,?,?,?)";
+                        st = conexion.getConnection().prepareStatement(sql);
 
-                    st.setString(1, rutUsuario);
-                    st.setString(2, nombreUsuario);
-                    st.setString(3, contrasena);
-                    st.setString(4, apellidoP);
-                    st.setString(5, apellidoM);
-                    st.setBoolean(6, false);
-                    st.setInt(7, rol1);
-                    st.executeUpdate();
-                    jTextFieldRutAgregarU.setText("");
-                    jTextFieldNombresAgregarU.setText("");
-                    jTextFieldApellidoPaternoAgregarU.setText("");
-                    jTextFieldApellidoMaternoAgregarU.setText("");
-                    jPasswordFieldConstraseña.setText("");
-                    jPasswordFieldContraseña2.setText("");
-                    JOptionPane.showMessageDialog(null, "El nuevo usuario fue agregado con exito!");
+                        st.setString(1, rutUsuario);
+                        st.setString(2, nombreUsuario);
+                        st.setString(3, contrasena);
+                        st.setString(4, apellidoP);
+                        st.setString(5, apellidoM);
+                        st.setBoolean(6, false);
+                        st.setInt(7, rol1);
+                        st.executeUpdate();
+                        jTextFieldRutAgregarU.setText("");
+                        jTextFieldNombresAgregarU.setText("");
+                        jTextFieldApellidoPaternoAgregarU.setText("");
+                        jTextFieldApellidoMaternoAgregarU.setText("");
+                        jPasswordFieldConstraseña.setText("");
+                        jPasswordFieldContraseña2.setText("");
+                        JOptionPane.showMessageDialog(null, "El nuevo usuario fue agregado con exito!");
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden!");
                 }
@@ -3267,8 +3338,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     String sql;
                     Statement st;
                     ResultSet rs;
-                    sql = "SELECT `nombreproveedor`, `descripcionproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor` FROM `proveedor` WHERE correoproveedor= "+ "\"" + numeroCheque + "\"";
-                     try {
+                    sql = "SELECT `nombreproveedor`, `descripcionproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor` FROM `proveedor` WHERE correoproveedor= " + "\"" + numeroCheque + "\"";
+                    try {
                         st = conexion.getConnection().createStatement();
                         rs = st.executeQuery(sql);
 
@@ -3279,17 +3350,17 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                             jTextFieldContactoProveedor1.setText(rs.getString(4));
                             jTextFieldCorreoProveedor1.setText(rs.getString(5));
                         }
-                     }catch (SQLException ex) {
+                    } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                     
-                     jPanelAgregarProveedor.show(false);
+
+                    jPanelAgregarProveedor.show(false);
                     jPanelListaProveedor.show(false);
-                    jPanelEditarProveedor.show(true);   
+                    jPanelEditarProveedor.show(true);
                 }
             }
         }
-            
+
         // TODO add your handling code here:
     }//GEN-LAST:event_jTableEditarProveedor1MouseClicked
 
@@ -3461,7 +3532,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     st.setString(9, banco);
                     st.setInt(10, numeroCuenta);
                     st.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "Cheque agregado exitosamente");
+                    JOptionPane.showMessageDialog(null, "El nuevo cheque fue agregado con exito!");
                     // TODO add your handling code here:
                 } catch (SQLException ex) {
                     Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -3569,7 +3640,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         seleccionarProducto.setTitle("Seleccionar producto");
         seleccionarProducto.setLocationRelativeTo(null);
         seleccionarProducto.setResizable(false);
-        seleccionarProducto.setVisible(true);        
+        seleccionarProducto.setVisible(true);
     }//GEN-LAST:event_jButtonAgregarProductoAVentaActionPerformed
 
     private void jComboBoxAgregarEspeciePlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAgregarEspeciePlantaActionPerformed
@@ -3639,29 +3710,29 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jTextFieldNumeroCuentaEditarChequeActionPerformed
 
     private void jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed
-         if(jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedIndex()==0){
-             try {
-                 rellenarComboBoxTipoPlantaListado();
-             } catch (SQLException ex) {
-                 Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-             }
-             jComboBoxTipoListaProductos.setSelectedIndex(0);
-             jComboBoxEspecieProducto.setSelectedIndex(0);
-             jLabelTipoPlantaLista.setVisible(true);
-             jLabelEspecieListaProductos.setVisible(true);
-             jComboBoxTipoListaProductos.setVisible(true);
-             jComboBoxEspecieProducto.setVisible(true);
-             
-         }else{
-             
-             jComboBoxTipoListaProductos.setSelectedIndex(0);
-             jComboBoxEspecieProducto.setSelectedIndex(0);
-             jLabelTipoPlantaLista.setVisible(false);
-             jLabelEspecieListaProductos.setVisible(false);
-             jComboBoxTipoListaProductos.setVisible(false);
-             jComboBoxEspecieProducto.setVisible(false);
-         }
-         refrescarTablaListaProductos();
+        if (jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedIndex() == 0) {
+            try {
+                rellenarComboBoxTipoPlantaListado();
+            } catch (SQLException ex) {
+                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            jComboBoxTipoListaProductos.setSelectedIndex(0);
+            jComboBoxEspecieProducto.setSelectedIndex(0);
+            jLabelTipoPlantaLista.setVisible(true);
+            jLabelEspecieListaProductos.setVisible(true);
+            jComboBoxTipoListaProductos.setVisible(true);
+            jComboBoxEspecieProducto.setVisible(true);
+
+        } else {
+
+            jComboBoxTipoListaProductos.setSelectedIndex(0);
+            jComboBoxEspecieProducto.setSelectedIndex(0);
+            jLabelTipoPlantaLista.setVisible(false);
+            jLabelEspecieListaProductos.setVisible(false);
+            jComboBoxTipoListaProductos.setVisible(false);
+            jComboBoxEspecieProducto.setVisible(false);
+        }
+        refrescarTablaListaProductos();
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed
 
@@ -3681,15 +3752,46 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jComboBoxEspecieProductoActionPerformed
 
     private void jTextFieldFiltrarPorLetrasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasKeyPressed
-        
-        
-         // TODO add your handling code here:
+
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldFiltrarPorLetrasKeyPressed
 
     private void jTextFieldFiltrarPorLetrasKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasKeyReleased
-    refrescarTablaListaProductos();   
-     // TODO add your handling code here:
+        refrescarTablaListaProductos();
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldFiltrarPorLetrasKeyReleased
+
+    private void jTableVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableVentaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableVentaKeyPressed
+
+    private void jTableVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableVentaMouseClicked
+        int column = jTableVenta.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableVenta.getRowHeight();
+        if (row < jTableVenta.getRowCount() && row >= 0 && column < jTableVenta.getColumnCount() && column >= 0) {
+            Object value = jTableVenta.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                int fila = jTableVenta.getSelectedRow();
+                if (boton.getText().equals("-")) {
+                    if(carrito[fila].getCantidad()>1){
+                        carrito[fila].setCantidad(carrito[fila].getCantidad() - 1);
+                    }
+                } else {
+                    if (boton.getText().equals("+")) {
+                        carrito[fila].setCantidad(carrito[fila].getCantidad() + 1);
+                    }else{
+                        if(boton.getText().equals("X")){
+                            eliminarDelCarrito(carrito, fila);
+                        }
+                    }
+                }
+                refrescarTablaVenta();
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableVentaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -3733,7 +3835,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
         return retValue;
     }
-    
+
     public void refrescarTablaListaProductos() {
         Clear_Table1(jTableListaProductos);
         JButton info = new JButton("Editar");
@@ -3743,7 +3845,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         String producto = this.jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedItem().toString();
         String tipo = this.jComboBoxTipoListaProductos.getSelectedItem().toString();
         String especie = "";
-        String filtroNombre= this.jTextFieldFiltrarPorLetras.getText();
+        String filtroNombre = this.jTextFieldFiltrarPorLetras.getText();
         if (producto.equals("Planta")) {
             if (this.jComboBoxEspecieProducto.getSelectedItem() != null) {
                 especie = this.jComboBoxEspecieProducto.getSelectedItem().toString();
@@ -3753,24 +3855,24 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             if (tipo.equals("--Seleccionar tipo--")) {
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                         + "FROM producto P, preciohistoricoproducto PH, planta pl "
-                        + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%"+ filtroNombre +"%'";
+                        + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
             } else if (especie.equals("--Seleccionar especie--")) {
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                         + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
-                        + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%"+ filtroNombre +"%'";
+                        + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
             } else {
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                         + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
-                        + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%"+ filtroNombre +"%'";
+                        + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
             }
         } else if (producto.equals("Accesorio")) {
             sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                     + "FROM producto P, preciohistoricoproducto PH, accesorio a "
-                    + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%"+ filtroNombre +"%'";
+                    + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
         } else {
             sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                     + "FROM producto P, preciohistoricoproducto PH "
-                    + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%"+ filtroNombre +"%'";
+                    + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
         }
         DefaultTableModel modelo = (DefaultTableModel) jTableListaProductos.getModel();
         //editar lo de abajo
