@@ -7,6 +7,7 @@ package proyectoyapur;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 /**
  *
  * @author maick
@@ -18,17 +19,15 @@ public class ConnectarBD {
     private static final String password= "";
     private static final String url= "jdbc:mysql://localhost:3306/proyecto-yapur";
 
-    public ConnectarBD() {
+    public ConnectarBD() throws ClassNotFoundException, SQLException {
         connection= null;
-        try{
+        
             Class.forName(driver);
             connection= DriverManager.getConnection(url, user, password);
             if(connection!= null){
                 System.out.println("Conexión establecida..");
             }
-        }catch (ClassNotFoundException | SQLException e){
-            System.out.println("error al conectar"+ e);
-        }
+        
     }
     
     public Connection getConnection(){

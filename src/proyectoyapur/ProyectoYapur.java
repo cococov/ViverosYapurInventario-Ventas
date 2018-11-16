@@ -37,8 +37,8 @@ public class ProyectoYapur {
         }
         /*-------------------------------------------------------*/
         
-        ConnectarBD conexion= new ConnectarBD();
-        Login inicio= new Login(conexion);
+        
+        Login inicio= new Login();
         inicio.setVisible(true);
     }
     

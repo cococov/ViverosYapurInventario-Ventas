@@ -56,6 +56,7 @@ public class Login extends javax.swing.JFrame implements FocusListener {
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
+        jTextFieldUsuario.addFocusListener(this);
     }
 
     public String FormatearRUT(String rut) {
@@ -189,48 +190,55 @@ public class Login extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jPasswordFieldContraseñaActionPerformed
 
     private void jButtonLoguearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoguearActionPerformed
-        String sql;
-        String datos[] = new String[6];
-        boolean bloqueado = true;
-        Statement st;
         try {
-            sql = "SELECT u.rutusuario, u.nombreusuario,u.apellidopaterno,u.apellidomaterno, u.passwd, u.bloqueadoS_N, u.idrol FROM usuario u WHERE u.rutusuario=" + "\"" + jTextFieldUsuario.getText() + "\"";
-            Statement st2 = conexion.getConnection().createStatement();
-            ResultSet rst2 = st2.executeQuery(sql);
-            boolean esta = false;
-            boolean esta2 = false;
-            while (rst2.next()) {
-                datos[0] = rst2.getString(1);
-                datos[1] = rst2.getString(2);
-                datos[2] = rst2.getString(3);
-                datos[3] = rst2.getString(4);
-                datos[4] = rst2.getString(5);
-                bloqueado = rst2.getBoolean(6);
-                datos[5] = rst2.getString(7);
-                if (!bloqueado) {
+            this.conexion = new ConnectarBD();
 
-                    if (jPasswordFieldContraseña.getText().equals(datos[4])) {
-                        esta2 = true;
-                        PanelMenu panel = new PanelMenu(conexion, datos);
-                        panel.setVisible(true);
-                        dispose();
+            String sql;
+            String datos[] = new String[6];
+            boolean bloqueado = true;
+            Statement st;
+            try {
+                sql = "SELECT u.rutusuario, u.nombreusuario,u.apellidopaterno,u.apellidomaterno, u.passwd, u.bloqueadoS_N, u.idrol FROM usuario u WHERE u.rutusuario=" + "\"" + jTextFieldUsuario.getText() + "\"";
+                Statement st2 = conexion.getConnection().createStatement();
+                ResultSet rst2 = st2.executeQuery(sql);
+                boolean esta = false;
+                boolean esta2 = false;
+                while (rst2.next()) {
+                    datos[0] = rst2.getString(1);
+                    datos[1] = rst2.getString(2);
+                    datos[2] = rst2.getString(3);
+                    datos[3] = rst2.getString(4);
+                    datos[4] = rst2.getString(5);
+                    bloqueado = rst2.getBoolean(6);
+                    datos[5] = rst2.getString(7);
+                    if (!bloqueado) {
+
+                        if (jPasswordFieldContraseña.getText().equals(datos[4])) {
+                            esta2 = true;
+                            PanelMenu panel = new PanelMenu(conexion, datos);
+                            panel.setVisible(true);
+                            dispose();
+                        } else {
+                            esta = true;
+                            JOptionPane.showMessageDialog(null, "Contraseña incorrecta!");
+                        }
                     } else {
-                        esta = true;
-                        JOptionPane.showMessageDialog(null, "Contraseña incorrecta!");
+                        esta2 = true;
+                        JOptionPane.showMessageDialog(null, "Usuario bloqueado!");
                     }
-                } else {
-                    esta2 = true;
-                    JOptionPane.showMessageDialog(null, "Usuario bloqueado!");
                 }
-            }
-            if (!esta && !esta2) {
-                JOptionPane.showMessageDialog(null, "usuario no registrado!");
-            }
+                if (!esta && !esta2) {
+                    JOptionPane.showMessageDialog(null, "usuario no registrado!");
+                }
 
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "No hay conexion con el sistema, contacte a soporte");
         } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "No hay conexion con el sistema, contacte a soporte");
         }
-
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonLoguearActionPerformed
 
