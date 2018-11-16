@@ -178,14 +178,22 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             int iva = (int) (totalGlobal * 0.19);
             CalcularIVA.setText(formatearAEntero("" + iva));
             double desc = Double.parseDouble(des) / 100;
-            if (!apreto) {
-                descuento = (int) ((totalGlobal + iva) * desc);
-                total = iva + totalGlobal - descuento;
+            if (desc > 1.0 || desc < 0.0) {
+                JOptionPane.showMessageDialog(null, "Descuento fuera de rango");
+                if (!apreto) {
+                    total = iva + totalGlobal;
+                } else {
+                    total = (pasarAinteger(jLabelPrecioAPagar.getText()));
+                }
             } else {
-                descuento = (int) ((pasarAinteger(jLabelPrecioAPagar.getText())) * desc);
-                total = (pasarAinteger(jLabelPrecioAPagar.getText())) - descuento;
+                if (!apreto) {
+                    descuento = (int) ((totalGlobal + iva) * desc);
+                    total = iva + totalGlobal - descuento;
+                } else {
+                    descuento = (int) ((pasarAinteger(jLabelPrecioAPagar.getText())) * desc);
+                    total = (pasarAinteger(jLabelPrecioAPagar.getText())) - descuento;
+                }
             }
-
             jLabelPrecioAPagar.setText(formatearAEntero("" + total));
         }
 
