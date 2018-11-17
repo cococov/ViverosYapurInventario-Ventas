@@ -68,6 +68,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         this.jPanel12.setVisible(false);
         this.jTextFieldRutEditarUsuario.setEditable(false);
         this.jTextFieldRutEditarUsuario.setEnabled(false);
+        this.jTextFieldDescuentoVenta.setEditable(false);
+        this.jTextFieldDescuentoVenta.setEnabled(true);
         validarSoloNumeros(jTextFieldNumeroChequeAgregar);
         validarSoloNumeros(jTextFieldMontoCheque);
         validarSoloNumeros(jTextFieldNumeroChequeEditar);
@@ -76,6 +78,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         validarSoloNumeros(jTextFieldCantidadVentaAgregarProducto);
         validarSoloNumeros(jTextFieldDescuentoVenta);
         validarSoloNumeros(jTextFieldContactoProveedor1);
+        
         this.jTextFieldMontoCheque.addFocusListener(this);
 
         jPanelTipoPlanta.setVisible(false);
@@ -177,24 +180,14 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             jLabelCalcularNeto.setText(formatearAEntero("" + totalGlobal));
             int iva = (int) (totalGlobal * 0.19);
             CalcularIVA.setText(formatearAEntero("" + iva));
-            double desc = Double.parseDouble(des) / 100;
-            if (desc > 1.0 || desc < 0.0) {
-                JOptionPane.showMessageDialog(null, "Descuento fuera de rango");
-                if (!apreto) {
-                    total = iva + totalGlobal;
-                } else {
-                    total = (pasarAinteger(jLabelPrecioAPagar.getText()));
-                }
-            } else {
-                if (!apreto) {
-                    descuento = (int) ((totalGlobal + iva) * desc);
-                    total = iva + totalGlobal - descuento;
-                } else {
-                    descuento = (int) ((pasarAinteger(jLabelPrecioAPagar.getText())) * desc);
-                    total = (pasarAinteger(jLabelPrecioAPagar.getText())) - descuento;
-                }
-            }
             jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+        }
+        if (datos[0] == null) {
+            jTextFieldDescuentoVenta.setEditable(false);
+            jTextFieldDescuentoVenta.setEnabled(false);
+        } else {
+            jTextFieldDescuentoVenta.setEditable(true);
+            jTextFieldDescuentoVenta.setEnabled(true);
         }
 
     }
@@ -936,7 +929,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabelCalcularNeto = new javax.swing.JLabel();
         jComboBoxMetodoPago = new javax.swing.JComboBox<>();
         jLabel39 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jComboBoxDescuentoVenta = new javax.swing.JComboBox<>();
         jLabelUsuario = new javax.swing.JLabel();
         jButtonCambioUsuario = new javax.swing.JButton();
         jLabelNombreUsuario = new javax.swing.JLabel();
@@ -2825,11 +2818,14 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jRadioButton2.setText("Factura");
 
         jLabel36.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel36.setText("Descuento %:");
+        jLabel36.setText("Descuento:");
 
         jTextFieldDescuentoVenta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextFieldDescuentoVentaKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldDescuentoVentaKeyReleased(evt);
             }
         });
 
@@ -2855,10 +2851,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel39.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel39.setText("Metodo de pago:");
 
-        jButton1.setText("Aplicar Descuento");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jComboBoxDescuentoVenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "%", "Pesos" }));
+        jComboBoxDescuentoVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jComboBoxDescuentoVentaActionPerformed(evt);
             }
         });
 
@@ -2889,9 +2885,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                                     .addComponent(CalcularIVA)
                                     .addComponent(jTextFieldDescuentoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabelCalcularNeto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(54, 54, 54)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxDescuentoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(132, 132, 132)))
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jButtonConfirmarVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -2927,7 +2923,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                         .addComponent(jComboBoxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(46, 46, 46)
                         .addComponent(jButtonConfirmarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 11, Short.MAX_VALUE))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2941,7 +2937,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextFieldDescuentoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1))
+                        .addComponent(jComboBoxDescuentoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel36))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -3844,15 +3840,36 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     }//GEN-LAST:event_jTextFieldDescuentoVentaKeyPressed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (carrito[0] == null) {
-            JOptionPane.showMessageDialog(null, "Carrito de ventas se encuentra vacio");
+    private void jComboBoxDescuentoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDescuentoVentaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxDescuentoVentaActionPerformed
+
+    private void jTextFieldDescuentoVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoVentaKeyReleased
+        int neto = pasarAinteger(jLabelCalcularNeto.getText());
+        int iva = pasarAinteger(CalcularIVA.getText());
+        if (jTextFieldDescuentoVenta.getText().equals("")) {
+            jLabelPrecioAPagar.setText(""+ (neto + iva));
         } else {
-            apreto = true;
-            refrescarTablaVenta();
-            jTextFieldDescuentoVenta.setText("");
+            if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
+                if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
+                    int totalConDescuento = (int)((double)(neto + iva) - (double)((neto + iva) * (double)((double)Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                    jLabelPrecioAPagar.setText("" + totalConDescuento);
+                }
+            } else {
+                if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
+                    
+                    if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
+
+                        int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
+                        jLabelPrecioAPagar.setText("" + totalConDescuento);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Descuento excedido");
+                    }
+                }
+            }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+        
+    }//GEN-LAST:event_jTextFieldDescuentoVentaKeyReleased
 
     /**
      * @param args the command line arguments
@@ -3963,7 +3980,6 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.ButtonGroup BoletaOFactura;
     private static javax.swing.JLabel CalcularIVA;
     private javax.swing.JPanel JPanelVenta;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonAgregarCheque;
     private javax.swing.JButton jButtonAgregarMerma;
     private javax.swing.JButton jButtonAgregarProducto;
@@ -3993,6 +4009,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JButton jButtonRealizarVenta;
     private javax.swing.JComboBox<String> jComboBoxAgregarEspeciePlanta;
     private javax.swing.JComboBox<String> jComboBoxAgregarTipoPlanta;
+    private javax.swing.JComboBox<String> jComboBoxDescuentoVenta;
     private javax.swing.JComboBox<String> jComboBoxEspecieListaProductos1;
     private javax.swing.JComboBox<String> jComboBoxEspecieProducto;
     private javax.swing.JComboBox<String> jComboBoxFiltrarProductoPlantaOAccesorio;
