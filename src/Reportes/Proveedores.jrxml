@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Proveedores" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="83ca18f3-6387-43d7-84e9-6b95923e303a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+     CONCAT(`nombreproveedor`," ",`apellidosproveedor`) AS proveedor,
+     proveedor.`descripcionproveedor` AS proveedor_descripcionproveedor,
+     proveedor.`contactoproveedor` AS proveedor_contactoproveedor,
+     proveedor.`correoproveedor` AS proveedor_correoproveedor
+FROM
+     `proveedor` proveedor]]>
+	</queryString>
+	<field name="proveedor" class="java.lang.String"/>
+	<field name="proveedor_descripcionproveedor" class="java.lang.String"/>
+	<field name="proveedor_contactoproveedor" class="java.lang.String"/>
+	<field name="proveedor_correoproveedor" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="430" y="10" width="91" height="20" uuid="c84972ab-4738-4182-ae0d-c1113f20ca50"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="172" y="10" width="221" height="55" uuid="22176aa6-c796-40fc-ba36-2583c1de2f19"/>
+				<textElement>
+					<font size="36" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Proveedores]]></text>
+			</staticText>
+			<image>
+				<reportElement x="10" y="10" width="106" height="63" uuid="50ca3ab6-9519-4c3f-8459-fdc293a2ac7a"/>
+				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-VentasFin\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="48" splitType="Stretch">
+			<staticText>
+				<reportElement x="209" y="-1" width="127" height="35" uuid="14c81741-e906-4b9d-b5d4-56cb6aec7442"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Viveros Yapur]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="100" height="20" uuid="5562e6cf-ed02-438f-8b22-d00a93d5ebcd"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Proveedor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="157" y="2" width="100" height="20" uuid="dacb400f-d3e5-4af5-bff8-42751b05358f"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Contacto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="2" width="100" height="20" uuid="f4fddc71-185e-4fa7-8172-73d5c7d64e6b"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Correo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="441" y="2" width="100" height="20" uuid="ebfc667e-abec-42b9-a3e6-e572772b18da"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Descipción]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="b5d73397-dd38-4146-b3aa-dd21eabb6d7f"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{proveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="157" y="0" width="100" height="20" uuid="728e380f-0c5d-4606-8320-046dc819b025"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{proveedor_contactoproveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="307" y="0" width="100" height="20" uuid="13fb9dac-c9aa-4783-82b6-e2406774b9f4"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{proveedor_correoproveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="441" y="0" width="100" height="20" uuid="462110be-ecdf-48c8-aa1a-26ada2886c13"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{proveedor_descripcionproveedor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="289" y="-1" width="40" height="20" uuid="ec48dd9f-82a4-43c0-a12e-63c64fd1d417"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="209" y="-1" width="80" height="20" uuid="5054d149-2be9-4eec-acf8-d3554c834512"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
