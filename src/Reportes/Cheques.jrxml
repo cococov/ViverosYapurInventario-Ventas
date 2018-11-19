@@ -36,14 +36,14 @@ FROM
 				</textElement>
 				<text><![CDATA[Cheques]]></text>
 			</staticText>
+			<image>
+				<reportElement x="19" y="11" width="106" height="63" uuid="e992c941-2ad5-4218-b479-7365239772e0"/>
+				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-VentasFin\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="439" y="11" width="100" height="20" uuid="89b942a6-c6c4-462b-a4dc-d0a428229361"/>
+				<reportElement x="439" y="32" width="100" height="20" uuid="b3ca5639-1aaa-4fd1-bb6a-3042490fc98c"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="15" y="3" width="115" height="76" uuid="bbb13f94-c876-4edb-8f80-d5bf9320fe04"/>
-				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -69,7 +69,7 @@ FROM
 			</staticText>
 			<staticText>
 				<reportElement x="218" y="0" width="55" height="20" uuid="4211e157-7d43-4d38-a392-9a5b0f4cc2e9"/>
-				<text><![CDATA[Recepción]]></text>
+				<text><![CDATA[Emision]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="282" y="0" width="64" height="20" uuid="08359e55-fac6-46cc-9941-5b94b78f94f5"/>

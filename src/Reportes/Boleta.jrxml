@@ -13,14 +13,14 @@
 				<textElement>
 					<font size="24"/>
 				</textElement>
-				<text><![CDATA[             Boleta]]></text>
+				<text><![CDATA[Comprobante de Venta]]></text>
 			</staticText>
 			<image>
 				<reportElement x="16" y="4" width="106" height="63" uuid="53f36ade-5c9a-4e2d-8a11-6cd0e5907b7b"/>
 				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
-			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement x="450" y="37" width="100" height="20" uuid="a4d1c485-747f-465d-a0d9-69be505630d4"/>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="457" y="33" width="100" height="20" uuid="23d72c14-49d6-4aec-b2e0-7c13a04661c7"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 		</band>
