@@ -930,6 +930,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jComboBoxMetodoPago = new javax.swing.JComboBox<>();
         jLabel39 = new javax.swing.JLabel();
         jComboBoxDescuentoVenta = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel80 = new javax.swing.JLabel();
+        jLabel82 = new javax.swing.JLabel();
         jLabelUsuario = new javax.swing.JLabel();
         jButtonCambioUsuario = new javax.swing.JButton();
         jLabelNombreUsuario = new javax.swing.JLabel();
@@ -2858,6 +2861,15 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             }
         });
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel2.setText("$");
+
+        jLabel80.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel80.setText("$");
+
+        jLabel82.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel82.setText("$");
+
         javax.swing.GroupLayout jPanelRealizarVentaLayout = new javax.swing.GroupLayout(jPanelRealizarVenta);
         jPanelRealizarVenta.setLayout(jPanelRealizarVentaLayout);
         jPanelRealizarVentaLayout.setHorizontalGroup(
@@ -2874,13 +2886,21 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                             .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
                                 .addComponent(jLabel35)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel82)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabelPrecioAPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
                                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel36)
-                                    .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel40))
-                                .addGap(44, 44, 44)
+                                    .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
+                                        .addComponent(jLabel38, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel80))
+                                    .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
+                                        .addComponent(jLabel40)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel2)))
+                                .addGap(4, 4, 4)
                                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(CalcularIVA)
                                     .addComponent(jTextFieldDescuentoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2928,11 +2948,14 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel40)
-                    .addComponent(jLabelCalcularNeto))
+                    .addComponent(jLabelCalcularNeto)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel38)
-                    .addComponent(CalcularIVA))
+                    .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(CalcularIVA, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel80)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2942,7 +2965,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel35)
-                    .addComponent(jLabelPrecioAPagar))
+                    .addComponent(jLabelPrecioAPagar)
+                    .addComponent(jLabel82))
                 .addGap(21, 21, 21))
         );
 
@@ -3848,12 +3872,12 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         int neto = pasarAinteger(jLabelCalcularNeto.getText());
         int iva = pasarAinteger(CalcularIVA.getText());
         if (jTextFieldDescuentoVenta.getText().equals("")) {
-            jLabelPrecioAPagar.setText(""+ (neto + iva));
+            jLabelPrecioAPagar.setText(""+ formatearAEntero(String.valueOf((neto + iva))));
         } else {
             if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
                 if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
                     int totalConDescuento = (int)((double)(neto + iva) - (double)((neto + iva) * (double)((double)Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
-                    jLabelPrecioAPagar.setText("" + totalConDescuento);
+                    jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
                 }
             } else {
                 if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
@@ -3861,7 +3885,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
 
                         int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
-                        jLabelPrecioAPagar.setText("" + totalConDescuento);
+                        jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
                     } else {
                         JOptionPane.showMessageDialog(null, "Descuento excedido");
                     }
@@ -4034,6 +4058,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
@@ -4100,6 +4125,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JLabel jLabel78;
     private javax.swing.JLabel jLabel79;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel80;
+    private javax.swing.JLabel jLabel82;
     private javax.swing.JLabel jLabel9;
     private static javax.swing.JLabel jLabelCalcularNeto;
     private javax.swing.JLabel jLabelErrorRut;
