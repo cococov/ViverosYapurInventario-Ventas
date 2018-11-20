@@ -732,6 +732,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private void initComponents() {
 
         BoletaOFactura = new javax.swing.ButtonGroup();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jButtonAgregarUsuario = new javax.swing.JButton();
@@ -943,7 +944,20 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         JPanelVenta = new javax.swing.JPanel();
         jButtonRealizarVenta = new javax.swing.JButton();
         jButtonRealizarPresupuesto = new javax.swing.JButton();
+        jButtonListaVentas = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
+        jPanelEditarVenta = new javax.swing.JPanel();
+        jLabel83 = new javax.swing.JLabel();
+        jLabel84 = new javax.swing.JLabel();
+        jTextFieldCodVenta = new javax.swing.JTextField();
+        jLabel85 = new javax.swing.JLabel();
+        jDateChooserFechaVenta = new com.toedter.calendar.JDateChooser();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
+        jLabel86 = new javax.swing.JLabel();
+        jComboBoxTipoDePago = new javax.swing.JComboBox<>();
+        jScrollPane11 = new javax.swing.JScrollPane();
+        jTableDetallesVenta = new javax.swing.JTable();
         jPanelRealizarVenta = new javax.swing.JPanel();
         jLabel33 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -970,7 +984,19 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel81 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
         jTableListaVentas = new javax.swing.JTable();
-        jButtonListaVentas = new javax.swing.JButton();
+        jPanelDetallesPresupuestos = new javax.swing.JPanel();
+        jLabel87 = new javax.swing.JLabel();
+        jLabel88 = new javax.swing.JLabel();
+        jTextFieldCodVenta1 = new javax.swing.JTextField();
+        jLabel89 = new javax.swing.JLabel();
+        jDateChooserFechaVenta1 = new com.toedter.calendar.JDateChooser();
+        jScrollPane14 = new javax.swing.JScrollPane();
+        jTableDetallesVenta1 = new javax.swing.JTable();
+        jPanelListaPresupuestos = new javax.swing.JPanel();
+        jLabel91 = new javax.swing.JLabel();
+        jScrollPane17 = new javax.swing.JScrollPane();
+        jTableListaVentas1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
         jLabelUsuario = new javax.swing.JLabel();
         jButtonCambioUsuario = new javax.swing.JButton();
         jLabelNombreUsuario = new javax.swing.JLabel();
@@ -2776,7 +2802,150 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             }
         });
 
+        jButtonListaVentas.setText("Lista Ventas");
+        jButtonListaVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonListaVentasActionPerformed(evt);
+            }
+        });
+
         jPanel7.setLayout(new java.awt.CardLayout());
+
+        jLabel83.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel83.setText("Detalles de venta");
+
+        jLabel84.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel84.setText("Id:");
+
+        jTextFieldCodVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldCodVentaActionPerformed(evt);
+            }
+        });
+
+        jLabel85.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel85.setText("Fecha:");
+
+        jRadioButton3.setText("jRadioButton3");
+
+        jRadioButton4.setText("jRadioButton4");
+
+        jLabel86.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel86.setText("Tipo de pago:");
+
+        jComboBoxTipoDePago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jTableDetallesVenta.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Nombre", "Precio", "Cantidad", "Total"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableDetallesVenta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableDetallesVentaMouseClicked(evt);
+            }
+        });
+        jTableDetallesVenta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTableDetallesVentaKeyPressed(evt);
+            }
+        });
+        jScrollPane11.setViewportView(jTableDetallesVenta);
+
+        javax.swing.GroupLayout jPanelEditarVentaLayout = new javax.swing.GroupLayout(jPanelEditarVenta);
+        jPanelEditarVenta.setLayout(jPanelEditarVentaLayout);
+        jPanelEditarVentaLayout.setHorizontalGroup(
+            jPanelEditarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelEditarVentaLayout.createSequentialGroup()
+                .addGroup(jPanelEditarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelEditarVentaLayout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addGroup(jPanelEditarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jRadioButton4)
+                            .addGroup(jPanelEditarVentaLayout.createSequentialGroup()
+                                .addComponent(jLabel84)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldCodVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29)
+                                .addComponent(jLabel85)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jDateChooserFechaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jRadioButton3))
+                            .addComponent(jLabel83, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel86)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBoxTipoDePago, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelEditarVentaLayout.createSequentialGroup()
+                        .addGap(92, 92, 92)
+                        .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(112, Short.MAX_VALUE))
+        );
+        jPanelEditarVentaLayout.setVerticalGroup(
+            jPanelEditarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelEditarVentaLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jLabel83)
+                .addGap(18, 18, 18)
+                .addGroup(jPanelEditarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelEditarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel84)
+                        .addComponent(jTextFieldCodVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel85)
+                        .addComponent(jDateChooserFechaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelEditarVentaLayout.createSequentialGroup()
+                        .addGroup(jPanelEditarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jRadioButton3)
+                            .addComponent(jLabel86)
+                            .addComponent(jComboBoxTipoDePago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButton4)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+                .addGap(47, 47, 47))
+        );
+
+        jPanel7.add(jPanelEditarVenta, "card4");
 
         jLabel33.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel33.setText("Venta");
@@ -2837,9 +3006,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         });
         jScrollPane5.setViewportView(jTableVenta);
         if (jTableVenta.getColumnModel().getColumnCount() > 0) {
+            jTableVenta.getColumnModel().getColumn(2).setHeaderValue("-");
             jTableVenta.getColumnModel().getColumn(4).setHeaderValue("+");
-            jTableVenta.getColumnModel().getColumn(5).setResizable(false);
-            jTableVenta.getColumnModel().getColumn(5).setHeaderValue("Total");
             jTableVenta.getColumnModel().getColumn(6).setResizable(false);
             jTableVenta.getColumnModel().getColumn(6).setHeaderValue("X");
         }
@@ -3018,7 +3186,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jPanel7.add(jPanelRealizarVenta, "card2");
 
         jLabel81.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel81.setText("Lista Ventas");
+        jLabel81.setText("Lista de ventas");
 
         jTableListaVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -3083,31 +3251,223 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             .addGroup(jPanelListaVentasLayout.createSequentialGroup()
                 .addGroup(jPanelListaVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelListaVentasLayout.createSequentialGroup()
-                        .addGap(359, 359, 359)
-                        .addComponent(jLabel81))
-                    .addGroup(jPanelListaVentasLayout.createSequentialGroup()
                         .addGap(102, 102, 102)
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelListaVentasLayout.createSequentialGroup()
+                        .addGap(341, 341, 341)
+                        .addComponent(jLabel81)))
                 .addContainerGap(102, Short.MAX_VALUE))
         );
         jPanelListaVentasLayout.setVerticalGroup(
             jPanelListaVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelListaVentasLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(jLabel81)
                 .addGap(40, 40, 40)
+                .addComponent(jLabel81)
+                .addGap(37, 37, 37)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(68, Short.MAX_VALUE))
         );
 
         jPanel7.add(jPanelListaVentas, "card3");
 
-        jButtonListaVentas.setText("Lista Ventas");
-        jButtonListaVentas.addActionListener(new java.awt.event.ActionListener() {
+        jLabel87.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel87.setText("Detalles de presupuesto");
+
+        jLabel88.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel88.setText("Id:");
+
+        jTextFieldCodVenta1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonListaVentasActionPerformed(evt);
+                jTextFieldCodVenta1ActionPerformed(evt);
             }
         });
+
+        jLabel89.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel89.setText("Fecha:");
+
+        jTableDetallesVenta1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Nombre", "Precio", "Cantidad", "Total"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableDetallesVenta1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableDetallesVenta1MouseClicked(evt);
+            }
+        });
+        jTableDetallesVenta1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTableDetallesVenta1KeyPressed(evt);
+            }
+        });
+        jScrollPane14.setViewportView(jTableDetallesVenta1);
+
+        javax.swing.GroupLayout jPanelDetallesPresupuestosLayout = new javax.swing.GroupLayout(jPanelDetallesPresupuestos);
+        jPanelDetallesPresupuestos.setLayout(jPanelDetallesPresupuestosLayout);
+        jPanelDetallesPresupuestosLayout.setHorizontalGroup(
+            jPanelDetallesPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelDetallesPresupuestosLayout.createSequentialGroup()
+                .addGroup(jPanelDetallesPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelDetallesPresupuestosLayout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addComponent(jLabel88)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextFieldCodVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel89)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jDateChooserFechaVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelDetallesPresupuestosLayout.createSequentialGroup()
+                        .addGap(92, 92, 92)
+                        .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelDetallesPresupuestosLayout.createSequentialGroup()
+                        .addGap(306, 306, 306)
+                        .addComponent(jLabel87)))
+                .addContainerGap(112, Short.MAX_VALUE))
+        );
+        jPanelDetallesPresupuestosLayout.setVerticalGroup(
+            jPanelDetallesPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelDetallesPresupuestosLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jLabel87)
+                .addGap(18, 18, 18)
+                .addGroup(jPanelDetallesPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel88)
+                    .addComponent(jTextFieldCodVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel89)
+                    .addComponent(jDateChooserFechaVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(32, 32, 32)
+                .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                .addGap(47, 47, 47))
+        );
+
+        jPanel7.add(jPanelDetallesPresupuestos, "card4");
+
+        jLabel91.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel91.setText("Lista de presupuestos");
+
+        jTableListaVentas1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Id", "Fecha", "Monto Total", "Tipo", "Metodo Pago", "Detalles"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableListaVentas1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableListaVentas1MouseClicked(evt);
+            }
+        });
+        jTableListaVentas1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTableListaVentas1KeyPressed(evt);
+            }
+        });
+        jScrollPane17.setViewportView(jTableListaVentas1);
+
+        javax.swing.GroupLayout jPanelListaPresupuestosLayout = new javax.swing.GroupLayout(jPanelListaPresupuestos);
+        jPanelListaPresupuestos.setLayout(jPanelListaPresupuestosLayout);
+        jPanelListaPresupuestosLayout.setHorizontalGroup(
+            jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                .addGroup(jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                        .addGap(102, 102, 102)
+                        .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                        .addGap(291, 291, 291)
+                        .addComponent(jLabel91)))
+                .addContainerGap(102, Short.MAX_VALUE))
+        );
+        jPanelListaPresupuestosLayout.setVerticalGroup(
+            jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addComponent(jLabel91)
+                .addGap(39, 39, 39)
+                .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(68, Short.MAX_VALUE))
+        );
+
+        jPanel7.add(jPanelListaPresupuestos, "card3");
+
+        jButton1.setText("Lista Presupuestos");
 
         javax.swing.GroupLayout JPanelVentaLayout = new javax.swing.GroupLayout(JPanelVenta);
         JPanelVenta.setLayout(JPanelVentaLayout);
@@ -3118,7 +3478,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 .addGroup(JPanelVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButtonRealizarPresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
                     .addComponent(jButtonRealizarVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
-                    .addComponent(jButtonListaVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE))
+                    .addComponent(jButtonListaVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(100, 100, 100)
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -3126,17 +3487,19 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         JPanelVentaLayout.setVerticalGroup(
             JPanelVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(JPanelVentaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(80, 80, 80))
+            .addGroup(JPanelVentaLayout.createSequentialGroup()
                 .addGap(86, 86, 86)
                 .addComponent(jButtonRealizarVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
                 .addComponent(jButtonRealizarPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
                 .addComponent(jButtonListaVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(JPanelVentaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(80, 80, 80))
         );
 
         jTabbedPane1.addTab("Ventas", JPanelVenta);
@@ -3510,6 +3873,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private void jButtonRealizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealizarVentaActionPerformed
         jPanel7.setVisible(true);
         jPanelListaVentas.show(false);
+        jPanelEditarVenta.show(false);
         jPanelRealizarVenta.show(true);
         this.jRadioButton1.setSelected(true);
         // TODO add your handling code here:
@@ -4052,6 +4416,38 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTableListaVentasKeyPressed
 
+    private void jTextFieldCodVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCodVentaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldCodVentaActionPerformed
+
+    private void jTableDetallesVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDetallesVentaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableDetallesVentaMouseClicked
+
+    private void jTableDetallesVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableDetallesVentaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableDetallesVentaKeyPressed
+
+    private void jTextFieldCodVenta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCodVenta1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldCodVenta1ActionPerformed
+
+    private void jTableDetallesVenta1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDetallesVenta1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableDetallesVenta1MouseClicked
+
+    private void jTableDetallesVenta1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableDetallesVenta1KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableDetallesVenta1KeyPressed
+
+    private void jTableListaVentas1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaVentas1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableListaVentas1MouseClicked
+
+    private void jTableListaVentas1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableListaVentas1KeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableListaVentas1KeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -4161,6 +4557,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.ButtonGroup BoletaOFactura;
     private static javax.swing.JLabel CalcularIVA;
     private javax.swing.JPanel JPanelVenta;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonAgregarCheque;
     private javax.swing.JButton jButtonAgregarMerma;
     private javax.swing.JButton jButtonAgregarProducto;
@@ -4198,6 +4596,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JComboBox<String> jComboBoxFiltrarTipo1;
     private javax.swing.JComboBox<String> jComboBoxMetodoPago;
     private javax.swing.JComboBox<String> jComboBoxTipoAgregarProducto;
+    private javax.swing.JComboBox<String> jComboBoxTipoDePago;
     private javax.swing.JComboBox<String> jComboBoxTipoEditarUsuario;
     private javax.swing.JComboBox<String> jComboBoxTipoListaProductos;
     private javax.swing.JComboBox<String> jComboBoxTipoUsuarioAgregar;
@@ -4205,6 +4604,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private com.toedter.calendar.JDateChooser jDateChooserFechaEmisionEditarCheque;
     private com.toedter.calendar.JDateChooser jDateChooserFechaVencAgregarCheque;
     private com.toedter.calendar.JDateChooser jDateChooserFechaVencEditarCheque;
+    private com.toedter.calendar.JDateChooser jDateChooserFechaVenta;
+    private com.toedter.calendar.JDateChooser jDateChooserFechaVenta1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -4286,7 +4687,15 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JLabel jLabel80;
     private javax.swing.JLabel jLabel81;
     private javax.swing.JLabel jLabel82;
+    private javax.swing.JLabel jLabel83;
+    private javax.swing.JLabel jLabel84;
+    private javax.swing.JLabel jLabel85;
+    private javax.swing.JLabel jLabel86;
+    private javax.swing.JLabel jLabel87;
+    private javax.swing.JLabel jLabel88;
+    private javax.swing.JLabel jLabel89;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabel91;
     private static javax.swing.JLabel jLabelCalcularNeto;
     private javax.swing.JLabel jLabelErrorRut;
     private javax.swing.JLabel jLabelErrorRut1;
@@ -4315,13 +4724,16 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JPanel jPanelAgregarUsuario;
     private javax.swing.JPanel jPanelBloquearUsuario;
     private javax.swing.JPanel jPanelCobrarCheque;
+    private javax.swing.JPanel jPanelDetallesPresupuestos;
     private javax.swing.JPanel jPanelEditarCheque;
     private javax.swing.JPanel jPanelEditarProducto;
     private javax.swing.JPanel jPanelEditarProveedor;
     private javax.swing.JPanel jPanelEditarUsuario;
+    private javax.swing.JPanel jPanelEditarVenta;
     private javax.swing.JPanel jPanelEliminarProducto;
     private javax.swing.JPanel jPanelEliminarProveedor;
     private javax.swing.JPanel jPanelListaCheque;
+    private javax.swing.JPanel jPanelListaPresupuestos;
     private javax.swing.JPanel jPanelListaProveedor;
     private javax.swing.JPanel jPanelListaUsuarios;
     private javax.swing.JPanel jPanelListaVentas;
@@ -4333,14 +4745,19 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JPasswordField jPasswordFieldContraseñaEditarUsuario;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JRadioButton jRadioButtonHabilitarEdicionUsuario;
     private javax.swing.JRadioButton jRadioButtonHabilitarEditarCheque;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
+    private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane13;
+    private javax.swing.JScrollPane jScrollPane14;
     private javax.swing.JScrollPane jScrollPane15;
     private javax.swing.JScrollPane jScrollPane16;
+    private javax.swing.JScrollPane jScrollPane17;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -4353,12 +4770,15 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTableBloquearUsuario;
     private javax.swing.JTable jTableCobrarCheque;
+    private static javax.swing.JTable jTableDetallesVenta;
+    private static javax.swing.JTable jTableDetallesVenta1;
     private javax.swing.JTable jTableEditarCheques;
     private javax.swing.JTable jTableEditarProveedor1;
     private javax.swing.JTable jTableEditarUsuario;
     private javax.swing.JTable jTableEliminarProveedor2;
     private javax.swing.JTable jTableListaProductos;
     private static javax.swing.JTable jTableListaVentas;
+    private static javax.swing.JTable jTableListaVentas1;
     private static javax.swing.JTable jTableVenta;
     private javax.swing.JTextArea jTextAreaProveedor;
     private javax.swing.JTextArea jTextAreaProveedor1;
@@ -4376,6 +4796,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JTextField jTextFieldBancoEditarCheque;
     private javax.swing.JTextField jTextFieldCantidadProdAgregaProducto;
     private javax.swing.JTextField jTextFieldCantidadVentaAgregarProducto;
+    private javax.swing.JTextField jTextFieldCodVenta;
+    private javax.swing.JTextField jTextFieldCodVenta1;
     private javax.swing.JTextField jTextFieldContactoProveedor;
     private javax.swing.JTextField jTextFieldContactoProveedor1;
     private javax.swing.JTextField jTextFieldCorreoProveedor;
