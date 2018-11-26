@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package proyectoyapur;
 
 import Ventanas.Login;
@@ -11,35 +6,19 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-/**
- *
- * @author maick
- */
-public class ProyectoYapur {
 
-    /**
-     * @param args the command line arguments
-     */
+public class ProyectoYapur {
     
     
     public static void main(String[] args) {
         
        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());//UI depende del sistema operativo
-        } catch (ClassNotFoundException ex) {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(ProyectoYapur.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(ProyectoYapur.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ProyectoYapur.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(ProyectoYapur.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        /*-------------------------------------------------------*/
-        
+        }       
         
         Login inicio= new Login();
         inicio.setVisible(true);
-    }
-    
+    }        
 }
