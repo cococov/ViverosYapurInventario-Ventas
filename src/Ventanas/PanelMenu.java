@@ -256,67 +256,153 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }
 
     public void registrarVenta() throws SQLException {
-        String tipoPago = "";
-        String metodoPago = "";
-        if (jRadioButtonBoleta.isSelected()) {
-            tipoPago = "Boleta";
+        if (carrito[0] != null) {
+            String tipoPago = "";
+            String metodoPago = "";
+            if (jRadioButtonBoleta.isSelected()) {
+                tipoPago = "Boleta";
+            } else {
+                if (jRadioButtonFactura.isSelected()) {
+                    tipoPago = "Factura";
+                }
+            }
+            metodoPago = (String) jComboBoxMetodoPago.getSelectedItem();
+            String totalConDescuento = jLabelPrecioAPagar.getText();
+            int totalSinDesc = pasarAinteger(jLabelCalcularNeto.getText()) + pasarAinteger(CalcularIVA.getText());
+            String totalSinDescuento = formatearAEntero("" + totalSinDesc);
+
+            //si no es cheque
+            if (jComboBoxMetodoPago.getSelectedIndex() != 4) {
+                //Ingresar orden Compra
+                if (jComboBoxMetodoPago.getSelectedIndex() == 0) {
+                    int efectivo;
+                    if (!jTextFieldEfectivo.getText().equalsIgnoreCase("")) {
+                        efectivo = pasarAinteger(jTextFieldEfectivo.getText());
+                    } else {
+                        efectivo = 0;
+                    }
+                    int total = pasarAinteger(jLabelPrecioAPagar.getText());
+                    if (efectivo < total) {
+                        JOptionPane.showMessageDialog(null, "Efectivo es menor que el total");
+                    } else {
+                        String sql4;
+                        PreparedStatement st4;
+                        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`) VALUES (?,?)";
+                        st4 = conexion.getConnection().prepareStatement(sql4);
+                        st4.setString(1, totalConDescuento);
+                        st4.setString(2, totalSinDescuento);
+                        st4.executeUpdate();
+
+                        //obtener id de la compra
+                        String sql2;
+                        Statement st2;
+                        ResultSet rs2;
+                        sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                        st2 = conexion.getConnection().createStatement();
+                        rs2 = st2.executeQuery(sql2);
+                        int codCompra = 0;
+                        while (rs2.next()) {
+                            codCompra = rs2.getInt(1);
+                        }
+
+                        String sql3;
+                        PreparedStatement st3;
+                        //ingresar productos
+                        for (int i = 0; i < cantProductosCarrito; i++) {
+                            sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
+                            st3 = conexion.getConnection().prepareStatement(sql3);
+                            st3.setInt(1, carrito[i].getId());
+                            st3.setInt(2, codCompra);
+                            st3.setInt(3, carrito[i].getCantidad());
+                            st3.executeUpdate();
+                        }
+                        //Ingresar orden compra
+                        String sql1;
+                        PreparedStatement st1;
+                        sql1 = "INSERT INTO `compra`(`codcompra`, `tipopago`, `metodopago`) VALUES (?,?,?)";
+                        st1 = conexion.getConnection().prepareStatement(sql1);
+                        st1.setInt(1, codCompra);
+                        st1.setString(2, tipoPago);
+                        st1.setString(3, metodoPago);
+                        st1.executeUpdate();
+                        JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+                        Clear_Table1(jTableVenta);
+                        jLabelCalcularNeto.setText("0");
+                        CalcularIVA.setText("0");
+                        jTextFieldDescuentoVenta.setText("");
+                        jLabelPrecioAPagar.setText("0");
+                        jTextFieldEfectivo.setText("");
+                        jLabelVuelto.setText("0");
+                        limpiarCarrito();
+                    }
+                } else {
+                    String sql4;
+                    PreparedStatement st4;
+                    sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`) VALUES (?,?)";
+                    st4 = conexion.getConnection().prepareStatement(sql4);
+                    st4.setString(1, totalConDescuento);
+                    st4.setString(2, totalSinDescuento);
+                    st4.executeUpdate();
+
+                    //obtener id de la compra
+                    String sql2;
+                    Statement st2;
+                    ResultSet rs2;
+                    sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                    st2 = conexion.getConnection().createStatement();
+                    rs2 = st2.executeQuery(sql2);
+                    int codCompra = 0;
+                    while (rs2.next()) {
+                        codCompra = rs2.getInt(1);
+                    }
+
+                    String sql3;
+                    PreparedStatement st3;
+                    //ingresar productos
+                    for (int i = 0; i < cantProductosCarrito; i++) {
+                        sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
+                        st3 = conexion.getConnection().prepareStatement(sql3);
+                        st3.setInt(1, carrito[i].getId());
+                        st3.setInt(2, codCompra);
+                        st3.setInt(3, carrito[i].getCantidad());
+                        st3.executeUpdate();
+                    }
+                    //Ingresar orden compra
+                    String sql1;
+                    PreparedStatement st1;
+                    sql1 = "INSERT INTO `compra`(`codcompra`, `tipopago`, `metodopago`) VALUES (?,?,?)";
+                    st1 = conexion.getConnection().prepareStatement(sql1);
+                    st1.setInt(1, codCompra);
+                    st1.setString(2, tipoPago);
+                    st1.setString(3, metodoPago);
+                    st1.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+                    Clear_Table1(jTableVenta);
+                    jLabelCalcularNeto.setText("0");
+                    CalcularIVA.setText("0");
+                    jTextFieldDescuentoVenta.setText("");
+                    jLabelPrecioAPagar.setText("0");
+                    jTextFieldEfectivo.setText("");
+                    jLabelVuelto.setText("0");
+                    limpiarCarrito();
+                }
+            } else {
+                NuevoCheque nuevocheque = new NuevoCheque(conexion, datos, carrito, cantProductosCarrito, totalConDescuento, totalSinDescuento, metodoPago, tipoPago);
+                nuevocheque.setVisible(true);
+                JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+                Clear_Table1(jTableVenta);
+                jLabelCalcularNeto.setText("0");
+                CalcularIVA.setText("0");
+                jTextFieldDescuentoVenta.setText("");
+                jLabelPrecioAPagar.setText("0");
+                jTextFieldEfectivo.setText("");
+                jLabelVuelto.setText("0");
+                limpiarCarrito();
+            }
         } else {
-            if (jRadioButtonFactura.isSelected()) {
-                tipoPago = "Factura";
-            }
+            JOptionPane.showMessageDialog(null, "Aun no a agregado productos a la venta");
         }
-        metodoPago = (String) jComboBoxMetodoPago.getSelectedItem();
-        String totalConDescuento = jLabelPrecioAPagar.getText();
-        int totalSinDesc = pasarAinteger(jLabelCalcularNeto.getText()) + pasarAinteger(CalcularIVA.getText());
-        String totalSinDescuento = formatearAEntero("" + totalSinDesc);
 
-        //si no es cheque
-        if (jComboBoxMetodoPago.getSelectedIndex() != 4) {
-            //Ingresar orden Compra
-            String sql4;
-            PreparedStatement st4;
-            sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`) VALUES (?,?)";
-            st4 = conexion.getConnection().prepareStatement(sql4);
-            st4.setString(1, totalConDescuento);
-            st4.setString(2, totalSinDescuento);
-            st4.executeUpdate();
-
-            //obtener id de la compra
-            String sql2;
-            Statement st2;
-            ResultSet rs2;
-            sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
-            st2 = conexion.getConnection().createStatement();
-            rs2 = st2.executeQuery(sql2);
-            int codCompra = 0;
-            while (rs2.next()) {
-                codCompra = rs2.getInt(1);
-            }
-
-            String sql3;
-            PreparedStatement st3;
-            //ingresar productos
-            for (int i = 0; i < cantProductosCarrito; i++) {
-                sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
-                st3 = conexion.getConnection().prepareStatement(sql3);
-                st3.setInt(1, carrito[i].getId());
-                st3.setInt(2, codCompra);
-                st3.setInt(3, carrito[i].getCantidad());
-                st3.executeUpdate();
-            }
-            //Ingresar orden compra
-            String sql1;
-            PreparedStatement st1;
-            sql1 = "INSERT INTO `compra`(`codcompra`, `tipopago`, `metodopago`) VALUES (?,?,?)";
-            st1 = conexion.getConnection().prepareStatement(sql1);
-            st1.setInt(1, codCompra);
-            st1.setString(2, tipoPago);
-            st1.setString(3, metodoPago);
-            st1.executeUpdate();
-        } else {
-            NuevoCheque nuevocheque = new NuevoCheque(conexion, datos, carrito, cantProductosCarrito, totalConDescuento, totalSinDescuento, metodoPago, tipoPago);
-            nuevocheque.setVisible(true);
-        }
     }
 
     public void refrescarTablaBloquearUsuario() {
@@ -1209,6 +1295,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel103 = new javax.swing.JLabel();
         jLabelVuelto = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
         jLabelUsuario = new javax.swing.JLabel();
         jButtonCambioUsuario = new javax.swing.JButton();
         jLabelNombreUsuario = new javax.swing.JLabel();
@@ -2399,7 +2486,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                             .addComponent(jComboBoxEditarEspeciePlanta, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelTipoPlanta1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jTextFieldIDeditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(35, 35, 35))))
         );
@@ -4020,6 +4107,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         });
 
         jRadioButtonFactura.setText("Factura");
+        jRadioButtonFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonFacturaActionPerformed(evt);
+            }
+        });
 
         jLabel36.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel36.setText("Descuento:");
@@ -4252,6 +4344,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         );
 
         jTabbedPane1.addTab("Ventas", JPanelVenta);
+        jTabbedPane1.addTab("tab6", jTabbedPane2);
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 1210, 600));
 
@@ -5173,6 +5266,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private void jButtonConfirmarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVentaActionPerformed
         try {
             registrarVenta();
+
             // TODO add your handling code here:
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -5180,7 +5274,11 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jButtonConfirmarVentaActionPerformed
 
     private void jRadioButtonBoletaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonBoletaActionPerformed
-        // TODO add your handling code here:
+        if(jRadioButtonBoleta.isSelected()){
+            jRadioButtonFactura.setSelected(false);
+        }else{
+            jRadioButtonFactura.setSelected(true);
+        }
     }//GEN-LAST:event_jRadioButtonBoletaActionPerformed
 
     private void jTextFieldDescuentoVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoVentaKeyPressed
@@ -5225,7 +5323,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jTextFieldDescuentoVentaKeyReleased
 
     private void jComboBoxMetodoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMetodoPagoActionPerformed
-        if (jComboBoxMetodoPago.getSelectedIndex() == 1) {
+        if (jComboBoxMetodoPago.getSelectedIndex() != 0) {
             jTextFieldEfectivo.setEditable(false);
             jTextFieldEfectivo.setEnabled(false);
         } else {
@@ -5691,6 +5789,14 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         }
     }//GEN-LAST:event_jRadioButton5ActionPerformed
 
+    private void jRadioButtonFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFacturaActionPerformed
+        if(jRadioButtonFactura.isSelected()){
+            jRadioButtonBoleta.setSelected(false);
+        }else{
+            jRadioButtonBoleta.setSelected(true);
+        }
+    }//GEN-LAST:event_jRadioButtonFacturaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -6048,6 +6154,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTableBloquearUsuario;
     private javax.swing.JTable jTableCobrarCheque;
     private static javax.swing.JTable jTableDetallesVenta;
