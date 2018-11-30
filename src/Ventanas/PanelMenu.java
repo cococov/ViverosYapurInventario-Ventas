@@ -110,6 +110,36 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         this.setLocationRelativeTo(null);
     }
 
+    public void reporteTodosProveedores() throws JRException {
+        JasperReport reporte = null;
+        String path = "src\\Reportes\\Proveedores.jasper";
+        reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+        JasperPrint jprint = JasperFillManager.fillReport(reporte, null, conexion.getConnection());
+        JasperViewer view = new JasperViewer(jprint, false);
+        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        view.setVisible(true);
+    }
+    
+    public void reporteTodosInventario() throws JRException{
+        JasperReport reporte = null;
+        String path = "src\\Reportes\\Inventario.jasper";
+        reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+        JasperPrint jprint = JasperFillManager.fillReport(reporte, null, conexion.getConnection());
+        JasperViewer view = new JasperViewer(jprint, false);
+        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        view.setVisible(true);
+    }
+    
+    public void reporteTodosCheques() throws JRException{
+        JasperReport reporte = null;
+        String path = "src\\Reportes\\Cheques.jasper";
+        reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+        JasperPrint jprint = JasperFillManager.fillReport(reporte, null, conexion.getConnection());
+        JasperViewer view = new JasperViewer(jprint, false);
+        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        view.setVisible(true);
+    }
+
     public static boolean eliminarDelCarrito(Producto[] carro, int x) {
         if (x < cantProductosCarrito && x >= 0) {
             carrito[x] = null;
