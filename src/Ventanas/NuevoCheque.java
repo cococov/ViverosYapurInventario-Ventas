@@ -8,6 +8,7 @@ package Ventanas;
 import Clases.Producto;
 import static Ventanas.PanelMenu.cantProductosCarrito;
 import static Ventanas.PanelMenu.carrito;
+import static Ventanas.PanelMenu.pasarAinteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,8 +33,10 @@ public class NuevoCheque extends javax.swing.JFrame {
     private String totalSinDescuento;
     private String metodoPago;
     private String tipoPago;
+    private int neto;
+    private int efectivo;
 
-    public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago) {
+   public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo) {
         initComponents();
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.conexion = conexion;
@@ -47,6 +50,8 @@ public class NuevoCheque extends javax.swing.JFrame {
         this.jTextFieldMontoCheque.setText(totalConDescuento);
         this.jTextFieldMontoCheque.setEnabled(false);
         this.jTextFieldMontoCheque.setEditable(false);
+        this.neto=neto;
+        this.efectivo=efectivo;
     }
 
     private NuevoCheque() {
@@ -260,10 +265,12 @@ public class NuevoCheque extends javax.swing.JFrame {
     private void ingresarVenta() throws SQLException {
         String sql4;
         PreparedStatement st4;
-        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`) VALUES (?,?)";
+        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
         st4 = conexion.getConnection().prepareStatement(sql4);
         st4.setString(1, totalConDescuento);
         st4.setString(2, totalSinDescuento);
+        st4.setInt(3, neto);
+        st4.setInt(4, efectivo);
         st4.executeUpdate();
 
         //obtener id de la compra

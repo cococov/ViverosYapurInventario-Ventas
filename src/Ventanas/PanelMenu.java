@@ -287,10 +287,12 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     } else {
                         String sql4;
                         PreparedStatement st4;
-                        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`) VALUES (?,?)";
+                        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
                         st4 = conexion.getConnection().prepareStatement(sql4);
                         st4.setString(1, totalConDescuento);
                         st4.setString(2, totalSinDescuento);
+                        st4.setInt(3, pasarAinteger(jLabelCalcularNeto.getText()));
+                        st4.setInt(4, pasarAinteger(jTextFieldEfectivo.getText()));
                         st4.executeUpdate();
 
                         //obtener id de la compra
@@ -338,10 +340,12 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 } else {
                     String sql4;
                     PreparedStatement st4;
-                    sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`) VALUES (?,?)";
+                    sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
                     st4 = conexion.getConnection().prepareStatement(sql4);
                     st4.setString(1, totalConDescuento);
                     st4.setString(2, totalSinDescuento);
+                    st4.setInt(3, pasarAinteger(jLabelCalcularNeto.getText()));
+                    st4.setInt(4, pasarAinteger(jTextFieldEfectivo.getText()));
                     st4.executeUpdate();
 
                     //obtener id de la compra
@@ -387,7 +391,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     limpiarCarrito();
                 }
             } else {
-                NuevoCheque nuevocheque = new NuevoCheque(conexion, datos, carrito, cantProductosCarrito, totalConDescuento, totalSinDescuento, metodoPago, tipoPago);
+                int neto = pasarAinteger(jLabelCalcularNeto.getText());
+                int efectivo = pasarAinteger(jTextFieldEfectivo.getText());
+                NuevoCheque nuevocheque = new NuevoCheque(conexion, datos, carrito, cantProductosCarrito, totalConDescuento, totalSinDescuento, metodoPago, tipoPago, neto, efectivo);
                 nuevocheque.setVisible(true);
                 JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
                 Clear_Table1(jTableVenta);
