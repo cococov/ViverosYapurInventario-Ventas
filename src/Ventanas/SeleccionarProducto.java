@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -20,7 +21,7 @@ import proyectoyapur.Render;
  *
  * @author Juan K
  */
-public class SeleccionarProducto extends javax.swing.JFrame {
+public final class SeleccionarProducto extends javax.swing.JFrame {
 
     private ConnectarBD conexion;
     private int column;
@@ -28,6 +29,8 @@ public class SeleccionarProducto extends javax.swing.JFrame {
 
     /**
      * Creates new form SeleccionarProducto
+     * @param conexion
+     * @param datos
      */
     public SeleccionarProducto(ConnectarBD conexion, String datos[]) {
         initComponents();
@@ -150,12 +153,12 @@ public class SeleccionarProducto extends javax.swing.JFrame {
                 modelo.addRow(datos);
             }
             jTableproductos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            jTableproductos.getColumnModel().getColumn(0).setPreferredWidth(27);
-            jTableproductos.getColumnModel().getColumn(1).setPreferredWidth(125);
-            jTableproductos.getColumnModel().getColumn(2).setPreferredWidth(80);
-            jTableproductos.getColumnModel().getColumn(3).setPreferredWidth(80);
-            jTableproductos.getColumnModel().getColumn(4).setPreferredWidth(60);
-            jTableproductos.getColumnModel().getColumn(5).setPreferredWidth(92);
+            jTableproductos.getColumnModel().getColumn(0).setPreferredWidth(25);
+            jTableproductos.getColumnModel().getColumn(1).setPreferredWidth(120);
+            jTableproductos.getColumnModel().getColumn(2).setPreferredWidth(58);
+            jTableproductos.getColumnModel().getColumn(3).setPreferredWidth(58);
+            jTableproductos.getColumnModel().getColumn(4).setPreferredWidth(58);
+            jTableproductos.getColumnModel().getColumn(5).setPreferredWidth(70);
             jTableproductos.setModel(modelo);
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -236,17 +239,17 @@ public class SeleccionarProducto extends javax.swing.JFrame {
             jPanelEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEspecieLayout.createSequentialGroup()
                 .addComponent(jLabel3)
-                .addGap(171, 171, 171)
+                .addGap(166, 166, 166)
                 .addComponent(jComboBoxEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanelEspecieLayout.setVerticalGroup(
             jPanelEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelEspecieLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(10, 10, 10)
                 .addGroup(jPanelEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jComboBoxEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGap(15, 15, 15))
         );
 
         javax.swing.GroupLayout jPanelTipoLayout = new javax.swing.GroupLayout(jPanelTipo);
@@ -254,14 +257,13 @@ public class SeleccionarProducto extends javax.swing.JFrame {
         jPanelTipoLayout.setHorizontalGroup(
             jPanelTipoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelTipoLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(0, 0, 0)
                 .addGroup(jPanelTipoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanelEspecie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelTipoLayout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(187, 187, 187)
-                        .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(182, 182, 182)
+                        .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         jPanelTipoLayout.setVerticalGroup(
             jPanelTipoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -270,7 +272,7 @@ public class SeleccionarProducto extends javax.swing.JFrame {
                 .addGroup(jPanelTipoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(10, 10, 10)
                 .addComponent(jPanelEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -313,6 +315,14 @@ public class SeleccionarProducto extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTableproductos);
+        if (jTableproductos.getColumnModel().getColumnCount() > 0) {
+            jTableproductos.getColumnModel().getColumn(0).setResizable(false);
+            jTableproductos.getColumnModel().getColumn(1).setResizable(false);
+            jTableproductos.getColumnModel().getColumn(2).setResizable(false);
+            jTableproductos.getColumnModel().getColumn(3).setResizable(false);
+            jTableproductos.getColumnModel().getColumn(4).setResizable(false);
+            jTableproductos.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         jButtonAgregar.setText("Agregar");
         jButtonAgregar.addActionListener(new java.awt.event.ActionListener() {
@@ -359,21 +369,19 @@ public class SeleccionarProducto extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(77, 77, 77)
-                                .addComponent(jPanelTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(87, 87, 87)
+                                .addGap(49, 49, 49)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(156, 156, 156)
                                         .addComponent(jComboBoxProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel4)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addGap(241, 241, 241)
+                                        .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(1, 1, 1))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap()
                                 .addComponent(jLabel5)
                                 .addGap(18, 18, 18)
                                 .addComponent(jTextFieldFiltroNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -381,12 +389,15 @@ public class SeleccionarProducto extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButtonCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButtonAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2))))
+                            .addComponent(jScrollPane2)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addComponent(jPanelTipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -396,34 +407,29 @@ public class SeleccionarProducto extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jTextFieldFiltroNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jComboBoxProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(8, 8, 8)
                 .addComponent(jPanelTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jComboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoActionPerformed
-        refrescarTabla();
-        refrescarEspecie();
-    }//GEN-LAST:event_jComboBoxTipoActionPerformed
 
     private void jTextFieldCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCantidadActionPerformed
         // TODO add your handling code here:
@@ -451,11 +457,14 @@ public class SeleccionarProducto extends javax.swing.JFrame {
 
         if (producto.equals("Planta")) {
             this.jPanelTipo.setVisible(true);
+            this.setSize(this.getWidth(), 640);
         } else if (producto.equals("Accesorio")) {
             this.jPanelTipo.setVisible(false);
-        } else {
+            this.setSize(this.getWidth(), 553);
+        } else {            
             this.jPanelTipo.setVisible(false);
-        }
+            this.setSize(this.getWidth(), 553);
+        }     
         refrescarTabla();
     }//GEN-LAST:event_jComboBoxProductoActionPerformed
 
@@ -494,14 +503,19 @@ public class SeleccionarProducto extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTableproductosMouseClicked
 
-    private void jComboBoxEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEspecieActionPerformed
-        refrescarTabla();
-    }//GEN-LAST:event_jComboBoxEspecieActionPerformed
-
     private void jTextFieldFiltroNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltroNombreKeyReleased
         refrescarTabla();
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldFiltroNombreKeyReleased
+
+    private void jComboBoxEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEspecieActionPerformed
+        refrescarTabla();
+    }//GEN-LAST:event_jComboBoxEspecieActionPerformed
+
+    private void jComboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoActionPerformed
+        refrescarTabla();
+        refrescarEspecie();
+    }//GEN-LAST:event_jComboBoxTipoActionPerformed
 
     /**
      * @param args the command line arguments
