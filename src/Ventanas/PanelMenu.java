@@ -5632,7 +5632,6 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         String apellidosCheque = jTextFieldApellidosEditarCheque.getText();
         String descripcion = jTextPaneDescripcionEditarCheque.getText();
         String monto = jTextFieldMontoEditarCheque.getText();
-        
         int numeroCuenta = 0;
         if (!jTextFieldNumeroCuentaEditarCheque.getText().equalsIgnoreCase("")) {
             numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaEditarCheque.getText());
