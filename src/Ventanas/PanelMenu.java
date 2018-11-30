@@ -16,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
@@ -5305,14 +5307,26 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private void jButtonConfirmarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVentaActionPerformed
         try {
             registrarVenta();
-            JasperReport reporte= null;
-            String path= "src\\Reportes\\boleta.jasper";
-            reporte= (JasperReport) JRLoader.loadObjectFromFile(path);
-            JasperPrint jprint= JasperFillManager.fillReport(reporte, null, conexion.getConnection());
-            JasperViewer view= new JasperViewer(jprint,false);
+            JasperReport reporte = null;
+            String path = "src\\Reportes\\boleta.jasper";
+            String sql2;
+            Statement st2;
+            ResultSet rs2;
+            sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+            st2 = conexion.getConnection().createStatement();
+            rs2 = st2.executeQuery(sql2);
+            int codCompra = 0;
+            while (rs2.next()) {
+                codCompra = rs2.getInt(1);
+            }
+            Map parametro = new HashMap();
+            parametro.put("codcompra", codCompra);
+            reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+            JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+            JasperViewer view = new JasperViewer(jprint, false);
             view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             view.setVisible(true);
-            
+
             // TODO add your handling code here:
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
