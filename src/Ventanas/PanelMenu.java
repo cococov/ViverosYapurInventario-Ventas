@@ -4166,6 +4166,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel36.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel36.setText("Descuento:");
 
+        jTextFieldDescuentoVenta.setText("0");
         jTextFieldDescuentoVenta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jTextFieldDescuentoVentaKeyPressed(evt);
@@ -4216,6 +4217,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jLabel101.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel101.setText("Efectivo:");
 
+        jTextFieldEfectivo.setText("0");
         jTextFieldEfectivo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldEfectivoActionPerformed(evt);
@@ -4243,7 +4245,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarVentaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 894, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jButtonConfirmarVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
