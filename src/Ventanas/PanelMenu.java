@@ -4681,9 +4681,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         jPanelAgregarUsuario.show(false);
         jPanelListaUsuarios.show(false);
         jPanelEditarUsuario.show(false);
-
         refrescarTablaBloquearUsuario();
-
         jPanelBloquearUsuario.show(true);
 
         // TODO add your handling code here:
