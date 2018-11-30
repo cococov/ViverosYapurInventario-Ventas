@@ -589,75 +589,54 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     public void agregarProducto() throws SQLException {
         String nomProducto = jTextFieldNombreAgregarProducto.getText();
-        int cantidadVenta = Integer.parseInt(jTextFieldCantidadVentaAgregarProducto.getText());
-        int cantidadProduccion = Integer.parseInt(jTextFieldCantidadProdAgregaProducto.getText());
+        int cantidadVenta = 0;
+        if (!jTextFieldCantidadVentaAgregarProducto.getText().equalsIgnoreCase("")) {
+            cantidadVenta = Integer.parseInt(jTextFieldCantidadVentaAgregarProducto.getText());
+        }
+        int cantidadProduccion = 0;
+        if (!jTextFieldCantidadProdAgregaProducto.getText().equalsIgnoreCase("")) {
+            cantidadProduccion = Integer.parseInt(jTextFieldCantidadProdAgregaProducto.getText());
+        }
         String precioProducto = jTextFieldPrecioAgregarProducto.getText();
         int tipoProducto = jComboBoxTipoAgregarProducto.getSelectedIndex();
         int tipoPlanta = jComboBoxAgregarTipoPlanta.getSelectedIndex();
         int especiePlanta = jComboBoxAgregarEspeciePlanta.getSelectedIndex();
         String nuevoTipoPlanta = jTextFieldAgregarTipoPlanta.getText();
         String nuevaEspeciePlanta = jTextFieldAgregarEspeciePlanta.getText();
+        if (!nomProducto.equalsIgnoreCase("") && cantidadVenta != 0 && cantidadProduccion != 0 && !precioProducto.equalsIgnoreCase("")
+                && tipoProducto != 0 && tipoPlanta != 0 && especiePlanta != 0) {
 
-        int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este producto?");
-        if (confirmar == JOptionPane.YES_OPTION) {
-            if (tipoProducto == 1) {
-                //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
-                int codTipoPlanta = 0;
-                int codEspeciePlanta = 0;
-                if (tipoPlanta == 1) {
-                    //ingresar tipo de planta
-                    String sql;
-                    PreparedStatement st;
-                    sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
-                    st = conexion.getConnection().prepareStatement(sql);
-                    st.setString(1, nuevoTipoPlanta);
-                    st.executeUpdate();
-                    //obtener codigo de tipo de planta 
-                    PreparedStatement st2;
-                    ResultSet rs2;
-                    sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
-                    st2 = conexion.getConnection().prepareStatement(sql);
-                    rs2 = st2.executeQuery(sql);
-                    while (rs2.next()) {
-                        codTipoPlanta = rs2.getInt(1);
-                    }
-                    //INGRESAR ESPECIE DE PLANTA
-                    PreparedStatement st3;
-                    sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
-                    st3 = conexion.getConnection().prepareStatement(sql);
-                    st3.setInt(1, codTipoPlanta);
-                    st3.setString(2, nuevaEspeciePlanta);
-                    st3.executeUpdate();
-                    //obtener codigo de especie de planta
-
-                    PreparedStatement st4;
-                    ResultSet rs4;
-                    sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
-                    st4 = conexion.getConnection().prepareStatement(sql);
-                    rs4 = st4.executeQuery(sql);
-                    while (rs4.next()) {
-                        codEspeciePlanta = rs4.getInt(1);
-                    }
-
-                } else //SOLO AGREGAR ESPECIE DE PLANTA
-                {
-                    if (especiePlanta == 1) {
-                        String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este producto?");
+            if (confirmar == JOptionPane.YES_OPTION) {
+                if (tipoProducto == 1) {
+                    //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
+                    int codTipoPlanta = 0;
+                    int codEspeciePlanta = 0;
+                    if (tipoPlanta == 1) {
+                        //ingresar tipo de planta
+                        String sql;
                         PreparedStatement st;
-                        ResultSet rs;
-                        String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                        sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
                         st = conexion.getConnection().prepareStatement(sql);
-                        rs = st.executeQuery(sql);
-                        while (rs.next()) {
-                            codTipoPlanta = rs.getInt(1);
-                        }
-
+                        st.setString(1, nuevoTipoPlanta);
+                        st.executeUpdate();
+                        //obtener codigo de tipo de planta 
                         PreparedStatement st2;
-                        sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                        ResultSet rs2;
+                        sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
                         st2 = conexion.getConnection().prepareStatement(sql);
-                        st2.setInt(1, codTipoPlanta);
-                        st2.setString(2, nuevaEspeciePlanta);
-                        st2.executeUpdate();
+                        rs2 = st2.executeQuery(sql);
+                        while (rs2.next()) {
+                            codTipoPlanta = rs2.getInt(1);
+                        }
+                        //INGRESAR ESPECIE DE PLANTA
+                        PreparedStatement st3;
+                        sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                        st3 = conexion.getConnection().prepareStatement(sql);
+                        st3.setInt(1, codTipoPlanta);
+                        st3.setString(2, nuevaEspeciePlanta);
+                        st3.executeUpdate();
+                        //obtener codigo de especie de planta
 
                         PreparedStatement st4;
                         ResultSet rs4;
@@ -668,90 +647,121 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                             codEspeciePlanta = rs4.getInt(1);
                         }
 
-                    } else {
+                    } else //SOLO AGREGAR ESPECIE DE PLANTA
+                    {
+                        if (especiePlanta == 1) {
+                            String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                            PreparedStatement st;
+                            ResultSet rs;
+                            String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                            st = conexion.getConnection().prepareStatement(sql);
+                            rs = st.executeQuery(sql);
+                            while (rs.next()) {
+                                codTipoPlanta = rs.getInt(1);
+                            }
 
-                        String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
-                        PreparedStatement st;
-                        ResultSet rs;
-                        String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
-                        st = conexion.getConnection().prepareStatement(sql);
-                        rs = st.executeQuery(sql);
-                        while (rs.next()) {
-                            codTipoPlanta = rs.getInt(1);
+                            PreparedStatement st2;
+                            sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                            st2 = conexion.getConnection().prepareStatement(sql);
+                            st2.setInt(1, codTipoPlanta);
+                            st2.setString(2, nuevaEspeciePlanta);
+                            st2.executeUpdate();
+
+                            PreparedStatement st4;
+                            ResultSet rs4;
+                            sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                            st4 = conexion.getConnection().prepareStatement(sql);
+                            rs4 = st4.executeQuery(sql);
+                            while (rs4.next()) {
+                                codEspeciePlanta = rs4.getInt(1);
+                            }
+
+                        } else {
+
+                            String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                            PreparedStatement st;
+                            ResultSet rs;
+                            String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                            st = conexion.getConnection().prepareStatement(sql);
+                            rs = st.executeQuery(sql);
+                            while (rs.next()) {
+                                codTipoPlanta = rs.getInt(1);
+                            }
+
                         }
-
                     }
+
+                    //ESPECIE Y TIPO YA ESTAN EN LA LISTA
+                    PreparedStatement st5;
+                    String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`) VALUES (?,?,?,?)";
+                    st5 = conexion.getConnection().prepareStatement(sql);
+                    st5.setString(1, nomProducto);
+                    st5.setInt(2, cantidadVenta);
+                    st5.setInt(3, cantidadProduccion);
+                    st5.setString(4, " prueba");
+                    st5.executeUpdate();
+
+                    int codProduto = 0;
+                    PreparedStatement st;
+                    ResultSet rs;
+                    sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
+                    st = conexion.getConnection().prepareStatement(sql);
+                    rs = st.executeQuery(sql);
+                    while (rs.next()) {
+                        codProduto = rs.getInt(1);
+                    }
+
+                    PreparedStatement st6;
+                    sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
+                    st6 = conexion.getConnection().prepareStatement(sql);
+                    st6.setInt(1, codProduto);
+                    st6.setInt(2, codEspeciePlanta);
+                    st6.executeUpdate();
+
+                    PreparedStatement st7;
+                    sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                    st7 = conexion.getConnection().prepareStatement(sql);
+                    st7.setInt(1, codProduto);
+                    st7.setString(2, precioProducto);
+                    st7.executeUpdate();
+
+                } else if (tipoProducto == 2) {
+                    PreparedStatement st5;
+                    String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`) VALUES (?,?,?,?)";
+                    st5 = conexion.getConnection().prepareStatement(sql);
+                    st5.setString(1, nomProducto);
+                    st5.setInt(2, cantidadVenta);
+                    st5.setInt(3, cantidadProduccion);
+                    st5.setString(4, " prueba");
+                    st5.executeUpdate();
+
+                    int codProduto = 0;
+                    PreparedStatement st;
+                    ResultSet rs;
+                    sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
+                    st = conexion.getConnection().prepareStatement(sql);
+                    rs = st.executeQuery(sql);
+                    while (rs.next()) {
+                        codProduto = rs.getInt(1);
+                    }
+
+                    PreparedStatement st6;
+                    sql = "INSERT INTO `accesorio`(`codproducto`) VALUES (?)";
+                    st6 = conexion.getConnection().prepareStatement(sql);
+                    st6.setInt(1, codProduto);
+                    st6.executeUpdate();
+
+                    PreparedStatement st7;
+                    sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                    st7 = conexion.getConnection().prepareStatement(sql);
+                    st7.setInt(1, codProduto);
+                    st7.setString(2, precioProducto);
+                    st7.executeUpdate();
                 }
-
-                //ESPECIE Y TIPO YA ESTAN EN LA LISTA
-                PreparedStatement st5;
-                String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`) VALUES (?,?,?,?)";
-                st5 = conexion.getConnection().prepareStatement(sql);
-                st5.setString(1, nomProducto);
-                st5.setInt(2, cantidadVenta);
-                st5.setInt(3, cantidadProduccion);
-                st5.setString(4, " prueba");
-                st5.executeUpdate();
-
-                int codProduto = 0;
-                PreparedStatement st;
-                ResultSet rs;
-                sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
-                st = conexion.getConnection().prepareStatement(sql);
-                rs = st.executeQuery(sql);
-                while (rs.next()) {
-                    codProduto = rs.getInt(1);
-                }
-
-                PreparedStatement st6;
-                sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
-                st6 = conexion.getConnection().prepareStatement(sql);
-                st6.setInt(1, codProduto);
-                st6.setInt(2, codEspeciePlanta);
-                st6.executeUpdate();
-
-                PreparedStatement st7;
-                sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                st7 = conexion.getConnection().prepareStatement(sql);
-                st7.setInt(1, codProduto);
-                st7.setString(2, precioProducto);
-                st7.executeUpdate();
-
-            } else if (tipoProducto == 2) {
-                PreparedStatement st5;
-                String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`) VALUES (?,?,?,?)";
-                st5 = conexion.getConnection().prepareStatement(sql);
-                st5.setString(1, nomProducto);
-                st5.setInt(2, cantidadVenta);
-                st5.setInt(3, cantidadProduccion);
-                st5.setString(4, " prueba");
-                st5.executeUpdate();
-
-                int codProduto = 0;
-                PreparedStatement st;
-                ResultSet rs;
-                sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
-                st = conexion.getConnection().prepareStatement(sql);
-                rs = st.executeQuery(sql);
-                while (rs.next()) {
-                    codProduto = rs.getInt(1);
-                }
-
-                PreparedStatement st6;
-                sql = "INSERT INTO `accesorio`(`codproducto`) VALUES (?)";
-                st6 = conexion.getConnection().prepareStatement(sql);
-                st6.setInt(1, codProduto);
-                st6.executeUpdate();
-
-                PreparedStatement st7;
-                sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                st7 = conexion.getConnection().prepareStatement(sql);
-                st7.setInt(1, codProduto);
-                st7.setString(2, precioProducto);
-                st7.executeUpdate();
-
+                JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
             }
-            JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Hay algunos campos que se encuentran vacios");
         }
     }
 
@@ -4463,38 +4473,38 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         String apellidoPEditar = jTextFieldApellidoPaternoEditarUsuario.getText();
         String contraseñaEditar = jPasswordFieldContraseñaEditarUsuario.getText();
         String contraseñaEditar2 = jPasswordFieldContraseña2EditarUsuario.getText();
-
-        if (contraseñaEditar.equals(contraseñaEditar2)) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro de editar estos datos?");
-            if (confirmar == JOptionPane.YES_OPTION) {
-                try {
-                    String sql = "UPDATE `usuario` SET `nombreusuario`=?,`passwd`=?,`apellidopaterno`=?,`apellidomaterno`=?,`idrol`=? WHERE rutusuario=?";
-
-                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-                    st.setString(1, nombresEditar);
-                    st.setString(2, contraseñaEditar);
-                    st.setString(3, apellidoPEditar);
-                    st.setString(4, apellidoMEditar);
-                    st.setInt(5, jComboBoxTipoEditarUsuario.getSelectedIndex() + 1);
-                    st.setString(6, jTextFieldRutEditarUsuario.getText());
-                    if (st.executeUpdate() > 0) {
-                        jTextFieldNombresEditarUsuario.setText("");
-                        jTextFieldApellidoMaternoEditarUsuario.setText("");
-                        jTextFieldApellidoPaternoEditarUsuario.setText("");
-                        jPasswordFieldContraseñaEditarUsuario.setText("");
-                        jPasswordFieldContraseña2EditarUsuario.setText("");
-                        JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
-                                JOptionPane.INFORMATION_MESSAGE);
-
+        if (!nombresEditar.equalsIgnoreCase("") && !contraseñaEditar.equalsIgnoreCase("")
+                && !contraseñaEditar2.equalsIgnoreCase("") && !apellidoPEditar.equalsIgnoreCase("") && !apellidoMEditar.equalsIgnoreCase("")) {
+            if (contraseñaEditar.equals(contraseñaEditar2)) {
+                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro de editar estos datos?");
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    try {
+                        String sql = "UPDATE `usuario` SET `nombreusuario`=?,`passwd`=?,`apellidopaterno`=?,`apellidomaterno`=?,`idrol`=? WHERE rutusuario=?";
+                        PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                        st.setString(1, nombresEditar);
+                        st.setString(2, contraseñaEditar);
+                        st.setString(3, apellidoPEditar);
+                        st.setString(4, apellidoMEditar);
+                        st.setInt(5, jComboBoxTipoEditarUsuario.getSelectedIndex() + 1);
+                        st.setString(6, jTextFieldRutEditarUsuario.getText());
+                        if (st.executeUpdate() > 0) {
+                            jTextFieldNombresEditarUsuario.setText("");
+                            jTextFieldApellidoMaternoEditarUsuario.setText("");
+                            jTextFieldApellidoPaternoEditarUsuario.setText("");
+                            jPasswordFieldContraseñaEditarUsuario.setText("");
+                            jPasswordFieldContraseña2EditarUsuario.setText("");
+                            JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden!");
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden!");
-
+            JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonConfirmarEditarUsuarioActionPerformed
@@ -4574,45 +4584,46 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             String apellidoP = jTextFieldApellidoPaternoAgregarU.getText();
             String apellidoM = jTextFieldApellidoMaternoAgregarU.getText();
             String rol = (String) jComboBoxTipoUsuarioAgregar.getSelectedItem();
-            int rol1;
-            if (rol.equals("Administrador")) {
-                rol1 = 1;
-            } else if (rol.equals("Vendedor")) {
-                rol1 = 2;
-            } else {
-                rol1 = 3;
-            }
-
-            if (validarRut(FormatearRUT(rutUsuario))) {
-                if (contrasena.equals(contrasena2)) {
-                    int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este usuario?");
-                    if (confirmar == JOptionPane.YES_OPTION) {
-                        sql = "INSERT INTO `usuario`(`rutusuario`, `nombreusuario`, `passwd`, `apellidopaterno`, `apellidomaterno`, `bloqueadoS_N`,`idrol`) VALUES (?,?,?,?,?,?,?)";
-                        st = conexion.getConnection().prepareStatement(sql);
-
-                        st.setString(1, rutUsuario);
-                        st.setString(2, nombreUsuario);
-                        st.setString(3, contrasena);
-                        st.setString(4, apellidoP);
-                        st.setString(5, apellidoM);
-                        st.setBoolean(6, false);
-                        st.setInt(7, rol1);
-                        st.executeUpdate();
-                        jTextFieldRutAgregarU.setText("");
-                        jTextFieldNombresAgregarU.setText("");
-                        jTextFieldApellidoPaternoAgregarU.setText("");
-                        jTextFieldApellidoMaternoAgregarU.setText("");
-                        jPasswordFieldConstraseña.setText("");
-                        jPasswordFieldContraseña2.setText("");
-                        JOptionPane.showMessageDialog(null, "El nuevo usuario fue agregado con exito!");
+            if (!rutUsuario.equalsIgnoreCase("") && !nombreUsuario.equalsIgnoreCase("") && !contrasena.equalsIgnoreCase("")
+                    && !contrasena2.equalsIgnoreCase("") && !apellidoP.equalsIgnoreCase("") && !apellidoM.equalsIgnoreCase("")) {
+                int rol1;
+                if (rol.equals("Administrador")) {
+                    rol1 = 1;
+                } else if (rol.equals("Vendedor")) {
+                    rol1 = 2;
+                } else {
+                    rol1 = 3;
+                }
+                if (validarRut(FormatearRUT(rutUsuario))) {
+                    if (contrasena.equals(contrasena2)) {
+                        int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este usuario?");
+                        if (confirmar == JOptionPane.YES_OPTION) {
+                            sql = "INSERT INTO `usuario`(`rutusuario`, `nombreusuario`, `passwd`, `apellidopaterno`, `apellidomaterno`, `bloqueadoS_N`,`idrol`) VALUES (?,?,?,?,?,?,?)";
+                            st = conexion.getConnection().prepareStatement(sql);
+                            st.setString(1, rutUsuario);
+                            st.setString(2, nombreUsuario);
+                            st.setString(3, contrasena);
+                            st.setString(4, apellidoP);
+                            st.setString(5, apellidoM);
+                            st.setBoolean(6, false);
+                            st.setInt(7, rol1);
+                            st.executeUpdate();
+                            jTextFieldRutAgregarU.setText("");
+                            jTextFieldNombresAgregarU.setText("");
+                            jTextFieldApellidoPaternoAgregarU.setText("");
+                            jTextFieldApellidoMaternoAgregarU.setText("");
+                            jPasswordFieldConstraseña.setText("");
+                            jPasswordFieldContraseña2.setText("");
+                            JOptionPane.showMessageDialog(null, "El nuevo usuario fue agregado con exito!");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden!");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden!");
+                    JOptionPane.showMessageDialog(null, "No se puede ingresar un usuario con rut invalido!");
                 }
             } else {
-
-                JOptionPane.showMessageDialog(null, "No se puede ingresar un usuario con rut invalido!");
-
+                JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Ya hay un usuario con este rut!");;
@@ -4942,56 +4953,74 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jTableEditarChequesMouseClicked
 
     private void jButtonConfirmarAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregar3ActionPerformed
-        int numeroCheque = Integer.parseInt(jTextFieldNumeroChequeAgregar.getText());
+        int numeroCheque = 0;
+        if (!jTextFieldNumeroChequeAgregar.getText().equals("")) {
+            numeroCheque = Integer.parseInt(jTextFieldNumeroChequeAgregar.getText());
+        }
         String nombresCheque = jTextFieldNombresAgregarCheque.getText();
-        java.util.Date fechaEmisionCheque = jDateChooserFechaEmisionAgregarCheque.getDate();
-        java.sql.Date sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
-        java.util.Date fechaVencCheque = jDateChooserFechaVencAgregarCheque.getDate();
-        java.sql.Date sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
+        java.util.Date fechaEmisionCheque = null;
+        java.sql.Date sqlEmision = null;
+        if (jDateChooserFechaEmisionAgregarCheque.getDate() != null) {
+            fechaEmisionCheque = jDateChooserFechaEmisionAgregarCheque.getDate();
+            sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
+        }
+        java.util.Date fechaVencCheque = null;
+        java.sql.Date sqlVencimiento = null;
+        if (jDateChooserFechaVencAgregarCheque.getDate() != null) {
+            fechaVencCheque = jDateChooserFechaVencAgregarCheque.getDate();
+            sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
+        }
         String apellidosCheque = jTextFieldApellidosAgregarCheque.getText();
         String descripcion = jTextPaneDescripcionAgregarCheque.getText();
         String monto = jTextFieldMontoCheque.getText();
-        int numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaAgregarCheque.getText());
+        int numeroCuenta = 0;
+        if (!jTextFieldNumeroCuentaAgregarCheque.getText().equalsIgnoreCase("")) {
+            numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaAgregarCheque.getText());
+        }
         String banco = jTextFieldBancoAgregarCheque.getText();
+        if (numeroCheque != 0 && !nombresCheque.equalsIgnoreCase("") && !apellidosCheque.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")
+                && !monto.equalsIgnoreCase("") && numeroCuenta != 0 && !banco.equalsIgnoreCase("") && sqlEmision != null && sqlVencimiento != null) {
+            if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
+                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este cheque?");
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    try {
+                        String sql = "INSERT INTO `cheques`(`numerocheque`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `descripcioncheque`, `nombresemisor`, `apellidosemisor`, `chequescobrados_n`, `banco`, `numerocuenta` ) VALUES (?,?,?,?,?,?,?,?,?,?)";
+                        PreparedStatement st = conexion.getConnection().prepareStatement(sql);
 
-        if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este cheque?");
-            if (confirmar == JOptionPane.YES_OPTION) {
-                try {
-                    String sql = "INSERT INTO `cheques`(`numerocheque`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `descripcioncheque`, `nombresemisor`, `apellidosemisor`, `chequescobrados_n`, `banco`, `numerocuenta` ) VALUES (?,?,?,?,?,?,?,?,?,?)";
-                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                        st.setInt(1, numeroCheque);
+                        st.setDate(2, sqlEmision);
+                        st.setDate(3, sqlVencimiento);
+                        st.setString(4, monto);
+                        st.setString(5, descripcion);
+                        st.setString(6, nombresCheque);
+                        st.setString(7, apellidosCheque);
+                        st.setBoolean(8, false);
+                        st.setString(9, banco);
+                        st.setInt(10, numeroCuenta);
+                        st.executeUpdate();
+                        JOptionPane.showMessageDialog(null, "El nuevo cheque fue agregado con exito!");
+                        // TODO add your handling code here:
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    jTextFieldNumeroChequeAgregar.setText("");
+                    jTextFieldNombresAgregarCheque.setText("");
+                    jDateChooserFechaEmisionAgregarCheque.setToolTipText("");
+                    jDateChooserFechaVencAgregarCheque.setToolTipText("");
+                    jTextFieldApellidosAgregarCheque.setText("");
+                    jTextPaneDescripcionAgregarCheque.setText("");
+                    jTextFieldMontoCheque.setText("");
+                    jTextFieldBancoAgregarCheque.setText("");
+                    jTextFieldNumeroCuentaAgregarCheque.setText("");
+                    jDateChooserFechaEmisionAgregarCheque.setCalendar(null);
+                    jDateChooserFechaVencAgregarCheque.setCalendar(null);
 
-                    st.setInt(1, numeroCheque);
-                    st.setDate(2, sqlEmision);
-                    st.setDate(3, sqlVencimiento);
-                    st.setString(4, monto);
-                    st.setString(5, descripcion);
-                    st.setString(6, nombresCheque);
-                    st.setString(7, apellidosCheque);
-                    st.setBoolean(8, false);
-                    st.setString(9, banco);
-                    st.setInt(10, numeroCuenta);
-                    st.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "El nuevo cheque fue agregado con exito!");
-                    // TODO add your handling code here:
-                } catch (SQLException ex) {
-                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                } else {
+                    JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
                 }
-                jTextFieldNumeroChequeAgregar.setText("");
-                jTextFieldNombresAgregarCheque.setText("");
-                jDateChooserFechaEmisionAgregarCheque.setToolTipText("");
-                jDateChooserFechaVencAgregarCheque.setToolTipText("");
-                jTextFieldApellidosAgregarCheque.setText("");
-                jTextPaneDescripcionAgregarCheque.setText("");
-                jTextFieldMontoCheque.setText("");
-                jTextFieldBancoAgregarCheque.setText("");
-                jTextFieldNumeroCuentaAgregarCheque.setText("");
-                jDateChooserFechaEmisionAgregarCheque.setCalendar(null);
-                jDateChooserFechaVencAgregarCheque.setCalendar(null);
-
-            } else {
-                JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Hay campos sin datos");
         }
     }//GEN-LAST:event_jButtonConfirmarAgregar3ActionPerformed
 
@@ -5274,9 +5303,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jButtonConfirmarVentaActionPerformed
 
     private void jRadioButtonBoletaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonBoletaActionPerformed
-        if(jRadioButtonBoleta.isSelected()){
+        if (jRadioButtonBoleta.isSelected()) {
             jRadioButtonFactura.setSelected(false);
-        }else{
+        } else {
             jRadioButtonFactura.setSelected(true);
         }
     }//GEN-LAST:event_jRadioButtonBoletaActionPerformed
@@ -5583,55 +5612,74 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jTableCobrarChequeMouseClicked
 
     private void jButtonConfirmarEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarChequeActionPerformed
-        int numeroCheque = Integer.parseInt(jTextFieldNumeroChequeEditar.getText());
+        int numeroCheque = 0;
+        if (!jTextFieldNumeroChequeEditar.getText().equals("")) {
+            numeroCheque = Integer.parseInt(jTextFieldNumeroChequeEditar.getText());
+        }
         String nombresCheque = jTextFieldNombresEditarCheque.getText();
-        java.util.Date fechaEmisionCheque = jDateChooserFechaEmisionEditarCheque.getDate();
-        java.sql.Date sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
-        java.util.Date fechaVencCheque = jDateChooserFechaVencEditarCheque.getDate();
-        java.sql.Date sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
+        java.util.Date fechaEmisionCheque = null;
+        java.sql.Date sqlEmision = null;
+        if (jDateChooserFechaEmisionEditarCheque.getDate() != null) {
+            fechaEmisionCheque = jDateChooserFechaEmisionEditarCheque.getDate();
+            sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
+        }
+        java.util.Date fechaVencCheque = null;
+        java.sql.Date sqlVencimiento = null;
+        if (jDateChooserFechaVencEditarCheque.getDate() != null) {
+            fechaVencCheque = jDateChooserFechaVencEditarCheque.getDate();
+            sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
+        }
         String apellidosCheque = jTextFieldApellidosEditarCheque.getText();
         String descripcion = jTextPaneDescripcionEditarCheque.getText();
         String monto = jTextFieldMontoEditarCheque.getText();
-        int numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaEditarCheque.getText());
+        int numeroCuenta = 0;
+        if (!jTextFieldNumeroCuentaEditarCheque.getText().equalsIgnoreCase("")) {
+            numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaEditarCheque.getText());
+        }
         String banco = jTextFieldBancoEditarCheque.getText();
-        if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea Editar este cheque?");
-            if (confirmar == JOptionPane.YES_OPTION) {
-                try {
-                    String sql = "UPDATE `cheques` SET `fecharecepcion`=?,"
-                            + "`fechavencimiento`=?,`montocheque`=?,`descripcioncheque`=?,`nombresemisor`=?,"
-                            + "`apellidosemisor`=?,`chequescobrados_n`=?,`banco`=?,`numerocuenta`=? WHERE `numerocheque` = ? ";
-                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-                    st.setDate(1, sqlEmision);
-                    st.setDate(2, sqlVencimiento);
-                    st.setString(3, monto);
-                    st.setString(4, descripcion);
-                    st.setString(5, nombresCheque);
-                    st.setString(6, apellidosCheque);
-                    st.setBoolean(7, false);
-                    st.setString(8, banco);
-                    st.setInt(9, numeroCuenta);
-                    st.setInt(10, numeroCheque);
-                    if (st.executeUpdate() > 0) {
-                        JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
-                                JOptionPane.INFORMATION_MESSAGE);
-                        jTextFieldNumeroChequeEditar.setText("");
-                        jTextFieldNombresEditarCheque.setText("");
-                        jDateChooserFechaEmisionEditarCheque.setDate(null);
-                        jDateChooserFechaVencEditarCheque.setDate(null);
-                        jTextFieldApellidosEditarCheque.setText("");
-                        jTextPaneDescripcionEditarCheque.setText("");
-                        jTextFieldMontoEditarCheque.setText("");
-                        jTextFieldNumeroCuentaEditarCheque.setText("");
-                        jTextFieldBancoEditarCheque.setText("");
-                        jRadioButtonHabilitarEditarCheque.setSelected(false);
+        if (!nombresCheque.equalsIgnoreCase("") && !apellidosCheque.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")
+                && !monto.equalsIgnoreCase("") && numeroCuenta != 0 && !banco.equalsIgnoreCase("") && sqlEmision != null && sqlVencimiento != null) {
+            if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
+                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea Editar este cheque?");
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    try {
+                        String sql = "UPDATE `cheques` SET `fecharecepcion`=?,"
+                                + "`fechavencimiento`=?,`montocheque`=?,`descripcioncheque`=?,`nombresemisor`=?,"
+                                + "`apellidosemisor`=?,`chequescobrados_n`=?,`banco`=?,`numerocuenta`=? WHERE `numerocheque` = ? ";
+                        PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                        st.setDate(1, sqlEmision);
+                        st.setDate(2, sqlVencimiento);
+                        st.setString(3, monto);
+                        st.setString(4, descripcion);
+                        st.setString(5, nombresCheque);
+                        st.setString(6, apellidosCheque);
+                        st.setBoolean(7, false);
+                        st.setString(8, banco);
+                        st.setInt(9, numeroCuenta);
+                        st.setInt(10, numeroCheque);
+                        if (st.executeUpdate() > 0) {
+                            JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            jTextFieldNumeroChequeEditar.setText("");
+                            jTextFieldNombresEditarCheque.setText("");
+                            jDateChooserFechaEmisionEditarCheque.setDate(null);
+                            jDateChooserFechaVencEditarCheque.setDate(null);
+                            jTextFieldApellidosEditarCheque.setText("");
+                            jTextPaneDescripcionEditarCheque.setText("");
+                            jTextFieldMontoEditarCheque.setText("");
+                            jTextFieldNumeroCuentaEditarCheque.setText("");
+                            jTextFieldBancoEditarCheque.setText("");
+                            jRadioButtonHabilitarEditarCheque.setSelected(false);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (SQLException ex) {
-                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                } else {
+                    JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "hay campos que se encuentran salidos");
         }
     }//GEN-LAST:event_jButtonConfirmarEditarChequeActionPerformed
 
@@ -5698,62 +5746,67 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         String precio = jTextFieldPrecioEditarProducto.getText();
         String cod = jTextFieldIDeditarProducto.getText();
         String descripcion = jTextAreaEditarProducto.getText();
-        int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea editar este producto?");
-        if (confirmar == JOptionPane.YES_OPTION) {
-            try {
-                String sql = "UPDATE `producto` SET `nombreproducto`=?,`cantidadproductoventa`=?,`cantidadproductoproduccion`=?,`descripcionproducto`=? WHERE codproducto = '" + cod + "'";
-                String sq2 = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                String sql3 = "SELECT PH.precioproductoneto \n"
-                        + "FROM producto p, preciohistoricoproducto PH \n"
-                        + "where P.codproducto = PH.codproducto AND \n"
-                        + "p.codproducto = " + "\"" + cod + "\" AND \n"
-                        + "PH.fechaproducto = (select MAX(fechaproducto) \n"
-                        + "from preciohistoricoproducto AS PH2 \n"
-                        + "where PH.codproducto = PH2.codproducto)";
-                PreparedStatement st3 = conexion.getConnection().prepareStatement(sql3);
-                ResultSet rs;
-                rs = st3.executeQuery(sql3);
-                int precioAnterior = 0;
-                while (rs.next()) {
-                    precioAnterior = rs.getInt(1);
-                }
-                PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-                if (precioAnterior != Integer.parseInt(precio)) {
-                    PreparedStatement st2 = conexion.getConnection().prepareStatement(sq2);
-                    st2.setInt(1, Integer.parseInt(cod));
-                    st2.setString(2, precio);
-                    st2.executeUpdate();
-                }
-                st.setString(1, nombreproducto);
-                st.setInt(2, Integer.parseInt(cantVentas));
-                st.setInt(3, Integer.parseInt(cantPro));
-                st.setString(4, descripcion);
-                st.executeUpdate();
-                // TODO add your handling code here:
-                if (st.executeUpdate() > 0) {
-                    JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
-                            JOptionPane.INFORMATION_MESSAGE);
-                    if (jComboBoxTipoEditarProducto.getSelectedIndex() == 0) {
-                        jTextFieldIDeditarProducto.setText("");
-                        jTextFieldIDeditarProducto.setText("");
-                        jTextFieldNombreEditarProducto.setText("");
-                        jTextFieldCantidadVentaEditarProducto.setText("");
-                        jTextFieldCantidadProdEditarProducto.setText("");
-                        jTextFieldPrecioEditarProducto.setText("");
-                        jTextAreaEditarProducto.setText("");
-                    } else {
-                        jTextFieldIDeditarProducto.setText("");
-                        jTextFieldIDeditarProducto.setText("");
-                        jTextFieldNombreEditarProducto.setText("");
-                        jTextAreaEditarProducto.setText("");
-                        jTextFieldCantidadVentaEditarProducto.setText("");
-                        jTextFieldCantidadProdEditarProducto.setText("");
-                        jTextFieldPrecioEditarProducto.setText("");
+        if (!nombreproducto.equalsIgnoreCase("") && !cantVentas.equalsIgnoreCase("") && !cantPro.equalsIgnoreCase("")
+                && !precio.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")) {
+            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea editar este producto?");
+            if (confirmar == JOptionPane.YES_OPTION) {
+                try {
+                    String sql = "UPDATE `producto` SET `nombreproducto`=?,`cantidadproductoventa`=?,`cantidadproductoproduccion`=?,`descripcionproducto`=? WHERE codproducto = '" + cod + "'";
+                    String sq2 = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                    String sql3 = "SELECT PH.precioproductoneto \n"
+                            + "FROM producto p, preciohistoricoproducto PH \n"
+                            + "where P.codproducto = PH.codproducto AND \n"
+                            + "p.codproducto = " + "\"" + cod + "\" AND \n"
+                            + "PH.fechaproducto = (select MAX(fechaproducto) \n"
+                            + "from preciohistoricoproducto AS PH2 \n"
+                            + "where PH.codproducto = PH2.codproducto)";
+                    PreparedStatement st3 = conexion.getConnection().prepareStatement(sql3);
+                    ResultSet rs;
+                    rs = st3.executeQuery(sql3);
+                    int precioAnterior = 0;
+                    while (rs.next()) {
+                        precioAnterior = rs.getInt(1);
                     }
+                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                    if (precioAnterior != Integer.parseInt(precio)) {
+                        PreparedStatement st2 = conexion.getConnection().prepareStatement(sq2);
+                        st2.setInt(1, Integer.parseInt(cod));
+                        st2.setString(2, precio);
+                        st2.executeUpdate();
+                    }
+                    st.setString(1, nombreproducto);
+                    st.setInt(2, Integer.parseInt(cantVentas));
+                    st.setInt(3, Integer.parseInt(cantPro));
+                    st.setString(4, descripcion);
+                    st.executeUpdate();
+                    // TODO add your handling code here:
+                    if (st.executeUpdate() > 0) {
+                        JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        if (jComboBoxTipoEditarProducto.getSelectedIndex() == 0) {
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldNombreEditarProducto.setText("");
+                            jTextFieldCantidadVentaEditarProducto.setText("");
+                            jTextFieldCantidadProdEditarProducto.setText("");
+                            jTextFieldPrecioEditarProducto.setText("");
+                            jTextAreaEditarProducto.setText("");
+                        } else {
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldNombreEditarProducto.setText("");
+                            jTextAreaEditarProducto.setText("");
+                            jTextFieldCantidadVentaEditarProducto.setText("");
+                            jTextFieldCantidadProdEditarProducto.setText("");
+                            jTextFieldPrecioEditarProducto.setText("");
+                        }
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else {
+            JOptionPane.showMessageDialog(null, " hay campos que se encuentran vacios");
         }
     }//GEN-LAST:event_jButtonConfirmarEditarProductoActionPerformed
 
@@ -5790,9 +5843,9 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }//GEN-LAST:event_jRadioButton5ActionPerformed
 
     private void jRadioButtonFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFacturaActionPerformed
-        if(jRadioButtonFactura.isSelected()){
+        if (jRadioButtonFactura.isSelected()) {
             jRadioButtonBoleta.setSelected(false);
-        }else{
+        } else {
             jRadioButtonBoleta.setSelected(true);
         }
     }//GEN-LAST:event_jRadioButtonFacturaActionPerformed
