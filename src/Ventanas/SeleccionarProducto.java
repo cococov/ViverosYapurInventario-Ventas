@@ -455,16 +455,20 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
     private void jComboBoxProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxProductoActionPerformed
         String producto = this.jComboBoxProducto.getSelectedItem().toString();
 
-        if (producto.equals("Planta")) {
-            this.jPanelTipo.setVisible(true);
-            this.setSize(this.getWidth(), 640);
-        } else if (producto.equals("Accesorio")) {
-            this.jPanelTipo.setVisible(false);
-            this.setSize(this.getWidth(), 553);
-        } else {            
-            this.jPanelTipo.setVisible(false);
-            this.setSize(this.getWidth(), 553);
-        }     
+        switch (producto) {
+            case "Planta":
+                this.jPanelTipo.setVisible(true);
+                this.setSize(this.getWidth(), 640);
+                break;
+            case "Accesorio":
+                this.jPanelTipo.setVisible(false);
+                this.setSize(this.getWidth(), 553);
+                break;
+            default:     
+                this.jPanelTipo.setVisible(false);
+                this.setSize(this.getWidth(), 553);
+                break;
+        }
         refrescarTabla();
     }//GEN-LAST:event_jComboBoxProductoActionPerformed
 
