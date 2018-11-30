@@ -5,10 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 import proyectoyapur.ConnectarBD;
 
 public class NuevoCheque extends javax.swing.JFrame {
@@ -24,7 +33,7 @@ public class NuevoCheque extends javax.swing.JFrame {
     private int neto;
     private int efectivo;
 
-   public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo) {
+    public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo) {
         initComponents();
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.conexion = conexion;
@@ -38,8 +47,8 @@ public class NuevoCheque extends javax.swing.JFrame {
         this.jTextFieldMontoCheque.setText(totalConDescuento);
         this.jTextFieldMontoCheque.setEnabled(false);
         this.jTextFieldMontoCheque.setEditable(false);
-        this.neto=neto;
-        this.efectivo=efectivo;
+        this.neto = neto;
+        this.efectivo = efectivo;
     }
 
     private NuevoCheque() {
@@ -324,9 +333,32 @@ public class NuevoCheque extends javax.swing.JFrame {
                     st.executeUpdate();
                     JOptionPane.showMessageDialog(null, "El nuevo cheque fue agregado con exito!");
                     ingresarVenta();
+                    JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+                    JasperReport reporte;
+                    String path = "src\\Reportes\\boleta.jasper";
+                    String sql2;
+                    Statement st2;
+                    ResultSet rs2;
+                    sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                    st2 = conexion.getConnection().createStatement();
+                    rs2 = st2.executeQuery(sql2);
+                    int codCompra = 0;
+                    while (rs2.next()) {
+                        codCompra = rs2.getInt(1);
+                    }
+                    Map parametro = new HashMap();
+                    parametro.put("codcompra", codCompra);
+                    reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                    JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+                    JasperViewer view = new JasperViewer(jprint, false);
+                    view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                    view.setVisible(true);
+
                     // TODO add your handling code here:
                 } catch (SQLException ex) {
                     Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (JRException ex) {
+                    Logger.getLogger(NuevoCheque.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 dispose();
             } else {
@@ -364,7 +396,7 @@ public class NuevoCheque extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-        
+
         //</editor-fold>
         //</editor-fold>
 

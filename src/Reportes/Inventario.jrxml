@@ -37,10 +37,6 @@
 				</textElement>
 				<text><![CDATA[Inventario]]></text>
 			</staticText>
-			<image>
-				<reportElement x="10" y="10" width="106" height="63" uuid="6052c97f-8042-483a-a2e8-e6ba52ce71ad"/>
-				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>
