@@ -24,6 +24,12 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 import proyectoyapur.ColorRender;
 import proyectoyapur.Render;
 
@@ -5299,9 +5305,18 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private void jButtonConfirmarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVentaActionPerformed
         try {
             registrarVenta();
-
+            JasperReport reporte= null;
+            String path= "src\\Reportes\\boleta.jasper";
+            reporte= (JasperReport) JRLoader.loadObjectFromFile(path);
+            JasperPrint jprint= JasperFillManager.fillReport(reporte, null, conexion.getConnection());
+            JasperViewer view= new JasperViewer(jprint,false);
+            view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            view.setVisible(true);
+            
             // TODO add your handling code here:
         } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonConfirmarVentaActionPerformed

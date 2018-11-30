@@ -2,9 +2,10 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Boleta" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b3f1c785-2293-45ca-9b07-7c81f28dc7e6">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="138"/>
 	<queryString>
-		<![CDATA[SELECT po.codordencompra,p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, oc.fecha from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=(SELECT MAX(codordencompra) FROM ordencompra) and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto AND ph2.fechaproducto<oc.fecha)]]>
+		<![CDATA[SELECT po.codordencompra,p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, oc.fecha, oc.totalneto, oc.totalcondescuento, (oc.totalsindescuento-oc.totalcondescuento) AS descuento, oc.efectivo, (oc.efectivo-oc.totalcondescuento) as vuelto, oc.totalsindescuento, ph.precioproductoneto
+from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra= (SELECT MAX(codordencompra) FROM ordencompra) and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE  PH.codproducto = PH2.codproducto AND ph2.fechaproducto<oc.fecha)]]>
 	</queryString>
 	<field name="codordencompra" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -22,6 +23,23 @@
 	<field name="fecha" class="java.sql.Timestamp">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="totalneto" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalcondescuento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descuento" class="java.lang.Double"/>
+	<field name="efectivo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vuelto" class="java.lang.Double"/>
+	<field name="totalsindescuento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="precioproductoneto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -34,26 +52,22 @@
 				</textElement>
 				<text><![CDATA[Comprobante de Venta]]></text>
 			</staticText>
-			<image>
-				<reportElement x="16" y="4" width="106" height="63" uuid="53f36ade-5c9a-4e2d-8a11-6cd0e5907b7b"/>
-				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
-			</image>
 			<textField>
-				<reportElement x="453" y="29" width="100" height="20" uuid="67083c87-1694-4b4c-92fc-7f7338adcf36"/>
+				<reportElement x="472" y="18" width="100" height="20" uuid="40fcc72e-538b-4e8f-a59d-e6bc3710e003"/>
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="35" splitType="Stretch">
-			<textField>
-				<reportElement x="122" y="0" width="100" height="20" uuid="3c0d2496-9ac6-4078-85f1-f462be4d703f"/>
-				<textFieldExpression><![CDATA[$F{codordencompra}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="0" y="0" width="122" height="20" uuid="a2b5fb5d-38c1-4f18-856e-7c6e35138a26"/>
 				<text><![CDATA[Codigo de comprobante:]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="122" y="0" width="100" height="20" uuid="481a69bf-8250-47c1-9b26-10ec45e810c1"/>
+				<textFieldExpression><![CDATA[$F{codordencompra}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -72,32 +86,89 @@
 			</staticText>
 			<staticText>
 				<reportElement x="299" y="0" width="100" height="20" uuid="1c8663b6-aa9e-4e44-bdd0-eaeabca9efda"/>
-				<text><![CDATA[Precio]]></text>
+				<text><![CDATA[Precio neto unidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="0" width="100" height="20" uuid="8ca31f61-68a5-44c9-984e-38b1cd06f996"/>
+				<text><![CDATA[Precio neto total]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="23" splitType="Stretch">
 			<textField>
-				<reportElement x="-1" y="0" width="100" height="20" uuid="b458a763-1e1f-435a-80fb-07f2bd0f5096"/>
+				<reportElement x="-1" y="0" width="100" height="20" uuid="3afbac17-45c0-49cd-807e-c8181ebc2949"/>
 				<textFieldExpression><![CDATA[$F{codproducto}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="99" y="0" width="100" height="20" uuid="66c3ebe2-fdc2-43ca-ab78-26fd85c1a121"/>
+				<reportElement x="99" y="0" width="100" height="20" uuid="9db9bf9d-1eee-4d70-83d7-693688e7c8c5"/>
 				<textFieldExpression><![CDATA[$F{nombreproducto}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="199" y="0" width="100" height="20" uuid="abcc30ab-d7bf-4491-b8d7-d480ecb53dd4"/>
+				<reportElement x="199" y="0" width="100" height="20" uuid="419b7887-8ccd-47b5-84fe-8c90e3fa9cea"/>
 				<textFieldExpression><![CDATA[$F{cantidadproductoordencompra}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="299" y="0" width="100" height="20" uuid="1753ff2c-fc8b-403d-8e33-97df1fe03b9c"/>
+				<reportElement x="299" y="0" width="100" height="20" uuid="f8f2eeb2-6338-4a07-bc81-297721f5388d"/>
+				<textFieldExpression><![CDATA[$F{precioproductoneto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="399" y="0" width="100" height="20" uuid="9a2875f5-197d-43d7-9c9b-b98591e1156e"/>
 				<textFieldExpression><![CDATA[$F{ph.precioproductoneto*po.cantidadproductoordencompra}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band height="120" splitType="Stretch">
+			<textField>
+				<reportElement x="399" y="0" width="100" height="20" uuid="1b1468e8-6f5a-41aa-adcd-9da0c5c793b4"/>
+				<textFieldExpression><![CDATA[$F{totalneto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="299" y="0" width="100" height="20" uuid="bcbe801d-6f3e-4cc1-af8e-8ba531723c63"/>
+				<text><![CDATA[Total neto:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="299" y="20" width="100" height="20" uuid="9d4db405-5fd6-4f68-95ea-c4f9de70c0f0"/>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="399" y="20" width="100" height="20" uuid="db208d6d-fb54-4724-9c0b-b5d1ac618eb8"/>
+				<textFieldExpression><![CDATA[$F{totalsindescuento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="399" y="40" width="100" height="20" uuid="3df67417-af6f-4cf4-912a-791e6c709790"/>
+				<textFieldExpression><![CDATA[$F{descuento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="299" y="40" width="100" height="20" uuid="d89c2211-e218-4d83-b907-da6990b8bcbb"/>
+				<text><![CDATA[Desuento:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="399" y="60" width="100" height="20" uuid="8065fc23-e57c-4fcc-a6c8-829d4c318272"/>
+				<textFieldExpression><![CDATA[$F{totalcondescuento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="281" y="60" width="118" height="20" uuid="60558370-954b-47f5-85a0-28f4f560a63d"/>
+				<text><![CDATA[Total con descuento:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="399" y="80" width="100" height="20" uuid="54605c01-f16d-46ad-9f12-cd0a0105b0a8"/>
+				<textFieldExpression><![CDATA[$F{efectivo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="299" y="80" width="100" height="20" uuid="5bbdccb8-3344-47e6-9381-f9a45220d732"/>
+				<text><![CDATA[Efectivo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="399" y="100" width="100" height="20" uuid="c8219acb-c991-4162-b216-a6b42a6139ea"/>
+				<textFieldExpression><![CDATA[$F{vuelto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="299" y="100" width="100" height="20" uuid="e2864f56-b7d6-469b-ad9c-a58f085c0b05"/>
+				<text><![CDATA[Vuelto:]]></text>
+			</staticText>
+		</band>
 	</columnFooter>
 	<pageFooter>
 		<band height="54" splitType="Stretch"/>
