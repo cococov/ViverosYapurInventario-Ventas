@@ -4,28 +4,23 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<queryString>
-		<![CDATA[SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, P.descripcionproducto, PH.fechaproducto, CONCAT("$",PH.precioproductoneto)AS PRECIO
- FROM producto P, preciohistoricoproducto PH WHERE P.codproducto = PH.codproducto AND PH.fechaproducto = (SELECT MAX(PH2.fechaproducto) FROM preciohistoricoproducto PH2 where PH.codproducto = PH2.codproducto)]]>
+		<![CDATA[SELECT po.codordencompra,p.nombreproducto,ph.precioproductoneto,po.cantidadproductoordencompra, oc.fecha from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=(SELECT MAX(codordencompra) FROM ordencompra) and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto AND ph2.fechaproducto<oc.fecha)]]>
 	</queryString>
-	<field name="codproducto" class="java.lang.Integer">
+	<field name="codordencompra" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="nombreproducto" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="cantidadproductoventa" class="java.lang.Integer">
+	<field name="precioproductoneto" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="cantidadproductoproduccion" class="java.lang.Integer">
+	<field name="cantidadproductoordencompra" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="descripcionproducto" class="java.lang.String">
+	<field name="fecha" class="java.sql.Timestamp">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="fechaproducto" class="java.sql.Timestamp">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="PRECIO" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
