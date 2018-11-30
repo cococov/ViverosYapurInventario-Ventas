@@ -3649,7 +3649,7 @@
                                   <Component id="jLabel62" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jTextFieldEditarCorreoProveedor" alignment="0" min="-2" pref="32" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="6" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="jButtonConfirmarEditarProveedor3" min="-2" pref="42" max="-2" attributes="0"/>

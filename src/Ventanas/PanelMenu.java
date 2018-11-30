@@ -32,7 +32,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import proyectoyapur.ColorRender;
 import proyectoyapur.Render;
 
-public class PanelMenu extends javax.swing.JFrame implements FocusListener {
+public final class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     private String datos[];
     private ConnectarBD conexion;
@@ -58,10 +58,10 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         this.jTableEditarUsuario.setDefaultRenderer(Object.class, new Render());
         this.jTableBloquearUsuario.setDefaultRenderer(Object.class, new Render());
         this.jTableEditarCheques.setDefaultRenderer(Object.class, new Render());
-        this.jTableVenta.setDefaultRenderer(Object.class, new Render());
+        PanelMenu.jTableVenta.setDefaultRenderer(Object.class, new Render());
         this.jTableListaProductos.setDefaultRenderer(Object.class, new Render());
         this.jTableEditarProveedor1.setDefaultRenderer(Object.class, new Render());
-        this.jTableListaVentas.setDefaultRenderer(Object.class, new Render());
+        PanelMenu.jTableListaVentas.setDefaultRenderer(Object.class, new Render());
         this.jTableEliminarProveedor2.setDefaultRenderer(Object.class, new Render());
         this.jTableCobrarCheque.setDefaultRenderer(Object.class, new Render());
         this.jPanel4.setVisible(false);
@@ -71,8 +71,8 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         this.jPanel12.setVisible(false);
         this.jTextFieldRutEditarUsuario.setEditable(false);
         this.jTextFieldRutEditarUsuario.setEnabled(false);
-        this.jTextFieldDescuentoVenta.setEditable(false);
-        this.jTextFieldDescuentoVenta.setEnabled(true);
+        PanelMenu.jTextFieldDescuentoVenta.setEditable(false);
+        PanelMenu.jTextFieldDescuentoVenta.setEnabled(true);
         validarSoloNumeros(jTextFieldNumeroChequeAgregar);
         validarSoloNumeros(jTextFieldMontoCheque);
         validarSoloNumeros(jTextFieldNumeroChequeEditar);
@@ -81,6 +81,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         validarSoloNumeros(jTextFieldCantidadVentaAgregarProducto);
         validarSoloNumeros(jTextFieldDescuentoVenta);
         validarSoloNumeros(jTextFieldEditarContactoProveedor);
+        validarSoloNumeros(jTextFieldContactoProveedor);
 
         this.jTextFieldMontoCheque.addFocusListener(this);
 
@@ -118,7 +119,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }
     
     public void reporteTodosInventario() throws JRException{
-        JasperReport reporte = null;
+        JasperReport reporte;
         String path = "src\\Reportes\\Inventario.jasper";
         reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
         JasperPrint jprint = JasperFillManager.fillReport(reporte, null, conexion.getConnection());
@@ -128,7 +129,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     }
     
     public void reporteTodosCheques() throws JRException{
-        JasperReport reporte = null;
+        JasperReport reporte;
         String path = "src\\Reportes\\Cheques.jasper";
         reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
         JasperPrint jprint = JasperFillManager.fillReport(reporte, null, conexion.getConnection());
@@ -270,18 +271,19 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         try {
             st2 = conexion.getConnection().createStatement();
             rs2 = st2.executeQuery(sql1);
-            Object[] datos = new Object[7];
+            Object[] datosQuery;
+            datosQuery = new Object[7];
 
             while (rs2.next()) {
 
-                datos[0] = rs2.getInt(1);
-                datos[1] = rs2.getString(2);
-                datos[2] = rs2.getString(3);
-                datos[3] = rs2.getDate(4);
-                datos[4] = rs2.getDate(5);
-                datos[5] = rs2.getString(6);
-                datos[6] = detalles;
-                modelo.addRow(datos);
+                datosQuery[0] = rs2.getInt(1);
+                datosQuery[1] = rs2.getString(2);
+                datosQuery[2] = rs2.getString(3);
+                datosQuery[3] = rs2.getDate(4);
+                datosQuery[4] = rs2.getDate(5);
+                datosQuery[5] = rs2.getString(6);
+                datosQuery[6] = detalles;
+                modelo.addRow(datosQuery);
             }
             jTableCobrarCheque.setModel(modelo);
         } catch (SQLException ex) {
@@ -293,7 +295,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     public void registrarVenta() throws SQLException {
         if (carrito[0] != null) {
             String tipoPago = "";
-            String metodoPago = "";
+            String metodoPago;
             if (jRadioButtonBoleta.isSelected()) {
                 tipoPago = "Boleta";
             } else {
@@ -458,33 +460,33 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         try {
             st2 = conexion.getConnection().createStatement();
             rs2 = st2.executeQuery(sql1);
-            Object[] datos = new Object[6];
+            Object[] datosQuery = new Object[6];
 
             while (rs2.next()) {
 
-                datos[0] = rs2.getString(1);
-                datos[1] = rs2.getString(2);
-                datos[2] = rs2.getString(3);
-                datos[3] = rs2.getString(4);
-                datos[4] = rs2.getString(5);
+                datosQuery[0] = rs2.getString(1);
+                datosQuery[1] = rs2.getString(2);
+                datosQuery[2] = rs2.getString(3);
+                datosQuery[3] = rs2.getString(4);
+                datosQuery[4] = rs2.getString(5);
 
                 if (rs2.getBoolean(6)) {
-                    if (datos[0].equals(this.datos[0])) {
+                    if (datosQuery[0].equals(this.datos[0])) {
                         JButton elMismo1 = new JButton("Desbloquear");
                         elMismo1.setEnabled(false);
-                        datos[5] = elMismo1;
+                        datosQuery[5] = elMismo1;
                     } else {
-                        datos[5] = desbloquear;
+                        datosQuery[5] = desbloquear;
                     }
-                } else if (datos[0].equals(this.datos[0])) {
+                } else if (datosQuery[0].equals(this.datos[0])) {
                     JButton elMismo = new JButton("Bloquear");
                     elMismo.setEnabled(false);
-                    datos[5] = elMismo;
+                    datosQuery[5] = elMismo;
 
                 } else {
-                    datos[5] = bloquear;
+                    datosQuery[5] = bloquear;
                 }
-                modelo.addRow(datos);
+                modelo.addRow(datosQuery);
 
             }
             jTableBloquearUsuario.setModel(modelo);
@@ -507,18 +509,18 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         try {
             st2 = conexion.getConnection().createStatement();
             rs2 = st2.executeQuery(sql1);
-            Object[] datos = new Object[7];
+            Object[] datosQuery = new Object[7];
 
             while (rs2.next()) {
 
-                datos[0] = rs2.getInt(1);
-                datos[1] = rs2.getString(2);
-                datos[2] = rs2.getString(3);
-                datos[3] = rs2.getDate(4);
-                datos[4] = rs2.getDate(5);
-                datos[5] = rs2.getString(6);
-                datos[6] = detalles;
-                modelo.addRow(datos);
+                datosQuery[0] = rs2.getInt(1);
+                datosQuery[1] = rs2.getString(2);
+                datosQuery[2] = rs2.getString(3);
+                datosQuery[3] = rs2.getDate(4);
+                datosQuery[4] = rs2.getDate(5);
+                datosQuery[5] = rs2.getString(6);
+                datosQuery[6] = detalles;
+                modelo.addRow(datosQuery);
             }
             jTableEditarCheques.setModel(modelo);
         } catch (SQLException ex) {
@@ -569,7 +571,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 break;
             }
         }
-        String resultadoFinal = "";
+        String resultadoFinal;
         if (hizo) {
             char[] vector2 = resultado.toCharArray();
             String listo = "";
@@ -851,17 +853,17 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         try {
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
-            Object[] datos = new Object[6];
+            Object[] datosQuery = new Object[6];
 
             while (rs.next()) {
 
-                datos[0] = rs.getString(1);
-                datos[2] = rs.getString(2);
-                datos[1] = rs.getDate(3);
-                datos[3] = rs.getString(4);
-                datos[4] = rs.getString(5);
-                datos[5] = detalles;
-                modelo.addRow(datos);
+                datosQuery[0] = rs.getString(1);
+                datosQuery[2] = rs.getString(2);
+                datosQuery[1] = rs.getDate(3);
+                datosQuery[3] = rs.getString(4);
+                datosQuery[4] = rs.getString(5);
+                datosQuery[5] = detalles;
+                modelo.addRow(datosQuery);
             }
             jTableListaVentas.setModel(modelo);
 
@@ -881,17 +883,17 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         try {
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
-            Object[] datos = new Object[6];
+            Object[] datosQuery = new Object[6];
 
             while (rs.next()) {
 
-                datos[0] = rs.getString(1);
-                datos[1] = rs.getString(2);
-                datos[2] = rs.getString(3);
-                datos[3] = rs.getString(4);
-                datos[4] = detalles;
-                datos[5] = rs.getString(5);
-                modelo.addRow(datos);
+                datosQuery[0] = rs.getString(1);
+                datosQuery[1] = rs.getString(2);
+                datosQuery[2] = rs.getString(3);
+                datosQuery[3] = rs.getString(4);
+                datosQuery[4] = detalles;
+                datosQuery[5] = rs.getString(5);
+                modelo.addRow(datosQuery);
 
             }
             jTableEditarProveedor1.setModel(modelo);
@@ -912,17 +914,17 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         try {
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
-            Object[] datos = new Object[6];
+            Object[] datosQuery = new Object[6];
 
             while (rs.next()) {
 
-                datos[0] = rs.getString(1);
-                datos[1] = rs.getString(2);
-                datos[2] = rs.getString(3);
-                datos[3] = rs.getString(4);
-                datos[4] = detalles;
-                datos[5] = rs.getString(5);
-                modelo.addRow(datos);
+                datosQuery[0] = rs.getString(1);
+                datosQuery[1] = rs.getString(2);
+                datosQuery[2] = rs.getString(3);
+                datosQuery[3] = rs.getString(4);
+                datosQuery[4] = detalles;
+                datosQuery[5] = rs.getString(5);
+                modelo.addRow(datosQuery);
 
             }
             jTableEliminarProveedor2.setModel(modelo);
@@ -969,6 +971,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
     public void validarSoloNumeros(JTextField jtext) {
         jtext.addKeyListener(new KeyAdapter() {
+            @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
                 if (!Character.isDigit(c)) {
@@ -4577,13 +4580,16 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                             jPasswordFieldContraseñaEditarUsuario.setText(rs.getString(4));
                             jPasswordFieldContraseña2EditarUsuario.setText(rs.getString(4));
 
-                            if (rs.getString(5).equals("1")) {
-                                jComboBoxTipoEditarUsuario.setSelectedIndex(0);
-
-                            } else if (rs.getString(5).equals("2")) {
-                                jComboBoxTipoEditarUsuario.setSelectedIndex(1);
-                            } else {
-                                jComboBoxTipoEditarUsuario.setSelectedIndex(2);
+                            switch (rs.getString(5)) {
+                                case "1":
+                                    jComboBoxTipoEditarUsuario.setSelectedIndex(0);
+                                    break;
+                                case "2":
+                                    jComboBoxTipoEditarUsuario.setSelectedIndex(1);
+                                    break;
+                                default:
+                                    jComboBoxTipoEditarUsuario.setSelectedIndex(2);
+                                    break;
                             }
 
                         }
@@ -4628,12 +4634,16 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             if (!rutUsuario.equalsIgnoreCase("") && !nombreUsuario.equalsIgnoreCase("") && !contrasena.equalsIgnoreCase("")
                     && !contrasena2.equalsIgnoreCase("") && !apellidoP.equalsIgnoreCase("") && !apellidoM.equalsIgnoreCase("")) {
                 int rol1;
-                if (rol.equals("Administrador")) {
-                    rol1 = 1;
-                } else if (rol.equals("Vendedor")) {
-                    rol1 = 2;
-                } else {
-                    rol1 = 3;
+                switch (rol) {
+                    case "Administrador":
+                        rol1 = 1;
+                        break;
+                    case "Vendedor":
+                        rol1 = 2;
+                        break;
+                    default:
+                        rol1 = 3;
+                        break;
                 }
                 if (validarRut(FormatearRUT(rutUsuario))) {
                     if (contrasena.equals(contrasena2)) {
@@ -4667,7 +4677,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                 JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Ya hay un usuario con este rut!");;
+            JOptionPane.showMessageDialog(null, "Ya hay un usuario con este rut!");
         }
 
         // TODO add your handling code here:
@@ -4693,17 +4703,17 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         try {
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
-            Object[] datos = new Object[6];
+            Object[] datosQuery = new Object[6];
 
             while (rs.next()) {
 
-                datos[0] = rs.getString(1);
-                datos[1] = rs.getString(2);
-                datos[2] = rs.getString(3);
-                datos[3] = rs.getString(4);
-                datos[4] = rs.getString(5);
-                datos[5] = editar;
-                modelo.addRow(datos);
+                datosQuery[0] = rs.getString(1);
+                datosQuery[1] = rs.getString(2);
+                datosQuery[2] = rs.getString(3);
+                datosQuery[3] = rs.getString(4);
+                datosQuery[4] = rs.getString(5);
+                datosQuery[5] = editar;
+                modelo.addRow(datosQuery);
 
             }
             jTableEditarUsuario.setModel(modelo);
@@ -5335,7 +5345,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
     private void jButtonConfirmarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVentaActionPerformed
         try {
             registrarVenta();
-            JasperReport reporte = null;
+            JasperReport reporte;
             String path = "src\\Reportes\\boleta.jasper";
             String sql2;
             Statement st2;
@@ -5356,9 +5366,7 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
             view.setVisible(true);
 
             // TODO add your handling code here:
-        } catch (SQLException ex) {
-            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JRException ex) {
+        } catch (SQLException | JRException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonConfirmarVentaActionPerformed
@@ -5927,22 +5935,16 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PanelMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PanelMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PanelMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(PanelMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PanelMenu().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new PanelMenu().setVisible(true);
         });
     }
 
@@ -5962,52 +5964,54 @@ public class PanelMenu extends javax.swing.JFrame implements FocusListener {
         ResultSet rs2;
         String producto = this.jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedItem().toString();
         String tipo = this.jComboBoxTipoListaProductos.getSelectedItem().toString();
-        String especie = "";
+        String especie;
         String filtroNombre = this.jTextFieldFiltrarPorLetras.getText();
-        if (producto.equals("Planta")) {
-            if (this.jComboBoxEspecieProducto.getSelectedItem() != null) {
-                especie = this.jComboBoxEspecieProducto.getSelectedItem().toString();
-            } else {
-                especie = "--Seleccionar especie--";
-            }
-            if (tipo.equals("--Seleccionar tipo--")) {
+        switch (producto) {
+            case "Planta":
+                if (this.jComboBoxEspecieProducto.getSelectedItem() != null) {
+                    especie = this.jComboBoxEspecieProducto.getSelectedItem().toString();
+                } else {
+                    especie = "--Seleccionar especie--";
+                }   if (tipo.equals("--Seleccionar tipo--")) {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                            + "FROM producto P, preciohistoricoproducto PH, planta pl "
+                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
+                } else if (especie.equals("--Seleccionar especie--")) {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                            + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
+                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
+                } else {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                            + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
+                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
+                }   break;
+            case "Accesorio":
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                        + "FROM producto P, preciohistoricoproducto PH, planta pl "
-                        + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
-            } else if (especie.equals("--Seleccionar especie--")) {
+                        + "FROM producto P, preciohistoricoproducto PH, accesorio a "
+                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
+                break;
+            default:
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                        + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
-                        + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
-            } else {
-                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                        + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
-                        + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
-            }
-        } else if (producto.equals("Accesorio")) {
-            sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                    + "FROM producto P, preciohistoricoproducto PH, accesorio a "
-                    + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
-        } else {
-            sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                    + "FROM producto P, preciohistoricoproducto PH "
-                    + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
+                        + "FROM producto P, preciohistoricoproducto PH "
+                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND P.nombreproducto LIKE '%" + filtroNombre + "%'";
+                break;
         }
         DefaultTableModel modelo = (DefaultTableModel) jTableListaProductos.getModel();
         //editar lo de abajo
         try {
             st2 = conexion.getConnection().createStatement();
             rs2 = st2.executeQuery(sql1);
-            Object[] datos = new Object[6];
+            Object[] datosQuery = new Object[6];
 
             while (rs2.next()) {
 
-                datos[0] = rs2.getInt(1);
-                datos[1] = rs2.getString(2);
-                datos[2] = rs2.getInt(3);
-                datos[3] = rs2.getInt(4);
-                datos[4] = formatearAEntero(rs2.getString(5));
-                datos[5] = info;
-                modelo.addRow(datos);
+                datosQuery[0] = rs2.getInt(1);
+                datosQuery[1] = rs2.getString(2);
+                datosQuery[2] = rs2.getInt(3);
+                datosQuery[3] = rs2.getInt(4);
+                datosQuery[4] = formatearAEntero(rs2.getString(5));
+                datosQuery[5] = info;
+                modelo.addRow(datosQuery);
             }
             jTableListaProductos.setModel(modelo);
         } catch (SQLException ex) {

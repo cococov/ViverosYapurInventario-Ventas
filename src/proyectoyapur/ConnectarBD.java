@@ -3,21 +3,20 @@ package proyectoyapur;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
 
 public class ConnectarBD {
 
     private static Connection connection;
-    private static final String driver = "com.mysql.jdbc.Driver";
-    private static final String user = "root";
-    private static final String password = "";
-    private static final String url = "jdbc:mysql://localhost:3306/proyecto-yapur";
+    private static final String DRIVER = "com.mysql.jdbc.Driver";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
+    private static final String URL = "jdbc:mysql://localhost:3306/proyecto-yapur";
 
     public ConnectarBD() throws ClassNotFoundException, SQLException {
         connection = null;
 
-        Class.forName(driver);
-        connection = DriverManager.getConnection(url, user, password);
+        Class.forName(DRIVER);
+        connection = DriverManager.getConnection(URL, USER, PASSWORD);
         if (connection != null) {
             System.out.println("Conexión establecida..");
         }

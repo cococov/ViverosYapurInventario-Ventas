@@ -6,7 +6,6 @@ import java.awt.Toolkit;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -105,35 +104,37 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
         ResultSet rs2;
         String producto = this.jComboBoxProducto.getSelectedItem().toString();
         String tipo = this.jComboBoxTipo.getSelectedItem().toString();
-        String especie = "";
+        String especie;
         String filtroNombre= this.jTextFieldFiltroNombre.getText();
-        if (producto.equals("Planta")) {
-            if (this.jComboBoxEspecie.getSelectedItem() != null) {
-                especie = this.jComboBoxEspecie.getSelectedItem().toString();
-            } else {
-                especie = "--Seleccionar especie--";
-            }
-            if (tipo.equals("--Seleccionar tipo--")) {
+        switch (producto) {
+            case "Planta":
+                if (this.jComboBoxEspecie.getSelectedItem() != null) {
+                    especie = this.jComboBoxEspecie.getSelectedItem().toString();
+                } else {
+                    especie = "--Seleccionar especie--";
+                }   if (tipo.equals("--Seleccionar tipo--")) {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                            + "FROM producto P, preciohistoricoproducto PH, planta pl "
+                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
+                } else if (especie.equals("--Seleccionar especie--")) {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                            + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
+                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
+                } else {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                            + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
+                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
+                }   break;
+            case "Accesorio":
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                        + "FROM producto P, preciohistoricoproducto PH, planta pl "
-                        + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
-            } else if (especie.equals("--Seleccionar especie--")) {
+                        + "FROM producto P, preciohistoricoproducto PH, accesorio a "
+                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
+                break;
+            default:
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                        + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
-                        + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
-            } else {
-                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                        + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
-                        + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
-            }
-        } else if (producto.equals("Accesorio")) {
-            sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                    + "FROM producto P, preciohistoricoproducto PH, accesorio a "
-                    + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
-        } else {
-            sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                    + "FROM producto P, preciohistoricoproducto PH "
-                    + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
+                        + "FROM producto P, preciohistoricoproducto PH "
+                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
+                break;
         }
         DefaultTableModel modelo = (DefaultTableModel) jTableproductos.getModel();
         //editar lo de abajo
@@ -537,22 +538,16 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SeleccionarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SeleccionarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SeleccionarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(SeleccionarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SeleccionarProducto().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new SeleccionarProducto().setVisible(true);
         });
     }
 

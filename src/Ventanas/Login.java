@@ -177,7 +177,7 @@ public class Login extends javax.swing.JFrame implements FocusListener {
 
             String sql;
             String datos[] = new String[6];
-            boolean bloqueado = true;
+            boolean bloqueado;
             Statement st;
             try {
                 sql = "SELECT u.rutusuario, u.nombreusuario,u.apellidopaterno,u.apellidomaterno, u.passwd, u.bloqueadoS_N, u.idrol FROM usuario u WHERE u.rutusuario=" + "\"" + jTextFieldUsuario.getText() + "\"";
@@ -216,11 +216,11 @@ public class Login extends javax.swing.JFrame implements FocusListener {
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(null, "No hay conexion con el sistema, contacte a soporte");
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(null, "No hay conexion con el sistema, contacte a soporte");
         }
+        // TODO add your handling code here:
+        
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonLoguearActionPerformed
 
@@ -257,22 +257,16 @@ public class Login extends javax.swing.JFrame implements FocusListener {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Login().setVisible(true);
         });
 
     }
