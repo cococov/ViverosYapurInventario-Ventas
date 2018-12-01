@@ -87,7 +87,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         validarSoloNumeros(jTextFieldEfectivo);
         validarSoloNumeros(jTextFieldNumeroCuentaAgregarCheque);
         validarSoloNumeros(jTextFieldNumeroCuentaEditarCheque);
-
+        validarSoloNumeros(jTextFieldStockAgregarProducto);
+        validarSoloNumeros(jTextFieldPrecioAgregarProducto);
+        validarSoloNumeros(jTextFieldStockEditarProducto);
+        validarSoloNumeros(jTextFieldCantidadProdEditarProducto);
+        validarSoloNumeros(jTextFieldCantidadVentaEditarProducto);
+        validarSoloNumeros(jTextFieldPrecioEditarProducto);
         this.jTextFieldMontoCheque.addFocusListener(this);
 
         jPanelTipoPlanta.setVisible(false);
@@ -662,104 +667,55 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         String descripcion = jTextAreaDescripcionAgregarProducto.getText();
         if (!nomProducto.equalsIgnoreCase("") && cantidadVenta != 0 && cantidadProduccion != 0 && !precioProducto.equalsIgnoreCase("")
                 && !stock.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")) {
-            String sqlAux;
-            PreparedStatement stAux;
-            sqlAux = "SELECT COUNT(*) FROM PRODUCTO P WHERE P.nombreproducto = '" + nomProducto + "'";
-            stAux = conexion.getConnection().prepareStatement(sqlAux);
-            ResultSet rsAux;
-            rsAux = stAux.executeQuery(sqlAux);
-            int cant = 0;
-            while (rsAux.next()) {
-                cant = rsAux.getInt(1);
-            }
-            if (cant < 1) {
-                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este producto?");
-                if (confirmar == JOptionPane.YES_OPTION) {
-                    if (tipoProducto == 1) {
-                        if (jComboBoxAgregarTipoPlanta.getSelectedIndex() != 0) {
-                            //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
-                            int codTipoPlanta = 0;
-                            int codEspeciePlanta = 0;
-                            if (tipoPlanta == 1) {
-                                if (!jTextFieldAgregarTipoPlanta.getText().equalsIgnoreCase("") && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
-                                    String sqlAux2;
-                                    PreparedStatement stAux2;
-                                    sqlAux2 = "SELECT COUNT(*) FROM TIPO T WHERE T.nombretipo = '" + nuevoTipoPlanta + "'";
-                                    stAux2 = conexion.getConnection().prepareStatement(sqlAux2);
-                                    ResultSet rsAux2;
-                                    rsAux2 = stAux2.executeQuery(sqlAux2);
-                                    int cant2 = 0;
-                                    while (rsAux2.next()) {
-                                        cant2 = rsAux2.getInt(1);
-                                    }
-                                    if (cant2 < 1) {
-                                        //ingresar tipo de planta
-                                        String sql;
-                                        PreparedStatement st;
-                                        sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
-                                        st = conexion.getConnection().prepareStatement(sql);
-                                        st.setString(1, nuevoTipoPlanta);
-                                        st.executeUpdate();
-                                        //obtener codigo de tipo de planta 
-                                        PreparedStatement st2;
-                                        ResultSet rs2;
-                                        sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
-                                        st2 = conexion.getConnection().prepareStatement(sql);
-                                        rs2 = st2.executeQuery(sql);
-                                        while (rs2.next()) {
-                                            codTipoPlanta = rs2.getInt(1);
+            int total = cantidadProduccion + cantidadVenta;
+            if (total >= Integer.parseInt(stock)) {
+                String sqlAux;
+                PreparedStatement stAux;
+                sqlAux = "SELECT COUNT(*) FROM PRODUCTO P WHERE P.nombreproducto = '" + nomProducto + "'";
+                stAux = conexion.getConnection().prepareStatement(sqlAux);
+                ResultSet rsAux;
+                rsAux = stAux.executeQuery(sqlAux);
+                int cant = 0;
+                while (rsAux.next()) {
+                    cant = rsAux.getInt(1);
+                }
+                if (cant < 1) {
+                    int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este producto?");
+                    if (confirmar == JOptionPane.YES_OPTION) {
+                        if (tipoProducto == 1) {
+                            if (jComboBoxAgregarTipoPlanta.getSelectedIndex() != 0) {
+                                //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
+                                int codTipoPlanta = 0;
+                                int codEspeciePlanta = 0;
+                                if (tipoPlanta == 1) {
+                                    if (!jTextFieldAgregarTipoPlanta.getText().equalsIgnoreCase("") && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
+                                        String sqlAux2;
+                                        PreparedStatement stAux2;
+                                        sqlAux2 = "SELECT COUNT(*) FROM TIPO T WHERE T.nombretipo = '" + nuevoTipoPlanta + "'";
+                                        stAux2 = conexion.getConnection().prepareStatement(sqlAux2);
+                                        ResultSet rsAux2;
+                                        rsAux2 = stAux2.executeQuery(sqlAux2);
+                                        int cant2 = 0;
+                                        while (rsAux2.next()) {
+                                            cant2 = rsAux2.getInt(1);
                                         }
-                                        String sqlAux3;
-                                        PreparedStatement stAux3;
-                                        sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
-                                        stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
-                                        ResultSet rsAux3;
-                                        rsAux3 = stAux3.executeQuery(sqlAux3);
-                                        int cant3 = 0;
-                                        while (rsAux3.next()) {
-                                            cant3 = rsAux3.getInt(1);
-                                        }
-                                        if (cant3 < 1) {
-                                            //INGRESAR ESPECIE DE PLANTA
-                                            PreparedStatement st3;
-                                            sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
-                                            st3 = conexion.getConnection().prepareStatement(sql);
-                                            st3.setInt(1, codTipoPlanta);
-                                            st3.setString(2, nuevaEspeciePlanta);
-                                            st3.executeUpdate();
-                                            //obtener codigo de especie de planta
-                                            PreparedStatement st4;
-                                            ResultSet rs4;
-                                            sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
-                                            st4 = conexion.getConnection().prepareStatement(sql);
-                                            rs4 = st4.executeQuery(sql);
-                                            while (rs4.next()) {
-                                                codEspeciePlanta = rs4.getInt(1);
-                                            }
-                                            todoBien = true;
-                                        } else {
-                                            JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
-                                        }
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "ya se encuentra un tipo con ese nombre");
-                                    }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
-                                }
-                            } else { //SOLO AGREGAR ESPECIE DE PLANTA
-                                if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() != 0) {
-                                    if (especiePlanta == 1) {
-                                        if (jComboBoxAgregarTipoPlanta.getSelectedIndex() > 1 && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
-                                            String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                                        if (cant2 < 1) {
+                                            //ingresar tipo de planta
+                                            String sql;
                                             PreparedStatement st;
-                                            ResultSet rs;
-                                            String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                                            sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
                                             st = conexion.getConnection().prepareStatement(sql);
-                                            rs = st.executeQuery(sql);
-                                            while (rs.next()) {
-                                                codTipoPlanta = rs.getInt(1);
+                                            st.setString(1, nuevoTipoPlanta);
+                                            st.executeUpdate();
+                                            //obtener codigo de tipo de planta 
+                                            PreparedStatement st2;
+                                            ResultSet rs2;
+                                            sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
+                                            st2 = conexion.getConnection().prepareStatement(sql);
+                                            rs2 = st2.executeQuery(sql);
+                                            while (rs2.next()) {
+                                                codTipoPlanta = rs2.getInt(1);
                                             }
-
                                             String sqlAux3;
                                             PreparedStatement stAux3;
                                             sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
@@ -771,14 +727,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                                 cant3 = rsAux3.getInt(1);
                                             }
                                             if (cant3 < 1) {
-
-                                                PreparedStatement st2;
+                                                //INGRESAR ESPECIE DE PLANTA
+                                                PreparedStatement st3;
                                                 sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
-                                                st2 = conexion.getConnection().prepareStatement(sql);
-                                                st2.setInt(1, codTipoPlanta);
-                                                st2.setString(2, nuevaEspeciePlanta);
-                                                st2.executeUpdate();
-
+                                                st3 = conexion.getConnection().prepareStatement(sql);
+                                                st3.setInt(1, codTipoPlanta);
+                                                st3.setString(2, nuevaEspeciePlanta);
+                                                st3.executeUpdate();
+                                                //obtener codigo de especie de planta
                                                 PreparedStatement st4;
                                                 ResultSet rs4;
                                                 sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
@@ -792,130 +748,184 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                                 JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
                                             }
                                         } else {
-                                            JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
+                                            JOptionPane.showMessageDialog(null, "ya se encuentra un tipo con ese nombre");
                                         }
                                     } else {
-                                        String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
-                                        PreparedStatement st;
-                                        ResultSet rs;
-                                        String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
-                                        st = conexion.getConnection().prepareStatement(sql);
-                                        rs = st.executeQuery(sql);
-                                        while (rs.next()) {
-                                            codTipoPlanta = rs.getInt(1);
-                                        }
-
-                                        PreparedStatement st2;
-                                        ResultSet rs2;
-                                        String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "'";
-                                        st2 = conexion.getConnection().prepareStatement(sql2);
-                                        rs2 = st.executeQuery(sql2);
-                                        while (rs2.next()) {
-                                            codEspeciePlanta = rs2.getInt(1);
-                                        }
-                                        todoBien = true;
+                                        JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
                                     }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
+                                } else { //SOLO AGREGAR ESPECIE DE PLANTA
+                                    if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() != 0) {
+                                        if (especiePlanta == 1) {
+                                            if (jComboBoxAgregarTipoPlanta.getSelectedIndex() > 1 && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
+                                                String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                                                PreparedStatement st;
+                                                ResultSet rs;
+                                                String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                                                st = conexion.getConnection().prepareStatement(sql);
+                                                rs = st.executeQuery(sql);
+                                                while (rs.next()) {
+                                                    codTipoPlanta = rs.getInt(1);
+                                                }
+
+                                                String sqlAux3;
+                                                PreparedStatement stAux3;
+                                                sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
+                                                stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
+                                                ResultSet rsAux3;
+                                                rsAux3 = stAux3.executeQuery(sqlAux3);
+                                                int cant3 = 0;
+                                                while (rsAux3.next()) {
+                                                    cant3 = rsAux3.getInt(1);
+                                                }
+                                                if (cant3 < 1) {
+
+                                                    PreparedStatement st2;
+                                                    sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                                                    st2 = conexion.getConnection().prepareStatement(sql);
+                                                    st2.setInt(1, codTipoPlanta);
+                                                    st2.setString(2, nuevaEspeciePlanta);
+                                                    st2.executeUpdate();
+
+                                                    PreparedStatement st4;
+                                                    ResultSet rs4;
+                                                    sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                                                    st4 = conexion.getConnection().prepareStatement(sql);
+                                                    rs4 = st4.executeQuery(sql);
+                                                    while (rs4.next()) {
+                                                        codEspeciePlanta = rs4.getInt(1);
+                                                    }
+                                                    todoBien = true;
+                                                } else {
+                                                    JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
+                                                }
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
+                                            }
+                                        } else {
+                                            String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                                            PreparedStatement st;
+                                            ResultSet rs;
+                                            String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                                            st = conexion.getConnection().prepareStatement(sql);
+                                            rs = st.executeQuery(sql);
+                                            while (rs.next()) {
+                                                codTipoPlanta = rs.getInt(1);
+                                            }
+
+                                            PreparedStatement st2;
+                                            ResultSet rs2;
+                                            String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "'";
+                                            st2 = conexion.getConnection().prepareStatement(sql2);
+                                            rs2 = st.executeQuery(sql2);
+                                            while (rs2.next()) {
+                                                codEspeciePlanta = rs2.getInt(1);
+                                            }
+                                            todoBien = true;
+                                        }
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
+                                    }
                                 }
-                            }
 
-                            if (todoBien) {
-                                //ESPECIE Y TIPO YA ESTAN EN LA LISTA
-                                PreparedStatement st5;
-                                String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`) VALUES (?,?,?,?,?)";
-                                st5 = conexion.getConnection().prepareStatement(sql);
-                                st5.setString(1, nomProducto);
-                                st5.setInt(2, cantidadVenta);
-                                st5.setInt(3, cantidadProduccion);
-                                st5.setString(4, descripcion);
-                                st5.setString(5, stock);
-                                st5.executeUpdate();
+                                if (todoBien) {
+                                    //ESPECIE Y TIPO YA ESTAN EN LA LISTA
+                                    PreparedStatement st5;
+                                    String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`) VALUES (?,?,?,?,?)";
+                                    st5 = conexion.getConnection().prepareStatement(sql);
+                                    st5.setString(1, nomProducto);
+                                    st5.setInt(2, cantidadVenta);
+                                    st5.setInt(3, cantidadProduccion);
+                                    st5.setString(4, descripcion);
+                                    st5.setString(5, stock);
+                                    st5.executeUpdate();
 
-                                int codProduto = 0;
-                                PreparedStatement st;
-                                ResultSet rs;
-                                sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
-                                st = conexion.getConnection().prepareStatement(sql);
-                                rs = st.executeQuery(sql);
-                                while (rs.next()) {
-                                    codProduto = rs.getInt(1);
+                                    int codProduto = 0;
+                                    PreparedStatement st;
+                                    ResultSet rs;
+                                    sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
+                                    st = conexion.getConnection().prepareStatement(sql);
+                                    rs = st.executeQuery(sql);
+                                    while (rs.next()) {
+                                        codProduto = rs.getInt(1);
+                                    }
+
+                                    PreparedStatement st6;
+                                    sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
+                                    st6 = conexion.getConnection().prepareStatement(sql);
+                                    st6.setInt(1, codProduto);
+                                    st6.setInt(2, codEspeciePlanta);
+                                    st6.executeUpdate();
+
+                                    PreparedStatement st7;
+                                    sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                                    st7 = conexion.getConnection().prepareStatement(sql);
+                                    st7.setInt(1, codProduto);
+                                    st7.setString(2, precioProducto);
+                                    st7.executeUpdate();
+                                    JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
+                                    jTextFieldNombreAgregarProducto.setText("");
+                                    jTextFieldCantidadVentaAgregarProducto.setText("");
+                                    jTextFieldCantidadProdAgregaProducto.setText("");
+                                    jTextFieldPrecioAgregarProducto.setText("");
+                                    jTextFieldStockAgregarProducto.setText("");
+                                    jTextAreaDescripcionAgregarProducto.setText("");
+                                    jTextFieldAgregarTipoPlanta.setText("");
+                                    jTextFieldAgregarEspeciePlanta.setText("");
+                                    jComboBoxTipoAgregarProducto.setSelectedIndex(0);
                                 }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Algunos campos vacios");
 
-                                PreparedStatement st6;
-                                sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
-                                st6 = conexion.getConnection().prepareStatement(sql);
-                                st6.setInt(1, codProduto);
-                                st6.setInt(2, codEspeciePlanta);
-                                st6.executeUpdate();
-
-                                PreparedStatement st7;
-                                sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                                st7 = conexion.getConnection().prepareStatement(sql);
-                                st7.setInt(1, codProduto);
-                                st7.setString(2, precioProducto);
-                                st7.executeUpdate();
-                                JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
-                                jTextFieldNombreAgregarProducto.setText("");
-                                jTextFieldCantidadVentaAgregarProducto.setText("");
-                                jTextFieldCantidadProdAgregaProducto.setText("");
-                                jTextFieldPrecioAgregarProducto.setText("");
-                                jTextFieldStockAgregarProducto.setText("");
-                                jTextAreaDescripcionAgregarProducto.setText("");
-                                jTextFieldAgregarTipoPlanta.setText("");
-                                jTextFieldAgregarEspeciePlanta.setText("");
-                                jComboBoxTipoAgregarProducto.setSelectedIndex(0);
                             }
+                        } else if (tipoProducto == 2) {
+                            PreparedStatement st5;
+                            String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`) VALUES (?,?,?,?,?)";
+                            st5 = conexion.getConnection().prepareStatement(sql);
+                            st5.setString(1, nomProducto);
+                            st5.setInt(2, cantidadVenta);
+                            st5.setInt(3, cantidadProduccion);
+                            st5.setString(4, descripcion);
+                            st5.setString(5, stock);
+                            st5.executeUpdate();
+
+                            int codProduto = 0;
+                            PreparedStatement st;
+                            ResultSet rs;
+                            sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
+                            st = conexion.getConnection().prepareStatement(sql);
+                            rs = st.executeQuery(sql);
+                            while (rs.next()) {
+                                codProduto = rs.getInt(1);
+                            }
+                            PreparedStatement st6;
+                            sql = "INSERT INTO `accesorio`(`codproducto`) VALUES (?)";
+                            st6 = conexion.getConnection().prepareStatement(sql);
+                            st6.setInt(1, codProduto);
+                            st6.executeUpdate();
+
+                            PreparedStatement st7;
+                            sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                            st7 = conexion.getConnection().prepareStatement(sql);
+                            st7.setInt(1, codProduto);
+                            st7.setString(2, precioProducto);
+                            st7.executeUpdate();
+                            JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
+                            jTextFieldNombreAgregarProducto.setText("");
+                            jTextFieldCantidadVentaAgregarProducto.setText("");
+                            jTextFieldCantidadProdAgregaProducto.setText("");
+                            jTextFieldPrecioAgregarProducto.setText("");
+                            jTextFieldStockAgregarProducto.setText("");
+                            jTextAreaDescripcionAgregarProducto.setText("");
+                            jComboBoxTipoAgregarProducto.setSelectedIndex(0);
                         } else {
-                            JOptionPane.showMessageDialog(null, "Algunos campos vacios");
-
+                            JOptionPane.showMessageDialog(null, "Seleccione un tipo de producto");
                         }
-                    } else if (tipoProducto == 2) {
-                        PreparedStatement st5;
-                        String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`) VALUES (?,?,?,?,?)";
-                        st5 = conexion.getConnection().prepareStatement(sql);
-                        st5.setString(1, nomProducto);
-                        st5.setInt(2, cantidadVenta);
-                        st5.setInt(3, cantidadProduccion);
-                        st5.setString(4, descripcion);
-                        st5.setString(5, stock);
-                        st5.executeUpdate();
-
-                        int codProduto = 0;
-                        PreparedStatement st;
-                        ResultSet rs;
-                        sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
-                        st = conexion.getConnection().prepareStatement(sql);
-                        rs = st.executeQuery(sql);
-                        while (rs.next()) {
-                            codProduto = rs.getInt(1);
-                        }
-                        PreparedStatement st6;
-                        sql = "INSERT INTO `accesorio`(`codproducto`) VALUES (?)";
-                        st6 = conexion.getConnection().prepareStatement(sql);
-                        st6.setInt(1, codProduto);
-                        st6.executeUpdate();
-
-                        PreparedStatement st7;
-                        sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                        st7 = conexion.getConnection().prepareStatement(sql);
-                        st7.setInt(1, codProduto);
-                        st7.setString(2, precioProducto);
-                        st7.executeUpdate();
-                        JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
-                        jTextFieldNombreAgregarProducto.setText("");
-                        jTextFieldCantidadVentaAgregarProducto.setText("");
-                        jTextFieldCantidadProdAgregaProducto.setText("");
-                        jTextFieldPrecioAgregarProducto.setText("");
-                        jTextFieldStockAgregarProducto.setText("");
-                        jTextAreaDescripcionAgregarProducto.setText("");
-                        jComboBoxTipoAgregarProducto.setSelectedIndex(0);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Seleccione un tipo de producto");
                     }
+                } else {
+                    JOptionPane.showMessageDialog(null, "ya se encuentra un producto con ese nombre");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "ya se encuentra un producto con ese nombre");
+                JOptionPane.showMessageDialog(null,"El stock no puede ser menor a la suma de producion y ventas");
             }
         } else {
             JOptionPane.showMessageDialog(null, "Hay algunos campos que se encuentran vacios");
@@ -5877,6 +5887,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         String stock = jTextFieldStockEditarProducto.getText();
         if (!nombreproducto.equalsIgnoreCase("") && !cantVentas.equalsIgnoreCase("") && !cantPro.equalsIgnoreCase("")
                 && !precio.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !stock.equalsIgnoreCase("")) {
+            
+            int total = Integer.parseInt(cantPro) + Integer.parseInt(cantVentas);
+            if (total >= Integer.parseInt(stock)) {
             int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea editar este producto?");
             if (confirmar == JOptionPane.YES_OPTION) {
                 try {
@@ -5938,6 +5951,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 } catch (SQLException ex) {
                     Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }
+            }else{
+                JOptionPane.showMessageDialog(null,"El Stock minimo no puede ser menor a la suma de ventas con produccion");
             }
         } else {
             JOptionPane.showMessageDialog(null, " hay campos que se encuentran vacios");

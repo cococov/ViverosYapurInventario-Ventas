@@ -1,6 +1,8 @@
 package Ventanas;
 
 import Clases.Producto;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +12,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import net.sf.jasperreports.engine.JRException;
@@ -32,7 +35,7 @@ public class NuevoCheque extends javax.swing.JFrame {
     private String tipoPago;
     private int neto;
     private int efectivo;
-
+    
     public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo) {
         initComponents();
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -49,10 +52,25 @@ public class NuevoCheque extends javax.swing.JFrame {
         this.jTextFieldMontoCheque.setEditable(false);
         this.neto = neto;
         this.efectivo = efectivo;
+        validarSoloNumeros(jTextFieldMontoCheque);
+        validarSoloNumeros(jTextFieldNumeroChequeAgregar);
+        validarSoloNumeros(jTextFieldNumeroCuentaAgregarCheque);
     }
 
     private NuevoCheque() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public void validarSoloNumeros(JTextField jtext) {
+        jtext.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                }
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
