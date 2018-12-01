@@ -925,7 +925,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     JOptionPane.showMessageDialog(null, "ya se encuentra un producto con ese nombre");
                 }
             } else {
-                JOptionPane.showMessageDialog(null,"El stock no puede ser menor a la suma de producion y ventas");
+                JOptionPane.showMessageDialog(null, "El stock no puede ser menor a la suma de producion y ventas");
             }
         } else {
             JOptionPane.showMessageDialog(null, "Hay algunos campos que se encuentran vacios");
@@ -5887,73 +5887,73 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         String stock = jTextFieldStockEditarProducto.getText();
         if (!nombreproducto.equalsIgnoreCase("") && !cantVentas.equalsIgnoreCase("") && !cantPro.equalsIgnoreCase("")
                 && !precio.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !stock.equalsIgnoreCase("")) {
-            
+
             int total = Integer.parseInt(cantPro) + Integer.parseInt(cantVentas);
             if (total >= Integer.parseInt(stock)) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea editar este producto?");
-            if (confirmar == JOptionPane.YES_OPTION) {
-                try {
-                    String sql = "UPDATE `producto` SET `nombreproducto`=?,`cantidadproductoventa`=?,`cantidadproductoproduccion`=?,`descripcionproducto`=?  , `stockminimo` = ? WHERE codproducto = '" + cod + "'";
-                    String sq2 = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                    String sql3 = "SELECT PH.precioproductoneto \n"
-                            + "FROM producto p, preciohistoricoproducto PH \n"
-                            + "where P.codproducto = PH.codproducto AND \n"
-                            + "p.codproducto = " + "\"" + cod + "\" AND \n"
-                            + "PH.fechaproducto = (select MAX(fechaproducto) \n"
-                            + "from preciohistoricoproducto AS PH2 \n"
-                            + "where PH.codproducto = PH2.codproducto)";
-                    PreparedStatement st3 = conexion.getConnection().prepareStatement(sql3);
-                    ResultSet rs;
-                    rs = st3.executeQuery(sql3);
-                    int precioAnterior = 0;
-                    while (rs.next()) {
-                        precioAnterior = rs.getInt(1);
-                    }
-                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-                    if (precioAnterior != Integer.parseInt(precio)) {
-                        PreparedStatement st2 = conexion.getConnection().prepareStatement(sq2);
-                        st2.setInt(1, Integer.parseInt(cod));
-                        st2.setString(2, precio);
-                        st2.executeUpdate();
-                    }
-                    st.setString(1, nombreproducto);
-                    st.setInt(2, Integer.parseInt(cantVentas));
-                    st.setInt(3, Integer.parseInt(cantPro));
-                    st.setString(4, descripcion);
-                    st.setString(5, stock);
-                    st.executeUpdate();
-                    // TODO add your handling code here:
-                    if (st.executeUpdate() > 0) {
-                        JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
-                                JOptionPane.INFORMATION_MESSAGE);
-                        if (jComboBoxTipoEditarProducto.getSelectedIndex() == 0) {
-                            jTextFieldIDeditarProducto.setText("");
-                            jTextFieldIDeditarProducto.setText("");
-                            jTextFieldStockEditarProducto.setText("");
-                            jTextFieldNombreEditarProducto.setText("");
-                            jTextFieldCantidadVentaEditarProducto.setText("");
-                            jTextFieldCantidadProdEditarProducto.setText("");
-                            jTextFieldPrecioEditarProducto.setText("");
-                            jTextAreaEditarProducto.setText("");
-                            jTextFieldStockEditarProducto.setText("");
-                        } else {
-                            jTextFieldStockEditarProducto.setText("");
-                            jTextFieldIDeditarProducto.setText("");
-                            jTextFieldIDeditarProducto.setText("");
-                            jTextFieldNombreEditarProducto.setText("");
-                            jTextAreaEditarProducto.setText("");
-                            jTextFieldCantidadVentaEditarProducto.setText("");
-                            jTextFieldCantidadProdEditarProducto.setText("");
-                            jTextFieldPrecioEditarProducto.setText("");
-                            jTextFieldStockEditarProducto.setText("");
+                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea editar este producto?");
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    try {
+                        String sql = "UPDATE `producto` SET `nombreproducto`=?,`cantidadproductoventa`=?,`cantidadproductoproduccion`=?,`descripcionproducto`=?  , `stockminimo` = ? WHERE codproducto = '" + cod + "'";
+                        String sq2 = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                        String sql3 = "SELECT PH.precioproductoneto \n"
+                                + "FROM producto p, preciohistoricoproducto PH \n"
+                                + "where P.codproducto = PH.codproducto AND \n"
+                                + "p.codproducto = " + "\"" + cod + "\" AND \n"
+                                + "PH.fechaproducto = (select MAX(fechaproducto) \n"
+                                + "from preciohistoricoproducto AS PH2 \n"
+                                + "where PH.codproducto = PH2.codproducto)";
+                        PreparedStatement st3 = conexion.getConnection().prepareStatement(sql3);
+                        ResultSet rs;
+                        rs = st3.executeQuery(sql3);
+                        int precioAnterior = 0;
+                        while (rs.next()) {
+                            precioAnterior = rs.getInt(1);
                         }
+                        PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                        if (precioAnterior != Integer.parseInt(precio)) {
+                            PreparedStatement st2 = conexion.getConnection().prepareStatement(sq2);
+                            st2.setInt(1, Integer.parseInt(cod));
+                            st2.setString(2, precio);
+                            st2.executeUpdate();
+                        }
+                        st.setString(1, nombreproducto);
+                        st.setInt(2, Integer.parseInt(cantVentas));
+                        st.setInt(3, Integer.parseInt(cantPro));
+                        st.setString(4, descripcion);
+                        st.setString(5, stock);
+                        st.executeUpdate();
+                        // TODO add your handling code here:
+                        if (st.executeUpdate() > 0) {
+                            JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            if (jComboBoxTipoEditarProducto.getSelectedIndex() == 0) {
+                                jTextFieldIDeditarProducto.setText("");
+                                jTextFieldIDeditarProducto.setText("");
+                                jTextFieldStockEditarProducto.setText("");
+                                jTextFieldNombreEditarProducto.setText("");
+                                jTextFieldCantidadVentaEditarProducto.setText("");
+                                jTextFieldCantidadProdEditarProducto.setText("");
+                                jTextFieldPrecioEditarProducto.setText("");
+                                jTextAreaEditarProducto.setText("");
+                                jTextFieldStockEditarProducto.setText("");
+                            } else {
+                                jTextFieldStockEditarProducto.setText("");
+                                jTextFieldIDeditarProducto.setText("");
+                                jTextFieldIDeditarProducto.setText("");
+                                jTextFieldNombreEditarProducto.setText("");
+                                jTextAreaEditarProducto.setText("");
+                                jTextFieldCantidadVentaEditarProducto.setText("");
+                                jTextFieldCantidadProdEditarProducto.setText("");
+                                jTextFieldPrecioEditarProducto.setText("");
+                                jTextFieldStockEditarProducto.setText("");
+                            }
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (SQLException ex) {
-                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-            }else{
-                JOptionPane.showMessageDialog(null,"El Stock minimo no puede ser menor a la suma de ventas con produccion");
+            } else {
+                JOptionPane.showMessageDialog(null, "El Stock minimo no puede ser menor a la suma de ventas con produccion");
             }
         } else {
             JOptionPane.showMessageDialog(null, " hay campos que se encuentran vacios");
