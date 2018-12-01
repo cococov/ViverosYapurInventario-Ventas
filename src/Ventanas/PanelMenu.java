@@ -659,9 +659,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         String nuevoTipoPlanta = jTextFieldAgregarTipoPlanta.getText();
         String nuevaEspeciePlanta = jTextFieldAgregarEspeciePlanta.getText();
         String stock = jTextFieldStockAgregarProducto.getText();
-        String descripcion  = jTextAreaDescripcionAgregarProducto.getText();
+        String descripcion = jTextAreaDescripcionAgregarProducto.getText();
         if (!nomProducto.equalsIgnoreCase("") && cantidadVenta != 0 && cantidadProduccion != 0 && !precioProducto.equalsIgnoreCase("")
-               && !stock.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")) {
+                && !stock.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")) {
             String sqlAux;
             PreparedStatement stAux;
             sqlAux = "SELECT COUNT(*) FROM PRODUCTO P WHERE P.nombreproducto = '" + nomProducto + "'";
@@ -856,6 +856,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 st7.setString(2, precioProducto);
                                 st7.executeUpdate();
                                 JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
+                                jTextFieldNombreAgregarProducto.setText("");
+                                jTextFieldCantidadVentaAgregarProducto.setText("");
+                                jTextFieldCantidadProdAgregaProducto.setText("");
+                                jTextFieldPrecioAgregarProducto.setText("");
+                                jTextFieldStockAgregarProducto.setText("");
+                                jTextAreaDescripcionAgregarProducto.setText("");
+                                jTextFieldAgregarTipoPlanta.setText("");
+                                jTextFieldAgregarEspeciePlanta.setText("");
+                                jComboBoxTipoAgregarProducto.setSelectedIndex(0);
                             }
                         } else {
                             JOptionPane.showMessageDialog(null, "Algunos campos vacios");
@@ -894,6 +903,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         st7.setString(2, precioProducto);
                         st7.executeUpdate();
                         JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
+                        jTextFieldNombreAgregarProducto.setText("");
+                        jTextFieldCantidadVentaAgregarProducto.setText("");
+                        jTextFieldCantidadProdAgregaProducto.setText("");
+                        jTextFieldPrecioAgregarProducto.setText("");
+                        jTextFieldStockAgregarProducto.setText("");
+                        jTextAreaDescripcionAgregarProducto.setText("");
+                        jComboBoxTipoAgregarProducto.setSelectedIndex(0);
                     } else {
                         JOptionPane.showMessageDialog(null, "Seleccione un tipo de producto");
                     }
@@ -5545,7 +5561,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     Statement st;
                     ResultSet rs;
                     if (jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedIndex() == 0) {
-                        sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, PH.precioproductoneto,t.nombretipo ,e.nombreespecie, p.descripcionproducto \n"
+                        sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, PH.precioproductoneto,t.nombretipo ,e.nombreespecie, p.descripcionproducto,p.stockminimo \n"
                                 + "FROM producto p, preciohistoricoproducto PH, planta pl, tipo t, especie e \n "
                                 + "where P.codproducto = PH.codproducto AND pl.codproducto = p.codproducto AND \n"
                                 + "pl.codespecie = e.codespecie AND t.codtipo = e.codtipo AND \n"
@@ -5568,6 +5584,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 jComboBoxEditarTipoPlanta.setSelectedItem(rs.getString(6));
                                 jComboBoxEditarEspeciePlanta.setSelectedItem(rs.getString(7));
                                 jTextAreaEditarProducto.setText(rs.getString(8));
+                                jTextFieldStockEditarProducto.setText(rs.getString(9));
                             }
                             jTextFieldIDeditarProducto.setVisible(false);
                             jTextFieldIDeditarProducto.setEnabled(false);
@@ -5579,6 +5596,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jComboBoxEditarTipoPlanta.setEnabled(false);
                             jComboBoxEditarEspeciePlanta.setEnabled(false);
                             jTextAreaEditarProducto.setEnabled(false);
+                            jTextFieldStockEditarProducto.setEnabled(false);
                             jPanelAgregarProducto.show(false);
                             jPanelEditarProducto.show(false);
                             jPanelEditarProductoForm.show(true);
@@ -5587,7 +5605,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {
-                        sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, PH.precioproductoneto,p.descripcionproducto \n"
+                        sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, PH.precioproductoneto,p.descripcionproducto,p.stockminimo \n"
                                 + "FROM producto p, preciohistoricoproducto PH,accesorio a \n"
                                 + "where P.codproducto = PH.codproducto AND a.codproducto = p.codproducto AND \n"
                                 + "p.codproducto = " + "\"" + id + "\" AND \n"
@@ -5605,6 +5623,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 jTextFieldPrecioEditarProducto.setText(rs.getString(5));
                                 jComboBoxTipoEditarProducto.setSelectedItem("Otros");
                                 jTextAreaEditarProducto.setText(rs.getString(6));
+                                jTextFieldStockEditarProducto.setText(rs.getString(7));
                             }
                             jTextFieldIDeditarProducto.setVisible(false);
                             jTextFieldIDeditarProducto.setEnabled(false);
@@ -5614,6 +5633,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jTextFieldPrecioEditarProducto.setEnabled(false);
                             jComboBoxTipoEditarProducto.setEnabled(false);
                             jTextAreaEditarProducto.setEnabled(false);
+                            jTextFieldStockEditarProducto.setEnabled(false);
                             jPanelAgregarProducto.show(false);
                             jPanelEditarProducto.show(false);
                             jPanelTipoPlanta1.show(false);
@@ -5902,6 +5922,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jTextFieldCantidadProdEditarProducto.setText("");
                             jTextFieldPrecioEditarProducto.setText("");
                             jTextAreaEditarProducto.setText("");
+                            jTextFieldStockEditarProducto.setText("");
                         } else {
                             jTextFieldStockEditarProducto.setText("");
                             jTextFieldIDeditarProducto.setText("");
@@ -5911,6 +5932,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jTextFieldCantidadVentaEditarProducto.setText("");
                             jTextFieldCantidadProdEditarProducto.setText("");
                             jTextFieldPrecioEditarProducto.setText("");
+                            jTextFieldStockEditarProducto.setText("");
                         }
                     }
                 } catch (SQLException ex) {
@@ -5945,12 +5967,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             jTextFieldCantidadProdEditarProducto.setEnabled(true);
             jTextFieldPrecioEditarProducto.setEnabled(true);
             jTextAreaEditarProducto.setEnabled(true);
+            jTextFieldStockEditarProducto.setEnabled(true);
         } else {
             jTextFieldNombreEditarProducto.setEnabled(false);
             jTextFieldCantidadVentaEditarProducto.setEnabled(false);
             jTextFieldCantidadProdEditarProducto.setEnabled(false);
             jTextFieldPrecioEditarProducto.setEnabled(false);
             jTextAreaEditarProducto.setEnabled(false);
+            jTextFieldStockEditarProducto.setEnabled(false);
         }
     }//GEN-LAST:event_jRadioButton5ActionPerformed
 
