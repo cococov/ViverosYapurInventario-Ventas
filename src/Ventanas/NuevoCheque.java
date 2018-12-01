@@ -301,69 +301,87 @@ public class NuevoCheque extends javax.swing.JFrame {
     }
 
     private void jButtonConfirmarAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregar3ActionPerformed
-        int numeroCheque = Integer.parseInt(jTextFieldNumeroChequeAgregar.getText());
+        int numeroCheque = 0;
+        if (!jTextFieldNumeroChequeAgregar.getText().equals("")) {
+            numeroCheque = Integer.parseInt(jTextFieldNumeroChequeAgregar.getText());
+        }
         String nombresCheque = jTextFieldNombresAgregarCheque.getText();
-        java.util.Date fechaEmisionCheque = jDateChooserFechaEmisionAgregarCheque.getDate();
-        java.sql.Date sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
-        java.util.Date fechaVencCheque = jDateChooserFechaVencAgregarCheque.getDate();
-        java.sql.Date sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
+        java.util.Date fechaEmisionCheque = null;
+        java.sql.Date sqlEmision = null;
+        if (jDateChooserFechaEmisionAgregarCheque.getDate() != null) {
+            fechaEmisionCheque = jDateChooserFechaEmisionAgregarCheque.getDate();
+            sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
+        }
+        java.util.Date fechaVencCheque = null;
+        java.sql.Date sqlVencimiento = null;
+        if (jDateChooserFechaVencAgregarCheque.getDate() != null) {
+            fechaVencCheque = jDateChooserFechaVencAgregarCheque.getDate();
+            sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
+        }
         String apellidosCheque = jTextFieldApellidosAgregarCheque.getText();
         String descripcion = jTextPaneDescripcionAgregarCheque.getText();
         String monto = jTextFieldMontoCheque.getText();
-        int numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaAgregarCheque.getText());
+        int numeroCuenta = 0;
+        if (!jTextFieldNumeroCuentaAgregarCheque.getText().equalsIgnoreCase("")) {
+            numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaAgregarCheque.getText());
+        }
         String banco = jTextFieldBancoAgregarCheque.getText();
+        if (numeroCheque != 0 && !nombresCheque.equalsIgnoreCase("") && !apellidosCheque.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")
+                && !monto.equalsIgnoreCase("") && numeroCuenta != 0 && !banco.equalsIgnoreCase("") && sqlEmision != null && sqlVencimiento != null) {
+            if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
+                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este cheque?");
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    try {
+                        String sql = "INSERT INTO `cheques`(`numerocheque`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `descripcioncheque`, `nombresemisor`, `apellidosemisor`, `chequescobrados_n`, `banco`, `numerocuenta` ) VALUES (?,?,?,?,?,?,?,?,?,?)";
+                        PreparedStatement st = conexion.getConnection().prepareStatement(sql);
 
-        if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este cheque?");
-            if (confirmar == JOptionPane.YES_OPTION) {
-                try {
-                    String sql = "INSERT INTO `cheques`(`numerocheque`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `descripcioncheque`, `nombresemisor`, `apellidosemisor`, `chequescobrados_n`, `banco`, `numerocuenta` ) VALUES (?,?,?,?,?,?,?,?,?,?)";
-                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                        st.setInt(1, numeroCheque);
+                        st.setDate(2, sqlEmision);
+                        st.setDate(3, sqlVencimiento);
+                        st.setString(4, monto);
+                        st.setString(5, descripcion);
+                        st.setString(6, nombresCheque);
+                        st.setString(7, apellidosCheque);
+                        st.setBoolean(8, false);
+                        st.setString(9, banco);
+                        st.setInt(10, numeroCuenta);
+                        st.executeUpdate();
+                        JOptionPane.showMessageDialog(null, "El nuevo cheque fue agregado con exito!");
+                        ingresarVenta();
+                        JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+                        JasperReport reporte;
+                        String path = "src\\Reportes\\boleta.jasper";
+                        String sql2;
+                        Statement st2;
+                        ResultSet rs2;
+                        sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                        st2 = conexion.getConnection().createStatement();
+                        rs2 = st2.executeQuery(sql2);
+                        int codCompra = 0;
+                        while (rs2.next()) {
+                            codCompra = rs2.getInt(1);
+                        }
+                        Map parametro = new HashMap();
+                        parametro.put("codcompra", codCompra);
+                        reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+                        JasperViewer view = new JasperViewer(jprint, false);
+                        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                        view.setVisible(true);
 
-                    st.setInt(1, numeroCheque);
-                    st.setDate(2, sqlEmision);
-                    st.setDate(3, sqlVencimiento);
-                    st.setString(4, monto);
-                    st.setString(5, descripcion);
-                    st.setString(6, nombresCheque);
-                    st.setString(7, apellidosCheque);
-                    st.setBoolean(8, false);
-                    st.setString(9, banco);
-                    st.setInt(10, numeroCuenta);
-                    st.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "El nuevo cheque fue agregado con exito!");
-                    ingresarVenta();
-                    JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
-                    JasperReport reporte;
-                    String path = "src\\Reportes\\boleta.jasper";
-                    String sql2;
-                    Statement st2;
-                    ResultSet rs2;
-                    sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
-                    st2 = conexion.getConnection().createStatement();
-                    rs2 = st2.executeQuery(sql2);
-                    int codCompra = 0;
-                    while (rs2.next()) {
-                        codCompra = rs2.getInt(1);
+                        // TODO add your handling code here:
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (JRException ex) {
+                        Logger.getLogger(NuevoCheque.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    Map parametro = new HashMap();
-                    parametro.put("codcompra", codCompra);
-                    reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
-                    JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-                    JasperViewer view = new JasperViewer(jprint, false);
-                    view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                    view.setVisible(true);
-
-                    // TODO add your handling code here:
-                } catch (SQLException ex) {
-                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (JRException ex) {
-                    Logger.getLogger(NuevoCheque.class.getName()).log(Level.SEVERE, null, ex);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
                 }
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Hay campos sin datos");
         }
     }//GEN-LAST:event_jButtonConfirmarAgregar3ActionPerformed
 
