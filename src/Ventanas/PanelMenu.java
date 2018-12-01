@@ -85,6 +85,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         validarSoloNumeros(jTextFieldEditarContactoProveedor);
         validarSoloNumeros(jTextFieldContactoProveedor);
         validarSoloNumeros(jTextFieldEfectivo);
+        validarSoloNumeros(jTextFieldNumeroCuentaAgregarCheque);
+        validarSoloNumeros(jTextFieldNumeroCuentaEditarCheque);
 
         this.jTextFieldMontoCheque.addFocusListener(this);
 
@@ -329,8 +331,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         PreparedStatement st4;
                         sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
                         st4 = conexion.getConnection().prepareStatement(sql4);
-                        st4.setString(1, totalConDescuento);
-                        st4.setString(2, totalSinDescuento);
+                        st4.setInt(1, pasarAinteger(totalConDescuento));
+                        st4.setInt(2, pasarAinteger(totalSinDescuento));
                         st4.setInt(3, pasarAinteger(jLabelCalcularNeto.getText()));
                         st4.setInt(4, pasarAinteger(jTextFieldEfectivo.getText()));
                         st4.executeUpdate();
@@ -383,8 +385,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     PreparedStatement st4;
                     sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
                     st4 = conexion.getConnection().prepareStatement(sql4);
-                    st4.setString(1, totalConDescuento);
-                    st4.setString(2, totalSinDescuento);
+                    st4.setInt(1, pasarAinteger(totalConDescuento));
+                    st4.setInt(2, pasarAinteger(totalSinDescuento));
                     st4.setInt(3, pasarAinteger(jLabelCalcularNeto.getText()));
                     st4.setInt(4, pasarAinteger(jTextFieldEfectivo.getText()));
                     st4.executeUpdate();
