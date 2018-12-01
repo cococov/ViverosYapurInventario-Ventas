@@ -376,6 +376,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         jTextFieldEfectivo.setText("");
                         jLabelVuelto.setText("0");
                         limpiarCarrito();
+                        return true;
                     }
                 } else {
                     String sql4;
