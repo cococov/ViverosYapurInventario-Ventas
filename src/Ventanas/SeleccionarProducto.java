@@ -155,11 +155,11 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             }
             jTableproductos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             jTableproductos.getColumnModel().getColumn(0).setPreferredWidth(25);
-            jTableproductos.getColumnModel().getColumn(1).setPreferredWidth(120);
+            jTableproductos.getColumnModel().getColumn(1).setPreferredWidth(118);
             jTableproductos.getColumnModel().getColumn(2).setPreferredWidth(58);
-            jTableproductos.getColumnModel().getColumn(3).setPreferredWidth(58);
-            jTableproductos.getColumnModel().getColumn(4).setPreferredWidth(58);
-            jTableproductos.getColumnModel().getColumn(5).setPreferredWidth(70);
+            jTableproductos.getColumnModel().getColumn(3).setPreferredWidth(62);
+            jTableproductos.getColumnModel().getColumn(4).setPreferredWidth(60);
+            jTableproductos.getColumnModel().getColumn(5).setPreferredWidth(67);
             jTableproductos.setModel(modelo);
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -292,7 +292,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Nombre", "Cant Ventas", "Cant Produc", "Precio", "Descripcion"
+                "ID", "Nombre", "Venta", "Produccion", "Precio", "Descripcion"
             }
         ) {
             Class[] types = new Class [] {
