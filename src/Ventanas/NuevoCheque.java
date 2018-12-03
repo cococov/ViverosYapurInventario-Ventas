@@ -3,6 +3,8 @@ package Ventanas;
 import Clases.Producto;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,7 +37,7 @@ public class NuevoCheque extends javax.swing.JFrame {
     private String tipoPago;
     private int neto;
     private int efectivo;
-    
+
     public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo) {
         initComponents();
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -60,7 +62,7 @@ public class NuevoCheque extends javax.swing.JFrame {
     private NuevoCheque() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public void validarSoloNumeros(JTextField jtext) {
         jtext.addKeyListener(new KeyAdapter() {
             @Override
@@ -277,8 +279,8 @@ public class NuevoCheque extends javax.swing.JFrame {
         PreparedStatement st4;
         sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
         st4 = conexion.getConnection().prepareStatement(sql4);
-        st4.setString(1, totalConDescuento);
-        st4.setString(2, totalSinDescuento);
+        st4.setInt(1, PanelMenu.pasarAinteger(totalConDescuento));
+        st4.setInt(2, PanelMenu.pasarAinteger(totalSinDescuento));
         st4.setInt(3, neto);
         st4.setInt(4, efectivo);
         st4.executeUpdate();
@@ -386,6 +388,7 @@ public class NuevoCheque extends javax.swing.JFrame {
                         JasperViewer view = new JasperViewer(jprint, false);
                         view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                         view.setVisible(true);
+                        dispose();
 
                         // TODO add your handling code here:
                     } catch (SQLException ex) {
@@ -410,6 +413,15 @@ public class NuevoCheque extends javax.swing.JFrame {
     private void jTextFieldNumeroCuentaAgregarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNumeroCuentaAgregarChequeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldNumeroCuentaAgregarChequeActionPerformed
+
+            @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("Imagenes/logo-yapur.png"));
+
+        return retValue;
+    }
+
 
     /**
      * @param args the command line arguments

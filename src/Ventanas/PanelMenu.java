@@ -29,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import net.sf.jasperreports.engine.JRException;
+import proyectoyapur.ColorRenderInv;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -68,12 +69,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         this.jTableBloquearUsuario.setDefaultRenderer(Object.class, new Render());
         this.jTableEditarCheques.setDefaultRenderer(Object.class, new Render());
         PanelMenu.jTableVenta.setDefaultRenderer(Object.class, new Render());
-        this.jTableListaProductos.setDefaultRenderer(Object.class, new Render());
+        this.jTableListaProductos.setDefaultRenderer(Object.class, new ColorRenderInv());
         this.jTableEditarProveedor1.setDefaultRenderer(Object.class, new Render());
         PanelMenu.jTableListaVentas.setDefaultRenderer(Object.class, new Render());
         this.jTableEliminarProveedor2.setDefaultRenderer(Object.class, new Render());
         this.jTableListaMermas.setDefaultRenderer(Object.class, new Render());
         this.jTableCobrarCheque.setDefaultRenderer(Object.class, new Render());
+        this.jTablePresupuesto.setDefaultRenderer(Object.class, new Render());
+        this.jTableListaPresupuestos.setDefaultRenderer(Object.class, new Render());
+
         this.jPanel4.setVisible(false);
         this.jPanel7.setVisible(false);
         this.jPanel6.setVisible(false);
@@ -85,6 +89,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         PanelMenu.jTextFieldDescuentoVenta.setEnabled(false);
         PanelMenu.jTextFieldEfectivo.setEditable(false);
         PanelMenu.jTextFieldEfectivo.setEnabled(false);
+        this.jPanelRealizarPresupuesto.setVisible(false);
+        this.jPanelRealizarVenta.setVisible(false);
+
         validarSoloNumeros(jTextFieldNumeroChequeAgregar);
         validarSoloNumeros(jTextFieldMontoCheque);
         validarSoloNumeros(jTextFieldNumeroChequeEditar);
@@ -267,6 +274,29 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         refrescarTablaVenta();
     }
 
+    public static boolean getEsVenta() {
+        if (jPanelRealizarVenta.isVisible()) {
+            return true;
+        }
+        return false;
+    }
+
+    public static void agregarProductoCarritoPresupuesto(Producto p) {
+        boolean encontrado = false;
+        for (int i = 0; i < cantProductosCarrito; i++) {
+            if (carrito[i].getId() == p.getId()) {
+                carrito[i].setCantidad(carrito[i].getCantidad() + p.getCantidad());
+                encontrado = true;
+            }
+        }
+        if (!encontrado) {
+            carrito[cantProductosCarrito] = p;
+            cantProductosCarrito++;
+        }
+        apreto = false;
+        refrescarTablaPresupuesto();
+    }
+
     public static void refrescarTablaVenta() {
         Clear_Table1(jTableVenta);
         DefaultTableModel modelo = (DefaultTableModel) jTableVenta.getModel();
@@ -351,6 +381,80 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
     }
 
+    public static void refrescarTablaPresupuesto() {
+        Clear_Table1(jTablePresupuesto);
+        DefaultTableModel modelo = (DefaultTableModel) jTablePresupuesto.getModel();
+        Object[] datos = new Object[8];
+        totalGlobal = 0;
+        for (int i = 0; i < cantProductosCarrito; i++) {
+            datos[0] = carrito[i].getId();
+            datos[1] = carrito[i].getNombre();
+            datos[2] = formatearAEntero("" + carrito[i].getPrecio());
+
+            JButton menos = new JButton("-");
+            if (carrito[i].getCantidad() == 1) {
+                menos.setEnabled(false);
+            }
+            datos[3] = menos;
+            datos[4] = carrito[i].getCantidad();
+            JButton mas = new JButton("+");
+            datos[5] = mas;
+            int total = carrito[i].getCantidad() * carrito[i].getPrecio();
+            datos[6] = formatearAEntero("" + total);
+            JButton eliminar = new JButton("X");
+            datos[7] = eliminar;
+            modelo.addRow(datos);
+            totalGlobal = totalGlobal + total;
+        }
+        jTablePresupuesto.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        jTablePresupuesto.getColumnModel().getColumn(0).setPreferredWidth(35);
+        jTablePresupuesto.getColumnModel().getColumn(1).setPreferredWidth(157);
+        jTablePresupuesto.getColumnModel().getColumn(2).setPreferredWidth(85);
+        jTablePresupuesto.getColumnModel().getColumn(6).setPreferredWidth(85);
+        jTablePresupuesto.setModel(modelo);
+        String des = jTextFieldDescuentoPresupuesto.getText();
+        if (des.equalsIgnoreCase("")) {
+            jLabelCalcularNetoPresupuesto.setText(formatearAEntero("" + totalGlobal));
+            int iva = (int) (totalGlobal * 0.19);
+            CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+            int total = iva + totalGlobal;
+            jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
+        } else {
+            jLabelCalcularNetoPresupuesto.setText(formatearAEntero("" + totalGlobal));
+            int iva = (int) (totalGlobal * 0.19);
+            CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+            int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
+            if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
+                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((neto + iva))));
+            } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
+                if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
+                    int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                    jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+
+                }
+            } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
+
+                if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
+
+                    int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
+                    jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                } else {
+                    JOptionPane.showMessageDialog(null, "Descuento excedido");
+                }
+
+            }
+
+        }
+        if (datos[0] == null) {
+            jTextFieldDescuentoPresupuesto.setEditable(false);
+            jTextFieldDescuentoPresupuesto.setEnabled(false);
+        } else {
+            jTextFieldDescuentoPresupuesto.setEditable(true);
+            jTextFieldDescuentoPresupuesto.setEnabled(true);
+        }
+
+    }
+
     public void refrescarTablaCobrarCheque() {
         Clear_Table1(jTableCobrarCheque);
         JButton detalles = new JButton("Cobrar");
@@ -387,7 +491,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     public boolean registrarVenta() throws SQLException {
         if (carrito[0] != null) {
             String tipoPago = "";
-            String metodoPago;
+            String metodoPago = "";
             if (jRadioButtonBoleta.isSelected()) {
                 tipoPago = "Boleta";
             } else if (jRadioButtonFactura.isSelected()) {
@@ -537,6 +641,77 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         } else {
             JOptionPane.showMessageDialog(null, "Aun no a agregado productos a la venta");
         }
+        return false;
+    }
+
+    public boolean registrarPresupuesto() throws SQLException {
+        if (carrito[0] != null) {
+            String tipoPago = "";
+            String metodoPago = "";
+            String totalConDescuento = jLabelPrecioAPagarPresupuesto.getText();
+            int totalSinDesc = pasarAinteger(jLabelCalcularNetoPresupuesto.getText()) + pasarAinteger(CalcularIVAPresupuesto.getText());
+            String totalSinDescuento = formatearAEntero("" + totalSinDesc);
+
+            //si no es cheque
+            //Ingresar orden Compra
+            if ((jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0 && pasarAinteger(jTextFieldDescuentoPresupuesto.getText()) < 100) || (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1 && pasarAinteger(jTextFieldDescuentoPresupuesto.getText()) < totalSinDesc)) {
+
+                String sql4;
+                PreparedStatement st4;
+                sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
+                st4 = conexion.getConnection().prepareStatement(sql4);
+                st4.setInt(1, pasarAinteger(totalConDescuento));
+                st4.setInt(2, pasarAinteger(totalSinDescuento));
+                st4.setInt(3, pasarAinteger(jLabelCalcularNetoPresupuesto.getText()));
+                st4.setInt(4, 0);
+                st4.executeUpdate();
+
+                //obtener id de la compra
+                String sql2;
+                Statement st2;
+                ResultSet rs2;
+                sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                st2 = conexion.getConnection().createStatement();
+                rs2 = st2.executeQuery(sql2);
+                int codCompra = 0;
+                while (rs2.next()) {
+                    codCompra = rs2.getInt(1);
+                }
+
+                String sql3;
+                PreparedStatement st3;
+                //ingresar productos
+                for (int i = 0; i < cantProductosCarrito; i++) {
+                    sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
+                    st3 = conexion.getConnection().prepareStatement(sql3);
+                    st3.setInt(1, carrito[i].getId());
+                    st3.setInt(2, codCompra);
+                    st3.setInt(3, carrito[i].getCantidad());
+                    st3.executeUpdate();
+                }
+                //Ingresar orden compra
+                String sql1;
+                PreparedStatement st1;
+                sql1 = "INSERT INTO `presupuesto`(`codpresupuesto`) VALUES (?)";
+                st1 = conexion.getConnection().prepareStatement(sql1);
+                st1.setInt(1, codCompra);
+                st1.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+                Clear_Table1(jTablePresupuesto);
+                jLabelCalcularNetoPresupuesto.setText("0");
+                CalcularIVAPresupuesto.setText("0");
+                jTextFieldDescuentoPresupuesto.setText("");
+                jLabelPrecioAPagarPresupuesto.setText("0");
+                limpiarCarrito();
+                return true;
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Descuento excedido");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay productos en el carro de presupuesto");
+        }
+
         return false;
     }
 
@@ -883,54 +1058,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                             JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
                                         }
                                     } else //SOLO AGREGAR ESPECIE DE PLANTA
-                                     if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() != 0) {
-                                            if (especiePlanta == 1) {
-                                                if (jComboBoxAgregarTipoPlanta.getSelectedIndex() > 1 && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
-                                                    String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
-                                                    PreparedStatement st;
-                                                    ResultSet rs;
-                                                    String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
-                                                    st = conexion.getConnection().prepareStatement(sql);
-                                                    rs = st.executeQuery(sql);
-                                                    while (rs.next()) {
-                                                        codTipoPlanta = rs.getInt(1);
-                                                    }
-
-                                                    String sqlAux3;
-                                                    PreparedStatement stAux3;
-                                                    sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
-                                                    stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
-                                                    ResultSet rsAux3;
-                                                    rsAux3 = stAux3.executeQuery(sqlAux3);
-                                                    int cant3 = 0;
-                                                    while (rsAux3.next()) {
-                                                        cant3 = rsAux3.getInt(1);
-                                                    }
-                                                    if (cant3 < 1) {
-
-                                                        PreparedStatement st2;
-                                                        sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
-                                                        st2 = conexion.getConnection().prepareStatement(sql);
-                                                        st2.setInt(1, codTipoPlanta);
-                                                        st2.setString(2, nuevaEspeciePlanta);
-                                                        st2.executeUpdate();
-
-                                                        PreparedStatement st4;
-                                                        ResultSet rs4;
-                                                        sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
-                                                        st4 = conexion.getConnection().prepareStatement(sql);
-                                                        rs4 = st4.executeQuery(sql);
-                                                        while (rs4.next()) {
-                                                            codEspeciePlanta = rs4.getInt(1);
-                                                        }
-                                                        todoBien = true;
-                                                    } else {
-                                                        JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
-                                                    }
-                                                } else {
-                                                    JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
-                                                }
-                                            } else {
+                                    if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() != 0) {
+                                        if (especiePlanta == 1) {
+                                            if (jComboBoxAgregarTipoPlanta.getSelectedIndex() > 1 && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
                                                 String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
                                                 PreparedStatement st;
                                                 ResultSet rs;
@@ -941,19 +1071,64 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                                     codTipoPlanta = rs.getInt(1);
                                                 }
 
-                                                PreparedStatement st2;
-                                                ResultSet rs2;
-                                                String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "'";
-                                                st2 = conexion.getConnection().prepareStatement(sql2);
-                                                rs2 = st.executeQuery(sql2);
-                                                while (rs2.next()) {
-                                                    codEspeciePlanta = rs2.getInt(1);
+                                                String sqlAux3;
+                                                PreparedStatement stAux3;
+                                                sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
+                                                stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
+                                                ResultSet rsAux3;
+                                                rsAux3 = stAux3.executeQuery(sqlAux3);
+                                                int cant3 = 0;
+                                                while (rsAux3.next()) {
+                                                    cant3 = rsAux3.getInt(1);
                                                 }
-                                                todoBien = true;
+                                                if (cant3 < 1) {
+
+                                                    PreparedStatement st2;
+                                                    sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                                                    st2 = conexion.getConnection().prepareStatement(sql);
+                                                    st2.setInt(1, codTipoPlanta);
+                                                    st2.setString(2, nuevaEspeciePlanta);
+                                                    st2.executeUpdate();
+
+                                                    PreparedStatement st4;
+                                                    ResultSet rs4;
+                                                    sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                                                    st4 = conexion.getConnection().prepareStatement(sql);
+                                                    rs4 = st4.executeQuery(sql);
+                                                    while (rs4.next()) {
+                                                        codEspeciePlanta = rs4.getInt(1);
+                                                    }
+                                                    todoBien = true;
+                                                } else {
+                                                    JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
+                                                }
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
                                             }
                                         } else {
-                                            JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
+                                            String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                                            PreparedStatement st;
+                                            ResultSet rs;
+                                            String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                                            st = conexion.getConnection().prepareStatement(sql);
+                                            rs = st.executeQuery(sql);
+                                            while (rs.next()) {
+                                                codTipoPlanta = rs.getInt(1);
+                                            }
+
+                                            PreparedStatement st2;
+                                            ResultSet rs2;
+                                            String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "'";
+                                            st2 = conexion.getConnection().prepareStatement(sql2);
+                                            rs2 = st.executeQuery(sql2);
+                                            while (rs2.next()) {
+                                                codEspeciePlanta = rs2.getInt(1);
+                                            }
+                                            todoBien = true;
                                         }
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
+                                    }
 
                                     if (todoBien) {
                                         //ESPECIE Y TIPO YA ESTAN EN LA LISTA
@@ -1115,10 +1290,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra";
         DefaultTableModel modelo = (DefaultTableModel) jTableListaVentas.getModel();
         JButton detalles = new JButton("Detalles");
+        JButton cancelar = new JButton("Cancelar");
+
         try {
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
-            Object[] datosQuery = new Object[6];
+            Object[] datosQuery = new Object[7];
 
             while (rs.next()) {
 
@@ -1128,9 +1305,41 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 datosQuery[3] = rs.getString(4);
                 datosQuery[4] = rs.getString(5);
                 datosQuery[5] = detalles;
+                datosQuery[6] = cancelar;
+
                 modelo.addRow(datosQuery);
             }
             jTableListaVentas.setModel(modelo);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void refrescarListaPresupuestos() {
+        Clear_Table1(jTableListaPresupuestos);
+        String sql;
+        Statement st;
+        ResultSet rs;
+        sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha FROM ordencompra oc, presupuesto p WHERE oc.codordencompra=p.codpresupuesto";
+        DefaultTableModel modelo = (DefaultTableModel) jTableListaPresupuestos.getModel();
+        JButton detalles = new JButton("Detalles");
+        JButton cancelar = new JButton("Cancelar");
+        try {
+            st = conexion.getConnection().createStatement();
+            rs = st.executeQuery(sql);
+            Object[] datosQuery = new Object[5];
+
+            while (rs.next()) {
+
+                datosQuery[0] = rs.getString(1);
+                datosQuery[2] = rs.getString(2);
+                datosQuery[1] = rs.getDate(3);
+                datosQuery[3] = detalles;
+                datosQuery[4] = cancelar;
+                modelo.addRow(datosQuery);
+            }
+            jTableListaPresupuestos.setModel(modelo);
 
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -1640,18 +1849,26 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jComboBoxTipoDePago = new javax.swing.JComboBox<>();
         jScrollPane11 = new javax.swing.JScrollPane();
         jTableDetallesVenta = new javax.swing.JTable();
+        jLabel128 = new javax.swing.JLabel();
+        jLabelCalcularNetoDetallesVenta = new javax.swing.JLabel();
+        jLabel129 = new javax.swing.JLabel();
+        jLabel131 = new javax.swing.JLabel();
+        jLabelPrecioAPagarDetallesVenta = new javax.swing.JLabel();
+        jLabel132 = new javax.swing.JLabel();
+        jLabelVueltoDetallesVenta = new javax.swing.JLabel();
+        jLabel133 = new javax.swing.JLabel();
+        jLabel134 = new javax.swing.JLabel();
+        jLabel135 = new javax.swing.JLabel();
+        jLabel136 = new javax.swing.JLabel();
+        jLabel137 = new javax.swing.JLabel();
+        jLabel138 = new javax.swing.JLabel();
+        jLabelDescuentoDetallesVenta = new javax.swing.JLabel();
+        jLabelEfectivoDetallesVenta1 = new javax.swing.JLabel();
+        jButtonImpimirBoletaVenta = new javax.swing.JButton();
         jPanelListaVentas = new javax.swing.JPanel();
         jLabel81 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
         jTableListaVentas = new javax.swing.JTable();
-        jPanelDetallesPresupuestos = new javax.swing.JPanel();
-        jLabel87 = new javax.swing.JLabel();
-        jLabel88 = new javax.swing.JLabel();
-        jTextFieldCodVenta1 = new javax.swing.JTextField();
-        jLabel89 = new javax.swing.JLabel();
-        jDateChooserFechaVenta1 = new com.toedter.calendar.JDateChooser();
-        jScrollPane14 = new javax.swing.JScrollPane();
-        jTableDetallesVenta1 = new javax.swing.JTable();
         jPanelRealizarVenta = new javax.swing.JPanel();
         jLabel33 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -1679,6 +1896,46 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel102 = new javax.swing.JLabel();
         jLabel103 = new javax.swing.JLabel();
         jLabelVuelto = new javax.swing.JLabel();
+        jPanelRealizarPresupuesto = new javax.swing.JPanel();
+        jLabel118 = new javax.swing.JLabel();
+        jScrollPane22 = new javax.swing.JScrollPane();
+        jTablePresupuesto = new javax.swing.JTable();
+        jLabel119 = new javax.swing.JLabel();
+        jLabelPrecioAPagarPresupuesto = new javax.swing.JLabel();
+        jButtonAgregarProductoAPresupuesto = new javax.swing.JButton();
+        jButtonConfirmarPresupuesto = new javax.swing.JButton();
+        jLabel120 = new javax.swing.JLabel();
+        jTextFieldDescuentoPresupuesto = new javax.swing.JTextField();
+        jLabel121 = new javax.swing.JLabel();
+        CalcularIVAPresupuesto = new javax.swing.JLabel();
+        jLabel122 = new javax.swing.JLabel();
+        jLabelCalcularNetoPresupuesto = new javax.swing.JLabel();
+        jComboBoxDescuentoPresupuesto = new javax.swing.JComboBox<>();
+        jLabel124 = new javax.swing.JLabel();
+        jLabel125 = new javax.swing.JLabel();
+        jLabel126 = new javax.swing.JLabel();
+        jPanelListaPresupuestos = new javax.swing.JPanel();
+        jLabel123 = new javax.swing.JLabel();
+        jScrollPane14 = new javax.swing.JScrollPane();
+        jTableListaPresupuestos = new javax.swing.JTable();
+        jPanelDetallesPresupuesto = new javax.swing.JPanel();
+        jLabel127 = new javax.swing.JLabel();
+        jLabel130 = new javax.swing.JLabel();
+        jTextFieldCodPresupuesto = new javax.swing.JTextField();
+        jLabel139 = new javax.swing.JLabel();
+        jDateChooserFechaPresupuesto = new com.toedter.calendar.JDateChooser();
+        jScrollPane24 = new javax.swing.JScrollPane();
+        jTableDetallesPresupuesto = new javax.swing.JTable();
+        jLabel141 = new javax.swing.JLabel();
+        jLabelCalcularNetoDetallesPresupuesto = new javax.swing.JLabel();
+        jLabel142 = new javax.swing.JLabel();
+        jLabel143 = new javax.swing.JLabel();
+        jLabelPrecioAPagarDetallesPresupuesto = new javax.swing.JLabel();
+        jLabel144 = new javax.swing.JLabel();
+        jLabel148 = new javax.swing.JLabel();
+        jLabel149 = new javax.swing.JLabel();
+        jLabelDescuentoDetallesPresupuesto = new javax.swing.JLabel();
+        jButtonImpimirBoletaPresupuesto = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jPanelReportes = new javax.swing.JPanel();
         jButtonAgregarProveedor1 = new javax.swing.JButton();
@@ -3106,11 +3363,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jTextFieldCantidadProdEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel113, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanelEditarProductoFormLayout.createSequentialGroup()
-                            .addGap(18, 18, 18)
-                            .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextFieldCantidadVentaEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel112)))))
+                        .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldCantidadVentaEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel112))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelEditarProductoFormLayout.createSequentialGroup()
@@ -4181,9 +4436,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel85.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel85.setText("Fecha:");
 
-        jRadioButton3.setText("jRadioButton3");
+        jRadioButton3.setText("Boleta");
 
-        jRadioButton4.setText("jRadioButton4");
+        jRadioButton4.setText("Factura");
+        jRadioButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton4ActionPerformed(evt);
+            }
+        });
 
         jLabel86.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel86.setText("Tipo de pago:");
@@ -4192,38 +4452,38 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
         jTableDetallesVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Nombre", "Precio", "Cantidad", "Total"
+                "Id", "Nombre", "Precio", "Cantidad", "Total"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -4246,35 +4506,134 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         });
         jScrollPane11.setViewportView(jTableDetallesVenta);
 
+        jLabel128.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel128.setText("$");
+
+        jLabelCalcularNetoDetallesVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelCalcularNetoDetallesVenta.setText("0");
+
+        jLabel129.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel129.setText("Total neto:");
+
+        jLabel131.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel131.setText("Descuento:");
+
+        jLabelPrecioAPagarDetallesVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelPrecioAPagarDetallesVenta.setText("0");
+
+        jLabel132.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel132.setText("Total:");
+
+        jLabelVueltoDetallesVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelVueltoDetallesVenta.setText("0");
+
+        jLabel133.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel133.setText("$");
+
+        jLabel134.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel134.setText("Vuelto:");
+
+        jLabel135.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel135.setText("Efectivo:");
+
+        jLabel136.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel136.setText("$");
+
+        jLabel137.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel137.setText("$");
+
+        jLabel138.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel138.setText("$");
+
+        jLabelDescuentoDetallesVenta.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelDescuentoDetallesVenta.setText("0");
+
+        jLabelEfectivoDetallesVenta1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelEfectivoDetallesVenta1.setText("0");
+
+        jButtonImpimirBoletaVenta.setText("Imprimir");
+        jButtonImpimirBoletaVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonImpimirBoletaVentaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelDetallesVentaLayout = new javax.swing.GroupLayout(jPanelDetallesVenta);
         jPanelDetallesVenta.setLayout(jPanelDetallesVentaLayout);
         jPanelDetallesVentaLayout.setHorizontalGroup(
             jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
-                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
                         .addGap(65, 65, 65)
-                        .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jRadioButton4)
+                        .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
-                                .addComponent(jLabel84)
+                                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
+                                        .addComponent(jLabel84)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jTextFieldCodVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(29, 29, 29)
+                                        .addComponent(jLabel85)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jDateChooserFechaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jRadioButton3))
+                                    .addComponent(jLabel83, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel86)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextFieldCodVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)
-                                .addComponent(jLabel85)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jDateChooserFechaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jRadioButton3))
-                            .addComponent(jLabel83, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel86)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBoxTipoDePago, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jComboBoxTipoDePago, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
+                                .addGap(365, 365, 365)
+                                .addComponent(jRadioButton4)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
                         .addGap(92, 92, 92)
                         .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonImpimirBoletaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesVentaLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesVentaLayout.createSequentialGroup()
+                        .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel135)
+                            .addComponent(jLabel132)
+                            .addComponent(jLabel134))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
+                                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel136)
+                                    .addComponent(jLabel133))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelPrecioAPagarDetallesVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabelVueltoDetallesVenta)))
+                            .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
+                                .addComponent(jLabel138)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelEfectivoDetallesVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(156, 156, 156))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesVentaLayout.createSequentialGroup()
+                        .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(jLabel129)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel128, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelCalcularNetoDetallesVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesVentaLayout.createSequentialGroup()
+                                .addComponent(jLabel131)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel137)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelDescuentoDetallesVenta)
+                                .addGap(72, 72, 72)))
+                        .addGap(164, 164, 164))))
         );
         jPanelDetallesVentaLayout.setVerticalGroup(
             jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -4288,16 +4647,45 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         .addComponent(jTextFieldCodVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel85)
                         .addComponent(jDateChooserFechaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jRadioButton3)
+                        .addComponent(jLabel86)
+                        .addComponent(jComboBoxTipoDePago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jRadioButton4)
+                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
-                        .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jRadioButton3)
-                            .addComponent(jLabel86)
-                            .addComponent(jComboBoxTipoDePago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton4)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
-                .addGap(47, 47, 47))
+                        .addGap(7, 7, 7)
+                        .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
+                        .addGap(184, 184, 184)
+                        .addComponent(jButtonImpimirBoletaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel129)
+                    .addComponent(jLabelCalcularNetoDetallesVenta)
+                    .addComponent(jLabel128))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel131)
+                    .addComponent(jLabel137)
+                    .addComponent(jLabelDescuentoDetallesVenta))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel132)
+                    .addComponent(jLabelPrecioAPagarDetallesVenta)
+                    .addComponent(jLabel136))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel135)
+                    .addComponent(jLabel138)
+                    .addComponent(jLabelEfectivoDetallesVenta1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel134)
+                    .addComponent(jLabel133)
+                    .addComponent(jLabelVueltoDetallesVenta))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         jPanel7.add(jPanelDetallesVenta, "card4");
@@ -4307,38 +4695,38 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
         jTableListaVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Fecha", "Monto Total", "Tipo", "Metodo Pago", "Detalles"
+                "Id", "Fecha", "Monto Total", "Tipo", "Metodo Pago", "Detalles", "Cancelar"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -4373,7 +4761,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     .addGroup(jPanelListaVentasLayout.createSequentialGroup()
                         .addGap(341, 341, 341)
                         .addComponent(jLabel81)))
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
         jPanelListaVentasLayout.setVerticalGroup(
             jPanelListaVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -4386,118 +4774,6 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         );
 
         jPanel7.add(jPanelListaVentas, "card3");
-
-        jLabel87.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel87.setText("Detalles de presupuesto");
-
-        jLabel88.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel88.setText("Id:");
-
-        jTextFieldCodVenta1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldCodVenta1ActionPerformed(evt);
-            }
-        });
-
-        jLabel89.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel89.setText("Fecha:");
-
-        jTableDetallesVenta1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Nombre", "Precio", "Cantidad", "Total"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jTableDetallesVenta1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTableDetallesVenta1MouseClicked(evt);
-            }
-        });
-        jTableDetallesVenta1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTableDetallesVenta1KeyPressed(evt);
-            }
-        });
-        jScrollPane14.setViewportView(jTableDetallesVenta1);
-
-        javax.swing.GroupLayout jPanelDetallesPresupuestosLayout = new javax.swing.GroupLayout(jPanelDetallesPresupuestos);
-        jPanelDetallesPresupuestos.setLayout(jPanelDetallesPresupuestosLayout);
-        jPanelDetallesPresupuestosLayout.setHorizontalGroup(
-            jPanelDetallesPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelDetallesPresupuestosLayout.createSequentialGroup()
-                .addGroup(jPanelDetallesPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelDetallesPresupuestosLayout.createSequentialGroup()
-                        .addGap(65, 65, 65)
-                        .addComponent(jLabel88)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextFieldCodVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel89)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jDateChooserFechaVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelDetallesPresupuestosLayout.createSequentialGroup()
-                        .addGap(92, 92, 92)
-                        .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelDetallesPresupuestosLayout.createSequentialGroup()
-                        .addGap(306, 306, 306)
-                        .addComponent(jLabel87)))
-                .addContainerGap(119, Short.MAX_VALUE))
-        );
-        jPanelDetallesPresupuestosLayout.setVerticalGroup(
-            jPanelDetallesPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelDetallesPresupuestosLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel87)
-                .addGap(18, 18, 18)
-                .addGroup(jPanelDetallesPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel88)
-                    .addComponent(jTextFieldCodVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel89)
-                    .addComponent(jDateChooserFechaVenta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
-                .addGap(47, 47, 47))
-        );
-
-        jPanel7.add(jPanelDetallesPresupuestos, "card4");
 
         jLabel33.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel33.setText("Venta");
@@ -4674,7 +4950,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarVentaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jButtonConfirmarVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -4789,7 +5065,476 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
         jPanel7.add(jPanelRealizarVenta, "card2");
 
+        jLabel118.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel118.setText("Presupuesto");
+
+        jTablePresupuesto.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Id", "Nombre", "Precio", "-", "Cantidad", "+", "Total", "X"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTablePresupuesto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTablePresupuestoMouseClicked(evt);
+            }
+        });
+        jTablePresupuesto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTablePresupuestoKeyPressed(evt);
+            }
+        });
+        jScrollPane22.setViewportView(jTablePresupuesto);
+
+        jLabel119.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel119.setText("Total:");
+
+        jLabelPrecioAPagarPresupuesto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelPrecioAPagarPresupuesto.setText("0");
+
+        jButtonAgregarProductoAPresupuesto.setText("Agregar Producto");
+        jButtonAgregarProductoAPresupuesto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAgregarProductoAPresupuestoActionPerformed(evt);
+            }
+        });
+
+        jButtonConfirmarPresupuesto.setText("Confirmar Presupuesto");
+        jButtonConfirmarPresupuesto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonConfirmarPresupuestoActionPerformed(evt);
+            }
+        });
+
+        jLabel120.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel120.setText("Descuento:");
+
+        jTextFieldDescuentoPresupuesto.setText("0");
+        jTextFieldDescuentoPresupuesto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextFieldDescuentoPresupuestoKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldDescuentoPresupuestoKeyReleased(evt);
+            }
+        });
+
+        jLabel121.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel121.setText("Iva:");
+
+        CalcularIVAPresupuesto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        CalcularIVAPresupuesto.setText("0");
+
+        jLabel122.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel122.setText("Total neto:");
+
+        jLabelCalcularNetoPresupuesto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelCalcularNetoPresupuesto.setText("0");
+
+        jComboBoxDescuentoPresupuesto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "%", "Pesos" }));
+        jComboBoxDescuentoPresupuesto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxDescuentoPresupuestoActionPerformed(evt);
+            }
+        });
+
+        jLabel124.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel124.setText("$");
+
+        jLabel125.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel125.setText("$");
+
+        jLabel126.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel126.setText("$");
+
+        javax.swing.GroupLayout jPanelRealizarPresupuestoLayout = new javax.swing.GroupLayout(jPanelRealizarPresupuesto);
+        jPanelRealizarPresupuesto.setLayout(jPanelRealizarPresupuestoLayout);
+        jPanelRealizarPresupuestoLayout.setHorizontalGroup(
+            jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonConfirmarPresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonAgregarProductoAPresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(27, 27, 27))
+            .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                .addGap(306, 306, 306)
+                .addComponent(jLabel118)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel120)
+                            .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                                .addComponent(jLabel121, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel125))
+                            .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                                .addComponent(jLabel122)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel124)))
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(CalcularIVAPresupuesto)
+                            .addComponent(jTextFieldDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelCalcularNetoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                        .addComponent(jLabel119)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel126)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelPrecioAPagarPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(238, 238, 238))
+        );
+        jPanelRealizarPresupuestoLayout.setVerticalGroup(
+            jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                        .addGap(145, 145, 145)
+                        .addComponent(jButtonAgregarProductoAPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(129, 129, 129)
+                        .addComponent(jButtonConfirmarPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel118)
+                        .addGap(13, 13, 13)
+                        .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel122)
+                    .addComponent(jLabelCalcularNetoPresupuesto)
+                    .addComponent(jLabel124))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel121)
+                    .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(CalcularIVAPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel125)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBoxDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel120))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel119)
+                    .addComponent(jLabelPrecioAPagarPresupuesto)
+                    .addComponent(jLabel126))
+                .addGap(66, 66, 66))
+        );
+
+        jPanel7.add(jPanelRealizarPresupuesto, "card2");
+
+        jLabel123.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel123.setText("Lista de presupuestos");
+
+        jTableListaPresupuestos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Id", "Fecha", "Monto total", "Detalles", "Cancelar"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableListaPresupuestos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableListaPresupuestosMouseClicked(evt);
+            }
+        });
+        jScrollPane14.setViewportView(jTableListaPresupuestos);
+
+        javax.swing.GroupLayout jPanelListaPresupuestosLayout = new javax.swing.GroupLayout(jPanelListaPresupuestos);
+        jPanelListaPresupuestos.setLayout(jPanelListaPresupuestosLayout);
+        jPanelListaPresupuestosLayout.setHorizontalGroup(
+            jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                .addGroup(jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                        .addGap(341, 341, 341)
+                        .addComponent(jLabel123))
+                    .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 787, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(46, Short.MAX_VALUE))
+        );
+        jPanelListaPresupuestosLayout.setVerticalGroup(
+            jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(jLabel123)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(73, Short.MAX_VALUE))
+        );
+
+        jPanel7.add(jPanelListaPresupuestos, "card3");
+
+        jLabel127.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel127.setText("Detalles de Presupuesto");
+
+        jLabel130.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel130.setText("Id:");
+
+        jTextFieldCodPresupuesto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldCodPresupuestoActionPerformed(evt);
+            }
+        });
+
+        jLabel139.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel139.setText("Fecha:");
+
+        jTableDetallesPresupuesto.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Id", "Nombre", "Precio", "Cantidad", "Total"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTableDetallesPresupuesto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableDetallesPresupuestoMouseClicked(evt);
+            }
+        });
+        jTableDetallesPresupuesto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTableDetallesPresupuestoKeyPressed(evt);
+            }
+        });
+        jScrollPane24.setViewportView(jTableDetallesPresupuesto);
+
+        jLabel141.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel141.setText("$");
+
+        jLabelCalcularNetoDetallesPresupuesto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelCalcularNetoDetallesPresupuesto.setText("0");
+
+        jLabel142.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel142.setText("Total neto:");
+
+        jLabel143.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel143.setText("Descuento:");
+
+        jLabelPrecioAPagarDetallesPresupuesto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelPrecioAPagarDetallesPresupuesto.setText("0");
+
+        jLabel144.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel144.setText("Total:");
+
+        jLabel148.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel148.setText("$");
+
+        jLabel149.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel149.setText("$");
+
+        jLabelDescuentoDetallesPresupuesto.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelDescuentoDetallesPresupuesto.setText("0");
+
+        jButtonImpimirBoletaPresupuesto.setText("Imprimir");
+        jButtonImpimirBoletaPresupuesto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonImpimirBoletaPresupuestoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelDetallesPresupuestoLayout = new javax.swing.GroupLayout(jPanelDetallesPresupuesto);
+        jPanelDetallesPresupuesto.setLayout(jPanelDetallesPresupuestoLayout);
+        jPanelDetallesPresupuestoLayout.setHorizontalGroup(
+            jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                .addGap(19, 570, Short.MAX_VALUE)
+                .addComponent(jLabel144)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel148)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelPrecioAPagarDetallesPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(156, 156, 156))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel142)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel141, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelCalcularNetoDetallesPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                        .addComponent(jLabel143)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel149)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelDescuentoDetallesPresupuesto)
+                        .addGap(72, 72, 72)))
+                .addGap(164, 164, 164))
+            .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                        .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                                .addGap(65, 65, 65)
+                                .addComponent(jLabel130)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldCodPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29)
+                                .addComponent(jLabel139)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jDateChooserFechaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                                .addGap(92, 92, 92)
+                                .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonImpimirBoletaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                        .addGap(280, 280, 280)
+                        .addComponent(jLabel127)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanelDetallesPresupuestoLayout.setVerticalGroup(
+            jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jLabel127)
+                .addGap(18, 18, 18)
+                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel130)
+                    .addComponent(jTextFieldCodPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel139)
+                    .addComponent(jDateChooserFechaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                        .addGap(209, 209, 209)
+                        .addComponent(jButtonImpimirBoletaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel142)
+                    .addComponent(jLabelCalcularNetoDetallesPresupuesto)
+                    .addComponent(jLabel141))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel143)
+                    .addComponent(jLabel149)
+                    .addComponent(jLabelDescuentoDetallesPresupuesto))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel144)
+                    .addComponent(jLabelPrecioAPagarDetallesPresupuesto)
+                    .addComponent(jLabel148))
+                .addContainerGap(81, Short.MAX_VALUE))
+        );
+
+        jPanel7.add(jPanelDetallesPresupuesto, "card4");
+
         jButton1.setText("Lista Presupuestos");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelVentasLayout = new javax.swing.GroupLayout(jPanelVentas);
         jPanelVentas.setLayout(jPanelVentasLayout);
@@ -5177,8 +5922,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private void jComboBoxTipoUsuarioAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoUsuarioAgregarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxTipoUsuarioAgregarActionPerformed
-    
-    private void refrescarTablaEditarUsuario(){
+
+    private void refrescarTablaEditarUsuario() {
         Clear_Table1(jTableEditarUsuario);
         JButton editar = new JButton("Detalles");
         //Rellenar tabla con usuarios
@@ -5210,12 +5955,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void jButtonEditarUsuairoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarUsuairoActionPerformed
         jPanel4.setVisible(true);
         jPanelAgregarUsuario.show(false);
         jPanelEditarUsuario.show(false);
-        jPanelBloquearUsuario.show(false);      
+        jPanelBloquearUsuario.show(false);
         refrescarTablaEditarUsuario();
         jPanelListaUsuarios.show(true);
 
@@ -5811,239 +6556,6 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jPanelAgregarProducto.show(false);
     }//GEN-LAST:event_jButtonAgregarMermaActionPerformed
 
-    private void jButtonRealizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealizarVentaActionPerformed
-        jPanel7.setVisible(true);
-        jPanelListaVentas.show(false);
-        jPanelDetallesVenta.show(false);
-        jPanelRealizarVenta.show(true);
-        this.jRadioButtonBoleta.setSelected(true);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonRealizarVentaActionPerformed
-
-    private void jButtonRealizarPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealizarPresupuestoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonRealizarPresupuestoActionPerformed
-
-    private void jButtonListaVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListaVentasActionPerformed
-        refrescarTablaListaVentas();
-        this.jPanel7.setVisible(true);
-        this.jPanelRealizarVenta.show(false);
-        this.jPanelListaVentas.show(true);
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonListaVentasActionPerformed
-
-    private void jTextFieldCodVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCodVentaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldCodVentaActionPerformed
-
-    private void jTableDetallesVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDetallesVentaMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTableDetallesVentaMouseClicked
-
-    private void jTableDetallesVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableDetallesVentaKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTableDetallesVentaKeyPressed
-
-    private void jTableListaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaVentasMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTableListaVentasMouseClicked
-
-    private void jTableListaVentasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableListaVentasKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTableListaVentasKeyPressed
-
-    private void jTextFieldCodVenta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCodVenta1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldCodVenta1ActionPerformed
-
-    private void jTableDetallesVenta1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDetallesVenta1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTableDetallesVenta1MouseClicked
-
-    private void jTableDetallesVenta1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableDetallesVenta1KeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTableDetallesVenta1KeyPressed
-
-    private void jTableVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableVentaMouseClicked
-        int column = jTableVenta.getColumnModel().getColumnIndexAtX(evt.getX());
-        int row = evt.getY() / jTableVenta.getRowHeight();
-        if (row < jTableVenta.getRowCount() && row >= 0 && column < jTableVenta.getColumnCount() && column >= 0) {
-            Object value = jTableVenta.getValueAt(row, column);
-            if (value instanceof JButton) {
-                ((JButton) value).doClick();
-                JButton boton = (JButton) value;
-                int fila = jTableVenta.getSelectedRow();
-                switch (boton.getText()) {
-                    case "-":
-                        if (carrito[fila].getCantidad() > 1) {
-                            carrito[fila].setCantidad(carrito[fila].getCantidad() - 1);
-                        }
-                        break;
-                    case "+":
-                        carrito[fila].setCantidad(carrito[fila].getCantidad() + 1);
-                        break;
-                    case "X":
-                        eliminarDelCarrito(carrito, fila);
-                        break;
-                    default:
-                        break;
-                }
-                refrescarTablaVenta();
-            }
-        }
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTableVentaMouseClicked
-
-    private void jTableVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableVentaKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTableVentaKeyPressed
-
-    private void jButtonAgregarProductoAVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoAVentaActionPerformed
-        SeleccionarProducto seleccionarProducto = new SeleccionarProducto(this.conexion, null);
-        seleccionarProducto.setTitle("Seleccionar producto");
-        seleccionarProducto.setLocationRelativeTo(null);
-        seleccionarProducto.setResizable(false);
-        seleccionarProducto.setVisible(true);
-        seleccionarProducto.setSize(418, 640);
-    }//GEN-LAST:event_jButtonAgregarProductoAVentaActionPerformed
-
-    private void jButtonConfirmarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVentaActionPerformed
-        try {
-            if (registrarVenta()) {
-                JasperReport reporte;
-                String path = "src\\Reportes\\boleta.jasper";
-                String sql2;
-                Statement st2;
-                ResultSet rs2;
-                sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
-                st2 = conexion.getConnection().createStatement();
-                rs2 = st2.executeQuery(sql2);
-                int codCompra = 0;
-                while (rs2.next()) {
-                    codCompra = rs2.getInt(1);
-                }
-                Map parametro = new HashMap();
-                parametro.put("codcompra", codCompra);
-                reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
-                JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-                JasperViewer view = new JasperViewer(jprint, false);
-                view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                view.setVisible(true);
-            }
-            // TODO add your handling code here:
-        } catch (SQLException | JRException ex) {
-            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButtonConfirmarVentaActionPerformed
-
-    private void jRadioButtonBoletaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonBoletaActionPerformed
-        if (jRadioButtonBoleta.isSelected()) {
-            jRadioButtonFactura.setSelected(false);
-        } else {
-            jRadioButtonFactura.setSelected(true);
-        }
-    }//GEN-LAST:event_jRadioButtonBoletaActionPerformed
-
-    private void jTextFieldDescuentoVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoVentaKeyPressed
-
-    }//GEN-LAST:event_jTextFieldDescuentoVentaKeyPressed
-
-    private void jTextFieldDescuentoVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoVentaKeyReleased
-        int neto = pasarAinteger(jLabelCalcularNeto.getText());
-        int iva = pasarAinteger(CalcularIVA.getText());
-        if (jTextFieldDescuentoVenta.getText().equals("")) {
-            jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((neto + iva))));
-        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
-            if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
-                int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
-                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-
-            }
-        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
-
-            if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
-
-                int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
-                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-            } else {
-                JOptionPane.showMessageDialog(null, "Descuento excedido");
-            }
-
-        }
-        if (jTextFieldEfectivo.getText().equals("")) {
-            jLabelVuelto.setText("0");
-        } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
-            jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
-        } else {
-            jLabelVuelto.setText("0");
-        }
-    }//GEN-LAST:event_jTextFieldDescuentoVentaKeyReleased
-
-    private void jComboBoxMetodoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMetodoPagoActionPerformed
-        if (jComboBoxMetodoPago.getSelectedIndex() != 0) {
-            jTextFieldEfectivo.setEditable(false);
-            jTextFieldEfectivo.setEnabled(false);
-        } else {
-            jTextFieldEfectivo.setEditable(true);
-            jTextFieldEfectivo.setEnabled(true);
-        }
-        jTextFieldEfectivo.setText("0");
-        // T
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxMetodoPagoActionPerformed
-
-    private void jComboBoxDescuentoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDescuentoVentaActionPerformed
-        int neto = pasarAinteger(jLabelCalcularNeto.getText());
-        int iva = pasarAinteger(CalcularIVA.getText());
-        if (jTextFieldDescuentoVenta.getText().equals("")) {
-            jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((neto + iva))));
-
-        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
-            if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
-                int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
-                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-
-            }
-        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
-
-            if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
-
-                int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
-                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-            } else {
-                JOptionPane.showMessageDialog(null, "Descuento excedido");
-            }
-
-        }
-        if (jTextFieldEfectivo.getText().equals("")) {
-            jLabelVuelto.setText("0");
-        } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
-            jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
-        } else {
-            jLabelVuelto.setText("0");
-        }
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxDescuentoVentaActionPerformed
-
-    private void jTextFieldEfectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldEfectivoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldEfectivoActionPerformed
-
-    private void jTextFieldEfectivoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldEfectivoKeyReleased
-        if (jTextFieldEfectivo.getText().equals("")) {
-            jLabelVuelto.setText("0");
-        } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
-            jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
-        } else {
-            jLabelVuelto.setText("0");
-        }
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldEfectivoKeyReleased
-
-    private void jPanelVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelVentasMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPanelVentasMouseClicked
-
     private void jTableListaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaProductosMouseClicked
         int column = jTableListaProductos.getColumnModel().getColumnIndexAtX(evt.getX());
         int row = evt.getY() / jTableListaProductos.getRowHeight();
@@ -6484,14 +6996,6 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         }
     }//GEN-LAST:event_jRadioButton5ActionPerformed
 
-    private void jRadioButtonFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFacturaActionPerformed
-        if (jRadioButtonFactura.isSelected()) {
-            jRadioButtonBoleta.setSelected(false);
-        } else {
-            jRadioButtonBoleta.setSelected(true);
-        }
-    }//GEN-LAST:event_jRadioButtonFacturaActionPerformed
-
     private void jComboBoxTipoAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoAgregarProductoActionPerformed
         if (jComboBoxTipoAgregarProducto.getSelectedIndex() == 1) {
             try {
@@ -6624,6 +7128,682 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private void jTextFieldFiltrarNombreEliminarProveedoresKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarNombreEliminarProveedoresKeyReleased
         refrescarTablaEliminarProveedores();
     }//GEN-LAST:event_jTextFieldFiltrarNombreEliminarProveedoresKeyReleased
+
+    private void jButtonRealizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealizarVentaActionPerformed
+        limpiarCarrito();
+        refrescarTablaVenta();
+        refrescarTablaPresupuesto();
+        jPanel7.setVisible(true);
+        jPanelListaVentas.show(false);
+        jPanelDetallesVenta.show(false);
+        jPanelRealizarPresupuesto.show(false);
+        this.jPanelListaPresupuestos.show(true);
+        jPanelDetallesPresupuesto.show(false);
+        jPanelRealizarVenta.show(true);
+        this.jRadioButtonBoleta.setSelected(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonRealizarVentaActionPerformed
+
+    private void jButtonRealizarPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealizarPresupuestoActionPerformed
+        limpiarCarrito();
+        refrescarTablaVenta();
+        refrescarTablaPresupuesto();
+        jPanel7.setVisible(true);
+        jPanelListaVentas.show(false);
+        jPanelDetallesVenta.show(false);
+        jPanelRealizarVenta.show(false);
+        jPanelListaPresupuestos.show(false);
+        jPanelDetallesPresupuesto.show(false);
+        jPanelRealizarPresupuesto.show(true);
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonRealizarPresupuestoActionPerformed
+
+    private void jButtonListaVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListaVentasActionPerformed
+        refrescarTablaListaVentas();
+        this.jPanel7.setVisible(true);
+        this.jPanelRealizarVenta.show(false);
+        jPanelDetallesVenta.show(false);
+        jPanelDetallesPresupuesto.show(false);
+        jPanelRealizarPresupuesto.show(false);
+        this.jPanelListaPresupuestos.show(false);
+        this.jPanelListaVentas.show(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonListaVentasActionPerformed
+
+    private void jTextFieldCodVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCodVentaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldCodVentaActionPerformed
+
+    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton4ActionPerformed
+
+    private void jTableDetallesVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDetallesVentaMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableDetallesVentaMouseClicked
+
+    private void jTableDetallesVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableDetallesVentaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableDetallesVentaKeyPressed
+
+    private void jButtonImpimirBoletaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImpimirBoletaVentaActionPerformed
+        JasperReport reporte;
+        String path = "src\\Reportes\\boleta.jasper";
+
+        Map parametro = new HashMap();
+        parametro.put("codcompra", Integer.parseInt(jTextFieldCodVenta.getText()));
+        try {
+            reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+
+            JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+            JasperViewer view = new JasperViewer(jprint, false);
+            view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            view.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonImpimirBoletaVentaActionPerformed
+
+    private void jTableListaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaVentasMouseClicked
+
+        int column = jTableListaVentas.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableListaVentas.getRowHeight();
+        if (row < jTableListaVentas.getRowCount() && row >= 0 && column < jTableListaVentas.getColumnCount() && column >= 0) {
+            Object value = jTableListaVentas.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                int codVentaSeleccionada = Integer.parseInt(String.valueOf(jTableListaVentas.getModel().getValueAt(jTableListaVentas.getSelectedRow(), 0)));
+
+                if (boton.getText().equals("Detalles")) {
+                    Clear_Table1(jTableDetallesVenta);
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra=" + "\"" + codVentaSeleccionada + "\"";
+                    try {
+                        st = conexion.getConnection().createStatement();
+                        rs = st.executeQuery(sql);
+
+                        while (rs.next()) {
+                            jTextFieldCodVenta.setText("" + rs.getInt(1));
+                            jDateChooserFechaVenta.setDate(rs.getDate(4));
+                            DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+                            modelo.addElement(rs.getString(7));
+                            if (rs.getString(8).equals("Boleta")) {
+                                jRadioButton3.setSelected(true);
+                                jRadioButton4.setSelected(false);
+
+                            } else {
+                                jRadioButton3.setSelected(false);
+                                jRadioButton4.setSelected(true);
+                            }
+                            jComboBoxTipoDePago.setModel(modelo);
+                        }
+
+                        String sql1;
+                        Statement st1;
+                        ResultSet rs1;
+                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto AND ph2.fechaproducto<oc.fecha)";
+                        st1 = conexion.getConnection().createStatement();
+                        rs1 = st1.executeQuery(sql1);
+                        DefaultTableModel modelo = (DefaultTableModel) jTableDetallesVenta.getModel();
+                        Object[] array = new Object[5];
+                        while (rs1.next()) {
+                            array[0] = rs1.getInt(2);
+                            array[1] = rs1.getString(1);
+                            array[2] = rs1.getString(5);
+                            array[3] = rs1.getInt(4);
+                            array[4] = rs1.getString(3);
+                            modelo.addRow(array);
+                        }
+                        jTableDetallesVenta.setModel(modelo);
+
+                        String sql2;
+                        Statement st2;
+                        ResultSet rs2;
+                        sql2 = "SELECT `totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` FROM `ordencompra` WHERE codordencompra=" + codVentaSeleccionada;
+                        st2 = conexion.getConnection().createStatement();
+                        rs2 = st2.executeQuery(sql2);
+
+                        while (rs2.next()) {
+                            jLabelCalcularNetoDetallesVenta.setText(rs2.getString(3));
+                            jLabelDescuentoDetallesVenta.setText(formatearAEntero("" + (pasarAinteger(rs2.getString(2)) - pasarAinteger(rs2.getString(1)))));
+                            jLabelPrecioAPagarDetallesVenta.setText(rs2.getString(2));
+                            jLabelEfectivoDetallesVenta1.setText("" + rs2.getInt(4));
+                            jLabelVueltoDetallesVenta.setText("" + (rs2.getInt(4) - pasarAinteger(rs2.getString(1))));
+                        }
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    jRadioButton3.setEnabled(false);
+                    jRadioButton4.setEnabled(false);
+                    jTextFieldCodVenta.setEnabled(false);
+                    jTextFieldCodVenta.setEditable(false);
+                    jDateChooserFechaVenta.setEnabled(false);
+                    jComboBoxTipoDePago.setEnabled(false);
+                    jPanelListaVentas.show(false);
+                    jPanelRealizarVenta.show(false);
+                    jPanelListaPresupuestos.show(false);
+                    jPanelRealizarPresupuesto.show(false);
+                    jPanelDetallesPresupuesto.show(false);
+                    jPanelDetallesVenta.show(true);
+
+                } else {
+                    if (boton.getText().equals("Cancelar")) {
+                        int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea Cancelar esta venta?");
+                        if (confirmar == JOptionPane.YES_OPTION) {
+
+                            try {
+                                String sql;
+                                Statement st;
+                                ResultSet rs;
+                                sql = "DELETE FROM `compra` WHERE `codcompra`=" + "\"" + codVentaSeleccionada + "\"";
+                                st = conexion.getConnection().prepareStatement(sql);
+                                st.executeUpdate(sql);
+
+                                String sql2;
+                                Statement st2;
+                                ResultSet rs2;
+                                sql2 = "DELETE FROM `productoordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
+                                st2 = conexion.getConnection().prepareStatement(sql2);
+                                st2.executeUpdate(sql2);
+
+                                String sql3;
+                                Statement st3;
+                                ResultSet rs3;
+                                sql3 = "DELETE FROM `ordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
+                                st3 = conexion.getConnection().prepareStatement(sql3);
+                                st3.executeUpdate(sql3);
+
+                            } catch (SQLException ex) {
+                                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                            JOptionPane.showMessageDialog(null, "La venta a sido cancelada", "Operación Exitosa",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            refrescarTablaListaVentas();
+                        }
+                    }
+                }
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableListaVentasMouseClicked
+
+    private void jTableListaVentasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableListaVentasKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableListaVentasKeyPressed
+
+    private void jTableVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableVentaMouseClicked
+        int column = jTableVenta.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableVenta.getRowHeight();
+        if (row < jTableVenta.getRowCount() && row >= 0 && column < jTableVenta.getColumnCount() && column >= 0) {
+            Object value = jTableVenta.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                int fila = jTableVenta.getSelectedRow();
+                if (boton.getText().equals("-")) {
+                    if (carrito[fila].getCantidad() > 1) {
+                        carrito[fila].setCantidad(carrito[fila].getCantidad() - 1);
+                    }
+                } else if (boton.getText().equals("+")) {
+                    carrito[fila].setCantidad(carrito[fila].getCantidad() + 1);
+                } else if (boton.getText().equals("X")) {
+                    eliminarDelCarrito(carrito, fila);
+                }
+                refrescarTablaVenta();
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableVentaMouseClicked
+
+    private void jTableVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableVentaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableVentaKeyPressed
+
+    private void jButtonAgregarProductoAVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoAVentaActionPerformed
+        SeleccionarProducto seleccionarProducto = new SeleccionarProducto(this.conexion, null);
+        seleccionarProducto.setTitle("Seleccionar producto");
+        seleccionarProducto.setLocationRelativeTo(null);
+        seleccionarProducto.setResizable(false);
+        seleccionarProducto.setVisible(true);
+        seleccionarProducto.setSize(418, 640);
+    }//GEN-LAST:event_jButtonAgregarProductoAVentaActionPerformed
+
+    private void jButtonConfirmarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVentaActionPerformed
+        try {
+            if (registrarVenta()) {
+                JasperReport reporte;
+                String path = "src\\Reportes\\boleta.jasper";
+                String sql2;
+                Statement st2;
+                ResultSet rs2;
+                sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                st2 = conexion.getConnection().createStatement();
+                rs2 = st2.executeQuery(sql2);
+                int codCompra = 0;
+                while (rs2.next()) {
+                    codCompra = rs2.getInt(1);
+                }
+                Map parametro = new HashMap();
+                parametro.put("codcompra", codCompra);
+                reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+                JasperViewer view = new JasperViewer(jprint, false);
+                view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                view.setVisible(true);
+            }
+            // TODO add your handling code here:
+        } catch (SQLException | JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonConfirmarVentaActionPerformed
+
+    private void jRadioButtonBoletaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonBoletaActionPerformed
+        if (jRadioButtonBoleta.isSelected()) {
+            jRadioButtonFactura.setSelected(false);
+        } else {
+            jRadioButtonFactura.setSelected(true);
+        }
+    }//GEN-LAST:event_jRadioButtonBoletaActionPerformed
+
+    private void jRadioButtonFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFacturaActionPerformed
+        if (jRadioButtonFactura.isSelected()) {
+            jRadioButtonBoleta.setSelected(false);
+        } else {
+            jRadioButtonBoleta.setSelected(true);
+        }
+    }//GEN-LAST:event_jRadioButtonFacturaActionPerformed
+
+    private void jTextFieldDescuentoVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoVentaKeyPressed
+
+    }//GEN-LAST:event_jTextFieldDescuentoVentaKeyPressed
+
+    private void jTextFieldDescuentoVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoVentaKeyReleased
+        int neto = pasarAinteger(jLabelCalcularNeto.getText());
+        int iva = pasarAinteger(CalcularIVA.getText());
+        if (jTextFieldDescuentoVenta.getText().equals("")) {
+            jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((neto + iva))));
+        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
+            if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
+                int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+
+            }
+        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
+
+            if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
+
+                int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
+                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+            } else {
+                JOptionPane.showMessageDialog(null, "Descuento excedido");
+            }
+
+        }
+        if (jTextFieldEfectivo.getText().equals("")) {
+            jLabelVuelto.setText("0");
+        } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
+            jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
+        } else {
+            jLabelVuelto.setText("0");
+        }
+    }//GEN-LAST:event_jTextFieldDescuentoVentaKeyReleased
+
+    private void jComboBoxMetodoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMetodoPagoActionPerformed
+        if (jComboBoxMetodoPago.getSelectedIndex() != 0) {
+            jTextFieldEfectivo.setEditable(false);
+            jTextFieldEfectivo.setEnabled(false);
+        } else {
+            jTextFieldEfectivo.setEditable(true);
+            jTextFieldEfectivo.setEnabled(true);
+        }
+        jTextFieldEfectivo.setText("0");
+        // T
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxMetodoPagoActionPerformed
+
+    private void jComboBoxDescuentoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDescuentoVentaActionPerformed
+        int neto = pasarAinteger(jLabelCalcularNeto.getText());
+        int iva = pasarAinteger(CalcularIVA.getText());
+        if (jTextFieldDescuentoVenta.getText().equals("")) {
+            jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((neto + iva))));
+
+        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
+            if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
+                int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+
+            }
+        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
+
+            if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
+
+                int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
+                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+            } else {
+                JOptionPane.showMessageDialog(null, "Descuento excedido");
+            }
+
+        }
+        if (jTextFieldEfectivo.getText().equals("")) {
+            jLabelVuelto.setText("0");
+        } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
+            jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
+        } else {
+            jLabelVuelto.setText("0");
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxDescuentoVentaActionPerformed
+
+    private void jTextFieldEfectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldEfectivoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldEfectivoActionPerformed
+
+    private void jTextFieldEfectivoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldEfectivoKeyReleased
+        if (jTextFieldEfectivo.getText().equals("")) {
+            jLabelVuelto.setText("0");
+        } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
+            jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
+        } else {
+            jLabelVuelto.setText("0");
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldEfectivoKeyReleased
+
+    private void jTablePresupuestoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePresupuestoMouseClicked
+        int column = jTablePresupuesto.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTablePresupuesto.getRowHeight();
+        if (row < jTablePresupuesto.getRowCount() && row >= 0 && column < jTablePresupuesto.getColumnCount() && column >= 0) {
+            Object value = jTablePresupuesto.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                int fila = jTablePresupuesto.getSelectedRow();
+                if (boton.getText().equals("-")) {
+                    if (carrito[fila].getCantidad() > 1) {
+                        carrito[fila].setCantidad(carrito[fila].getCantidad() - 1);
+                    }
+                } else if (boton.getText().equals("+")) {
+                    carrito[fila].setCantidad(carrito[fila].getCantidad() + 1);
+                } else if (boton.getText().equals("X")) {
+                    eliminarDelCarrito(carrito, fila);
+                }
+                refrescarTablaPresupuesto();
+            }
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTablePresupuestoMouseClicked
+
+    private void jTablePresupuestoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTablePresupuestoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTablePresupuestoKeyPressed
+
+    private void jButtonAgregarProductoAPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoAPresupuestoActionPerformed
+        SeleccionarProducto seleccionarProducto = new SeleccionarProducto(this.conexion, null);
+        seleccionarProducto.setTitle("Seleccionar producto");
+        seleccionarProducto.setLocationRelativeTo(null);
+        seleccionarProducto.setResizable(false);
+        seleccionarProducto.setVisible(true);
+        seleccionarProducto.setSize(418, 640);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonAgregarProductoAPresupuestoActionPerformed
+
+    private void jButtonConfirmarPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarPresupuestoActionPerformed
+        try {
+            if (registrarPresupuesto()) {
+                JasperReport reporte;
+                String path = "src\\Reportes\\Presupuesto.jasper";
+                String sql2;
+                Statement st2;
+                ResultSet rs2;
+                sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                st2 = conexion.getConnection().createStatement();
+                rs2 = st2.executeQuery(sql2);
+                int codCompra = 0;
+                while (rs2.next()) {
+                    codCompra = rs2.getInt(1);
+                }
+                Map parametro = new HashMap();
+                parametro.put("codcompra", codCompra);
+                reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+                JasperViewer view = new JasperViewer(jprint, false);
+                view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                view.setVisible(true);
+            }
+            // TODO add your handling code here:
+        } catch (SQLException | JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonConfirmarPresupuestoActionPerformed
+
+    private void jTextFieldDescuentoPresupuestoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoPresupuestoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldDescuentoPresupuestoKeyPressed
+
+    private void jTextFieldDescuentoPresupuestoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoPresupuestoKeyReleased
+        int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
+        int iva = pasarAinteger(CalcularIVAPresupuesto.getText());
+        if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
+            jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((neto + iva))));
+        } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
+            if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
+                int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
+                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+
+            }
+        } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
+
+            if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
+
+                int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
+                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+            } else {
+                JOptionPane.showMessageDialog(null, "Descuento excedido");
+            }
+
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldDescuentoPresupuestoKeyReleased
+
+    private void jComboBoxDescuentoPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDescuentoPresupuestoActionPerformed
+        int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
+        int iva = pasarAinteger(CalcularIVAPresupuesto.getText());
+        if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
+            jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((neto + iva))));
+
+        } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
+            if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
+                int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
+                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+
+            }
+        } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
+
+            if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
+
+                int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
+                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+            } else {
+                JOptionPane.showMessageDialog(null, "Descuento excedido");
+            }
+
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxDescuentoPresupuestoActionPerformed
+
+    private void jTableListaPresupuestosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaPresupuestosMouseClicked
+
+        int column = jTableListaPresupuestos.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableListaPresupuestos.getRowHeight();
+        if (row < jTableListaPresupuestos.getRowCount() && row >= 0 && column < jTableListaPresupuestos.getColumnCount() && column >= 0) {
+            Object value = jTableListaPresupuestos.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                int codVentaSeleccionada = Integer.parseInt(String.valueOf(jTableListaPresupuestos.getModel().getValueAt(jTableListaPresupuestos.getSelectedRow(), 0)));
+
+                if (boton.getText().equals("Detalles")) {
+                    Clear_Table1(jTableDetallesPresupuesto);
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo FROM ordencompra oc, compra c WHERE oc.codordencompra=" + "\"" + codVentaSeleccionada + "\"";
+                    try {
+                        st = conexion.getConnection().createStatement();
+                        rs = st.executeQuery(sql);
+
+                        while (rs.next()) {
+                            jTextFieldCodPresupuesto.setText("" + rs.getInt(1));
+                            jDateChooserFechaPresupuesto.setDate(rs.getDate(4));
+
+                        }
+
+                        String sql1;
+                        Statement st1;
+                        ResultSet rs1;
+                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto AND ph2.fechaproducto<oc.fecha)";
+                        st1 = conexion.getConnection().createStatement();
+                        rs1 = st1.executeQuery(sql1);
+                        DefaultTableModel modelo = (DefaultTableModel) jTableDetallesPresupuesto.getModel();
+                        Object[] array = new Object[5];
+                        while (rs1.next()) {
+                            array[0] = rs1.getInt(2);
+                            array[1] = rs1.getString(1);
+                            array[2] = rs1.getString(5);
+                            array[3] = rs1.getInt(4);
+                            array[4] = rs1.getString(3);
+                            modelo.addRow(array);
+                        }
+                        jTableDetallesPresupuesto.setModel(modelo);
+
+                        String sql2;
+                        Statement st2;
+                        ResultSet rs2;
+                        sql2 = "SELECT `totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` FROM `ordencompra` WHERE codordencompra=" + codVentaSeleccionada;
+                        st2 = conexion.getConnection().createStatement();
+                        rs2 = st2.executeQuery(sql2);
+
+                        while (rs2.next()) {
+                            jLabelCalcularNetoDetallesPresupuesto.setText(rs2.getString(3));
+                            jLabelDescuentoDetallesPresupuesto.setText(formatearAEntero("" + (pasarAinteger(rs2.getString(2)) - pasarAinteger(rs2.getString(1)))));
+                            jLabelPrecioAPagarDetallesPresupuesto.setText(rs2.getString(2));
+                        }
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    jTextFieldCodPresupuesto.setEnabled(false);
+                    jTextFieldCodPresupuesto.setEditable(false);
+                    jDateChooserFechaPresupuesto.setEnabled(false);
+                    jPanelListaVentas.show(false);
+                    jPanelRealizarVenta.show(false);
+                    jPanelListaPresupuestos.show(false);
+                    jPanelRealizarPresupuesto.show(false);
+                    jPanelDetallesVenta.show(false);
+                    jPanelDetallesPresupuesto.show(true);
+
+                } else {
+                    if (boton.getText().equals("Cancelar")) {
+                        int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea Cancelar este presupuesto?");
+                        if (confirmar == JOptionPane.YES_OPTION) {
+
+                            try {
+                                String sql;
+                                Statement st;
+                                ResultSet rs;
+                                sql = "DELETE FROM `presupuesto` WHERE `codpresupuesto`=" + "\"" + codVentaSeleccionada + "\"";
+                                st = conexion.getConnection().prepareStatement(sql);
+                                st.executeUpdate(sql);
+
+                                String sql2;
+                                Statement st2;
+                                ResultSet rs2;
+                                sql2 = "DELETE FROM `productoordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
+                                st2 = conexion.getConnection().prepareStatement(sql2);
+                                st2.executeUpdate(sql2);
+
+                                String sql3;
+                                Statement st3;
+                                ResultSet rs3;
+                                sql3 = "DELETE FROM `ordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
+                                st3 = conexion.getConnection().prepareStatement(sql3);
+                                st3.executeUpdate(sql3);
+
+                            } catch (SQLException ex) {
+                                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                            JOptionPane.showMessageDialog(null, "El presupuesto a sido cancelado", "Operación Exitosa",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            refrescarListaPresupuestos();
+                        }
+                    }
+                }
+            }
+        }
+            // TODO add your handling code here:
+    }//GEN-LAST:event_jTableListaPresupuestosMouseClicked
+
+    private void jTextFieldCodPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCodPresupuestoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldCodPresupuestoActionPerformed
+
+    private void jTableDetallesPresupuestoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDetallesPresupuestoMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableDetallesPresupuestoMouseClicked
+
+    private void jTableDetallesPresupuestoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableDetallesPresupuestoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableDetallesPresupuestoKeyPressed
+
+    private void jButtonImpimirBoletaPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImpimirBoletaPresupuestoActionPerformed
+        JasperReport reporte;
+        String path = "src\\Reportes\\Presupuesto.jasper";
+
+        Map parametro = new HashMap();
+        parametro.put("codcompra", Integer.parseInt(jTextFieldCodPresupuesto.getText()));
+        try {
+            reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+
+            JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+            JasperViewer view = new JasperViewer(jprint, false);
+            view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            view.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonImpimirBoletaPresupuestoActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        refrescarListaPresupuestos();
+        this.jPanel7.setVisible(true);
+        this.jPanelRealizarVenta.show(false);
+        jPanelDetallesVenta.show(false);
+        jPanelRealizarPresupuesto.show(false);
+        jPanelDetallesPresupuesto.show(false);
+        this.jPanelListaVentas.show(false);
+        this.jPanelListaPresupuestos.show(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jPanelVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelVentasMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanelVentasMouseClicked
 
     /**
      * @param args the command line arguments
@@ -6801,6 +7981,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup BoletaOFactura;
     private static javax.swing.JLabel CalcularIVA;
+    private static javax.swing.JLabel CalcularIVAPresupuesto;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroupVentaproduccionMerma;
     private javax.swing.JButton jButton1;
@@ -6811,6 +7992,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JButton jButtonAgregarCheque;
     private javax.swing.JButton jButtonAgregarMerma;
     private javax.swing.JButton jButtonAgregarProducto;
+    private javax.swing.JButton jButtonAgregarProductoAPresupuesto;
     private javax.swing.JButton jButtonAgregarProductoAVenta;
     private javax.swing.JButton jButtonAgregarProveedor;
     private javax.swing.JButton jButtonAgregarProveedor1;
@@ -6829,17 +8011,21 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JButton jButtonConfirmarEditarProducto;
     private javax.swing.JButton jButtonConfirmarEditarProveedor3;
     private javax.swing.JButton jButtonConfirmarEditarUsuario;
+    private javax.swing.JButton jButtonConfirmarPresupuesto;
     private javax.swing.JButton jButtonConfirmarVenta;
     private javax.swing.JButton jButtonEditarCheque;
     private javax.swing.JButton jButtonEditarMerma;
     private javax.swing.JButton jButtonEditarProducto;
     private javax.swing.JButton jButtonEditarProveedor;
     private javax.swing.JButton jButtonEditarUsuairo;
+    private javax.swing.JButton jButtonImpimirBoletaPresupuesto;
+    private javax.swing.JButton jButtonImpimirBoletaVenta;
     private javax.swing.JButton jButtonListaVentas;
     private javax.swing.JButton jButtonRealizarPresupuesto;
     private javax.swing.JButton jButtonRealizarVenta;
     private javax.swing.JComboBox<String> jComboBoxAgregarEspeciePlanta;
     private javax.swing.JComboBox<String> jComboBoxAgregarTipoPlanta;
+    private static javax.swing.JComboBox<String> jComboBoxDescuentoPresupuesto;
     private static javax.swing.JComboBox<String> jComboBoxDescuentoVenta;
     private javax.swing.JComboBox<String> jComboBoxEditarEspeciePlanta;
     private javax.swing.JComboBox<String> jComboBoxEditarTipoPlanta;
@@ -6857,10 +8043,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JComboBox<String> jComboBoxTipoUsuarioAgregar;
     private com.toedter.calendar.JDateChooser jDateChooserFechaEmisionAgregarCheque;
     private com.toedter.calendar.JDateChooser jDateChooserFechaEmisionEditarCheque;
+    private com.toedter.calendar.JDateChooser jDateChooserFechaPresupuesto;
     private com.toedter.calendar.JDateChooser jDateChooserFechaVencAgregarCheque;
     private com.toedter.calendar.JDateChooser jDateChooserFechaVencEditarCheque;
     private com.toedter.calendar.JDateChooser jDateChooserFechaVenta;
-    private com.toedter.calendar.JDateChooser jDateChooserFechaVenta1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel100;
@@ -6880,9 +8066,37 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JLabel jLabel114;
     private javax.swing.JLabel jLabel115;
     private javax.swing.JLabel jLabel116;
+    private javax.swing.JLabel jLabel118;
+    private javax.swing.JLabel jLabel119;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel120;
+    private javax.swing.JLabel jLabel121;
+    private javax.swing.JLabel jLabel122;
+    private javax.swing.JLabel jLabel123;
+    private javax.swing.JLabel jLabel124;
+    private javax.swing.JLabel jLabel125;
+    private javax.swing.JLabel jLabel126;
+    private javax.swing.JLabel jLabel127;
+    private javax.swing.JLabel jLabel128;
+    private javax.swing.JLabel jLabel129;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel130;
+    private javax.swing.JLabel jLabel131;
+    private javax.swing.JLabel jLabel132;
+    private javax.swing.JLabel jLabel133;
+    private javax.swing.JLabel jLabel134;
+    private javax.swing.JLabel jLabel135;
+    private javax.swing.JLabel jLabel136;
+    private javax.swing.JLabel jLabel137;
+    private javax.swing.JLabel jLabel138;
+    private javax.swing.JLabel jLabel139;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel141;
+    private javax.swing.JLabel jLabel142;
+    private javax.swing.JLabel jLabel143;
+    private javax.swing.JLabel jLabel144;
+    private javax.swing.JLabel jLabel148;
+    private javax.swing.JLabel jLabel149;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
@@ -6962,9 +8176,6 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JLabel jLabel84;
     private javax.swing.JLabel jLabel85;
     private javax.swing.JLabel jLabel86;
-    private javax.swing.JLabel jLabel87;
-    private javax.swing.JLabel jLabel88;
-    private javax.swing.JLabel jLabel89;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabel90;
     private javax.swing.JLabel jLabel91;
@@ -6977,6 +8188,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JLabel jLabel98;
     private javax.swing.JLabel jLabel99;
     private static javax.swing.JLabel jLabelCalcularNeto;
+    private static javax.swing.JLabel jLabelCalcularNetoDetallesPresupuesto;
+    private static javax.swing.JLabel jLabelCalcularNetoDetallesVenta;
+    private static javax.swing.JLabel jLabelCalcularNetoPresupuesto;
+    private javax.swing.JLabel jLabelDescuentoDetallesPresupuesto;
+    private javax.swing.JLabel jLabelDescuentoDetallesVenta;
+    private static javax.swing.JLabel jLabelEfectivoDetallesVenta1;
     private javax.swing.JLabel jLabelErrorRut;
     private javax.swing.JLabel jLabelErrorRut1;
     private javax.swing.JLabel jLabelErrorRut2;
@@ -6988,12 +8205,16 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JLabel jLabelEspeciePlanta1;
     private javax.swing.JLabel jLabelNombreUsuario;
     private static javax.swing.JLabel jLabelPrecioAPagar;
+    private static javax.swing.JLabel jLabelPrecioAPagarDetallesPresupuesto;
+    private static javax.swing.JLabel jLabelPrecioAPagarDetallesVenta;
+    private static javax.swing.JLabel jLabelPrecioAPagarPresupuesto;
     private javax.swing.JLabel jLabelTipoPlanta;
     private javax.swing.JLabel jLabelTipoPlanta1;
     private javax.swing.JLabel jLabelTipoPlantaLista;
     private javax.swing.JLabel jLabelTipoPlantaListaMerma;
     private javax.swing.JLabel jLabelUsuario;
     private static javax.swing.JLabel jLabelVuelto;
+    private static javax.swing.JLabel jLabelVueltoDetallesVenta;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
@@ -7007,7 +8228,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JPanel jPanelBloquearUsuario;
     private javax.swing.JPanel jPanelCheques;
     private javax.swing.JPanel jPanelCobrarCheque;
-    private javax.swing.JPanel jPanelDetallesPresupuestos;
+    private javax.swing.JPanel jPanelDetallesPresupuesto;
     private javax.swing.JPanel jPanelDetallesVenta;
     private javax.swing.JPanel jPanelEditarCheque;
     private javax.swing.JPanel jPanelEditarMerma;
@@ -7020,10 +8241,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JPanel jPanelInventario;
     private javax.swing.JPanel jPanelListaCheque;
     private javax.swing.JPanel jPanelListaMermas;
+    private javax.swing.JPanel jPanelListaPresupuestos;
     private javax.swing.JPanel jPanelListaProveedor;
     private javax.swing.JPanel jPanelListaUsuarios;
     private javax.swing.JPanel jPanelListaVentas;
-    private javax.swing.JPanel jPanelRealizarVenta;
+    private static javax.swing.JPanel jPanelRealizarPresupuesto;
+    private static javax.swing.JPanel jPanelRealizarVenta;
     private javax.swing.JPanel jPanelReportes;
     private javax.swing.JPanel jPanelTipoPlanta;
     private javax.swing.JPanel jPanelTipoPlanta1;
@@ -7059,6 +8282,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane20;
     private javax.swing.JScrollPane jScrollPane21;
+    private javax.swing.JScrollPane jScrollPane22;
+    private javax.swing.JScrollPane jScrollPane24;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
@@ -7069,16 +8294,18 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableBloquearUsuario;
     private javax.swing.JTable jTableCobrarCheque;
+    private static javax.swing.JTable jTableDetallesPresupuesto;
     private static javax.swing.JTable jTableDetallesVenta;
-    private static javax.swing.JTable jTableDetallesVenta1;
     private javax.swing.JTable jTableEditarCheques;
     private javax.swing.JTable jTableEditarProveedor1;
     private javax.swing.JTable jTableEditarUsuario;
     private javax.swing.JTable jTableEliminarProveedor2;
     private javax.swing.JTable jTableListaMermas;
+    private javax.swing.JTable jTableListaPresupuestos;
     private javax.swing.JTable jTableListaProductos;
     private javax.swing.JTable jTableListaProductosMerma;
     private static javax.swing.JTable jTableListaVentas;
+    private static javax.swing.JTable jTablePresupuesto;
     private static javax.swing.JTable jTableVenta;
     private javax.swing.JTextArea jTextAreaDescripcionAgregarProducto;
     private javax.swing.JTextArea jTextAreaDescripcionMerma;
@@ -7102,10 +8329,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JTextField jTextFieldCantidadProdEditarProducto;
     private javax.swing.JTextField jTextFieldCantidadVentaAgregarProducto;
     private javax.swing.JTextField jTextFieldCantidadVentaEditarProducto;
+    private javax.swing.JTextField jTextFieldCodPresupuesto;
     private javax.swing.JTextField jTextFieldCodVenta;
-    private javax.swing.JTextField jTextFieldCodVenta1;
     private javax.swing.JTextField jTextFieldContactoProveedor;
     private javax.swing.JTextField jTextFieldCorreoProveedor;
+    private static javax.swing.JTextField jTextFieldDescuentoPresupuesto;
     private static javax.swing.JTextField jTextFieldDescuentoVenta;
     private javax.swing.JTextField jTextFieldEditarApellidosProveedor;
     private javax.swing.JTextField jTextFieldEditarCantidadMerma;

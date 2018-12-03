@@ -2279,12 +2279,9 @@
                                               <Component id="jLabel113" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="3" attributes="0">
-                                              <Component id="jTextFieldCantidadVentaEditarProducto" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                                              <Component id="jLabel112" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          </Group>
+                                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                          <Component id="jTextFieldCantidadVentaEditarProducto" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                                          <Component id="jLabel112" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -4284,35 +4281,98 @@
                     <DimensionLayout dim="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="jRadioButton4" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <Component id="jLabel84" min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Group type="103" groupAlignment="1" attributes="0">
+                                                  <Group type="102" alignment="1" attributes="0">
+                                                      <Component id="jLabel84" min="-2" max="-2" attributes="0"/>
+                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                      <Component id="jTextFieldCodVenta" min="-2" pref="116" max="-2" attributes="0"/>
+                                                      <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                                                      <Component id="jLabel85" min="-2" max="-2" attributes="0"/>
+                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                      <Component id="jDateChooserFechaVenta" min="-2" pref="124" max="-2" attributes="0"/>
+                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                      <Component id="jRadioButton3" min="-2" max="-2" attributes="0"/>
+                                                  </Group>
+                                                  <Component id="jLabel83" alignment="1" min="-2" pref="195" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace max="32767" attributes="0"/>
+                                              <Component id="jLabel86" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="jTextFieldCodVenta" min="-2" pref="116" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                                              <Component id="jLabel85" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="jDateChooserFechaVenta" min="-2" pref="124" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="jRadioButton3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jComboBoxTipoDePago" min="-2" pref="116" max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="jLabel83" alignment="1" min="-2" pref="195" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="365" max="-2" attributes="0"/>
+                                              <Component id="jRadioButton4" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                          </Group>
                                       </Group>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jLabel86" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jComboBoxTipoDePago" min="-2" pref="116" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
                                       <Component id="jScrollPane11" min="-2" pref="664" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="99" max="32767" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jButtonImpimirBoletaVenta" min="-2" pref="84" max="-2" attributes="0"/>
+                              <EmptySpace pref="18" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="jLabel135" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel132" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel134" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="jLabel136" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel133" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="jLabelPrecioAPagarDetallesVenta" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
+                                                  <Component id="jLabelVueltoDetallesVenta" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="jLabel138" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="jLabelEfectivoDetallesVenta1" min="-2" pref="87" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                                              <Component id="jLabel129" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="jLabel128" min="-2" pref="8" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="jLabelCalcularNetoDetallesVenta" min="-2" pref="80" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="1" attributes="0">
+                                              <Component id="jLabel131" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="jLabel137" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="jLabelDescuentoDetallesVenta" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="164" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -4329,19 +4389,55 @@
                                       <Component id="jLabel85" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jDateChooserFechaVenta" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jRadioButton3" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel86" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jComboBoxTipoDePago" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jRadioButton4" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                      <Component id="jRadioButton3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel86" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jComboBoxTipoDePago" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jScrollPane11" pref="338" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jRadioButton4" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                                      <Component id="jScrollPane11" min="-2" pref="224" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="184" max="-2" attributes="0"/>
+                                      <Component id="jButtonImpimirBoletaVenta" min="-2" pref="36" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel129" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelCalcularNetoDetallesVenta" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel128" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel131" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel137" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelDescuentoDetallesVenta" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel132" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelPrecioAPagarDetallesVenta" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel136" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel135" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel138" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelEfectivoDetallesVenta1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel134" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel133" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelVueltoDetallesVenta" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="34" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -4380,13 +4476,16 @@
                     </Component>
                     <Component class="javax.swing.JRadioButton" name="jRadioButton3">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jRadioButton3"/>
+                        <Property name="text" type="java.lang.String" value="Boleta"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JRadioButton" name="jRadioButton4">
                       <Properties>
-                        <Property name="text" type="java.lang.String" value="jRadioButton4"/>
+                        <Property name="text" type="java.lang.String" value="Factura"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButton4ActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel86">
                       <Properties>
@@ -4421,11 +4520,12 @@
                         <Component class="javax.swing.JTable" name="jTableDetallesVenta">
                           <Properties>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="4" rowCount="22">
+                              <Table columnCount="5" rowCount="22">
+                                <Column editable="false" title="Id" type="java.lang.Integer"/>
                                 <Column editable="false" title="Nombre" type="java.lang.String"/>
                                 <Column editable="false" title="Precio" type="java.lang.String"/>
                                 <Column editable="false" title="Cantidad" type="java.lang.Integer"/>
-                                <Column editable="false" title="Total" type="java.lang.Object"/>
+                                <Column editable="false" title="Total" type="java.lang.String"/>
                               </Table>
                             </Property>
                             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
@@ -4442,6 +4542,146 @@
                         </Component>
                       </SubComponents>
                     </Container>
+                    <Component class="javax.swing.JLabel" name="jLabel128">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelCalcularNetoDetallesVenta">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel129">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Total neto:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel131">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Descuento:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelPrecioAPagarDetallesVenta">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel132">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Total:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelVueltoDetallesVenta">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel133">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel134">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Vuelto:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel135">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Efectivo:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel136">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel137">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel138">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelDescuentoDetallesVenta">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelEfectivoDetallesVenta1">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="jButtonImpimirBoletaVenta">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Imprimir"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonImpimirBoletaVentaActionPerformed"/>
+                      </Events>
+                    </Component>
                   </SubComponents>
                 </Container>
                 <Container class="javax.swing.JPanel" name="jPanelListaVentas">
@@ -4465,7 +4705,7 @@
                                       <Component id="jLabel81" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="109" max="32767" attributes="0"/>
+                              <EmptySpace pref="102" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -4500,13 +4740,14 @@
                         <Component class="javax.swing.JTable" name="jTableListaVentas">
                           <Properties>
                             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="6" rowCount="22">
+                              <Table columnCount="7" rowCount="22">
                                 <Column editable="false" title="Id" type="java.lang.String"/>
                                 <Column editable="false" title="Fecha" type="java.lang.Object"/>
                                 <Column editable="false" title="Monto Total" type="java.lang.String"/>
                                 <Column editable="false" title="Tipo" type="java.lang.String"/>
                                 <Column editable="false" title="Metodo Pago" type="java.lang.String"/>
                                 <Column editable="false" title="Detalles" type="java.lang.Object"/>
+                                <Column editable="false" title="Cancelar" type="java.lang.Object"/>
                               </Table>
                             </Property>
                             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
@@ -4525,126 +4766,10 @@
                     </Container>
                   </SubComponents>
                 </Container>
-                <Container class="javax.swing.JPanel" name="jPanelDetallesPresupuestos">
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
-                      <CardConstraints cardName="card4"/>
-                    </Constraint>
-                  </Constraints>
-
-                  <Layout>
-                    <DimensionLayout dim="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
-                                      <Component id="jLabel88" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jTextFieldCodVenta1" min="-2" pref="116" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                                      <Component id="jLabel89" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jDateChooserFechaVenta1" min="-2" pref="124" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
-                                      <Component id="jScrollPane14" min="-2" pref="664" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="306" max="-2" attributes="0"/>
-                                      <Component id="jLabel87" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace pref="119" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
-                    <DimensionLayout dim="1">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                              <Component id="jLabel87" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jLabel88" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jTextFieldCodVenta1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel89" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jDateChooserFechaVenta1" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                              <Component id="jScrollPane14" pref="339" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                    </DimensionLayout>
-                  </Layout>
-                  <SubComponents>
-                    <Component class="javax.swing.JLabel" name="jLabel87">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="24" style="0"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="Detalles de presupuesto"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel88">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="14" style="0"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="Id:"/>
-                      </Properties>
-                    </Component>
-                    <Component class="javax.swing.JTextField" name="jTextFieldCodVenta1">
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldCodVenta1ActionPerformed"/>
-                      </Events>
-                    </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel89">
-                      <Properties>
-                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                          <Font name="Tahoma" size="14" style="0"/>
-                        </Property>
-                        <Property name="text" type="java.lang.String" value="Fecha:"/>
-                      </Properties>
-                    </Component>
-                    <Component class="com.toedter.calendar.JDateChooser" name="jDateChooserFechaVenta1">
-                    </Component>
-                    <Container class="javax.swing.JScrollPane" name="jScrollPane14">
-                      <AuxValues>
-                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                      </AuxValues>
-
-                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                      <SubComponents>
-                        <Component class="javax.swing.JTable" name="jTableDetallesVenta1">
-                          <Properties>
-                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                              <Table columnCount="4" rowCount="22">
-                                <Column editable="false" title="Nombre" type="java.lang.String"/>
-                                <Column editable="false" title="Precio" type="java.lang.String"/>
-                                <Column editable="false" title="Cantidad" type="java.lang.Integer"/>
-                                <Column editable="false" title="Total" type="java.lang.Object"/>
-                              </Table>
-                            </Property>
-                            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-                            </Property>
-                          </Properties>
-                          <Events>
-                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTableDetallesVenta1MouseClicked"/>
-                            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTableDetallesVenta1KeyPressed"/>
-                          </Events>
-                          <AuxValues>
-                            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
-                          </AuxValues>
-                        </Component>
-                      </SubComponents>
-                    </Container>
-                  </SubComponents>
-                </Container>
                 <Container class="javax.swing.JPanel" name="jPanelRealizarVenta">
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
                       <CardConstraints cardName="card2"/>
@@ -4657,7 +4782,7 @@
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jScrollPane5" min="-2" pref="664" max="-2" attributes="0"/>
-                              <EmptySpace pref="42" max="32767" attributes="0"/>
+                              <EmptySpace pref="31" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="jButtonConfirmarVenta" alignment="0" max="32767" attributes="0"/>
@@ -4832,50 +4957,6 @@
                                 <Column editable="false" title="Total" type="java.lang.Object"/>
                                 <Column editable="false" title="X" type="java.lang.Object"/>
                               </Table>
-                            </Property>
-                            <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                              <TableColumnModel selectionModel="0">
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                                  <Title/>
-                                  <Editor/>
-                                  <Renderer/>
-                                </Column>
-                              </TableColumnModel>
                             </Property>
                             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                               <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
@@ -5117,12 +5198,656 @@
                     </Component>
                   </SubComponents>
                 </Container>
+                <Container class="javax.swing.JPanel" name="jPanelRealizarPresupuesto">
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                  </AuxValues>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+                      <CardConstraints cardName="card2"/>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jScrollPane22" min="-2" pref="664" max="-2" attributes="0"/>
+                              <EmptySpace pref="24" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jButtonConfirmarPresupuesto" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jButtonAgregarProductoAPresupuesto" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="306" max="-2" attributes="0"/>
+                              <Component id="jLabel118" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel120" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="jLabel121" min="-2" pref="33" max="-2" attributes="0"/>
+                                              <EmptySpace max="32767" attributes="0"/>
+                                              <Component id="jLabel125" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="jLabel122" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="jLabel124" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="CalcularIVAPresupuesto" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jTextFieldDescuentoPresupuesto" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
+                                          <Component id="jLabelCalcularNetoPresupuesto" alignment="0" min="-2" pref="80" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="jLabel119" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="40" max="32767" attributes="0"/>
+                                      <Component id="jLabel126" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabelPrecioAPagarPresupuesto" min="-2" pref="87" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jComboBoxDescuentoPresupuesto" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="238" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="145" max="-2" attributes="0"/>
+                                      <Component id="jButtonAgregarProductoAPresupuesto" min="-2" pref="41" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="129" max="-2" attributes="0"/>
+                                      <Component id="jButtonConfirmarPresupuesto" min="-2" pref="39" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel118" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+                                      <Component id="jScrollPane22" pref="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel122" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelCalcularNetoPresupuesto" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel124" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jLabel121" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                                      <Component id="CalcularIVAPresupuesto" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
+                                      <Component id="jLabel125" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                      <Component id="jTextFieldDescuentoPresupuesto" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jComboBoxDescuentoPresupuesto" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="jLabel120" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel119" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelPrecioAPagarPresupuesto" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel126" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="jLabel118">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="24" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Presupuesto"/>
+                      </Properties>
+                    </Component>
+                    <Container class="javax.swing.JScrollPane" name="jScrollPane22">
+                      <AuxValues>
+                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                      </AuxValues>
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                      <SubComponents>
+                        <Component class="javax.swing.JTable" name="jTablePresupuesto">
+                          <Properties>
+                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                              <Table columnCount="8" rowCount="22">
+                                <Column editable="false" title="Id" type="java.lang.String"/>
+                                <Column editable="false" title="Nombre" type="java.lang.String"/>
+                                <Column editable="false" title="Precio" type="java.lang.String"/>
+                                <Column editable="false" title="-" type="java.lang.Object"/>
+                                <Column editable="false" title="Cantidad" type="java.lang.Integer"/>
+                                <Column editable="false" title="+" type="java.lang.Object"/>
+                                <Column editable="false" title="Total" type="java.lang.Object"/>
+                                <Column editable="false" title="X" type="java.lang.Object"/>
+                              </Table>
+                            </Property>
+                            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                            </Property>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTablePresupuestoMouseClicked"/>
+                            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTablePresupuestoKeyPressed"/>
+                          </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                          </AuxValues>
+                        </Component>
+                      </SubComponents>
+                    </Container>
+                    <Component class="javax.swing.JLabel" name="jLabel119">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Total:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelPrecioAPagarPresupuesto">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="jButtonAgregarProductoAPresupuesto">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Agregar Producto"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAgregarProductoAPresupuestoActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="jButtonConfirmarPresupuesto">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Confirmar Presupuesto"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonConfirmarPresupuestoActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel120">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Descuento:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="jTextFieldDescuentoPresupuesto">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldDescuentoPresupuestoKeyPressed"/>
+                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldDescuentoPresupuestoKeyReleased"/>
+                      </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel121">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Iva:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="CalcularIVAPresupuesto">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel122">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Total neto:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelCalcularNetoPresupuesto">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JComboBox" name="jComboBoxDescuentoPresupuesto">
+                      <Properties>
+                        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                          <StringArray count="2">
+                            <StringItem index="0" value="%"/>
+                            <StringItem index="1" value="Pesos"/>
+                          </StringArray>
+                        </Property>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jComboBoxDescuentoPresupuestoActionPerformed"/>
+                      </Events>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel124">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel125">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel126">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JPanel" name="jPanelListaPresupuestos">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+                      <CardConstraints cardName="card3"/>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="341" max="-2" attributes="0"/>
+                                      <Component id="jLabel123" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                                      <Component id="jScrollPane14" min="-2" pref="787" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace pref="46" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="jLabel123" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="jScrollPane14" min="-2" pref="355" max="-2" attributes="0"/>
+                              <EmptySpace pref="73" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="jLabel123">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="24" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Lista de presupuestos"/>
+                      </Properties>
+                    </Component>
+                    <Container class="javax.swing.JScrollPane" name="jScrollPane14">
+                      <AuxValues>
+                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                      </AuxValues>
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                      <SubComponents>
+                        <Component class="javax.swing.JTable" name="jTableListaPresupuestos">
+                          <Properties>
+                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                              <Table columnCount="5" rowCount="4">
+                                <Column editable="false" title="Id" type="java.lang.Integer"/>
+                                <Column editable="false" title="Fecha" type="java.lang.Object"/>
+                                <Column editable="false" title="Monto total" type="java.lang.String"/>
+                                <Column editable="false" title="Detalles" type="java.lang.Object"/>
+                                <Column editable="false" title="Cancelar" type="java.lang.Object"/>
+                              </Table>
+                            </Property>
+                            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                            </Property>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTableListaPresupuestosMouseClicked"/>
+                          </Events>
+                        </Component>
+                      </SubComponents>
+                    </Container>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JPanel" name="jPanelDetallesPresupuesto">
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+                      <CardConstraints cardName="card4"/>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout>
+                    <DimensionLayout dim="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="19" pref="570" max="32767" attributes="0"/>
+                              <Component id="jLabel144" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabel148" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jLabelPrecioAPagarDetallesPresupuesto" min="-2" pref="87" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                                      <Component id="jLabel142" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel141" min="-2" pref="8" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabelCalcularNetoDetallesPresupuesto" min="-2" pref="80" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="jLabel143" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabel149" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jLabelDescuentoDetallesPresupuesto" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="-2" pref="164" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
+                                              <Component id="jLabel130" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="jTextFieldCodPresupuesto" min="-2" pref="116" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                                              <Component id="jLabel139" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="jDateChooserFechaPresupuesto" min="-2" pref="124" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
+                                              <Component id="jScrollPane24" min="-2" pref="664" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="jButtonImpimirBoletaPresupuesto" min="-2" pref="84" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="280" max="-2" attributes="0"/>
+                                      <Component id="jLabel127" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                    <DimensionLayout dim="1">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                              <Component id="jLabel127" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel130" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jTextFieldCodPresupuesto" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel139" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jDateChooserFechaPresupuesto" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
+                                      <Component id="jScrollPane24" min="-2" pref="224" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="209" max="-2" attributes="0"/>
+                                      <Component id="jButtonImpimirBoletaPresupuesto" min="-2" pref="36" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel142" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelCalcularNetoDetallesPresupuesto" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel141" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel143" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel149" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelDescuentoDetallesPresupuesto" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel144" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelPrecioAPagarDetallesPresupuesto" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel148" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="81" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                    </DimensionLayout>
+                  </Layout>
+                  <SubComponents>
+                    <Component class="javax.swing.JLabel" name="jLabel127">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="24" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Detalles de Presupuesto"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel130">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Id:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="jTextFieldCodPresupuesto">
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldCodPresupuestoActionPerformed"/>
+                      </Events>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel139">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Fecha:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="com.toedter.calendar.JDateChooser" name="jDateChooserFechaPresupuesto">
+                    </Component>
+                    <Container class="javax.swing.JScrollPane" name="jScrollPane24">
+                      <AuxValues>
+                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                      </AuxValues>
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                      <SubComponents>
+                        <Component class="javax.swing.JTable" name="jTableDetallesPresupuesto">
+                          <Properties>
+                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                              <Table columnCount="5" rowCount="22">
+                                <Column editable="false" title="Id" type="java.lang.Integer"/>
+                                <Column editable="false" title="Nombre" type="java.lang.String"/>
+                                <Column editable="false" title="Precio" type="java.lang.String"/>
+                                <Column editable="false" title="Cantidad" type="java.lang.Integer"/>
+                                <Column editable="false" title="Total" type="java.lang.String"/>
+                              </Table>
+                            </Property>
+                            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                            </Property>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTableDetallesPresupuestoMouseClicked"/>
+                            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTableDetallesPresupuestoKeyPressed"/>
+                          </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                          </AuxValues>
+                        </Component>
+                      </SubComponents>
+                    </Container>
+                    <Component class="javax.swing.JLabel" name="jLabel141">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelCalcularNetoDetallesPresupuesto">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel142">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Total neto:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel143">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Descuento:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelPrecioAPagarDetallesPresupuesto">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
+                      </AuxValues>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel144">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Total:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel148">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel149">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="$"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabelDescuentoDetallesPresupuesto">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="14" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="0"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JButton" name="jButtonImpimirBoletaPresupuesto">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Imprimir"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonImpimirBoletaPresupuestoActionPerformed"/>
+                      </Events>
+                    </Component>
+                  </SubComponents>
+                </Container>
               </SubComponents>
             </Container>
             <Component class="javax.swing.JButton" name="jButton1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Lista Presupuestos"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

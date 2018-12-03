@@ -28,6 +28,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
 
     /**
      * Creates new form SeleccionarProducto
+     *
      * @param conexion
      * @param datos
      */
@@ -87,7 +88,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().
@@ -105,35 +106,37 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
         String producto = this.jComboBoxProducto.getSelectedItem().toString();
         String tipo = this.jComboBoxTipo.getSelectedItem().toString();
         String especie;
-        String filtroNombre= this.jTextFieldFiltroNombre.getText();
+        String filtroNombre = this.jTextFieldFiltroNombre.getText();
         switch (producto) {
             case "Planta":
                 if (this.jComboBoxEspecie.getSelectedItem() != null) {
                     especie = this.jComboBoxEspecie.getSelectedItem().toString();
                 } else {
                     especie = "--Seleccionar especie--";
-                }   if (tipo.equals("--Seleccionar tipo--")) {
+                }
+                if (tipo.equals("--Seleccionar tipo--")) {
                     sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                             + "FROM producto P, preciohistoricoproducto PH, planta pl "
-                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
+                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 } else if (especie.equals("--Seleccionar especie--")) {
                     sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                             + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
-                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
+                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 } else {
                     sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                             + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
-                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
-                }   break;
+                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                }
+                break;
             case "Accesorio":
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                         + "FROM producto P, preciohistoricoproducto PH, accesorio a "
-                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
+                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 break;
             default:
                 sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
                         + "FROM producto P, preciohistoricoproducto PH "
-                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%"+ filtroNombre +"%' OR P.codproducto LIKE '%"+ filtroNombre +"%')";
+                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 break;
         }
         DefaultTableModel modelo = (DefaultTableModel) jTableproductos.getModel();
@@ -149,7 +152,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                 datos[1] = rs2.getString(2);
                 datos[2] = rs2.getInt(3);
                 datos[3] = rs2.getInt(4);
-                datos[4] = PanelMenu.formatearAEntero(""+rs2.getString(5));
+                datos[4] = PanelMenu.formatearAEntero("" + rs2.getString(5));
                 datos[5] = info;
                 modelo.addRow(datos);
             }
@@ -446,7 +449,11 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             int cantidad = Integer.parseInt(this.jTextFieldCantidad.getText());
             if (cantidad <= (cantidadVentas + cantidadProduccion)) {
                 Producto p = new Producto(ID, nombre, cantidad, precio);
-                PanelMenu.agregarProductoCarrito(p);
+                if (PanelMenu.getEsVenta()) {
+                    PanelMenu.agregarProductoCarrito(p);
+                } else {
+                    PanelMenu.agregarProductoCarritoPresupuesto(p);
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Cantidad insuficiente del producto!");
             }
@@ -465,7 +472,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                 this.jPanelTipo.setVisible(false);
                 this.setSize(this.getWidth(), 553);
                 break;
-            default:     
+            default:
                 this.jPanelTipo.setVisible(false);
                 this.setSize(this.getWidth(), 553);
                 break;
@@ -542,7 +549,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(SeleccionarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
+
         //</editor-fold>
 
         /* Create and display the form */
