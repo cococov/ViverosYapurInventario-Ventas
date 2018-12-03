@@ -1,35 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Inventario" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9c1291a0-d1f9-4eb9-a053-3e5a5a41bd01">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<queryString>
-		<![CDATA[SELECT po.codordencompra,p.nombreproducto,ph.precioproductoneto,po.cantidadproductoordencompra, oc.fecha from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=(SELECT MAX(codordencompra) FROM ordencompra) and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto AND ph2.fechaproducto<oc.fecha)]]>
+		<![CDATA[SELECT p.codproducto as codigo,p.nombreproducto as nombre, p.stockminimo as 'stock minimo' ,p.cantidadproductoventa as 'cantidad en ventas',p.cantidadproductoproduccion as ' cantidad en produccion' ,(CASE when pl.codproducto is null then 'accesorio' else 'planta' end) as tipo, ph.precioproductoneto as precio
+from preciohistoricoproducto ph, producto p left OUTER JOIN planta pl on p.codproducto= pl.codproducto LEFT OUTER JOIN accesorio a  on p.codproducto= a.codproducto 
+WHERE ph.codproducto = p.codproducto and ph.fechaproducto = ( SELECT max(ph2.fechaproducto) from preciohistoricoproducto ph2 where ph2.codproducto = p.codproducto)]]>
 	</queryString>
-	<field name="codordencompra" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="nombreproducto" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="precioproductoneto" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="cantidadproductoordencompra" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fecha" class="java.sql.Timestamp">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
+	<field name="codigo" class="java.lang.Integer"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="stock minimo" class="java.lang.String"/>
+	<field name="cantidad en ventas" class="java.lang.Integer"/>
+	<field name="cantidad en produccion" class="java.lang.Integer"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="precio" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="79" splitType="Stretch">
-			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="430" y="10" width="100" height="20" uuid="301a87c5-e665-4a1a-abdf-44e33a809a9e"/>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="194" y="10" width="179" height="55" uuid="bd7d5c97-747f-4a1e-a02b-460b45f94c46"/>
 				<textElement>
@@ -37,10 +27,18 @@
 				</textElement>
 				<text><![CDATA[Inventario]]></text>
 			</staticText>
+			<image>
+				<reportElement x="0" y="10" width="106" height="63" uuid="5168a8f8-a530-4ccf-8155-41623314de26"/>
+				<imageExpression><![CDATA["C:\\Users\\ASUS\\Desktop\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
+			<textField pattern="dd/MM/yyyy HH.mm.ss">
+				<reportElement x="450" y="23" width="100" height="20" uuid="5b53154b-136d-41cf-a8fa-89fc08292374"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="46" splitType="Stretch">
+		<band height="48" splitType="Stretch">
 			<staticText>
 				<reportElement x="209" y="-1" width="127" height="35" uuid="1bec83fd-f88f-47cb-a171-e6ec25b73749"/>
 				<textElement>
@@ -51,66 +49,87 @@
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="20" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement x="46" y="0" width="65" height="20" uuid="ef66a537-4fae-4cde-afc0-8f3bb167ce4c"/>
+				<reportElement x="0" y="0" width="67" height="20" uuid="d403ace9-fd80-48a0-9fc1-3697a24ab2dd"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codigo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="67" y="0" width="63" height="20" uuid="eda17bcc-a97a-464b-8c12-f96e88e6a7bf"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Nombre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="23" y="0" width="23" height="20" uuid="38e14438-5ce3-41ad-9c66-52a171ad0dd1"/>
-				<text><![CDATA[ID]]></text>
+				<reportElement x="164" y="0" width="100" height="20" uuid="8b3a6bc9-c4e0-477b-a7e7-9679b3fd2806"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stock minimo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="111" y="0" width="168" height="20" uuid="d93feaa4-1e6a-4633-abd0-b52493b0d6dc"/>
-				<text><![CDATA[Descripción]]></text>
+				<reportElement x="231" y="0" width="100" height="20" uuid="22cb2c4a-27c4-4079-b713-a90deee67f04"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad en ventas]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="336" y="0" width="84" height="20" uuid="82f91854-28ee-430c-85e2-c72e1cd3db30"/>
-				<text><![CDATA[Stock produccion]]></text>
+				<reportElement x="331" y="0" width="119" height="20" uuid="1e966322-f30f-401f-a31b-ab3d0a40e672"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad en produccion]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="279" y="0" width="57" height="20" uuid="e1f8a668-ebf2-4ae5-a741-6f119fa8e9e9"/>
-				<text><![CDATA[Stock venta]]></text>
+				<reportElement x="450" y="0" width="55" height="20" uuid="fe48c79b-aa9a-4b5e-97b8-f8e34f382496"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="470" y="0" width="54" height="20" uuid="4fcff613-0abe-4961-a33c-838dd6b53865"/>
+				<reportElement x="505" y="0" width="100" height="20" uuid="a6852e40-c1a0-411e-a9b8-c47d8146ac60"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Precio]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="420" y="0" width="50" height="20" uuid="534ad23c-ee91-4844-93d3-0c37f563af4a"/>
-				<text><![CDATA[Fecha]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="46" y="0" width="65" height="20" uuid="4818fa9b-b2f3-4e7a-a5bd-7155db1d3b04"/>
-				<textFieldExpression><![CDATA[$F{nombreproducto}]]></textFieldExpression>
+				<reportElement x="0" y="1" width="67" height="20" uuid="60e605fe-2bae-450a-ab14-c0b49d82ba3c"/>
+				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="23" y="0" width="23" height="20" uuid="4c374066-42af-4007-adce-de127c2a971c"/>
-				<textFieldExpression><![CDATA[$F{codproducto}]]></textFieldExpression>
+				<reportElement x="264" y="1" width="74" height="20" uuid="a6374174-e1f4-485a-8695-55272c6b4a5b"/>
+				<textFieldExpression><![CDATA[$F{cantidad en ventas}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="111" y="0" width="168" height="20" uuid="1a0f2336-948d-4409-8b42-cbbd7e0d77a6"/>
-				<textFieldExpression><![CDATA[$F{descripcionproducto}]]></textFieldExpression>
+				<reportElement x="360" y="0" width="100" height="20" uuid="22818d83-28d4-4033-894d-a77fe94d4460"/>
+				<textFieldExpression><![CDATA[$F{cantidad en produccion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="279" y="0" width="57" height="20" uuid="a68e5530-04f5-49d9-b739-f2216bd21aa6"/>
-				<textFieldExpression><![CDATA[$F{cantidadproductoventa}]]></textFieldExpression>
+				<reportElement x="450" y="1" width="100" height="20" uuid="cf183cde-84c5-4823-ab8e-998b599c0d12"/>
+				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="336" y="0" width="84" height="20" uuid="0c5537c6-ce5f-49e0-a695-5104fa1f963c"/>
-				<textFieldExpression><![CDATA[$F{cantidadproductoproduccion}]]></textFieldExpression>
+				<reportElement x="67" y="1" width="83" height="20" uuid="47afe03e-b720-4917-870f-9df8774fcd7d"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="420" y="0" width="50" height="20" uuid="606013bb-481b-49c5-9a7b-a560504f02fb"/>
-				<textFieldExpression><![CDATA[$F{fechaproducto}]]></textFieldExpression>
+				<reportElement x="505" y="0" width="100" height="20" uuid="47d377b3-0ea1-4574-a4dc-fbdefe295e87"/>
+				<textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="470" y="1" width="54" height="20" uuid="9eadf54a-2feb-4ee7-8596-2a7a311aaf00"/>
-				<textFieldExpression><![CDATA[$F{PRECIO}]]></textFieldExpression>
+				<reportElement x="177" y="1" width="69" height="20" uuid="4ffbb27c-d92b-42fc-9ca5-e8e2dcf0aacb"/>
+				<textFieldExpression><![CDATA[$F{stock minimo}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Proveedores" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="83ca18f3-6387-43d7-84e9-6b95923e303a">
-	<property name="ireport.zoom" value="1.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Proveedores" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b253f4df-2585-491a-9350-f7f2204ecb86">
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<queryString>
-		<![CDATA[SELECT
-     CONCAT(`nombreproveedor`," ",`apellidosproveedor`) AS proveedor,
-     proveedor.`descripcionproveedor` AS proveedor_descripcionproveedor,
-     proveedor.`contactoproveedor` AS proveedor_contactoproveedor,
-     proveedor.`correoproveedor` AS proveedor_correoproveedor
-FROM
-     `proveedor` proveedor]]>
+		<![CDATA[SELECT concat(p.nombreproveedor," ", p.apellidosproveedor) as nombre, p.descripcionproveedor,p.contactoproveedor,p.correoproveedor FROM proveedor p]]>
 	</queryString>
-	<field name="proveedor" class="java.lang.String"/>
-	<field name="proveedor_descripcionproveedor" class="java.lang.String"/>
-	<field name="proveedor_contactoproveedor" class="java.lang.String"/>
-	<field name="proveedor_correoproveedor" class="java.lang.String"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="descripcionproveedor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="contactoproveedor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="correoproveedor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="79" splitType="Stretch">
-			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="430" y="10" width="91" height="20" uuid="c84972ab-4738-4182-ae0d-c1113f20ca50"/>
+			<image>
+				<reportElement x="11" y="0" width="106" height="63" uuid="19b5cd2a-8316-45d6-8db7-362b1be8ba1e"/>
+				<imageExpression><![CDATA["C:\\Users\\ASUS\\Desktop\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="117" y="11" width="291" height="68" uuid="7446f6d1-2e98-47f9-84d2-88b096ce24a3"/>
+				<textElement>
+					<font size="36"/>
+				</textElement>
+				<text><![CDATA[      Proveedores]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH.mm.ss">
+				<reportElement x="444" y="43" width="100" height="20" uuid="1a57d36f-b0eb-46c3-830a-dd5c0365be8b"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="172" y="10" width="221" height="55" uuid="22176aa6-c796-40fc-ba36-2583c1de2f19"/>
-				<textElement>
-					<font size="36" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Proveedores]]></text>
-			</staticText>
-			<image>
-				<reportElement x="10" y="10" width="106" height="63" uuid="50ca3ab6-9519-4c3f-8459-fdc293a2ac7a"/>
-				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-VentasFin\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="48" splitType="Stretch">
+		<band height="40" splitType="Stretch">
 			<staticText>
-				<reportElement x="209" y="-1" width="127" height="35" uuid="14c81741-e906-4b9d-b5d4-56cb6aec7442"/>
+				<reportElement x="219" y="0" width="127" height="35" uuid="56085029-7c81-4408-935b-c05e6dd769e3"/>
 				<textElement>
 					<font size="18"/>
 				</textElement>
@@ -50,50 +50,54 @@ FROM
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="28" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="2" width="100" height="20" uuid="5562e6cf-ed02-438f-8b22-d00a93d5ebcd"/>
-				<textElement textAlignment="Center"/>
-				<text><![CDATA[Proveedor]]></text>
+				<reportElement x="17" y="2" width="100" height="20" uuid="0f2c2c01-d4d8-4f51-a6f3-8042cb450bd2"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="157" y="2" width="100" height="20" uuid="dacb400f-d3e5-4af5-bff8-42751b05358f"/>
-				<textElement textAlignment="Center"/>
+				<reportElement x="159" y="2" width="100" height="20" uuid="440dead0-cbf9-4306-87cd-6fd4ec70f67e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Contacto]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="307" y="2" width="100" height="20" uuid="f4fddc71-185e-4fa7-8172-73d5c7d64e6b"/>
-				<textElement textAlignment="Center"/>
+				<reportElement x="302" y="2" width="100" height="20" uuid="bb22598a-14ab-43a1-91eb-f92d9515c08b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Correo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="441" y="2" width="100" height="20" uuid="ebfc667e-abec-42b9-a3e6-e572772b18da"/>
-				<textElement textAlignment="Center"/>
-				<text><![CDATA[Descipción]]></text>
+				<reportElement x="455" y="2" width="100" height="20" uuid="d0b2fe86-3144-4012-9436-128e840536d9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="22" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="b5d73397-dd38-4146-b3aa-dd21eabb6d7f"/>
-				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{proveedor}]]></textFieldExpression>
+				<reportElement x="17" y="0" width="100" height="20" uuid="f5eb0d5f-536c-49a3-9073-92920c47a2fb"/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="157" y="0" width="100" height="20" uuid="728e380f-0c5d-4606-8320-046dc819b025"/>
-				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{proveedor_contactoproveedor}]]></textFieldExpression>
+				<reportElement x="159" y="0" width="100" height="20" uuid="29dfd1f7-6ca7-4a82-89e2-49d2f77bf207"/>
+				<textFieldExpression><![CDATA[$F{contactoproveedor}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="307" y="0" width="100" height="20" uuid="13fb9dac-c9aa-4783-82b6-e2406774b9f4"/>
-				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{proveedor_correoproveedor}]]></textFieldExpression>
+				<reportElement x="302" y="0" width="100" height="20" uuid="1fb8a22f-27c6-4f07-bcf8-9454c33c2f91"/>
+				<textFieldExpression><![CDATA[$F{correoproveedor}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="441" y="0" width="100" height="20" uuid="462110be-ecdf-48c8-aa1a-26ada2886c13"/>
-				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{proveedor_descripcionproveedor}]]></textFieldExpression>
+				<reportElement x="455" y="0" width="100" height="20" uuid="5aaab4c8-dec5-45bf-a6e3-7c9b9edb50cc"/>
+				<textFieldExpression><![CDATA[$F{descripcionproveedor}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -102,14 +106,14 @@ FROM
 	</columnFooter>
 	<pageFooter>
 		<band height="54" splitType="Stretch">
-			<textField evaluationTime="Report">
-				<reportElement x="289" y="-1" width="40" height="20" uuid="ec48dd9f-82a4-43c0-a12e-63c64fd1d417"/>
-				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
 			<textField>
-				<reportElement x="209" y="-1" width="80" height="20" uuid="5054d149-2be9-4eec-acf8-d3554c834512"/>
+				<reportElement x="208" y="16" width="80" height="20" uuid="be8bf305-86b7-417f-844f-fc3dc77e88a1"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="288" y="16" width="40" height="20" uuid="86388aa6-5388-4b8a-8812-425a7f9234ba"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

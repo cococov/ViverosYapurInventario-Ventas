@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Usuarios" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b538fc46-5d60-4749-9015-9922d09df168">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="nombrerol" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT u.nombreusuario as Nombres , concat(u.apellidomaterno, " " ,u.apellidomaterno) as Apellidos ,r.nombrerol  from usuario u ,rol r where r.idrol = u.idrol ]]>
+	</queryString>
+	<field name="Nombres" class="java.lang.String"/>
+	<field name="Apellidos" class="java.lang.String"/>
+	<field name="nombrerol" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="106" height="63" uuid="76c0c157-6ebe-4560-ad92-fe29bdeeb41e"/>
+				<imageExpression><![CDATA["C:\\Users\\ASUS\\Desktop\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="190" y="16" width="164" height="47" uuid="9c692b8b-4b64-4c91-8b51-911af5a856d8"/>
+				<textElement>
+					<font size="36" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuarios]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH.mm.ss">
+				<reportElement x="455" y="29" width="100" height="20" uuid="683d7446-5457-444a-98c4-c99fc2ae44be"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="207" y="0" width="127" height="35" uuid="5766168b-d8f0-4e3f-81d1-dc88482119bd"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Viveros Yapur]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="52" y="2" width="100" height="20" uuid="e334d2f1-ff60-486d-8dbc-fd284a063908"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombres]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="222" y="2" width="100" height="20" uuid="0b53476d-46a5-4bd5-af01-8a5ec3f9fb3a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apellidos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="383" y="0" width="100" height="20" uuid="a7d189ff-423b-416c-bb01-f4e9bf5c838c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cargo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="52" y="0" width="100" height="20" uuid="a7f1556d-ae78-4f0e-908a-9c17f01c0978"/>
+				<textFieldExpression><![CDATA[$F{Nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="222" y="2" width="100" height="20" uuid="02f20671-a8ed-4955-b16c-009b20061bc5"/>
+				<textFieldExpression><![CDATA[$F{Apellidos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="383" y="0" width="100" height="20" uuid="327aef47-51c1-41b1-8fea-f36d0d04d882"/>
+				<textFieldExpression><![CDATA[$F{nombrerol}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="53" splitType="Stretch">
+			<textField>
+				<reportElement x="207" y="26" width="80" height="20" uuid="d54ceee5-f2cf-4755-abf8-400fc06c7890"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="294" y="26" width="40" height="20" uuid="b3df1c81-5862-47e2-b5fb-300e6fdd5005"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
