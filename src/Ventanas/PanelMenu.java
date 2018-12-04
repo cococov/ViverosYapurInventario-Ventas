@@ -39,7 +39,7 @@ import proyectoyapur.ColorRender;
 import proyectoyapur.Render;
 
 public final class PanelMenu extends javax.swing.JFrame implements FocusListener {
-
+    
     private String datos[];
     private ConnectarBD conexion;
     private String rutAeditar;
@@ -49,7 +49,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     public static boolean apreto = false;
     private String ProveedorSeleccionado;
     private String mermaSeleccionada;
-
+    
     public PanelMenu(ConnectarBD conexion, String datos[]) {
         initComponents();
         ProveedorSeleccionado = "";
@@ -77,7 +77,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         this.jTableCobrarCheque.setDefaultRenderer(Object.class, new Render());
         this.jTablePresupuesto.setDefaultRenderer(Object.class, new Render());
         this.jTableListaPresupuestos.setDefaultRenderer(Object.class, new Render());
-
+        this.jTextFieldDescuentoPresupuesto.setText("0");
         this.jPanel4.setVisible(false);
         this.jPanel7.setVisible(false);
         this.jPanel6.setVisible(false);
@@ -91,7 +91,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         PanelMenu.jTextFieldEfectivo.setEnabled(false);
         this.jPanelRealizarPresupuesto.setVisible(false);
         this.jPanelRealizarVenta.setVisible(false);
-
+        
         validarSoloNumeros(jTextFieldNumeroChequeAgregar);
         validarSoloNumeros(jTextFieldMontoCheque);
         validarSoloNumeros(jTextFieldNumeroChequeEditar);
@@ -112,22 +112,22 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         validarSoloNumeros(jTextFieldPrecioEditarProducto);
         validarSoloNumeros(jTextFieldCantidadMerma);
         this.jTextFieldMontoCheque.addFocusListener(this);
-
+        
         jPanelTipoPlanta.setVisible(false);
-
+        
         if (datos[5].equals("2")) {
             this.jTabbedPane1.remove(3);
             this.jTabbedPane1.remove(2);
             this.jTabbedPane1.remove(1);
             this.jTabbedPane1.remove(0);
-
+            
         } else if (datos[5].equals("3")) {
             this.jTabbedPane1.remove(0);
-
+            
             this.jTabbedPane1.remove(1);
             this.jTabbedPane1.remove(1);
             this.jTabbedPane1.remove(1);
-
+            
         }
         refrescarTablaVenta();
         refrescarTablaListaProductosMerma();
@@ -138,12 +138,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public PanelMenu() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-
+    
     public void reporteTodosProveedores() throws JRException {
         JasperReport reporte;
         String path = "src\\Reportes\\Proveedores.jasper";
@@ -153,7 +153,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         view.setVisible(true);
     }
-
+    
     public void reporteTodosInventario() throws JRException {
         JasperReport reporte;
         String path = "src\\Reportes\\Inventario.jasper";
@@ -163,7 +163,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         view.setVisible(true);
     }
-
+    
     public void reporteTodosUsuario() throws JRException {
         JasperReport reporte;
         String path = "src\\Reportes\\Usuarios.jasper";
@@ -173,7 +173,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         view.setVisible(true);
     }
-
+    
     public void reporteTodosVentas() throws JRException {
         JasperReport reporte;
         SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -205,7 +205,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             }
         }
     }
-
+    
     public void reporteTodosCheques() throws JRException, ParseException {
         JasperReport reporte;
         SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -237,7 +237,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             }
         }
     }
-
+    
     public static boolean eliminarDelCarrito(Producto[] carro, int x) {
         if (x < cantProductosCarrito && x >= 0) {
             carrito[x] = null;
@@ -251,13 +251,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             return false;
         }
     }
-
+    
     public static void limpiarCarrito() {
         carrito = new Producto[1000];
         cantProductosCarrito = 0;
-
+        
     }
-
+    
     public static void agregarProductoCarrito(Producto p) {
         boolean encontrado = false;
         for (int i = 0; i < cantProductosCarrito; i++) {
@@ -273,14 +273,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         apreto = false;
         refrescarTablaVenta();
     }
-
+    
     public static boolean getEsVenta() {
         if (jPanelRealizarVenta.isVisible()) {
             return true;
         }
         return false;
     }
-
+    
     public static void agregarProductoCarritoPresupuesto(Producto p) {
         boolean encontrado = false;
         for (int i = 0; i < cantProductosCarrito; i++) {
@@ -296,7 +296,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         apreto = false;
         refrescarTablaPresupuesto();
     }
-
+    
     public static void refrescarTablaVenta() {
         Clear_Table1(jTableVenta);
         DefaultTableModel modelo = (DefaultTableModel) jTableVenta.getModel();
@@ -306,7 +306,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             datos[0] = carrito[i].getId();
             datos[1] = carrito[i].getNombre();
             datos[2] = formatearAEntero("" + carrito[i].getPrecio());
-
+            
             JButton menos = new JButton("-");
             if (carrito[i].getCantidad() == 1) {
                 menos.setEnabled(false);
@@ -346,18 +346,18 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
                     int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
                     jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-
+                    
                 }
             } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
 
                 if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
-
+                    
                     int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
                     jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
                 } else {
                     JOptionPane.showMessageDialog(null, "Descuento excedido");
                 }
-
+                
             }
             if (jTextFieldEfectivo.getText().equals("")) {
                 jLabelVuelto.setText("0");
@@ -378,9 +378,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             jTextFieldEfectivo.setEditable(true);
             jTextFieldEfectivo.setEnabled(true);
         }
-
+        
     }
-
+    
     public static void refrescarTablaPresupuesto() {
         Clear_Table1(jTablePresupuesto);
         DefaultTableModel modelo = (DefaultTableModel) jTablePresupuesto.getModel();
@@ -390,7 +390,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             datos[0] = carrito[i].getId();
             datos[1] = carrito[i].getNombre();
             datos[2] = formatearAEntero("" + carrito[i].getPrecio());
-
+            
             JButton menos = new JButton("-");
             if (carrito[i].getCantidad() == 1) {
                 menos.setEnabled(false);
@@ -427,23 +427,24 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
                 jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((neto + iva))));
             } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
+
                 if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
                     int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
                     jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-
                 }
+                
             } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
 
                 if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
-
+                    
                     int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
                     jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
                 } else {
                     JOptionPane.showMessageDialog(null, "Descuento excedido");
                 }
-
+                
             }
-
+            
         }
         if (datos[0] == null) {
             jTextFieldDescuentoPresupuesto.setEditable(false);
@@ -452,9 +453,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             jTextFieldDescuentoPresupuesto.setEditable(true);
             jTextFieldDescuentoPresupuesto.setEnabled(true);
         }
-
+        
     }
-
+    
     public void refrescarTablaCobrarCheque() {
         Clear_Table1(jTableCobrarCheque);
         JButton detalles = new JButton("Cobrar");
@@ -469,9 +470,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             rs2 = st2.executeQuery(sql1);
             Object[] datosQuery;
             datosQuery = new Object[7];
-
+            
             while (rs2.next()) {
-
+                
                 datosQuery[0] = rs2.getInt(1);
                 datosQuery[1] = rs2.getString(2);
                 datosQuery[2] = rs2.getString(3);
@@ -485,9 +486,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
-
+    
     public boolean registrarVenta() throws SQLException {
         if (carrito[0] != null) {
             String tipoPago = "";
@@ -537,7 +538,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         while (rs2.next()) {
                             codCompra = rs2.getInt(1);
                         }
-
+                        
                         String sql3;
                         PreparedStatement st3;
                         //ingresar productos
@@ -591,7 +592,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     while (rs2.next()) {
                         codCompra = rs2.getInt(1);
                     }
-
+                    
                     String sql3;
                     PreparedStatement st3;
                     //ingresar productos
@@ -643,7 +644,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         }
         return false;
     }
-
+    
     public boolean registrarPresupuesto() throws SQLException {
         if (carrito[0] != null) {
             String tipoPago = "";
@@ -655,7 +656,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             //si no es cheque
             //Ingresar orden Compra
             if ((jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0 && pasarAinteger(jTextFieldDescuentoPresupuesto.getText()) < 100) || (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1 && pasarAinteger(jTextFieldDescuentoPresupuesto.getText()) < totalSinDesc)) {
-
+                
                 String sql4;
                 PreparedStatement st4;
                 sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
@@ -677,7 +678,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 while (rs2.next()) {
                     codCompra = rs2.getInt(1);
                 }
-
+                
                 String sql3;
                 PreparedStatement st3;
                 //ingresar productos
@@ -704,17 +705,17 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 jLabelPrecioAPagarPresupuesto.setText("0");
                 limpiarCarrito();
                 return true;
-
+                
             } else {
                 JOptionPane.showMessageDialog(null, "Descuento excedido");
             }
         } else {
             JOptionPane.showMessageDialog(null, "No hay productos en el carro de presupuesto");
         }
-
+        
         return false;
     }
-
+    
     public void refrescarTablaBloquearUsuario() {
         Clear_Table1(jTableBloquearUsuario);
         JButton bloquear = new JButton("Bloquear");
@@ -729,15 +730,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             st2 = conexion.getConnection().createStatement();
             rs2 = st2.executeQuery(sql1);
             Object[] datosQuery = new Object[6];
-
+            
             while (rs2.next()) {
-
+                
                 datosQuery[0] = rs2.getString(1);
                 datosQuery[1] = rs2.getString(2);
                 datosQuery[2] = rs2.getString(3);
                 datosQuery[3] = rs2.getString(4);
                 datosQuery[4] = rs2.getString(5);
-
+                
                 if (rs2.getBoolean(6)) {
                     if (datosQuery[0].equals(this.datos[0])) {
                         JButton elMismo1 = new JButton("Desbloquear");
@@ -750,21 +751,21 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     JButton elMismo = new JButton("Bloquear");
                     elMismo.setEnabled(false);
                     datosQuery[5] = elMismo;
-
+                    
                 } else {
                     datosQuery[5] = bloquear;
                 }
                 modelo.addRow(datosQuery);
-
+                
             }
             jTableBloquearUsuario.setModel(modelo);
-
+            
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
-
+    
     public void refrescarTablaEditarCheque() {
         Clear_Table1(jTableEditarCheques);
         JButton detalles = new JButton("Detalles");
@@ -778,9 +779,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             st2 = conexion.getConnection().createStatement();
             rs2 = st2.executeQuery(sql1);
             Object[] datosQuery = new Object[7];
-
+            
             while (rs2.next()) {
-
+                
                 datosQuery[0] = rs2.getInt(1);
                 datosQuery[1] = rs2.getString(2);
                 datosQuery[2] = rs2.getString(3);
@@ -794,9 +795,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
-
+    
     @Override
     public void focusLost(FocusEvent e) {
         if (e.getSource() == jTextFieldRutAgregarU) {
@@ -810,13 +811,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 }
             }
         }
-
+        
         if (e.getSource() == jTextFieldMontoCheque) {
             jTextFieldMontoCheque.setText(formatearAEntero(jTextFieldMontoCheque.getText()));
-
+            
         }
     }
-
+    
     public static String formatearAEntero(String n) {
         char[] vector = n.toCharArray();
         String resultado = "";
@@ -833,7 +834,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     resultado = resultado + vector[i];
                     cont++;
                 }
-
+                
             } else {
                 resultado = n;
                 break;
@@ -851,9 +852,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             resultadoFinal = n;
         }
         return resultadoFinal;
-
+        
     }
-
+    
     public static int pasarAinteger(String entero) {
         char[] numero = entero.toCharArray();
         String resultado = "";
@@ -864,7 +865,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         }
         return Integer.parseInt(resultado);
     }
-
+    
     public void agregarProveedor() {
         String sql;
         PreparedStatement st;
@@ -901,7 +902,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             JOptionPane.showMessageDialog(null, "ya hay un proveedor con ese rut");
         }
     }
-
+    
     public void agregarMerma(int ID, int cant, String info, String ventaProduccion, int cantO) {
         String sql = null;
         PreparedStatement st;
@@ -948,7 +949,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             JOptionPane.showMessageDialog(null, "La merma excede el stock actual en el area seleccionada.");
         }
     }
-
+    
     public void agregarProducto() throws SQLException {
         boolean todoBien = false;
         String nomProducto = jTextFieldNombreAgregarProducto.getText();
@@ -1070,7 +1071,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                                 while (rs.next()) {
                                                     codTipoPlanta = rs.getInt(1);
                                                 }
-
+                                                
                                                 String sqlAux3;
                                                 PreparedStatement stAux3;
                                                 sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
@@ -1082,14 +1083,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                                     cant3 = rsAux3.getInt(1);
                                                 }
                                                 if (cant3 < 1) {
-
+                                                    
                                                     PreparedStatement st2;
                                                     sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
                                                     st2 = conexion.getConnection().prepareStatement(sql);
                                                     st2.setInt(1, codTipoPlanta);
                                                     st2.setString(2, nuevaEspeciePlanta);
                                                     st2.executeUpdate();
-
+                                                    
                                                     PreparedStatement st4;
                                                     ResultSet rs4;
                                                     sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
@@ -1115,7 +1116,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                             while (rs.next()) {
                                                 codTipoPlanta = rs.getInt(1);
                                             }
-
+                                            
                                             PreparedStatement st2;
                                             ResultSet rs2;
                                             String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "'";
@@ -1129,7 +1130,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
                                     }
-
+                                    
                                     if (todoBien) {
                                         //ESPECIE Y TIPO YA ESTAN EN LA LISTA
                                         PreparedStatement st5;
@@ -1141,7 +1142,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                         st5.setString(4, descripcion);
                                         st5.setString(5, stock);
                                         st5.executeUpdate();
-
+                                        
                                         int codProduto = 0;
                                         PreparedStatement st;
                                         ResultSet rs;
@@ -1151,14 +1152,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                         while (rs.next()) {
                                             codProduto = rs.getInt(1);
                                         }
-
+                                        
                                         PreparedStatement st6;
                                         sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
                                         st6 = conexion.getConnection().prepareStatement(sql);
                                         st6.setInt(1, codProduto);
                                         st6.setInt(2, codEspeciePlanta);
                                         st6.executeUpdate();
-
+                                        
                                         PreparedStatement st7;
                                         sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
                                         st7 = conexion.getConnection().prepareStatement(sql);
@@ -1178,7 +1179,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                     }
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Algunos campos vacios");
-
+                                    
                                 }
                                 break;
                             case 2:
@@ -1235,7 +1236,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             JOptionPane.showMessageDialog(null, "Hay algunos campos que se encuentran vacios");
         }
     }
-
+    
     private static void Clear_Table1(JTable tabla) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
         for (int i = 0; i < tabla.getRowCount(); i++) {
@@ -1243,7 +1244,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             i -= 1;
         }
     }
-
+    
     public void rellenarComboBoxTipoPlanta() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
         String sql = "SELECT nombretipo FROM `tipo`";
@@ -1257,7 +1258,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jComboBoxAgregarTipoPlanta.setModel(modelo);
         jComboBoxEditarTipoPlanta.setModel(modelo);
     }
-
+    
     public void rellenarComboBoxTipoPlantaListado() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
         String sql = "SELECT nombretipo FROM `tipo`";
@@ -1269,7 +1270,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         }
         jComboBoxTipoListaProductos.setModel(modelo);
     }
-
+    
     public void rellenarComboBoxTipoPlantaListadoMerma() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
         String sql = "SELECT nombretipo FROM `tipo`";
@@ -1281,7 +1282,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         }
         jComboBoxTipoListaProductosMerma.setModel(modelo);
     }
-
+    
     public void refrescarTablaListaVentas() {
         Clear_Table1(jTableListaVentas);
         String sql;
@@ -1291,14 +1292,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         DefaultTableModel modelo = (DefaultTableModel) jTableListaVentas.getModel();
         JButton detalles = new JButton("Detalles");
         JButton cancelar = new JButton("Cancelar");
-
+        
         try {
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
             Object[] datosQuery = new Object[7];
-
+            
             while (rs.next()) {
-
+                
                 datosQuery[0] = rs.getString(1);
                 datosQuery[2] = rs.getString(2);
                 datosQuery[1] = rs.getDate(3);
@@ -1306,16 +1307,16 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 datosQuery[4] = rs.getString(5);
                 datosQuery[5] = detalles;
                 datosQuery[6] = cancelar;
-
+                
                 modelo.addRow(datosQuery);
             }
             jTableListaVentas.setModel(modelo);
-
+            
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void refrescarListaPresupuestos() {
         Clear_Table1(jTableListaPresupuestos);
         String sql;
@@ -1329,9 +1330,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
             Object[] datosQuery = new Object[5];
-
+            
             while (rs.next()) {
-
+                
                 datosQuery[0] = rs.getString(1);
                 datosQuery[2] = rs.getString(2);
                 datosQuery[1] = rs.getDate(3);
@@ -1340,12 +1341,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 modelo.addRow(datosQuery);
             }
             jTableListaPresupuestos.setModel(modelo);
-
+            
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void refrescarTablaProveedores() {
         Clear_Table1(jTableEditarProveedor1);
         String sql;
@@ -1359,9 +1360,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
             Object[] datosQuery = new Object[6];
-
+            
             while (rs.next()) {
-
+                
                 datosQuery[0] = rs.getString(1);
                 datosQuery[1] = rs.getString(2);
                 datosQuery[2] = rs.getString(3);
@@ -1369,15 +1370,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 datosQuery[4] = detalles;
                 datosQuery[5] = rs.getString(5);
                 modelo.addRow(datosQuery);
-
+                
             }
             jTableEditarProveedor1.setModel(modelo);
-
+            
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void refrescarTablaMermas() {
         Clear_Table1(jTableListaMermas);
         String sql;
@@ -1391,9 +1392,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
             Object[] datosQuery = new Object[7];
-
+            
             while (rs.next()) {
-
+                
                 datosQuery[0] = rs.getDate(1);
                 datosQuery[1] = rs.getString(2);
                 datosQuery[2] = rs.getString(3);
@@ -1402,15 +1403,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 datosQuery[5] = eliminar;
                 datosQuery[6] = rs.getString(5);
                 modelo.addRow(datosQuery);
-
+                
             }
             jTableListaMermas.setModel(modelo);
-
+            
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }
-
+    
     public void refrescarTablaEliminarProveedores() {
         Clear_Table1(this.jTableEliminarProveedor2);
         String sql;
@@ -1424,9 +1425,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
             Object[] datosQuery = new Object[6];
-
+            
             while (rs.next()) {
-
+                
                 datosQuery[0] = rs.getString(1);
                 datosQuery[1] = rs.getString(2);
                 datosQuery[2] = rs.getString(3);
@@ -1434,15 +1435,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 datosQuery[4] = detalles;
                 datosQuery[5] = rs.getString(5);
                 modelo.addRow(datosQuery);
-
+                
             }
             jTableEliminarProveedor2.setModel(modelo);
-
+            
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void rellenarComboBoxEspeciePlanta() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
         String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxAgregarTipoPlanta.getSelectedItem() + "'";
@@ -1463,9 +1464,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         }
         jComboBoxAgregarEspeciePlanta.setModel(modelo);
         jComboBoxEditarEspeciePlanta.setModel(modelo2);
-
+        
     }
-
+    
     public void rellenarComboBoxEspeciePlantaListado() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
         String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxTipoListaProductos.getSelectedItem() + "'";
@@ -1477,7 +1478,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         }
         jComboBoxEspecieProducto.setModel(modelo);
     }
-
+    
     public void rellenarComboBoxEspeciePlantaListadoMerma() throws SQLException {
         Statement st = conexion.getConnection().createStatement();
         String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxTipoListaProductosMerma.getSelectedItem() + "'";
@@ -1489,7 +1490,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         }
         jComboBoxEspecieProductoMerma.setModel(modelo);
     }
-
+    
     public void validarSoloNumeros(JTextField jtext) {
         jtext.addKeyListener(new KeyAdapter() {
             @Override
@@ -1501,18 +1502,18 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             }
         });
     }
-
+    
     public boolean validarRut(String rut) {
-
+        
         boolean validacion = false;
         try {
             rut = rut.toUpperCase();
             rut = rut.replace(".", "");
             rut = rut.replace("-", "");
             int rutAux = Integer.parseInt(rut.substring(0, rut.length() - 1));
-
+            
             char dv = rut.charAt(rut.length() - 1);
-
+            
             int m = 0, s = 1;
             for (; rutAux != 0; rutAux /= 10) {
                 s = (s + rutAux % 10 * (9 - m++ % 6)) % 11;
@@ -1520,15 +1521,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             if (dv == (char) (s != 0 ? s + 47 : 75)) {
                 validacion = true;
             }
-
+            
         } catch (java.lang.NumberFormatException e) {
         } catch (Exception e) {
         }
         return validacion;
     }
-
+    
     public String FormatearRUT(String rut) {
-
+        
         int cont = 0;
         String format;
         rut = rut.replace(".", "");
@@ -5675,34 +5676,34 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jButtonCambioUsuarioActionPerformed
 
     private void jButtonAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoActionPerformed
-
+        
         jPanelEditarProducto.show(false);
         this.jPanelAgregarMerma.show(false);
         this.jPanelListaMermas.show(false);
         this.jPanelEditarMerma.show(false);
-
+        
         jPanel6.setVisible(true);
         jPanelAgregarProducto.show(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonAgregarProductoActionPerformed
 
     private void jTableBloquearUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableBloquearUsuarioMouseClicked
-
+        
         int column = jTableBloquearUsuario.getColumnModel().getColumnIndexAtX(evt.getX());
         int row = evt.getY() / jTableBloquearUsuario.getRowHeight();
         if (row < jTableBloquearUsuario.getRowCount() && row >= 0 && column < jTableBloquearUsuario.getColumnCount() && column >= 0) {
             Object value = jTableBloquearUsuario.getValueAt(row, column);
-
+            
             if (value instanceof JButton) {
                 ((JButton) value).doClick();
                 JButton boton = (JButton) value;
-
+                
                 String rutBloqueo = String.valueOf(jTableBloquearUsuario.getValueAt(jTableBloquearUsuario.getSelectedRow(), 0));
                 String sql = "UPDATE `usuario` SET `bloqueadoS_N`=? WHERE rutusuario=?";
                 if (!rutBloqueo.equals(datos[0])) {
                     try {
                         if (boton.getText().equals("Bloquear")) {
-
+                            
                             PreparedStatement st = conexion.getConnection().prepareStatement(sql);
                             st.setBoolean(1, true);
                             st.setString(2, rutBloqueo);
@@ -5715,11 +5716,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 }
                             }
                         } else if (boton.getText().equals("Desbloquear")) {
-
+                            
                             PreparedStatement st = conexion.getConnection().prepareStatement(sql);
                             st.setBoolean(1, false);
                             st.setString(2, rutBloqueo);
-
+                            
                             if (st.executeUpdate() > 0) {
                                 int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea desbloquear a este usuario?");
                                 if (confirmar == JOptionPane.YES_OPTION) {
@@ -5727,16 +5728,16 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                     JOptionPane.showMessageDialog(null, "El usuario a sido desbloqueado", "Operación Exitosa",
                                             JOptionPane.INFORMATION_MESSAGE);
                                 }
-
+                                
                             }
-
+                            
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                    
                 }
-
+                
             }
         }
         // TODO add your handling code here:
@@ -5747,7 +5748,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jComboBoxTipoEditarUsuarioActionPerformed
 
     private void jButtonConfirmarEditarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarUsuarioActionPerformed
-
+        
         String nombresEditar = jTextFieldNombresEditarUsuario.getText();
         String apellidoMEditar = jTextFieldApellidoMaternoEditarUsuario.getText();
         String apellidoPEditar = jTextFieldApellidoPaternoEditarUsuario.getText();
@@ -5805,9 +5806,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     sql = "SELECT u.nombreusuario, u.apellidopaterno, u.apellidomaterno, u.passwd, u.idrol FROM usuario u where u.rutusuario=" + "\"" + rutAeditar + "\"";
                     try {
                         st = conexion.getConnection().createStatement();
-
+                        
                         rs = st.executeQuery(sql);
-
+                        
                         while (rs.next()) {
                             jTextFieldRutEditarUsuario.setText(rutAeditar);
                             jTextFieldNombresEditarUsuario.setText(rs.getString(1));
@@ -5815,7 +5816,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jTextFieldApellidoMaternoEditarUsuario.setText(rs.getString(3));
                             jPasswordFieldContraseñaEditarUsuario.setText(rs.getString(4));
                             jPasswordFieldContraseña2EditarUsuario.setText(rs.getString(4));
-
+                            
                             switch (rs.getString(5)) {
                                 case "1":
                                     jComboBoxTipoEditarUsuario.setSelectedIndex(0);
@@ -5827,12 +5828,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                     jComboBoxTipoEditarUsuario.setSelectedIndex(2);
                                     break;
                             }
-
+                            
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                    
                     jTextFieldNombresEditarUsuario.setEditable(false);
                     jTextFieldNombresEditarUsuario.setEnabled(false);
                     jTextFieldApellidoPaternoEditarUsuario.setEditable(false);
@@ -5846,7 +5847,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     jComboBoxTipoEditarUsuario.setEditable(false);
                     jComboBoxTipoEditarUsuario.setEnabled(false);
                     jButtonConfirmarEditarUsuario.setEnabled(false);
-
+                    
                     jPanelListaUsuarios.show(false);
                     jPanelAgregarUsuario.show(false);
                     jPanelEditarUsuario.show(true);
@@ -5922,7 +5923,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private void jComboBoxTipoUsuarioAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoUsuarioAgregarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxTipoUsuarioAgregarActionPerformed
-
+    
     private void refrescarTablaEditarUsuario() {
         Clear_Table1(jTableEditarUsuario);
         JButton editar = new JButton("Detalles");
@@ -5937,9 +5938,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             st = conexion.getConnection().createStatement();
             rs = st.executeQuery(sql);
             Object[] datosQuery = new Object[6];
-
+            
             while (rs.next()) {
-
+                
                 datosQuery[0] = rs.getString(1);
                 datosQuery[1] = rs.getString(2);
                 datosQuery[2] = rs.getString(3);
@@ -5947,10 +5948,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 datosQuery[4] = rs.getString(5);
                 datosQuery[5] = editar;
                 modelo.addRow(datosQuery);
-
+                
             }
             jTableEditarUsuario.setModel(modelo);
-
+            
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -5984,7 +5985,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jPanelEditarUsuario.show(false);
         jPanelBloquearUsuario.show(false);
         jPanelAgregarUsuario.show(true);
-
+        
         jTextFieldRutAgregarU.addFocusListener(this);
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonAgregarUsuarioActionPerformed
@@ -6023,7 +6024,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     try {
                         st = conexion.getConnection().createStatement();
                         rs = st.executeQuery(sql);
-
+                        
                         while (rs.next()) {
                             jTextFieldEditarNombresProveedor.setText(rs.getString(1));
                             jTextAreaEditarDescripcionProveedor.setText(rs.getString(2));
@@ -6034,7 +6035,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                    
                     jPanelAgregarProveedor.show(false);
                     jPanelListaProveedor.show(false);
                     jPanelEditarProveedor.show(true);
@@ -6140,13 +6141,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     try {
                         st = conexion.getConnection().prepareStatement(sql);
                         st.executeUpdate(sql);
-
+                        
                         JOptionPane.showMessageDialog(null, "Proveedor elminado con exito.", "Operación Exitosa",
                                 JOptionPane.INFORMATION_MESSAGE);
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                    
                     this.refrescarTablaEliminarProveedores();
                 }
             }
@@ -6201,7 +6202,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     try {
                         st = conexion.getConnection().createStatement();
                         rs = st.executeQuery(sql);
-
+                        
                         while (rs.next()) {
                             jTextFieldNumeroChequeEditar.setText(rs.getString(1));
                             jTextFieldNombresEditarCheque.setText(rs.getString(2));
@@ -6212,7 +6213,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jTextPaneDescripcionEditarCheque.setText(rs.getString(7));
                             jTextFieldBancoEditarCheque.setText(rs.getString(8));
                             jTextFieldNumeroCuentaEditarCheque.setText(rs.getString(9));
-
+                            
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -6237,7 +6238,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     jPanelAgregarCheque.show(false);
                     jPanelListaCheque.show(false);
                     jPanelEditarCheque.show(true);
-
+                    
                 }
             }
         }
@@ -6279,7 +6280,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     try {
                         String sql = "INSERT INTO `cheques`(`numerocheque`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `descripcioncheque`, `nombresemisor`, `apellidosemisor`, `chequescobrados_n`, `banco`, `numerocuenta` ) VALUES (?,?,?,?,?,?,?,?,?,?)";
                         PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-
+                        
                         st.setInt(1, numeroCheque);
                         st.setDate(2, sqlEmision);
                         st.setDate(3, sqlVencimiento);
@@ -6307,7 +6308,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     jTextFieldNumeroCuentaAgregarCheque.setText("");
                     jDateChooserFechaEmisionAgregarCheque.setCalendar(null);
                     jDateChooserFechaVencAgregarCheque.setCalendar(null);
-
+                    
                 } else {
                     JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
                 }
@@ -6333,7 +6334,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             jComboBoxTipoEditarUsuario.setEnabled(true);
             jButtonConfirmarEditarUsuario.setEnabled(true);
         } else {
-
+            
             jTextFieldNombresEditarUsuario.setEditable(false);
             jTextFieldNombresEditarUsuario.setEnabled(false);
             jTextFieldApellidoPaternoEditarUsuario.setEditable(false);
@@ -6347,7 +6348,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             jComboBoxTipoEditarUsuario.setEditable(false);
             jComboBoxTipoEditarUsuario.setEnabled(false);
             jButtonConfirmarEditarUsuario.setEnabled(false);
-
+            
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButtonHabilitarEdicionUsuarioActionPerformed
@@ -6434,9 +6435,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             jLabelEspecieListaProductosMerma.setVisible(true);
             jComboBoxTipoListaProductosMerma.setVisible(true);
             jComboBoxEspecieProductoMerma.setVisible(true);
-
+            
         } else {
-
+            
             jComboBoxTipoListaProductosMerma.setSelectedIndex(0);
             jComboBoxEspecieProductoMerma.setSelectedIndex(0);
             jLabelTipoPlantaListaMerma.setVisible(false);
@@ -6489,7 +6490,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     try {
                         st = conexion.getConnection().createStatement();
                         rs = st.executeQuery(sql);
-
+                        
                         while (rs.next()) {
                             jTextFieldEditarFechaMerma.setText(rs.getString(1));
                             jTextFieldEditarNombreMerma.setText(rs.getString(2));
@@ -6499,7 +6500,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                    
                     jPanelAgregarProducto.show(false);
                     jPanelEditarProducto.show(false);
                     this.jPanelAgregarMerma.show(false);
@@ -6673,9 +6674,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             jLabelEspecieListaProductos.setVisible(true);
             jComboBoxTipoListaProductos.setVisible(true);
             jComboBoxEspecieProducto.setVisible(true);
-
+            
         } else {
-
+            
             jComboBoxTipoListaProductos.setSelectedIndex(0);
             jComboBoxEspecieProducto.setSelectedIndex(0);
             jLabelTipoPlantaLista.setVisible(false);
@@ -6721,11 +6722,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         int row = evt.getY() / jTableCobrarCheque.getRowHeight();
         if (row < jTableCobrarCheque.getRowCount() && row >= 0 && column < jTableCobrarCheque.getColumnCount() && column >= 0) {
             Object value = jTableCobrarCheque.getValueAt(row, column);
-
+            
             if (value instanceof JButton) {
                 ((JButton) value).doClick();
                 JButton boton = (JButton) value;
-
+                
                 String numero = String.valueOf(jTableCobrarCheque.getValueAt(jTableCobrarCheque.getSelectedRow(), 0));
                 String sql = "UPDATE `cheques` SET `chequescobrados_n`=? WHERE numerocheque=?";
                 try {
@@ -6746,7 +6747,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 } catch (SQLException ex) {
                     Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+                
             }
         }
     }//GEN-LAST:event_jTableCobrarChequeMouseClicked
@@ -6889,7 +6890,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         String stock = jTextFieldStockEditarProducto.getText();
         if (!nombreproducto.equalsIgnoreCase("") && !cantVentas.equalsIgnoreCase("") && !cantPro.equalsIgnoreCase("")
                 && !precio.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !stock.equalsIgnoreCase("")) {
-
+            
             int total = Integer.parseInt(cantPro) + Integer.parseInt(cantVentas);
             if (total >= Integer.parseInt(stock)) {
                 int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea editar este producto?");
@@ -7020,10 +7021,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private void jComboBoxAgregarTipoPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAgregarTipoPlantaActionPerformed
         if (jComboBoxAgregarTipoPlanta.getSelectedIndex() == 1) {
             jComboBoxAgregarEspeciePlanta.setEnabled(false);
-
+            
             jTextFieldAgregarTipoPlanta.setEnabled(true);
             jTextFieldAgregarEspeciePlanta.setEnabled(true);
-
+            
         } else {
             try {
                 rellenarComboBoxEspeciePlanta();
@@ -7137,7 +7138,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jPanelListaVentas.show(false);
         jPanelDetallesVenta.show(false);
         jPanelRealizarPresupuesto.show(false);
-        this.jPanelListaPresupuestos.show(true);
+        this.jPanelListaPresupuestos.show(false);
         jPanelDetallesPresupuesto.show(false);
         jPanelRealizarVenta.show(true);
         this.jRadioButtonBoleta.setSelected(true);
@@ -7190,12 +7191,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private void jButtonImpimirBoletaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImpimirBoletaVentaActionPerformed
         JasperReport reporte;
         String path = "src\\Reportes\\boleta.jasper";
-
+        
         Map parametro = new HashMap();
         parametro.put("codcompra", Integer.parseInt(jTextFieldCodVenta.getText()));
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
-
+            
             JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
             JasperViewer view = new JasperViewer(jprint, false);
             view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -7207,7 +7208,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jButtonImpimirBoletaVentaActionPerformed
 
     private void jTableListaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaVentasMouseClicked
-
+        
         int column = jTableListaVentas.getColumnModel().getColumnIndexAtX(evt.getX());
         int row = evt.getY() / jTableListaVentas.getRowHeight();
         if (row < jTableListaVentas.getRowCount() && row >= 0 && column < jTableListaVentas.getColumnCount() && column >= 0) {
@@ -7216,7 +7217,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 ((JButton) value).doClick();
                 JButton boton = (JButton) value;
                 int codVentaSeleccionada = Integer.parseInt(String.valueOf(jTableListaVentas.getModel().getValueAt(jTableListaVentas.getSelectedRow(), 0)));
-
+                
                 if (boton.getText().equals("Detalles")) {
                     Clear_Table1(jTableDetallesVenta);
                     String sql;
@@ -7226,7 +7227,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     try {
                         st = conexion.getConnection().createStatement();
                         rs = st.executeQuery(sql);
-
+                        
                         while (rs.next()) {
                             jTextFieldCodVenta.setText("" + rs.getInt(1));
                             jDateChooserFechaVenta.setDate(rs.getDate(4));
@@ -7235,14 +7236,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             if (rs.getString(8).equals("Boleta")) {
                                 jRadioButton3.setSelected(true);
                                 jRadioButton4.setSelected(false);
-
+                                
                             } else {
                                 jRadioButton3.setSelected(false);
                                 jRadioButton4.setSelected(true);
                             }
                             jComboBoxTipoDePago.setModel(modelo);
                         }
-
+                        
                         String sql1;
                         Statement st1;
                         ResultSet rs1;
@@ -7260,26 +7261,30 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             modelo.addRow(array);
                         }
                         jTableDetallesVenta.setModel(modelo);
-
+                        
                         String sql2;
                         Statement st2;
                         ResultSet rs2;
                         sql2 = "SELECT `totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` FROM `ordencompra` WHERE codordencompra=" + codVentaSeleccionada;
                         st2 = conexion.getConnection().createStatement();
                         rs2 = st2.executeQuery(sql2);
-
+                        
                         while (rs2.next()) {
                             jLabelCalcularNetoDetallesVenta.setText(rs2.getString(3));
-                            jLabelDescuentoDetallesVenta.setText(formatearAEntero("" + (pasarAinteger(rs2.getString(2)) - pasarAinteger(rs2.getString(1)))));
+                            jLabelDescuentoDetallesVenta.setText(formatearAEntero("" + (pasarAinteger(rs2.getString(1)) - (pasarAinteger(rs2.getString(2))))));
                             jLabelPrecioAPagarDetallesVenta.setText(rs2.getString(2));
                             jLabelEfectivoDetallesVenta1.setText("" + rs2.getInt(4));
-                            jLabelVueltoDetallesVenta.setText("" + (rs2.getInt(4) - pasarAinteger(rs2.getString(1))));
+                            if (rs2.getInt(4) != 0) {
+                                jLabelVueltoDetallesVenta.setText("" + (rs2.getInt(4) - pasarAinteger(rs2.getString(1))));
+                            } else {
+                                jLabelVueltoDetallesVenta.setText("0");
+                            }
                         }
-
+                        
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                    
                     jRadioButton3.setEnabled(false);
                     jRadioButton4.setEnabled(false);
                     jTextFieldCodVenta.setEnabled(false);
@@ -7292,12 +7297,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     jPanelRealizarPresupuesto.show(false);
                     jPanelDetallesPresupuesto.show(false);
                     jPanelDetallesVenta.show(true);
-
+                    
                 } else {
                     if (boton.getText().equals("Cancelar")) {
                         int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea Cancelar esta venta?");
                         if (confirmar == JOptionPane.YES_OPTION) {
-
+                            
                             try {
                                 String sql;
                                 Statement st;
@@ -7305,25 +7310,25 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 sql = "DELETE FROM `compra` WHERE `codcompra`=" + "\"" + codVentaSeleccionada + "\"";
                                 st = conexion.getConnection().prepareStatement(sql);
                                 st.executeUpdate(sql);
-
+                                
                                 String sql2;
                                 Statement st2;
                                 ResultSet rs2;
                                 sql2 = "DELETE FROM `productoordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
                                 st2 = conexion.getConnection().prepareStatement(sql2);
                                 st2.executeUpdate(sql2);
-
+                                
                                 String sql3;
                                 Statement st3;
                                 ResultSet rs3;
                                 sql3 = "DELETE FROM `ordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
                                 st3 = conexion.getConnection().prepareStatement(sql3);
                                 st3.executeUpdate(sql3);
-
+                                
                             } catch (SQLException ex) {
                                 Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                             }
-
+                            
                             JOptionPane.showMessageDialog(null, "La venta a sido cancelada", "Operación Exitosa",
                                     JOptionPane.INFORMATION_MESSAGE);
                             refrescarTablaListaVentas();
@@ -7373,7 +7378,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         seleccionarProducto.setLocationRelativeTo(null);
         seleccionarProducto.setResizable(false);
         seleccionarProducto.setVisible(true);
-        seleccionarProducto.setSize(418, 640);
+        seleccionarProducto.setSize(440, 640);
     }//GEN-LAST:event_jButtonAgregarProductoAVentaActionPerformed
 
     private void jButtonConfirmarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVentaActionPerformed
@@ -7434,18 +7439,18 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
                 int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
                 jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-
+                
             }
         } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
 
             if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
-
+                
                 int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
                 jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
             } else {
                 JOptionPane.showMessageDialog(null, "Descuento excedido");
             }
-
+            
         }
         if (jTextFieldEfectivo.getText().equals("")) {
             jLabelVuelto.setText("0");
@@ -7474,23 +7479,23 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         int iva = pasarAinteger(CalcularIVA.getText());
         if (jTextFieldDescuentoVenta.getText().equals("")) {
             jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((neto + iva))));
-
+            
         } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
             if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
                 int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
                 jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-
+                
             }
         } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
 
             if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
-
+                
                 int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
                 jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
             } else {
                 JOptionPane.showMessageDialog(null, "Descuento excedido");
             }
-
+            
         }
         if (jTextFieldEfectivo.getText().equals("")) {
             jLabelVuelto.setText("0");
@@ -7599,18 +7604,18 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
                 int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
                 jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-
+                
             }
         } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
 
             if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
-
+                
                 int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
                 jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
             } else {
                 JOptionPane.showMessageDialog(null, "Descuento excedido");
             }
-
+            
         }
 
         // TODO add your handling code here:
@@ -7621,30 +7626,30 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         int iva = pasarAinteger(CalcularIVAPresupuesto.getText());
         if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
             jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((neto + iva))));
-
+            
         } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
             if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
                 int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
                 jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-
+                
             }
         } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
 
             if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
-
+                
                 int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
                 jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
             } else {
                 JOptionPane.showMessageDialog(null, "Descuento excedido");
             }
-
+            
         }
 
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxDescuentoPresupuestoActionPerformed
 
     private void jTableListaPresupuestosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaPresupuestosMouseClicked
-
+        
         int column = jTableListaPresupuestos.getColumnModel().getColumnIndexAtX(evt.getX());
         int row = evt.getY() / jTableListaPresupuestos.getRowHeight();
         if (row < jTableListaPresupuestos.getRowCount() && row >= 0 && column < jTableListaPresupuestos.getColumnCount() && column >= 0) {
@@ -7653,7 +7658,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 ((JButton) value).doClick();
                 JButton boton = (JButton) value;
                 int codVentaSeleccionada = Integer.parseInt(String.valueOf(jTableListaPresupuestos.getModel().getValueAt(jTableListaPresupuestos.getSelectedRow(), 0)));
-
+                
                 if (boton.getText().equals("Detalles")) {
                     Clear_Table1(jTableDetallesPresupuesto);
                     String sql;
@@ -7663,13 +7668,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     try {
                         st = conexion.getConnection().createStatement();
                         rs = st.executeQuery(sql);
-
+                        
                         while (rs.next()) {
                             jTextFieldCodPresupuesto.setText("" + rs.getInt(1));
                             jDateChooserFechaPresupuesto.setDate(rs.getDate(4));
-
+                            
                         }
-
+                        
                         String sql1;
                         Statement st1;
                         ResultSet rs1;
@@ -7687,24 +7692,24 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             modelo.addRow(array);
                         }
                         jTableDetallesPresupuesto.setModel(modelo);
-
+                        
                         String sql2;
                         Statement st2;
                         ResultSet rs2;
                         sql2 = "SELECT `totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` FROM `ordencompra` WHERE codordencompra=" + codVentaSeleccionada;
                         st2 = conexion.getConnection().createStatement();
                         rs2 = st2.executeQuery(sql2);
-
+                        
                         while (rs2.next()) {
                             jLabelCalcularNetoDetallesPresupuesto.setText(rs2.getString(3));
                             jLabelDescuentoDetallesPresupuesto.setText(formatearAEntero("" + (pasarAinteger(rs2.getString(2)) - pasarAinteger(rs2.getString(1)))));
                             jLabelPrecioAPagarDetallesPresupuesto.setText(rs2.getString(2));
                         }
-
+                        
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
+                    
                     jTextFieldCodPresupuesto.setEnabled(false);
                     jTextFieldCodPresupuesto.setEditable(false);
                     jDateChooserFechaPresupuesto.setEnabled(false);
@@ -7714,12 +7719,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     jPanelRealizarPresupuesto.show(false);
                     jPanelDetallesVenta.show(false);
                     jPanelDetallesPresupuesto.show(true);
-
+                    
                 } else {
                     if (boton.getText().equals("Cancelar")) {
                         int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea Cancelar este presupuesto?");
                         if (confirmar == JOptionPane.YES_OPTION) {
-
+                            
                             try {
                                 String sql;
                                 Statement st;
@@ -7727,25 +7732,25 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 sql = "DELETE FROM `presupuesto` WHERE `codpresupuesto`=" + "\"" + codVentaSeleccionada + "\"";
                                 st = conexion.getConnection().prepareStatement(sql);
                                 st.executeUpdate(sql);
-
+                                
                                 String sql2;
                                 Statement st2;
                                 ResultSet rs2;
                                 sql2 = "DELETE FROM `productoordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
                                 st2 = conexion.getConnection().prepareStatement(sql2);
                                 st2.executeUpdate(sql2);
-
+                                
                                 String sql3;
                                 Statement st3;
                                 ResultSet rs3;
                                 sql3 = "DELETE FROM `ordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
                                 st3 = conexion.getConnection().prepareStatement(sql3);
                                 st3.executeUpdate(sql3);
-
+                                
                             } catch (SQLException ex) {
                                 Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                             }
-
+                            
                             JOptionPane.showMessageDialog(null, "El presupuesto a sido cancelado", "Operación Exitosa",
                                     JOptionPane.INFORMATION_MESSAGE);
                             refrescarListaPresupuestos();
@@ -7754,7 +7759,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 }
             }
         }
-            // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTableListaPresupuestosMouseClicked
 
     private void jTextFieldCodPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCodPresupuestoActionPerformed
@@ -7772,12 +7777,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private void jButtonImpimirBoletaPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImpimirBoletaPresupuestoActionPerformed
         JasperReport reporte;
         String path = "src\\Reportes\\Presupuesto.jasper";
-
+        
         Map parametro = new HashMap();
         parametro.put("codcompra", Integer.parseInt(jTextFieldCodPresupuesto.getText()));
         try {
             reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
-
+            
             JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
             JasperViewer view = new JasperViewer(jprint, false);
             view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -7833,15 +7838,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             new PanelMenu().setVisible(true);
         });
     }
-
+    
     @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().
                 getImage(ClassLoader.getSystemResource("Imagenes/logo-yapur.png"));
-
+        
         return retValue;
     }
-
+    
     public void refrescarTablaListaProductos() {
         Clear_Table1(jTableListaProductos);
         JButton info = new JButton("Editar");
@@ -7890,9 +7895,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             st2 = conexion.getConnection().createStatement();
             rs2 = st2.executeQuery(sql1);
             Object[] datosQuery = new Object[7];
-
+            
             while (rs2.next()) {
-
+                
                 datosQuery[0] = rs2.getInt(1);
                 datosQuery[1] = rs2.getString(2);
                 datosQuery[2] = rs2.getInt(3);
@@ -7907,7 +7912,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void refrescarTablaListaProductosMerma() {
         Clear_Table1(jTableListaProductosMerma);
         JButton info = new JButton("Editar");
@@ -7956,9 +7961,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             st2 = conexion.getConnection().createStatement();
             rs2 = st2.executeQuery(sql1);
             Object[] datosQuery = new Object[5];
-
+            
             while (rs2.next()) {
-
+                
                 datosQuery[0] = rs2.getInt(1);
                 datosQuery[1] = rs2.getString(2);
                 datosQuery[2] = rs2.getInt(3);
@@ -8377,5 +8382,5 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     public void focusGained(FocusEvent e) {
         //To change body of generated methods, choose Tools | Templates.
     }
-
+    
 }
