@@ -27,14 +27,14 @@ WHERE ph.codproducto = p.codproducto and ph.fechaproducto = ( SELECT max(ph2.fec
 				</textElement>
 				<text><![CDATA[Inventario]]></text>
 			</staticText>
-			<image>
-				<reportElement x="0" y="10" width="106" height="63" uuid="5168a8f8-a530-4ccf-8155-41623314de26"/>
-				<imageExpression><![CDATA["C:\\Users\\ASUS\\Desktop\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
-			</image>
 			<textField pattern="dd/MM/yyyy HH.mm.ss">
 				<reportElement x="450" y="23" width="100" height="20" uuid="5b53154b-136d-41cf-a8fa-89fc08292374"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="24" y="10" width="106" height="63" uuid="39741ffd-a6d1-47dd-b549-9f5f04418bed"/>
+				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

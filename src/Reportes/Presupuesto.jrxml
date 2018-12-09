@@ -56,6 +56,10 @@ WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and 
 				<reportElement x="434" y="20" width="100" height="20" uuid="2eb27ce9-7d60-4bba-bafb-8589065a86d9"/>
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="26" y="14" width="106" height="63" uuid="804026b6-4706-4ef1-93a9-d9b0bbe859ae"/>
+				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

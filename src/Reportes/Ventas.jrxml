@@ -32,10 +32,6 @@
 	</background>
 	<title>
 		<band height="79" splitType="Stretch">
-			<image>
-				<reportElement x="0" y="0" width="106" height="63" uuid="8ca7cdfb-f15b-4c33-a04c-4f5fa3d38fe6"/>
-				<imageExpression><![CDATA["C:\\Users\\ASUS\\Desktop\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="206" y="11" width="169" height="52" uuid="1bbfba0c-df06-4627-a73e-c51077153a01"/>
 				<textElement>
@@ -47,6 +43,10 @@
 				<reportElement x="455" y="24" width="100" height="20" uuid="e0dd0d5f-03e9-460c-b18c-a13a03659c35"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="26" y="14" width="106" height="63" uuid="812a85e8-9c56-49a3-9912-9c9f354eee79"/>
+				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

@@ -58,6 +58,10 @@
 				<reportElement x="472" y="18" width="100" height="20" uuid="40fcc72e-538b-4e8f-a59d-e6bc3710e003"/>
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="16" y="4" width="106" height="63" uuid="ed3c6f5d-48e6-4f54-bf58-6ab06ca3e1f5"/>
+				<imageExpression><![CDATA["..\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

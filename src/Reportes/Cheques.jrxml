@@ -43,14 +43,14 @@ where fecharecepcion between $P{fecha1} and $P{fecha2}]]>
 				</textElement>
 				<text><![CDATA[Cheques]]></text>
 			</staticText>
-			<image>
-				<reportElement x="0" y="11" width="106" height="63" uuid="41ca35f0-ed57-4a4a-b365-5b389ab77308"/>
-				<imageExpression><![CDATA["C:\\Users\\ASUS\\Desktop\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
-			</image>
 			<textField pattern="dd/MM/yyyy HH.mm.ss">
 				<reportElement x="439" y="27" width="100" height="20" uuid="28863b74-4b00-466f-9c0b-6475270c06a4"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="15" y="11" width="106" height="63" uuid="e6f14b4c-a9c8-4cb2-a051-43b0b9c9dff1"/>
+				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
