@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Boleta" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b3f1c785-2293-45ca-9b07-7c81f28dc7e6">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="89"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="codcompra" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -59,8 +59,8 @@
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="16" y="4" width="106" height="63" uuid="ed3c6f5d-48e6-4f54-bf58-6ab06ca3e1f5"/>
-				<imageExpression><![CDATA["..\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<reportElement x="16" y="4" width="106" height="63" uuid="bb6eb42c-79c6-4652-972d-9c4966c77ac1"/>
+				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>
