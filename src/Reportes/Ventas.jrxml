@@ -44,8 +44,8 @@
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="26" y="14" width="106" height="63" uuid="812a85e8-9c56-49a3-9912-9c9f354eee79"/>
-				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<reportElement x="23" y="11" width="106" height="63" uuid="346723f7-c0a8-4236-87f3-89d563a32c0c"/>
+				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

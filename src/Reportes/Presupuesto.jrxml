@@ -57,8 +57,8 @@ WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and 
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="26" y="14" width="106" height="63" uuid="804026b6-4706-4ef1-93a9-d9b0bbe859ae"/>
-				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<reportElement x="20" y="6" width="106" height="63" uuid="fe67a43e-b0bf-4f03-b392-462c698750fe"/>
+				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

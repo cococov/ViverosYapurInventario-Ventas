@@ -59,8 +59,8 @@
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="16" y="4" width="106" height="63" uuid="bb6eb42c-79c6-4652-972d-9c4966c77ac1"/>
-				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<reportElement x="16" y="16" width="106" height="63" uuid="b67b9d4d-feca-4dc4-a301-9d289039a587"/>
+				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

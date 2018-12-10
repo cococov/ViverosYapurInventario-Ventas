@@ -31,8 +31,8 @@
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="26" y="14" width="106" height="63" uuid="90b7f4e8-6329-4d87-9e00-f7752d035461"/>
-				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<reportElement x="17" y="16" width="106" height="63" uuid="a2fa4e72-b277-4d32-a874-6e6733532776"/>
+				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

@@ -32,8 +32,8 @@ WHERE ph.codproducto = p.codproducto and ph.fechaproducto = ( SELECT max(ph2.fec
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="24" y="10" width="106" height="63" uuid="39741ffd-a6d1-47dd-b549-9f5f04418bed"/>
-				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<reportElement x="24" y="10" width="106" height="63" uuid="f8c56313-d017-4710-a5bc-618abca3449b"/>
+				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

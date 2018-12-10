@@ -48,8 +48,8 @@ where fecharecepcion between $P{fecha1} and $P{fecha2}]]>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="15" y="11" width="106" height="63" uuid="e6f14b4c-a9c8-4cb2-a051-43b0b9c9dff1"/>
-				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<reportElement x="15" y="11" width="106" height="63" uuid="fcfa5343-9127-438a-abb3-68b549da4087"/>
+				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

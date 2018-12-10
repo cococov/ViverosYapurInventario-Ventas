@@ -21,6 +21,10 @@
 	</background>
 	<title>
 		<band height="79" splitType="Stretch">
+			<image>
+				<reportElement x="11" y="0" width="106" height="63" uuid="19b5cd2a-8316-45d6-8db7-362b1be8ba1e"/>
+				<imageExpression><![CDATA["C:\\Users\\ASUS\\Desktop\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+			</image>
 			<staticText>
 				<reportElement x="117" y="11" width="291" height="68" uuid="7446f6d1-2e98-47f9-84d2-88b096ce24a3"/>
 				<textElement>
@@ -32,10 +36,6 @@
 				<reportElement x="444" y="43" width="100" height="20" uuid="1a57d36f-b0eb-46c3-830a-dd5c0365be8b"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="11" y="11" width="106" height="63" uuid="900232fe-ab37-4f79-a332-a6fc130462a8"/>
-				<imageExpression><![CDATA["C:\\Users\\maick\\Documents\\proyectoYapurGitHub\\ViverosYapurInventario-Ventas\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -72,17 +72,10 @@
 				</textElement>
 				<text><![CDATA[Correo]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="455" y="2" width="100" height="20" uuid="d0b2fe86-3144-4012-9436-128e840536d9"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Descripción]]></text>
-			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="73" splitType="Stretch">
 			<textField>
 				<reportElement x="17" y="0" width="100" height="20" uuid="f5eb0d5f-536c-49a3-9073-92920c47a2fb"/>
 				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
@@ -92,13 +85,20 @@
 				<textFieldExpression><![CDATA[$F{contactoproveedor}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="302" y="0" width="100" height="20" uuid="1fb8a22f-27c6-4f07-bcf8-9454c33c2f91"/>
+				<reportElement x="302" y="0" width="142" height="20" uuid="1fb8a22f-27c6-4f07-bcf8-9454c33c2f91"/>
 				<textFieldExpression><![CDATA[$F{correoproveedor}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="455" y="0" width="100" height="20" uuid="5aaab4c8-dec5-45bf-a6e3-7c9b9edb50cc"/>
+				<reportElement x="17" y="40" width="527" height="20" uuid="5aaab4c8-dec5-45bf-a6e3-7c9b9edb50cc"/>
 				<textFieldExpression><![CDATA[$F{descripcionproveedor}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="228" y="20" width="100" height="20" uuid="d0b2fe86-3144-4012-9436-128e840536d9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<columnFooter>
