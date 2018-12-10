@@ -447,7 +447,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
 
                 if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
-                    int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                    int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
                     jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
                 }
 
