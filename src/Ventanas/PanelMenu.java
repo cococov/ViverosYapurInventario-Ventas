@@ -634,7 +634,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         String sql8;
                         Statement st8;
                         ResultSet rs8;
-                        sql8 = "SELECT `cantidadproductoventa` FROM `producto` WHERE `codproducto`= `" + carrito[i].getId() + "`";
+                        sql8 = "SELECT `cantidadproductoventa` FROM `producto` WHERE `codproducto`= " + carrito[i].getId();
                         st8 = conexion.getConnection().createStatement();
                         rs8 = st8.executeQuery(sql8);
                         int cantStock = 0;
@@ -646,7 +646,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             String sql9;
                             PreparedStatement st9;
                             sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
-                            st9 = conexion.getConnection().prepareStatement(sql8);
+                            st9 = conexion.getConnection().prepareStatement(sql9);
                             st9.setInt(1, (cantStock - carrito[i].getCantidad()));
                             st9.setInt(2, carrito[i].getId());
                             st9.executeUpdate();
