@@ -207,7 +207,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
             } else {
                 String fechaFin = myFormat.format(jd2.getDate());
-                String logo = "/Imagenes/logo-yapur.png";              
+                String logo = "/Imagenes/logo-yapur.png";
                 Map parametro = new HashMap();
                 parametro.put("fecha1", fechaInicio);
                 parametro.put("fecha2", fechaFin);
@@ -236,7 +236,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             JDateChooser jd2 = new JDateChooser();
             String message2 = "Seleccione fecha Fin :\n";
             Object[] params2 = {message2, jd2};
-            String logo = "/Imagenes/logo-yapur.png";  
+            String logo = "/Imagenes/logo-yapur.png";
             JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
             if (jd2.getDate() == null) {
                 JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
@@ -479,6 +479,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         String path = "/Reportes/Cambios.jasper";
         String logo = "/Imagenes/logo-yapur.png";
         Map parametro = new HashMap();
+        System.out.println(getClass().getResource(logo));
         parametro.put("logo", this.getClass().getResourceAsStream(logo));
         reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
         JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
@@ -7358,13 +7359,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private void jButtonImpimirBoletaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImpimirBoletaVentaActionPerformed
         JasperReport reporte;
         String path = "/Reportes/Boleta.jasper";
-         String logo = "/Imagenes/logo-yapur.png";
+        String logo = "/Imagenes/logo-yapur.png";
         Map parametro = new HashMap();
         parametro.put("logo", this.getClass().getResourceAsStream(logo));
         parametro.put("codcompra", Integer.parseInt(jTextFieldCodVenta.getText()));
         try {
             reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-            
+
             JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
             JasperViewer view = new JasperViewer(jprint, false);
             view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -7471,6 +7472,48 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     if (confirmar == JOptionPane.YES_OPTION) {
 
                         try {
+
+                            String sql8;
+                            Statement st8;
+                            ResultSet rs8;
+                            sql8 = "SELECT `codproducto`FROM `productoordencompra` WHERE `codordencompra`=" + codVentaSeleccionada;
+                            st8 = conexion.getConnection().createStatement();
+                            rs8 = st8.executeQuery(sql8);
+                            int codProducto = 0;
+                            while (rs8.next()) {
+                                codProducto = rs8.getInt(1);
+                                
+                                String sql7;
+                                Statement st7;
+                                ResultSet rs7;
+                                sql7 = "SELECT `cantidadproductoventa` FROM `producto` WHERE `codproducto`=" + codProducto;
+                                st7 = conexion.getConnection().createStatement();
+                                rs7 = st7.executeQuery(sql7);
+                                int cantStock = 0;
+                                while (rs7.next()) {
+                                    cantStock = rs7.getInt(1);
+                                }
+                                
+                                String sql5;
+                                Statement st5;
+                                ResultSet rs5;
+                                sql5 = "SELECT `cantidadproductoordencompra` FROM `productoordencompra` WHERE `codproducto`="+ codProducto+ " AND `codordencompra`=" + codVentaSeleccionada;
+                                st5 = conexion.getConnection().createStatement();
+                                rs5 = st5.executeQuery(sql5);
+                                int cantVenta = 0;
+                                while (rs5.next()) {
+                                    cantVenta = rs5.getInt(1);
+                                }
+                                
+                                String sql9;
+                                PreparedStatement st9;
+                                sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
+                                st9 = conexion.getConnection().prepareStatement(sql9);
+                                st9.setInt(1, (cantStock + cantVenta));
+                                st9.setInt(2, codProducto);
+                                st9.executeUpdate();
+                            }
+
                             String sql;
                             Statement st;
                             ResultSet rs;
