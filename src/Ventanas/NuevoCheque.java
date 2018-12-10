@@ -370,7 +370,7 @@ public class NuevoCheque extends javax.swing.JFrame {
                         ingresarVenta();
                         JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
                         JasperReport reporte;
-                        String path = "src\\Reportes\\boleta.jasper";
+                        String path = "/Reportes/Boleta.jasper";
                         String sql2;
                         Statement st2;
                         ResultSet rs2;
@@ -382,8 +382,10 @@ public class NuevoCheque extends javax.swing.JFrame {
                             codCompra = rs2.getInt(1);
                         }
                         Map parametro = new HashMap();
+                        String logo = "/Imagenes/logo-yapur.png";
+                        parametro.put("logo", this.getClass().getResourceAsStream(logo));
                         parametro.put("codcompra", codCompra);
-                        reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
                         JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
                         JasperViewer view = new JasperViewer(jprint, false);
                         view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -414,14 +416,13 @@ public class NuevoCheque extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldNumeroCuentaAgregarChequeActionPerformed
 
-            @Override
+    @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().
                 getImage(ClassLoader.getSystemResource("Imagenes/logo-yapur.png"));
 
         return retValue;
     }
-
 
     /**
      * @param args the command line arguments

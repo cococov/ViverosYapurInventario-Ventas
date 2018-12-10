@@ -7568,7 +7568,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         try {
             if (registrarVenta()) {
                 JasperReport reporte;
-                String path = "/Reportes/boleta.jasper";
+                String path = "/Reportes/Boleta.jasper";
                 String sql2;
                 Statement st2;
                 ResultSet rs2;
