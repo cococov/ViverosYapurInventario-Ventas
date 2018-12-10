@@ -85,6 +85,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         this.jPanel12.setVisible(false);
         this.jTextFieldRutEditarUsuario.setEditable(false);
         this.jTextFieldRutEditarUsuario.setEnabled(false);
+        jComboBoxTipoUsuarioAgregar.setEditable(false);
+        jComboBoxTipoEditarUsuario.setEditable(false);
         PanelMenu.jTextFieldDescuentoVenta.setEditable(false);
         PanelMenu.jTextFieldDescuentoVenta.setEnabled(false);
         PanelMenu.jTextFieldEfectivo.setEditable(false);
@@ -120,10 +122,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             this.jTabbedPane1.remove(2);
             this.jTabbedPane1.remove(1);
             this.jTabbedPane1.remove(0);
+            this.jTabbedPane1.remove(1);
+            this.jButtonListaVentas.setVisible(false);
+            this.jButtonListaPresupuestos.setVisible(false);
 
         } else if (datos[5].equals("3")) {
             this.jTabbedPane1.remove(0);
-
+            this.jTabbedPane1.remove(1);
             this.jTabbedPane1.remove(1);
             this.jTabbedPane1.remove(1);
             this.jTabbedPane1.remove(1);
@@ -2046,7 +2051,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel149 = new javax.swing.JLabel();
         jLabelDescuentoDetallesPresupuesto = new javax.swing.JLabel();
         jButtonImpimirBoletaPresupuesto = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jButtonListaPresupuestos = new javax.swing.JButton();
         jPanelReportes = new javax.swing.JPanel();
         jButtonAgregarProveedor1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -5750,10 +5755,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
         jPanel7.add(jPanelDetallesPresupuesto, "card4");
 
-        jButton1.setText("Lista Presupuestos");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonListaPresupuestos.setText("Lista Presupuestos");
+        jButtonListaPresupuestos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonListaPresupuestosActionPerformed(evt);
             }
         });
 
@@ -5766,7 +5771,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 .addGroup(jPanelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButtonRealizarPresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
                     .addComponent(jButtonListaVentas, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonListaPresupuestos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButtonRealizarVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(100, 100, 100)
                 .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -5786,7 +5791,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 .addGap(50, 50, 50)
                 .addComponent(jButtonListaVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonListaPresupuestos, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -7946,7 +7951,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonImpimirBoletaPresupuestoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonListaPresupuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListaPresupuestosActionPerformed
         refrescarListaPresupuestos();
         this.jPanel7.setVisible(true);
         this.jPanelRealizarVenta.show(false);
@@ -7956,7 +7961,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         this.jPanelListaVentas.show(false);
         this.jPanelListaPresupuestos.show(true);
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonListaPresupuestosActionPerformed
 
     private void jPanelVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelVentasMouseClicked
         // TODO add your handling code here:
@@ -8271,7 +8276,6 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroupCobradoSNListadeCheques;
     private javax.swing.ButtonGroup buttonGroupVentaproduccionMerma;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -8308,6 +8312,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JButton jButtonEditarUsuairo;
     private javax.swing.JButton jButtonImpimirBoletaPresupuesto;
     private javax.swing.JButton jButtonImpimirBoletaVenta;
+    private javax.swing.JButton jButtonListaPresupuestos;
     private javax.swing.JButton jButtonListaVentas;
     private javax.swing.JButton jButtonRealizarPresupuesto;
     private javax.swing.JButton jButtonRealizarVenta;
