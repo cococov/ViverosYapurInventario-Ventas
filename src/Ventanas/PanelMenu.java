@@ -151,9 +151,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
     public void reporteTodosProveedores() throws JRException {
         JasperReport reporte;
-        String path = "src\\Reportes\\Proveedores.jasper";
-        reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
-        JasperPrint jprint = JasperFillManager.fillReport(reporte, null, conexion.getConnection());
+        String path = "/Reportes/Proveedores.jasper";
+        Map parametro = new HashMap();
+        String logo = "/Imagenes/logo-yapur.png";
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
+        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
         JasperViewer view = new JasperViewer(jprint, false);
         view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         view.setVisible(true);
@@ -161,9 +164,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
     public void reporteTodosInventario() throws JRException {
         JasperReport reporte;
-        String path = "src\\Reportes\\Inventario.jasper";
-        reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
-        JasperPrint jprint = JasperFillManager.fillReport(reporte, null, conexion.getConnection());
+        String path = "/Reportes/Inventario.jasper";
+        Map parametro = new HashMap();
+        String logo = "/Imagenes/logo-yapur.png";
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
+        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
         JasperViewer view = new JasperViewer(jprint, false);
         view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         view.setVisible(true);
@@ -171,9 +177,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
     public void reporteTodosUsuario() throws JRException {
         JasperReport reporte;
-        String path = "src\\Reportes\\Usuarios.jasper";
-        reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
-        JasperPrint jprint = JasperFillManager.fillReport(reporte, null, conexion.getConnection());
+        String logo = "/Imagenes/logo-yapur.png";
+        String path = "/Reportes/Usuarios.jasper";
+        Map parametro = new HashMap();
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
+        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
         JasperViewer view = new JasperViewer(jprint, false);
         view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         view.setVisible(true);
@@ -198,11 +207,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
             } else {
                 String fechaFin = myFormat.format(jd2.getDate());
+                String logo = "/Imagenes/logo-yapur.png";              
                 Map parametro = new HashMap();
                 parametro.put("fecha1", fechaInicio);
                 parametro.put("fecha2", fechaFin);
-                String path = "src\\Reportes\\Ventas.jasper";
-                reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                parametro.put("logo", this.getClass().getResourceAsStream(logo));
+                String path = "/Reportes/Ventas.jasper";
+                reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
                 JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
                 JasperViewer view = new JasperViewer(jprint, false);
                 view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -225,6 +236,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             JDateChooser jd2 = new JDateChooser();
             String message2 = "Seleccione fecha Fin :\n";
             Object[] params2 = {message2, jd2};
+            String logo = "/Imagenes/logo-yapur.png";  
             JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
             if (jd2.getDate() == null) {
                 JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
@@ -233,8 +245,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 Map parametro = new HashMap();
                 parametro.put("fecha1", fechaInicio);
                 parametro.put("fecha2", fechaFin);
-                String path = "src\\Reportes\\Cheques.jasper";
-                reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                parametro.put("logo", this.getClass().getResourceAsStream(logo));
+                String path = "/Reportes/Cheques.jasper";
+                reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
                 JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
                 JasperViewer view = new JasperViewer(jprint, false);
                 view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -463,9 +476,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
     public void reporteTodosCambios() throws JRException {
         JasperReport reporte;
-        String path = "src\\Reportes\\Cambios.jasper";
-        reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
-        JasperPrint jprint = JasperFillManager.fillReport(reporte, null, conexion.getConnection());
+        String path = "/Reportes/Cambios.jasper";
+        String logo = "/Imagenes/logo-yapur.png";
+        Map parametro = new HashMap();
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
+        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
         JasperViewer view = new JasperViewer(jprint, false);
         view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         view.setVisible(true);
@@ -1143,54 +1159,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                         JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
                                     }
                                 } else //SOLO AGREGAR ESPECIE DE PLANTA
-                                 if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() != 0) {
-                                        if (especiePlanta == 1) {
-                                            if (jComboBoxAgregarTipoPlanta.getSelectedIndex() > 1 && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
-                                                String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
-                                                PreparedStatement st;
-                                                ResultSet rs;
-                                                String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
-                                                st = conexion.getConnection().prepareStatement(sql);
-                                                rs = st.executeQuery(sql);
-                                                while (rs.next()) {
-                                                    codTipoPlanta = rs.getInt(1);
-                                                }
-
-                                                String sqlAux3;
-                                                PreparedStatement stAux3;
-                                                sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
-                                                stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
-                                                ResultSet rsAux3;
-                                                rsAux3 = stAux3.executeQuery(sqlAux3);
-                                                int cant3 = 0;
-                                                while (rsAux3.next()) {
-                                                    cant3 = rsAux3.getInt(1);
-                                                }
-                                                if (cant3 < 1) {
-
-                                                    PreparedStatement st2;
-                                                    sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
-                                                    st2 = conexion.getConnection().prepareStatement(sql);
-                                                    st2.setInt(1, codTipoPlanta);
-                                                    st2.setString(2, nuevaEspeciePlanta);
-                                                    st2.executeUpdate();
-
-                                                    PreparedStatement st4;
-                                                    ResultSet rs4;
-                                                    sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
-                                                    st4 = conexion.getConnection().prepareStatement(sql);
-                                                    rs4 = st4.executeQuery(sql);
-                                                    while (rs4.next()) {
-                                                        codEspeciePlanta = rs4.getInt(1);
-                                                    }
-                                                    todoBien = true;
-                                                } else {
-                                                    JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
-                                                }
-                                            } else {
-                                                JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
-                                            }
-                                        } else {
+                                if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() != 0) {
+                                    if (especiePlanta == 1) {
+                                        if (jComboBoxAgregarTipoPlanta.getSelectedIndex() > 1 && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
                                             String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
                                             PreparedStatement st;
                                             ResultSet rs;
@@ -1201,19 +1172,64 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                                 codTipoPlanta = rs.getInt(1);
                                             }
 
-                                            PreparedStatement st2;
-                                            ResultSet rs2;
-                                            String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "'";
-                                            st2 = conexion.getConnection().prepareStatement(sql2);
-                                            rs2 = st.executeQuery(sql2);
-                                            while (rs2.next()) {
-                                                codEspeciePlanta = rs2.getInt(1);
+                                            String sqlAux3;
+                                            PreparedStatement stAux3;
+                                            sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
+                                            stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
+                                            ResultSet rsAux3;
+                                            rsAux3 = stAux3.executeQuery(sqlAux3);
+                                            int cant3 = 0;
+                                            while (rsAux3.next()) {
+                                                cant3 = rsAux3.getInt(1);
                                             }
-                                            todoBien = true;
+                                            if (cant3 < 1) {
+
+                                                PreparedStatement st2;
+                                                sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                                                st2 = conexion.getConnection().prepareStatement(sql);
+                                                st2.setInt(1, codTipoPlanta);
+                                                st2.setString(2, nuevaEspeciePlanta);
+                                                st2.executeUpdate();
+
+                                                PreparedStatement st4;
+                                                ResultSet rs4;
+                                                sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                                                st4 = conexion.getConnection().prepareStatement(sql);
+                                                rs4 = st4.executeQuery(sql);
+                                                while (rs4.next()) {
+                                                    codEspeciePlanta = rs4.getInt(1);
+                                                }
+                                                todoBien = true;
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
+                                            }
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
                                         }
                                     } else {
-                                        JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
+                                        String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                                        PreparedStatement st;
+                                        ResultSet rs;
+                                        String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                                        st = conexion.getConnection().prepareStatement(sql);
+                                        rs = st.executeQuery(sql);
+                                        while (rs.next()) {
+                                            codTipoPlanta = rs.getInt(1);
+                                        }
+
+                                        PreparedStatement st2;
+                                        ResultSet rs2;
+                                        String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "'";
+                                        st2 = conexion.getConnection().prepareStatement(sql2);
+                                        rs2 = st.executeQuery(sql2);
+                                        while (rs2.next()) {
+                                            codEspeciePlanta = rs2.getInt(1);
+                                        }
+                                        todoBien = true;
                                     }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
+                                }
 
                                 if (todoBien) {
                                     //ESPECIE Y TIPO YA ESTAN EN LA LISTA
@@ -7552,7 +7568,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         try {
             if (registrarVenta()) {
                 JasperReport reporte;
-                String path = "src\\Reportes\\boleta.jasper";
+                String path = "/Reportes/boleta.jasper";
                 String sql2;
                 Statement st2;
                 ResultSet rs2;
@@ -7563,9 +7579,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 while (rs2.next()) {
                     codCompra = rs2.getInt(1);
                 }
+                String logo = "/Imagenes/logo-yapur.png";
                 Map parametro = new HashMap();
                 parametro.put("codcompra", codCompra);
-                reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                parametro.put("logo", this.getClass().getResourceAsStream(logo));
+                reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
                 JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
                 JasperViewer view = new JasperViewer(jprint, false);
                 view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -7732,7 +7750,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         try {
             if (registrarPresupuesto()) {
                 JasperReport reporte;
-                String path = "src\\Reportes\\Presupuesto.jasper";
+                String path = "/Reportes/Presupuesto.jasper";
                 String sql2;
                 Statement st2;
                 ResultSet rs2;
@@ -7743,9 +7761,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 while (rs2.next()) {
                     codCompra = rs2.getInt(1);
                 }
+                String logo = "/Imagenes/logo-yapur.png";
                 Map parametro = new HashMap();
                 parametro.put("codcompra", codCompra);
-                reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
+                parametro.put("logo", this.getClass().getResourceAsStream(logo));
+                reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
                 JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
                 JasperViewer view = new JasperViewer(jprint, false);
                 view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);

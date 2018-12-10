@@ -3,9 +3,7 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="nombrerol" class="java.lang.String">
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
-	</parameter>
+	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT u.nombreusuario as Nombres , concat(u.apellidomaterno, " " ,u.apellidomaterno) as Apellidos ,r.nombrerol  from usuario u ,rol r where r.idrol = u.idrol]]>
 	</queryString>
@@ -31,8 +29,8 @@
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="17" y="16" width="106" height="63" uuid="a2fa4e72-b277-4d32-a874-6e6733532776"/>
-				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<reportElement x="0" y="0" width="106" height="63" uuid="a2fa4e72-b277-4d32-a874-6e6733532776"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 		</band>
 	</title>

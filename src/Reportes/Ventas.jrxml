@@ -9,6 +9,7 @@
 	<parameter name="fecha2" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT oc.codordencompra, oc.totalcondescuento,oc.fecha, c.tipopago,c.metodopago from ordencompra oc, compra c where oc.codordencompra = c.codcompra  and oc.fecha between $P{fecha1} and $P{fecha2}]]>
 	</queryString>
@@ -45,7 +46,7 @@
 			</textField>
 			<image>
 				<reportElement x="23" y="11" width="106" height="63" uuid="346723f7-c0a8-4236-87f3-89d563a32c0c"/>
-				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 		</band>
 	</title>
