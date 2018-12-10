@@ -2,6 +2,7 @@ package proyectoyapur;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -34,10 +35,11 @@ public class ColorRender extends DefaultTableCellRenderer {
         java.util.Date fechaRecepcion = new Date();
         java.util.Date fechaVenc = (java.util.Date) table.getValueAt(row, 4);
         int difDias = (int) ((fechaVenc.getTime() - fechaRecepcion.getTime()) / 86400000);
-        if (difDias <=0) {
+        this.setFont(this.getFont().deriveFont(Font.BOLD));
+        if (difDias <= 0) {
             this.setOpaque(true);
             this.setBackground(Color.RED);
-            this.setForeground(Color.YELLOW);
+            this.setForeground(Color.BLACK);
         } else {
             if (difDias <= 10) {
                 this.setOpaque(true);
@@ -46,7 +48,7 @@ public class ColorRender extends DefaultTableCellRenderer {
             } else {
                 this.setOpaque(true);
                 this.setBackground(Color.GREEN);
-                this.setForeground(Color.WHITE);
+                this.setForeground(Color.BLACK);
             }
         }
 

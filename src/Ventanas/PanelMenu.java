@@ -7357,13 +7357,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
     private void jButtonImpimirBoletaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImpimirBoletaVentaActionPerformed
         JasperReport reporte;
-        String path = "src\\Reportes\\boleta.jasper";
-
+        String path = "/Reportes/Boleta.jasper";
+         String logo = "/Imagenes/logo-yapur.png";
         Map parametro = new HashMap();
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
         parametro.put("codcompra", Integer.parseInt(jTextFieldCodVenta.getText()));
         try {
-            reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
-
+            reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+            
             JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
             JasperViewer view = new JasperViewer(jprint, false);
             view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -7961,13 +7962,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
     private void jButtonImpimirBoletaPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImpimirBoletaPresupuestoActionPerformed
         JasperReport reporte;
-        String path = "src\\Reportes\\Presupuesto.jasper";
-
+        String path = "/Reportes/Presupuesto.jasper";
+        String logo = "/Imagenes/logo-yapur.png";
         Map parametro = new HashMap();
         parametro.put("codcompra", Integer.parseInt(jTextFieldCodPresupuesto.getText()));
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
         try {
-            reporte = (JasperReport) JRLoader.loadObjectFromFile(path);
-
+            reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
             JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
             JasperViewer view = new JasperViewer(jprint, false);
             view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
