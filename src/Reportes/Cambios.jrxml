@@ -27,7 +27,7 @@
 			</textField>
 			<image>
 				<reportElement x="18" y="14" width="106" height="63" uuid="e3fe7aa0-c397-47eb-87b7-e211c42d1b82"/>
-				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

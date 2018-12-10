@@ -58,7 +58,7 @@ WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and 
 			</textField>
 			<image>
 				<reportElement x="20" y="6" width="106" height="63" uuid="fe67a43e-b0bf-4f03-b392-462c698750fe"/>
-				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

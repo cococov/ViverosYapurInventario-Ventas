@@ -33,7 +33,7 @@ WHERE ph.codproducto = p.codproducto and ph.fechaproducto = ( SELECT max(ph2.fec
 			</textField>
 			<image>
 				<reportElement x="24" y="10" width="106" height="63" uuid="f8c56313-d017-4710-a5bc-618abca3449b"/>
-				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

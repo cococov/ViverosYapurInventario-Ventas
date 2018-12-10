@@ -60,7 +60,7 @@
 			</textField>
 			<image>
 				<reportElement x="16" y="16" width="106" height="63" uuid="b67b9d4d-feca-4dc4-a301-9d289039a587"/>
-				<imageExpression><![CDATA["C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

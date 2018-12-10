@@ -23,7 +23,7 @@
 		<band height="79" splitType="Stretch">
 			<image>
 				<reportElement x="11" y="0" width="106" height="63" uuid="19b5cd2a-8316-45d6-8db7-362b1be8ba1e"/>
-				<imageExpression><![CDATA["C:\\Users\\ASUS\\Desktop\\ViverosYapurInventario-Ventas2\\src\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="117" y="11" width="291" height="68" uuid="7446f6d1-2e98-47f9-84d2-88b096ce24a3"/>
