@@ -7482,7 +7482,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             int codProducto = 0;
                             while (rs8.next()) {
                                 codProducto = rs8.getInt(1);
-                                
+
                                 String sql7;
                                 Statement st7;
                                 ResultSet rs7;
@@ -7493,18 +7493,18 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 while (rs7.next()) {
                                     cantStock = rs7.getInt(1);
                                 }
-                                
+
                                 String sql5;
                                 Statement st5;
                                 ResultSet rs5;
-                                sql5 = "SELECT `cantidadproductoordencompra` FROM `productoordencompra` WHERE `codproducto`="+ codProducto+ " AND `codordencompra`=" + codVentaSeleccionada;
+                                sql5 = "SELECT `cantidadproductoordencompra` FROM `productoordencompra` WHERE `codproducto`=" + codProducto + " AND `codordencompra`=" + codVentaSeleccionada;
                                 st5 = conexion.getConnection().createStatement();
                                 rs5 = st5.executeQuery(sql5);
                                 int cantVenta = 0;
                                 while (rs5.next()) {
                                     cantVenta = rs5.getInt(1);
                                 }
-                                
+
                                 String sql9;
                                 PreparedStatement st9;
                                 sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
