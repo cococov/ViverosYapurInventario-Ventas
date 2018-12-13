@@ -341,6 +341,14 @@ public class NuevoCheque extends javax.swing.JFrame {
         st1.setString(2, tipoPago);
         st1.setString(3, metodoPago);
         st1.executeUpdate();
+
+        String sql9;
+        PreparedStatement st9;
+        sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+        st9 = conexion.getConnection().prepareStatement(sql9);
+        st9.setString(1, datos[0]);
+        st9.setString(2, "El usuario " + datos[0] + " realizo la venta ID: " + codCompra);
+        st9.executeUpdate();
     }
 
     private void jButtonConfirmarAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregar3ActionPerformed

@@ -586,6 +586,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         st1.setString(2, tipoPago);
                         st1.setString(3, metodoPago);
                         st1.executeUpdate();
+
+                        String sql9;
+                        PreparedStatement st9;
+                        sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                        st9 = conexion.getConnection().prepareStatement(sql9);
+                        st9.setString(1, datos[0]);
+                        st9.setString(2, "El usuario " + datos[0] + " realizo la venta ID: " + codCompra);
+                        st9.executeUpdate();
+
                         JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
                         Clear_Table1(jTableVenta);
                         jLabelCalcularNeto.setText("0");
@@ -667,7 +676,17 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     st1.setString(2, tipoPago);
                     st1.setString(3, metodoPago);
                     st1.executeUpdate();
+
+                    String sql9;
+                    PreparedStatement st9;
+                    sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                    st9 = conexion.getConnection().prepareStatement(sql9);
+                    st9.setString(1, datos[0]);
+                    st9.setString(2, "El usuario " + datos[0] + " realizo la venta ID: " + codCompra);
+                    st9.executeUpdate();
+
                     JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+
                     Clear_Table1(jTableVenta);
                     jLabelCalcularNeto.setText("0");
                     CalcularIVA.setText("0");
@@ -7122,6 +7141,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             st2.setInt(1, Integer.parseInt(cod));
                             st2.setString(2, precio);
                             st2.executeUpdate();
+
+                            String sql9;
+                            PreparedStatement st9;
+                            sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                            st9 = conexion.getConnection().prepareStatement(sql9);
+                            st9.setString(1, datos[0]);
+                            st9.setString(2, "El usuario " + datos[0] + " cambio el precio del producto " + cod + " a: $"+ precio);
+                            st9.executeUpdate();
+
                         }
                         st.setString(1, nombreproducto);
                         st.setInt(2, Integer.parseInt(cantVentas));

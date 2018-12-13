@@ -45,21 +45,21 @@
 	<columnHeader>
 		<band height="23" splitType="Stretch">
 			<staticText>
-				<reportElement x="34" y="0" width="100" height="20" uuid="c859bc19-f574-4c45-85d7-67fd02295d58"/>
+				<reportElement x="18" y="0" width="100" height="20" uuid="c859bc19-f574-4c45-85d7-67fd02295d58"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Codigo cambio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="159" y="3" width="78" height="20" uuid="a18d5d91-8df7-46d5-97e3-779e6fd0a18a"/>
+				<reportElement x="136" y="0" width="78" height="20" uuid="a18d5d91-8df7-46d5-97e3-779e6fd0a18a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Rut]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="252" y="3" width="100" height="20" uuid="fdd5ae29-56b8-4ba3-90bc-d9d6292bfcaf"/>
+				<reportElement x="226" y="0" width="100" height="20" uuid="fdd5ae29-56b8-4ba3-90bc-d9d6292bfcaf"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -68,17 +68,17 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="31" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="159" y="0" width="78" height="20" uuid="a8352933-59a5-4c84-9fe7-f649cbc10276"/>
+				<reportElement x="136" y="0" width="78" height="20" uuid="a8352933-59a5-4c84-9fe7-f649cbc10276"/>
 				<textFieldExpression><![CDATA[$F{rut}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="252" y="0" width="330" height="20" uuid="b1dbf66e-6ccd-464f-a13a-04bf928e3fe0"/>
+				<reportElement x="226" y="0" width="330" height="20" uuid="b1dbf66e-6ccd-464f-a13a-04bf928e3fe0"/>
 				<textFieldExpression><![CDATA[$F{Descripcion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="59" y="0" width="100" height="20" uuid="9c729dbb-5461-4484-ac21-9444fea069eb"/>
+				<reportElement x="36" y="0" width="100" height="20" uuid="9c729dbb-5461-4484-ac21-9444fea069eb"/>
 				<textFieldExpression><![CDATA[$F{codigo cambio}]]></textFieldExpression>
 			</textField>
 		</band>
