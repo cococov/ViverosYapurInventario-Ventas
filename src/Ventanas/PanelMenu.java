@@ -592,7 +592,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                         st9 = conexion.getConnection().prepareStatement(sql9);
                         st9.setString(1, datos[0]);
-                        st9.setString(2, "El usuario " + datos[0] + " realizo la venta ID: " + codCompra);
+                        st9.setString(2, "El usuario realizo la venta ID: " + codCompra);
                         st9.executeUpdate();
 
                         JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
@@ -682,7 +682,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                     st9 = conexion.getConnection().prepareStatement(sql9);
                     st9.setString(1, datos[0]);
-                    st9.setString(2, "El usuario " + datos[0] + " realizo la venta ID: " + codCompra);
+                    st9.setString(2, "El usuario realizo la venta ID: " + codCompra);
                     st9.executeUpdate();
 
                     JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
@@ -1052,7 +1052,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             aux = rsAux.getInt(1);
                         }
                         st2.setString(1, datos[0]);
-                        st2.setString(2, "El usuario: " + datos[1] + " agrego la merma de codigo: " + aux);
+                        st2.setString(2, "El usuario agrego la merma de codigo: " + aux);
                         st2.executeUpdate();
                         jTextFieldCantidadMerma.setText("0");
                         jTextFieldFiltrarPorLetrasMerma.setText("");
@@ -7147,7 +7147,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                             st9 = conexion.getConnection().prepareStatement(sql9);
                             st9.setString(1, datos[0]);
-                            st9.setString(2, "El usuario " + datos[0] + " cambio el precio del producto " + cod + " a: $"+ precio);
+                            st9.setString(2, "El usuario cambio el precio del producto " + cod + " a: $"+ precio);
                             st9.executeUpdate();
 
                         }
@@ -7578,7 +7578,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 aux = rsAux.getInt(1);
                             }
                             staux2.setString(1, datos[0]);
-                            staux2.setString(2, "El usuario: " + datos[1] + " cancelo la compra de codigo: " + aux);
+                            staux2.setString(2, "El usuario cancelo la compra de codigo: " + aux);
                             staux2.executeUpdate();
 
                         } catch (SQLException ex) {
