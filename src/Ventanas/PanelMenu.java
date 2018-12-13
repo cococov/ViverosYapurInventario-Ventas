@@ -49,6 +49,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     public static boolean apreto = false;
     private String ProveedorSeleccionado;
     private String mermaSeleccionada;
+    private SeleccionarProducto seleccionarProducto;
 
     public PanelMenu(ConnectarBD conexion, String datos[]) {
         initComponents();
@@ -114,6 +115,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         validarSoloNumeros(jTextFieldPrecioEditarProducto);
         validarSoloNumeros(jTextFieldCantidadMerma);
         this.jTextFieldMontoCheque.addFocusListener(this);
+        seleccionarProducto = new SeleccionarProducto(this.conexion, null);
 
         jPanelTipoPlanta.setVisible(false);
 
@@ -728,6 +730,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
             //si no es cheque
             //Ingresar orden Compra
+            if(jTextFieldDescuentoPresupuesto.getText().equals("0")){
+                jTextFieldDescuentoPresupuesto.setText("0");
+            }
+            
+            
             if ((jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0 && pasarAinteger(jTextFieldDescuentoPresupuesto.getText()) < 100) || (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1 && pasarAinteger(jTextFieldDescuentoPresupuesto.getText()) < totalSinDesc)) {
 
                 String sql4;
@@ -770,7 +777,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 st1 = conexion.getConnection().prepareStatement(sql1);
                 st1.setInt(1, codCompra);
                 st1.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+                JOptionPane.showMessageDialog(null, "Presupuesto realizado exitosamente");
                 Clear_Table1(jTablePresupuesto);
                 jLabelCalcularNetoPresupuesto.setText("0");
                 CalcularIVAPresupuesto.setText("0");
@@ -7147,7 +7154,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                             st9 = conexion.getConnection().prepareStatement(sql9);
                             st9.setString(1, datos[0]);
-                            st9.setString(2, "El usuario cambio el precio del producto " + cod + " a: $"+ precio);
+                            st9.setString(2, "El usuario cambio el precio del producto " + cod + " a: $" + precio);
                             st9.executeUpdate();
 
                         }
@@ -7628,12 +7635,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jTableVentaKeyPressed
 
     private void jButtonAgregarProductoAVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoAVentaActionPerformed
-        SeleccionarProducto seleccionarProducto = new SeleccionarProducto(this.conexion, null);
-        seleccionarProducto.setTitle("Seleccionar producto");
-        seleccionarProducto.setLocationRelativeTo(null);
-        seleccionarProducto.setResizable(false);
-        seleccionarProducto.setVisible(true);
-        seleccionarProducto.setSize(440, 640);
+
+        if (!seleccionarProducto.isVisible()) {
+
+            seleccionarProducto.setTitle("Seleccionar producto");
+            seleccionarProducto.setLocationRelativeTo(null);
+            seleccionarProducto.setResizable(false);
+            seleccionarProducto.setVisible(true);
+            seleccionarProducto.setSize(440, 640);
+        }
     }//GEN-LAST:event_jButtonAgregarProductoAVentaActionPerformed
 
     private void jButtonConfirmarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVentaActionPerformed
@@ -7809,13 +7819,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jTablePresupuestoKeyPressed
 
     private void jButtonAgregarProductoAPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoAPresupuestoActionPerformed
-        SeleccionarProducto seleccionarProducto = new SeleccionarProducto(this.conexion, null);
-        seleccionarProducto.setTitle("Seleccionar producto");
-        seleccionarProducto.setLocationRelativeTo(null);
-        seleccionarProducto.setResizable(false);
-        seleccionarProducto.setVisible(true);
-        seleccionarProducto.setSize(418, 640);
-        // TODO add your handling code here:
+        if (!seleccionarProducto.isVisible()) {
+            seleccionarProducto.setTitle("Seleccionar producto");
+
+            seleccionarProducto.setLocationRelativeTo(null);
+            seleccionarProducto.setResizable(false);
+            seleccionarProducto.setVisible(true);
+            seleccionarProducto.setSize(418, 640);
+        }// TODO add your handling code here:
     }//GEN-LAST:event_jButtonAgregarProductoAPresupuestoActionPerformed
 
     private void jButtonConfirmarPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarPresupuestoActionPerformed
