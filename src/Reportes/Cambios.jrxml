@@ -3,6 +3,7 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT idcambio as "codigo cambio", rutusuario as "rut", descripcioncambio as "Descripcion" from cambios]]>
 	</queryString>
@@ -27,7 +28,7 @@
 			</textField>
 			<image>
 				<reportElement x="18" y="14" width="106" height="63" uuid="e3fe7aa0-c397-47eb-87b7-e211c42d1b82"/>
-				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 		</band>
 	</title>
