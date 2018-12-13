@@ -1,6 +1,7 @@
 package Ventanas;
 
 import Clases.Producto;
+import static Ventanas.PanelMenu.carrito;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Image;
@@ -308,6 +309,28 @@ public class NuevoCheque extends javax.swing.JFrame {
             st3.setInt(2, codCompra);
             st3.setInt(3, carrito[i].getCantidad());
             st3.executeUpdate();
+
+            String sql8;
+            Statement st8;
+            ResultSet rs8;
+            sql8 = "SELECT `cantidadproductoventa` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
+            st8 = conexion.getConnection().createStatement();
+            rs8 = st8.executeQuery(sql8);
+            int cantStock = 0;
+            while (rs8.next()) {
+                cantStock = rs8.getInt(1);
+            }
+
+            if (cantStock - carrito[i].getCantidad() >= 0) {
+                String sql9;
+                PreparedStatement st9;
+                sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
+                st9 = conexion.getConnection().prepareStatement(sql9);
+                st9.setInt(1, (cantStock - carrito[i].getCantidad()));
+                st9.setInt(2, carrito[i].getId());
+                st9.executeUpdate();
+
+            }
         }
         //Ingresar orden compra
         String sql1;
