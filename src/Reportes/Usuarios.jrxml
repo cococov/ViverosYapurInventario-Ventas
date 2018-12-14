@@ -5,7 +5,7 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[SELECT u.nombreusuario as Nombres , concat(u.apellidomaterno, " " ,u.apellidomaterno) as Apellidos ,r.nombrerol, u.rutusuario from usuario u ,rol r where r.idrol = u.idrol]]>
+		<![CDATA[SELECT u.nombreusuario as Nombres , concat(u.apellidopaterno, " " ,u.apellidomaterno) as Apellidos ,r.nombrerol, u.rutusuario from usuario u ,rol r where r.idrol = u.idrol]]>
 	</queryString>
 	<field name="Nombres" class="java.lang.String"/>
 	<field name="Apellidos" class="java.lang.String"/>

@@ -9,6 +9,7 @@
 	<parameter name="fecha2" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT
      cheques.`numerocheque` AS cheques_numerocheque,
@@ -49,7 +50,7 @@ where fecharecepcion between $P{fecha1} and $P{fecha2}]]>
 			</textField>
 			<image>
 				<reportElement x="15" y="11" width="106" height="63" uuid="fcfa5343-9127-438a-abb3-68b549da4087"/>
-				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 		</band>
 	</title>

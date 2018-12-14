@@ -6,6 +6,7 @@
 	<parameter name="codcompra" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
 		<![CDATA[SELECT po.codordencompra,p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, oc.fecha, oc.totalneto, oc.totalcondescuento, (oc.totalsindescuento-oc.totalcondescuento) AS descuento, oc.totalsindescuento, ph.precioproductoneto 
 from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc
@@ -58,7 +59,7 @@ WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and 
 			</textField>
 			<image>
 				<reportElement x="20" y="6" width="106" height="63" uuid="fe67a43e-b0bf-4f03-b392-462c698750fe"/>
-				<imageExpression><![CDATA["..\\Imagenes\\logo-yapur.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 		</band>
 	</title>
