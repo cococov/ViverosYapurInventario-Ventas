@@ -106,25 +106,31 @@ public class NuevoCheque extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel66.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel66.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel66.setText("Agregar Cheque");
 
-        jLabel67.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel67.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel67.setText("Nombres:");
 
-        jLabel68.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel68.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel68.setText("Apellidos:");
 
-        jLabel69.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel69.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel69.setText("Fecha emision:");
 
-        jLabel70.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel70.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel70.setText("Fecha vencimiento:");
 
-        jLabel71.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel71.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel71.setText("Numero:");
 
-        jButtonConfirmarAgregar3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jTextFieldNombresAgregarCheque.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        jTextFieldNumeroChequeAgregar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        jTextFieldApellidosAgregarCheque.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        jButtonConfirmarAgregar3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jButtonConfirmarAgregar3.setText("Agregar cheque");
         jButtonConfirmarAgregar3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,26 +141,35 @@ public class NuevoCheque extends javax.swing.JFrame {
         jLabelErrorRut3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabelErrorRut3.setForeground(new java.awt.Color(255, 0, 0));
 
-        jLabel73.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel73.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel73.setText("Descripcion:");
 
+        jTextPaneDescripcionAgregarCheque.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jScrollPane15.setViewportView(jTextPaneDescripcionAgregarCheque);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jDateChooserFechaEmisionAgregarCheque.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        jDateChooserFechaVencAgregarCheque.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Monto:");
 
-        jLabel57.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jTextFieldMontoCheque.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+
+        jLabel57.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel57.setText("Banco:");
 
+        jTextFieldBancoAgregarCheque.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jTextFieldBancoAgregarCheque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldBancoAgregarChequeActionPerformed(evt);
             }
         });
 
-        jLabel58.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel58.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel58.setText("Numero cuenta:");
 
+        jTextFieldNumeroCuentaAgregarCheque.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jTextFieldNumeroCuentaAgregarCheque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldNumeroCuentaAgregarChequeActionPerformed(evt);
@@ -188,7 +203,7 @@ public class NuevoCheque extends javax.swing.JFrame {
                                 .addComponent(jTextFieldNombresAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
                                 .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(76, 76, 76)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jTextFieldNumeroChequeAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
                                 .addComponent(jLabel73)
@@ -203,7 +218,7 @@ public class NuevoCheque extends javax.swing.JFrame {
                         .addGroup(jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jTextFieldBancoAgregarCheque)
                             .addComponent(jTextFieldNumeroCuentaAgregarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                            .addComponent(jTextFieldMontoCheque, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
+                            .addComponent(jTextFieldMontoCheque))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabelErrorRut3))
                     .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
@@ -212,7 +227,7 @@ public class NuevoCheque extends javax.swing.JFrame {
                     .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
                         .addGap(272, 272, 272)
                         .addComponent(jButtonConfirmarAgregar3, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanelAgregarChequeLayout.setVerticalGroup(
             jPanelAgregarChequeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -262,8 +277,9 @@ public class NuevoCheque extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanelAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

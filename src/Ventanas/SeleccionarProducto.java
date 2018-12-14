@@ -210,6 +210,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
         setTitle("Seleccionar Producto");
         setIconImage(getIconImage());
 
+        jComboBoxProducto.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jComboBoxProducto.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Planta", "Accesorio"}));
         jComboBoxProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,10 +218,13 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel1.setText("Producto: ");
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Tipo:");
 
+        jComboBoxTipo.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jComboBoxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {}));
         jComboBoxTipo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -228,8 +232,10 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel3.setText("Especie:");
 
+        jComboBoxEspecie.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jComboBoxEspecie.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {}));
         jComboBoxEspecie.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -266,8 +272,9 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                     .addComponent(jPanelEspecie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelTipoLayout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(182, 182, 182)
-                        .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jComboBoxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         jPanelTipoLayout.setVerticalGroup(
             jPanelTipoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,6 +287,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                 .addComponent(jPanelEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        jTableproductos.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jTableproductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -328,6 +336,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             jTableproductos.getColumnModel().getColumn(5).setResizable(false);
         }
 
+        jButtonAgregar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jButtonAgregar.setText("Agregar");
         jButtonAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -335,6 +344,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             }
         });
 
+        jTextFieldCantidad.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jTextFieldCantidad.setText("1");
         jTextFieldCantidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -342,13 +352,16 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             }
         });
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("Cantidad:");
 
         jTextAreaInfoProducto.setColumns(20);
+        jTextAreaInfoProducto.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
         jTextAreaInfoProducto.setRows(5);
         jTextAreaInfoProducto.setEnabled(false);
         jScrollPane2.setViewportView(jTextAreaInfoProducto);
 
+        jButtonCerrar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jButtonCerrar.setText("Cerrar");
         jButtonCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -356,8 +369,10 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel5.setText("Busqueda:");
 
+        jTextFieldFiltroNombre.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jTextFieldFiltroNombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTextFieldFiltroNombreKeyReleased(evt);
@@ -374,16 +389,17 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(49, 49, 49)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel1)
-                                        .addGap(156, 156, 156)
-                                        .addComponent(jComboBoxProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel4)
                                         .addGap(241, 241, 241)
-                                        .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(1, 1, 1))
+                                        .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(4, 4, 4))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jComboBoxProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(12, 12, 12))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel5)
@@ -420,7 +436,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jComboBoxProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(8, 8, 8)
-                .addComponent(jPanelTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanelTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
