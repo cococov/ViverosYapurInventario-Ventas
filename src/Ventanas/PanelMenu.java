@@ -1102,7 +1102,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
             String sqlAux;
             PreparedStatement stAux;
-            sqlAux = "SELECT COUNT(*) FROM PRODUCTO P WHERE P.nombreproducto = '" + nomProducto + "'";
+            sqlAux = "SELECT COUNT(*) FROM producto P WHERE P.nombreproducto = '" + nomProducto + "'";
             stAux = conexion.getConnection().prepareStatement(sqlAux);
             ResultSet rsAux;
             rsAux = stAux.executeQuery(sqlAux);
@@ -4396,7 +4396,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     .addComponent(jLabel48))
                 .addGroup(jPanelAgregarProveedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelAgregarProveedorLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel47)
                         .addGap(13, 13, 13))
                     .addGroup(jPanelAgregarProveedorLayout.createSequentialGroup()
@@ -5007,11 +5007,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 .addComponent(jLabel83)
                 .addGap(18, 18, 18)
                 .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jDateChooserFechaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel84)
                         .addComponent(jTextFieldCodVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel85)
-                        .addComponent(jDateChooserFechaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel85))
                     .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jRadioButton3)
                         .addComponent(jLabel86)
