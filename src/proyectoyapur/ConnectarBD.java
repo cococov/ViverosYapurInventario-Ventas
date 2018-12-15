@@ -10,7 +10,7 @@ public class ConnectarBD {
     private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static final String USER = "root";
     private static final String PASSWORD = "";
-    private static final String URL = "jdbc:mysql://192.168.1.14:3306/proyecto_yapur";
+    private static final String URL = "jdbc:mysql://localhost:3306/proyecto_yapur";
 
     public ConnectarBD() throws ClassNotFoundException, SQLException {
         connection = null;
