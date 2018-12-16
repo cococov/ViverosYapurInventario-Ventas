@@ -1054,7 +1054,7 @@
                                                   <Component id="jTextFieldPrecioAgregarProducto" max="32767" attributes="0"/>
                                                   <Component id="jTextFieldCantidadProdAgregaProducto" alignment="0" max="32767" attributes="0"/>
                                                   <Component id="jTextFieldCantidadVentaAgregarProducto" alignment="0" max="32767" attributes="0"/>
-                                                  <Component id="jTextFieldNombreAgregarProducto" alignment="0" pref="164" max="32767" attributes="0"/>
+                                                  <Component id="jTextFieldNombreAgregarProducto" alignment="0" pref="173" max="32767" attributes="0"/>
                                               </Group>
                                               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                                           </Group>
@@ -1438,7 +1438,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="0" attributes="0">
                                       <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
-                                      <Component id="jTextFieldCantidadMerma" pref="270" max="32767" attributes="0"/>
+                                      <Component id="jTextFieldCantidadMerma" pref="279" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" pref="254" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
@@ -3523,61 +3523,64 @@
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <EmptySpace min="-2" pref="361" max="-2" attributes="0"/>
-                                      <Component id="jLabel52" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="jLabel87" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="jTextFieldFiltrarNumeroListaDeCheques" min="-2" pref="153" max="-2" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <EmptySpace min="-2" pref="361" max="-2" attributes="0"/>
+                                              <Component id="jLabel52" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
-                                              <Component id="jDateChooserFiltrarFechaListaDeCheques1" min="-2" pref="142" max="-2" attributes="0"/>
-                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                              <Component id="jDateChooserFiltrarFechaListaDeCheques2" min="-2" pref="140" max="-2" attributes="0"/>
                                           </Group>
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <EmptySpace pref="224" max="-2" attributes="0"/>
-                                              <Component id="jLabel65" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Group type="102" alignment="0" attributes="0">
+                                                      <Component id="jLabel87" min="-2" max="-2" attributes="0"/>
+                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                      <Component id="jTextFieldFiltrarNumeroListaDeCheques" min="-2" pref="153" max="-2" attributes="0"/>
+                                                      <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
+                                                      <Component id="jDateChooserFiltrarFechaListaDeCheques1" min="-2" pref="142" max="-2" attributes="0"/>
+                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                      <Component id="jDateChooserFiltrarFechaListaDeCheques2" min="-2" pref="140" max="-2" attributes="0"/>
+                                                  </Group>
+                                                  <Group type="102" alignment="1" attributes="0">
+                                                      <EmptySpace pref="224" max="-2" attributes="0"/>
+                                                      <Component id="jLabel65" min="-2" max="-2" attributes="0"/>
+                                                      <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                                                  </Group>
+                                              </Group>
                                           </Group>
                                       </Group>
-                                  </Group>
-                              </Group>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jRadioButtonFiltrarCobradoListaDeCheques" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jRadioButtonSinCobrarlistaDeCheques" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jRadioButtonTodosListaDeCheques" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="jLabel51" pref="0" max="32767" attributes="0"/>
-                                          <Component id="jLabel3" min="-2" pref="14" max="-2" attributes="0"/>
-                                          <Component id="jLabel32" min="-2" pref="14" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel53" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel54" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel55" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jRadioButtonFiltrarCobradoListaDeCheques" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jRadioButtonSinCobrarlistaDeCheques" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jRadioButtonTodosListaDeCheques" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="jLabel51" pref="0" max="32767" attributes="0"/>
+                                                  <Component id="jLabel3" min="-2" pref="14" max="-2" attributes="0"/>
+                                                  <Component id="jLabel32" min="-2" pref="14" max="-2" attributes="0"/>
+                                              </Group>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <Component id="jLabel53" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel54" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="jLabel55" min="-2" max="-2" attributes="0"/>
+                                              </Group>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="jButtonlimpiarFiltrosListacheques" max="32767" attributes="0"/>
+                                          </Group>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jButtonlimpiarFiltrosListacheques" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                                      <Component id="jScrollPane12" min="-2" pref="957" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                              <Component id="jScrollPane12" min="-2" pref="957" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -3637,7 +3640,7 @@
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jScrollPane12" min="-2" pref="362" max="-2" attributes="0"/>
-                              <EmptySpace pref="17" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -4020,7 +4023,7 @@
                               </Group>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
-                                      <EmptySpace pref="7" max="32767" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
                                       <Component id="jLabel47" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                                   </Group>
@@ -4030,7 +4033,7 @@
                                   </Group>
                               </Group>
                               <Component id="jButtonConfirmarAgregarProveedor2" min="-2" pref="42" max="-2" attributes="0"/>
-                              <EmptySpace pref="12" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -4194,7 +4197,7 @@
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="jScrollPane6" min="-2" pref="344" max="-2" attributes="0"/>
-                              <EmptySpace pref="8" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -4902,7 +4905,7 @@
                                       <Component id="jButtonImpimirBoletaVenta" min="-2" pref="116" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="120" max="32767" attributes="0"/>
+                              <EmptySpace pref="110" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -5278,7 +5281,7 @@
                                               <EmptySpace min="-2" pref="165" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <Component id="jButton6" pref="251" max="32767" attributes="0"/>
+                                      <Component id="jButton6" pref="241" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
@@ -6005,7 +6008,7 @@
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="144" max="32767" attributes="0"/>
+                              <EmptySpace pref="128" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -6275,7 +6278,7 @@
                                       <Component id="jLabel123" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="148" max="32767" attributes="0"/>
+                              <EmptySpace pref="138" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -6400,7 +6403,7 @@
                                       <Component id="jLabel127" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="126" max="32767" attributes="0"/>
+                              <EmptySpace pref="114" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>

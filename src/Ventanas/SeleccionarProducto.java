@@ -157,11 +157,11 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                 modelo.addRow(datos);
             }
             jTableproductos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            jTableproductos.getColumnModel().getColumn(0).setPreferredWidth(25);
+            jTableproductos.getColumnModel().getColumn(0).setPreferredWidth(38);
             jTableproductos.getColumnModel().getColumn(1).setPreferredWidth(118);
             jTableproductos.getColumnModel().getColumn(2).setPreferredWidth(58);
             jTableproductos.getColumnModel().getColumn(3).setPreferredWidth(62);
-            jTableproductos.getColumnModel().getColumn(4).setPreferredWidth(60);
+            jTableproductos.getColumnModel().getColumn(4).setPreferredWidth(68);
             jTableproductos.getColumnModel().getColumn(5).setPreferredWidth(67);
             jTableproductos.setModel(modelo);
         } catch (SQLException ex) {

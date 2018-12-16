@@ -347,6 +347,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jTableVenta.getColumnModel().getColumn(0).setPreferredWidth(35);
         jTableVenta.getColumnModel().getColumn(1).setPreferredWidth(157);
         jTableVenta.getColumnModel().getColumn(2).setPreferredWidth(85);
+        jTableVenta.getColumnModel().getColumn(3).setPreferredWidth(47);
+        jTableVenta.getColumnModel().getColumn(5).setPreferredWidth(47);
         jTableVenta.getColumnModel().getColumn(6).setPreferredWidth(85);
         jTableVenta.setModel(modelo);
         String des = jTextFieldDescuentoVenta.getText();
@@ -431,6 +433,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jTablePresupuesto.getColumnModel().getColumn(0).setPreferredWidth(35);
         jTablePresupuesto.getColumnModel().getColumn(1).setPreferredWidth(157);
         jTablePresupuesto.getColumnModel().getColumn(2).setPreferredWidth(85);
+        jTablePresupuesto.getColumnModel().getColumn(3).setPreferredWidth(46);
+        jTablePresupuesto.getColumnModel().getColumn(5).setPreferredWidth(45);
         jTablePresupuesto.getColumnModel().getColumn(6).setPreferredWidth(85);
         jTablePresupuesto.setModel(modelo);
         String des = jTextFieldDescuentoPresupuesto.getText();
@@ -616,7 +620,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                         st9 = conexion.getConnection().prepareStatement(sql9);
                         st9.setString(1, datos[0]);
-                        st9.setString(2, "El usuario: "+datos[0]+" realizo la venta ID: " + codCompra);
+                        st9.setString(2, "El usuario realizo la venta ID: " + codCompra);
                         st9.executeUpdate();
 
                         JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
@@ -706,7 +710,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                     st9 = conexion.getConnection().prepareStatement(sql9);
                     st9.setString(1, datos[0]);
-                    st9.setString(2, "El usuario: "+datos[0]+" realizo la venta ID: " + codCompra);
+                    st9.setString(2, "El usuario realizo la venta ID: " + codCompra);
                     st9.executeUpdate();
 
                     JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
@@ -7073,7 +7077,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     if (jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedIndex() == 0) {
                         sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, PH.precioproductoneto,t.nombretipo ,e.nombreespecie, p.descripcionproducto,p.stockminimo \n"
                                 + "FROM producto p, preciohistoricoproducto PH, planta pl, tipo t, especie e \n "
-                                + "where P.codproducto = PH.codproducto AND pl.codproducto = p.codproducto AND \n"
+                                + "where p.codproducto = PH.codproducto AND pl.codproducto = p.codproducto AND \n"
                                 + "pl.codespecie = e.codespecie AND t.codtipo = e.codtipo AND \n"
                                 + "p.codproducto = " + "\"" + id + "\" AND \n"
                                 + "PH.fechaproducto = (select MAX(fechaproducto) \n"
@@ -7120,7 +7124,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     } else {
                         sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, PH.precioproductoneto,p.descripcionproducto,p.stockminimo \n"
                                 + "FROM producto p, preciohistoricoproducto PH,accesorio a \n"
-                                + "where P.codproducto = PH.codproducto AND a.codproducto = p.codproducto AND \n"
+                                + "where p.codproducto = PH.codproducto AND a.codproducto = p.codproducto AND \n"
                                 + "p.codproducto = " + "\"" + id + "\" AND \n"
                                 + "PH.fechaproducto = (select MAX(fechaproducto) \n"
                                 + "from preciohistoricoproducto AS PH2 \n"
@@ -7395,7 +7399,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                             st9 = conexion.getConnection().prepareStatement(sql9);
                             st9.setString(1, datos[0]);
-                            st9.setString(2, "El usuario: "+datos[0]+" cambio el precio del producto de codigo: " + cod + " a: $" + precio);
+                            st9.setString(2, "El usuario cambio el precio del producto: " + cod + ", a: $" + precio);
                             st9.executeUpdate();
 
                         }
@@ -7692,7 +7696,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         String sql1;
                         Statement st1;
                         ResultSet rs1;
-                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto AND ph2.fechaproducto<oc.fecha)";
+                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE ph.codproducto = PH2.codproducto AND PH2.fechaproducto<oc.fecha)";
                         st1 = conexion.getConnection().createStatement();
                         rs1 = st1.executeQuery(sql1);
                         DefaultTableModel modelo = (DefaultTableModel) jTableDetallesVenta.getModel();
@@ -8188,7 +8192,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         String sql1;
                         Statement st1;
                         ResultSet rs1;
-                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto AND ph2.fechaproducto<oc.fecha)";
+                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE ph.codproducto = PH2.codproducto AND PH2.fechaproducto<oc.fecha)";
                         st1 = conexion.getConnection().createStatement();
                         rs1 = st1.executeQuery(sql1);
                         DefaultTableModel modelo = (DefaultTableModel) jTableDetallesPresupuesto.getModel();
