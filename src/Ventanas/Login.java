@@ -11,6 +11,7 @@ import proyectoyapur.ConnectarBD;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 
 public class Login extends javax.swing.JFrame implements FocusListener {
@@ -173,7 +174,11 @@ public class Login extends javax.swing.JFrame implements FocusListener {
 
     private void jButtonLoguearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoguearActionPerformed
         try {
-            this.conexion = new ConnectarBD();
+            try {
+                this.conexion = new ConnectarBD();
+            } catch (IOException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             String sql;
             String datos[] = new String[6];
