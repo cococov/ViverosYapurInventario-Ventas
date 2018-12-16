@@ -2406,37 +2406,8 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="266" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="jPanelTipoPlanta1" max="32767" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel111" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel112" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel113" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel114" alignment="0" min="-2" pref="125" max="-2" attributes="0"/>
-                                          <Component id="jLabel115" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="jTextFieldPrecioEditarProducto" max="32767" attributes="0"/>
-                                          <Component id="jTextFieldNombreEditarProducto" alignment="1" max="32767" attributes="0"/>
-                                          <Component id="jComboBoxTipoEditarProducto" alignment="0" pref="185" max="32767" attributes="0"/>
-                                          <Component id="jTextFieldCantidadVentaEditarProducto" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jTextFieldCantidadProdEditarProducto" alignment="0" max="32767" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="jScrollPane21" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jLabel31" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jTextFieldStockEditarProducto" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jLabel116" alignment="0" min="-2" pref="165" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
+                              <Component id="jPanelTipoPlanta1" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="32767" attributes="0"/>
@@ -2450,6 +2421,51 @@
                               <Component id="jLabel110" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="168" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel111" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel115" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel114" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="jLabel112" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel113" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jTextFieldPrecioEditarProducto" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldNombreEditarProducto" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="jComboBoxTipoEditarProducto" pref="243" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="jTextFieldCantidadVentaEditarProducto" alignment="0" pref="103" max="32767" attributes="0"/>
+                                          <Component id="jTextFieldCantidadProdEditarProducto" alignment="0" max="32767" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <Component id="jLabel117" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="cantProdActual" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="jLabel109" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="cantVentaActual" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel31" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel116" min="-2" pref="165" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane21" min="-2" pref="216" max="-2" attributes="0"/>
+                                  <Component id="jTextFieldStockEditarProducto" min="-2" pref="216" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                     </DimensionLayout>
                     <DimensionLayout dim="1">
@@ -2460,7 +2476,7 @@
                               <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jTextFieldNombreEditarProducto" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                                  <Component id="jLabel116" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel116" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel111" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="103" groupAlignment="1" attributes="0">
@@ -2473,11 +2489,15 @@
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="jLabel112" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="jTextFieldCantidadVentaEditarProducto" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                                          <Component id="jLabel109" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cantVentaActual" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="jLabel113" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                                           <Component id="jTextFieldCantidadProdEditarProducto" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                                          <Component id="jLabel117" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cantProdActual" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
@@ -2542,7 +2562,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="18" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cantidad en venta:"/>
+                        <Property name="text" type="java.lang.String" value="Agregar cantidad en venta:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel113">
@@ -2550,7 +2570,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Tahoma" size="18" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Cantidad en producci&#xf3;n:"/>
+                        <Property name="text" type="java.lang.String" value="Agregar cantidad en producci&#xf3;n:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextFieldCantidadVentaEditarProducto">
@@ -2611,7 +2631,7 @@
                                       <Component id="jComboBoxEditarTipoPlanta" max="32767" attributes="0"/>
                                       <Component id="jComboBoxEditarEspeciePlanta" pref="179" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="172" max="32767" attributes="0"/>
                                   <Component id="jTextFieldIDeditarProducto" min="-2" pref="71" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
                               </Group>
@@ -2794,6 +2814,36 @@
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButton5ActionPerformed"/>
                       </Events>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel109">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="18" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Actual:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel117">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="18" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Actual:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="cantVentaActual">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="18" style="0"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="cantProdActual">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="18" style="0"/>
+                        </Property>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
