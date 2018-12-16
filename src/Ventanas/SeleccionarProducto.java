@@ -484,15 +484,15 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
         switch (producto) {
             case "Planta":
                 this.jPanelTipo.setVisible(true);
-                this.setSize(this.getWidth(), 730);
+                this.setSize(this.getWidth(), 715);
                 break;
             case "Accesorio":
                 this.jPanelTipo.setVisible(false);
-                this.setSize(this.getWidth(), 730);
+                this.setSize(this.getWidth(), 615);
                 break;
             default:
                 this.jPanelTipo.setVisible(false);
-                this.setSize(this.getWidth(), 730);
+                this.setSize(this.getWidth(), 715);
                 break;
         }
         refrescarTabla();
