@@ -4893,7 +4893,6 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel86.setText("Tipo de pago:");
 
         jComboBoxTipoDePago.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jComboBoxTipoDePago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jTableDetallesVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -7095,7 +7094,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jRadioButtonHabilitarEdicionMermaActionPerformed
 
     private void jButtonAgregarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarMermaActionPerformed
-        jRadioButtonVentaMerma.setSelected(true); 
+        jRadioButtonVentaMerma.setSelected(true);
         refrescarTablaListaProductosMerma();
         jPanelEditarProducto.show(false);
         jPanelEditarProductoForm.show(false);
@@ -7104,7 +7103,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         this.jPanelEditarMerma.show(false);
         jPanel6.setVisible(true);
         jPanelAgregarProducto.show(false);
-        
+
     }//GEN-LAST:event_jButtonAgregarMermaActionPerformed
 
     private void jTableListaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaProductosMouseClicked
@@ -7750,7 +7749,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jDateChooserFechaVenta.setDate(rs.getDate(4));
                             DefaultComboBoxModel modelo = new DefaultComboBoxModel();
                             modelo.addElement(rs.getString(7));
-                            if (rs.getString(8).equals("Boleta")) {
+                            if (rs.getString(7).equals("Boleta")) {
                                 jRadioButton3.setSelected(true);
                                 jRadioButton4.setSelected(false);
 
@@ -7758,7 +7757,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 jRadioButton3.setSelected(false);
                                 jRadioButton4.setSelected(true);
                             }
-                            jComboBoxTipoDePago.setModel(modelo);
+                            //jComboBoxTipoDePago.setModel(modelo);
+                            jComboBoxTipoDePago.addItem(rs.getString(8));
+                            jComboBoxTipoDePago.setSelectedItem(rs.getString(8));
+                            
+
                         }
 
                         String sql1;
