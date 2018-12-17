@@ -1490,7 +1490,18 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         String sql;
         Statement st;
         ResultSet rs;
-        sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha FROM ordencompra oc, presupuesto p WHERE oc.codordencompra=p.codpresupuesto";
+        String filtroCodigo = this.jTextFieldFiltroCodigoListaDeVentas1.getText();
+        java.util.Date fecha1 = this.jDateChooserFiltroFechaListaDeVentas4.getDate();
+        java.util.Date fecha2 = this.jDateChooserFiltroFechaListaDeVentas3.getDate();
+        java.sql.Date filtroFecha1;
+        java.sql.Date filtroFecha2;
+        if (fecha1 != null && fecha2 != null) {
+            filtroFecha1 = new java.sql.Date(fecha1.getTime());
+            filtroFecha2 = new java.sql.Date(fecha2.getTime());
+            sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha FROM ordencompra oc, presupuesto p WHERE oc.codordencompra=p.codpresupuesto AND oc.codordencompra LIKE '%" + filtroCodigo + "%' AND oc.fecha BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "'";
+        } else {
+            sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha FROM ordencompra oc, presupuesto p WHERE oc.codordencompra=p.codpresupuesto AND oc.codordencompra LIKE '%" + filtroCodigo + "%'";
+        }
         DefaultTableModel modelo = (DefaultTableModel) jTableListaPresupuestos.getModel();
         JButton detalles = new JButton("Detalles");
         JButton cancelar = new JButton("Cancelar");
@@ -2101,6 +2112,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel123 = new javax.swing.JLabel();
         jScrollPane14 = new javax.swing.JScrollPane();
         jTableListaPresupuestos = new javax.swing.JTable();
+        jLabel140 = new javax.swing.JLabel();
+        jDateChooserFiltroFechaListaDeVentas3 = new com.toedter.calendar.JDateChooser();
+        jDateChooserFiltroFechaListaDeVentas4 = new com.toedter.calendar.JDateChooser();
+        jTextFieldFiltroCodigoListaDeVentas1 = new javax.swing.JTextField();
+        jLabel145 = new javax.swing.JLabel();
+        jButton8 = new javax.swing.JButton();
         jPanelDetallesPresupuesto = new javax.swing.JPanel();
         jLabel127 = new javax.swing.JLabel();
         jLabel130 = new javax.swing.JLabel();
@@ -5846,6 +5863,41 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         });
         jScrollPane14.setViewportView(jTableListaPresupuestos);
 
+        jLabel140.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel140.setText("Rango de fechas:");
+
+        jDateChooserFiltroFechaListaDeVentas3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jDateChooserFiltroFechaListaDeVentas3.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jDateChooserFiltroFechaListaDeVentas3PropertyChange(evt);
+            }
+        });
+
+        jDateChooserFiltroFechaListaDeVentas4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jDateChooserFiltroFechaListaDeVentas4.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jDateChooserFiltroFechaListaDeVentas4PropertyChange(evt);
+            }
+        });
+
+        jTextFieldFiltroCodigoListaDeVentas1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jTextFieldFiltroCodigoListaDeVentas1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldFiltroCodigoListaDeVentas1KeyReleased(evt);
+            }
+        });
+
+        jLabel145.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel145.setText("Código:");
+
+        jButton8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jButton8.setText("Limpiar Filtros");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelListaPresupuestosLayout = new javax.swing.GroupLayout(jPanelListaPresupuestos);
         jPanelListaPresupuestos.setLayout(jPanelListaPresupuestosLayout);
         jPanelListaPresupuestosLayout.setHorizontalGroup(
@@ -5853,21 +5905,48 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
                 .addGroup(jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
-                        .addGap(35, 35, 35)
+                        .addGap(285, 285, 285)
+                        .addComponent(jLabel123))
+                    .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                        .addGap(49, 49, 49)
                         .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 787, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
-                        .addGap(262, 262, 262)
-                        .addComponent(jLabel123)))
-                .addContainerGap(138, Short.MAX_VALUE))
+                        .addGap(80, 80, 80)
+                        .addGroup(jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                                .addComponent(jLabel145)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldFiltroCodigoListaDeVentas1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(43, 43, 43)
+                                .addComponent(jDateChooserFiltroFechaListaDeVentas4, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jDateChooserFiltroFechaListaDeVentas3, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
+                                .addComponent(jLabel140)
+                                .addGap(72, 72, 72)))
+                        .addGap(43, 43, 43)
+                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(174, Short.MAX_VALUE))
         );
         jPanelListaPresupuestosLayout.setVerticalGroup(
             jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelListaPresupuestosLayout.createSequentialGroup()
-                .addGap(40, 40, 40)
+                .addGap(35, 35, 35)
                 .addComponent(jLabel123)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel140)
+                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelListaPresupuestosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel145)
+                        .addComponent(jTextFieldFiltroCodigoListaDeVentas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jDateChooserFiltroFechaListaDeVentas4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jDateChooserFiltroFechaListaDeVentas3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
         jPanel7.add(jPanelListaPresupuestos, "card3");
@@ -7760,7 +7839,6 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             //jComboBoxTipoDePago.setModel(modelo);
                             jComboBoxTipoDePago.addItem(rs.getString(8));
                             jComboBoxTipoDePago.setSelectedItem(rs.getString(8));
-                            
 
                         }
 
@@ -8522,6 +8600,39 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton7ActionPerformed
+    boolean tempo7 = false;
+    private void jDateChooserFiltroFechaListaDeVentas3PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooserFiltroFechaListaDeVentas3PropertyChange
+        if (tempo7) {
+            refrescarListaPresupuestos();
+        } else {
+            tempo7 = true;
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jDateChooserFiltroFechaListaDeVentas3PropertyChange
+    boolean tempo6 = false;
+    private void jDateChooserFiltroFechaListaDeVentas4PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooserFiltroFechaListaDeVentas4PropertyChange
+
+        if (tempo6) {
+            refrescarListaPresupuestos();
+        } else {
+            tempo = true;
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jDateChooserFiltroFechaListaDeVentas4PropertyChange
+
+
+    private void jTextFieldFiltroCodigoListaDeVentas1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltroCodigoListaDeVentas1KeyReleased
+        refrescarListaPresupuestos();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldFiltroCodigoListaDeVentas1KeyReleased
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        this.jTextFieldFiltroCodigoListaDeVentas1.setText("");
+        this.jDateChooserFiltroFechaListaDeVentas3.setDate(null);
+        this.jDateChooserFiltroFechaListaDeVentas4.setDate(null);
+        refrescarListaPresupuestos();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -8711,6 +8822,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JButton jButtonAgregarCheque;
     private javax.swing.JButton jButtonAgregarMerma;
     private javax.swing.JButton jButtonAgregarProducto;
@@ -8775,6 +8887,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private com.toedter.calendar.JDateChooser jDateChooserFiltrarFechaListaDeCheques2;
     private com.toedter.calendar.JDateChooser jDateChooserFiltroFechaListaDeVentas1;
     private com.toedter.calendar.JDateChooser jDateChooserFiltroFechaListaDeVentas2;
+    private com.toedter.calendar.JDateChooser jDateChooserFiltroFechaListaDeVentas3;
+    private com.toedter.calendar.JDateChooser jDateChooserFiltroFechaListaDeVentas4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel100;
@@ -8821,10 +8935,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JLabel jLabel138;
     private javax.swing.JLabel jLabel139;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel140;
     private javax.swing.JLabel jLabel141;
     private javax.swing.JLabel jLabel142;
     private javax.swing.JLabel jLabel143;
     private javax.swing.JLabel jLabel144;
+    private javax.swing.JLabel jLabel145;
     private javax.swing.JLabel jLabel148;
     private javax.swing.JLabel jLabel149;
     private javax.swing.JLabel jLabel15;
@@ -9083,6 +9199,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JTextField jTextFieldFiltrarPorLetrasMerma;
     private javax.swing.JTextField jTextFieldFiltrarRutBloquearUsuario;
     private javax.swing.JTextField jTextFieldFiltroCodigoListaDeVentas;
+    private javax.swing.JTextField jTextFieldFiltroCodigoListaDeVentas1;
     private javax.swing.JTextField jTextFieldFiltroRutListaUsuarios;
     private javax.swing.JTextField jTextFieldIDeditarProducto;
     private javax.swing.JTextField jTextFieldMontoCheque;

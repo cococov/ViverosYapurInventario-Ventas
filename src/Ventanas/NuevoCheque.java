@@ -446,9 +446,9 @@ public class NuevoCheque extends javax.swing.JFrame {
                         Logger.getLogger(NuevoCheque.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
             }
         } else {
             JOptionPane.showMessageDialog(null, "Hay campos sin datos");
