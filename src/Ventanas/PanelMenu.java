@@ -6325,6 +6325,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jPasswordFieldContraseña2EditarUsuario.setText("");
                             JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
                                     JOptionPane.INFORMATION_MESSAGE);
+                            jPanelAgregarUsuario.show(false);
+                            jPanelEditarUsuario.show(false);
+                            jPanelBloquearUsuario.show(false);
+                            refrescarTablaEditarUsuario();
+                            jPanelListaUsuarios.show(true);
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -6395,7 +6400,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     jComboBoxTipoEditarUsuario.setEditable(false);
                     jComboBoxTipoEditarUsuario.setEnabled(false);
                     jButtonConfirmarEditarUsuario.setEnabled(false);
-
+                    jRadioButtonHabilitarEdicionUsuario.setSelected(false);
                     jPanelListaUsuarios.show(false);
                     jPanelAgregarUsuario.show(false);
                     jPanelEditarUsuario.show(true);
@@ -6645,6 +6650,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         jTextFieldEditarCorreoProveedor.setText("");
                         JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
                                 JOptionPane.INFORMATION_MESSAGE);
+                        jPanelEditarProveedor.show(false);
+                        jPanelAgregarProveedor.show(false);
+                        jPanelEliminarProveedor.show(false);
+                        refrescarTablaProveedores();
+                        jPanelListaProveedor.show(true);
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -6733,7 +6743,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jTextPaneDescripcionEditarCheque.setText(rs.getString(7));
                             jTextFieldBancoEditarCheque.setText(rs.getString(8));
                             jTextFieldNumeroCuentaEditarCheque.setText(rs.getString(9));
-
+                            jRadioButtonHabilitarEditarCheque.setSelected(false);
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -6755,6 +6765,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     jTextFieldBancoEditarCheque.setEnabled(false);
                     jTextFieldNumeroCuentaEditarCheque.setEditable(false);
                     jTextFieldNumeroCuentaEditarCheque.setEnabled(false);
+                    jRadioButtonHabilitarEditarCheque.setSelected(false);
                     jPanelAgregarCheque.show(false);
                     jPanelListaCheque.show(false);
                     jPanelEditarCheque.show(true);
@@ -7088,7 +7099,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jRadioButtonHabilitarEdicionMermaActionPerformed
 
     private void jButtonAgregarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarMermaActionPerformed
-        jRadioButtonVentaMerma.setSelected(true);
+        jRadioButtonVentaMerma.setSelected(true); 
+        refrescarTablaListaProductosMerma();
         jPanelEditarProducto.show(false);
         jPanelEditarProductoForm.show(false);
         this.jPanelAgregarMerma.show(true);
@@ -7096,6 +7108,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         this.jPanelEditarMerma.show(false);
         jPanel6.setVisible(true);
         jPanelAgregarProducto.show(false);
+        
     }//GEN-LAST:event_jButtonAgregarMermaActionPerformed
 
     private void jTableListaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaProductosMouseClicked
@@ -7311,6 +7324,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         if (st.executeUpdate() > 0) {
                             JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
                                     JOptionPane.INFORMATION_MESSAGE);
+
                             jTextFieldNumeroChequeEditar.setText("");
                             jTextFieldNombresEditarCheque.setText("");
                             jDateChooserFechaEmisionEditarCheque.setDate(null);
@@ -7321,13 +7335,22 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jTextFieldNumeroCuentaEditarCheque.setText("");
                             jTextFieldBancoEditarCheque.setText("");
                             jRadioButtonHabilitarEditarCheque.setSelected(false);
+                            this.jTextFieldFiltrarNumeroListaDeCheques.setText("");
+                            this.jDateChooserFiltrarFechaListaDeCheques1.setDate(null);
+                            this.jDateChooserFiltrarFechaListaDeCheques2.setDate(null);
+                            this.jRadioButtonTodosListaDeCheques.setSelected(true);
+                            jPanelAgregarCheque.show(false);
+                            jPanelEditarCheque.show(false);
+                            refrescarTablaEditarCheque();
+                            jTableEditarCheques.setDefaultRenderer(Object.class, new ColorRender());
+                            jPanelListaCheque.show(true);
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
             }
         } else {
             JOptionPane.showMessageDialog(null, "hay campos que se encuentran salidos");
@@ -7453,6 +7476,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     if (st.executeUpdate() > 0) {
                         JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
                                 JOptionPane.INFORMATION_MESSAGE);
+                        refrescarTablaListaProductos();
+                        jPanelAgregarProducto.show(false);
+                        this.jPanelAgregarMerma.show(false);
+                        this.jPanelListaMermas.show(false);
+                        this.jPanelEditarMerma.show(false);
+                        jPanelEditarProductoForm.show(false);
+                        jPanelEditarProducto.show(true);
                         if (jComboBoxTipoEditarProducto.getSelectedIndex() == 0) {
                             jTextFieldIDeditarProducto.setText("");
                             jTextFieldIDeditarProducto.setText("");
@@ -8657,10 +8687,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             }
             jTableListaProductosMerma.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             jTableListaProductosMerma.getColumnModel().getColumn(0).setPreferredWidth(61);
-            jTableListaProductosMerma.getColumnModel().getColumn(1).setPreferredWidth(242);
-            jTableListaProductosMerma.getColumnModel().getColumn(2).setPreferredWidth(137);
-            jTableListaProductosMerma.getColumnModel().getColumn(3).setPreferredWidth(137);
-            jTableListaProductosMerma.getColumnModel().getColumn(4).setPreferredWidth(137);
+            jTableListaProductosMerma.getColumnModel().getColumn(1).setPreferredWidth(300);
+            jTableListaProductosMerma.getColumnModel().getColumn(2).setPreferredWidth(151);
+            jTableListaProductosMerma.getColumnModel().getColumn(3).setPreferredWidth(151);
+            jTableListaProductosMerma.getColumnModel().getColumn(4).setPreferredWidth(152);
             jTableListaProductosMerma.setModel(modelo);
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
