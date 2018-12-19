@@ -8,7 +8,7 @@
 	</parameter>
 	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[SELECT po.codordencompra,p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, oc.fecha, oc.totalneto, oc.totalcondescuento, (oc.totalsindescuento-oc.totalcondescuento) AS descuento, oc.efectivo, (CASE WHEN oc.efectivo = 0 THEN 0 ELSE (oc.efectivo-oc.totalcondescuento) END) as vuelto, oc.totalsindescuento, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra= $P{codcompra} and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto AND ph2.fechaproducto<oc.fecha)]]>
+		<![CDATA[SELECT po.codordencompra,p.nombreproducto,p.codigounico, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, oc.fecha, oc.totalneto, oc.totalcondescuento, (oc.totalsindescuento-oc.totalcondescuento) AS descuento, oc.efectivo, (CASE WHEN oc.efectivo = 0 THEN 0 ELSE (oc.efectivo-oc.totalcondescuento) END) as vuelto, oc.totalsindescuento, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra= $P{codcompra} and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto AND ph2.fechaproducto<oc.fecha)]]>
 	</queryString>
 	<field name="codordencompra" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -16,7 +16,7 @@
 	<field name="nombreproducto" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="codproducto" class="java.lang.Integer">
+	<field name="codigounico" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="ph.precioproductoneto*po.cantidadproductoordencompra" class="java.lang.Double"/>
@@ -104,10 +104,6 @@
 	<detail>
 		<band height="23" splitType="Stretch">
 			<textField>
-				<reportElement x="-1" y="0" width="100" height="20" uuid="3afbac17-45c0-49cd-807e-c8181ebc2949"/>
-				<textFieldExpression><![CDATA[$F{codproducto}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="99" y="0" width="100" height="20" uuid="9db9bf9d-1eee-4d70-83d7-693688e7c8c5"/>
 				<textFieldExpression><![CDATA[$F{nombreproducto}]]></textFieldExpression>
 			</textField>
@@ -122,6 +118,10 @@
 			<textField>
 				<reportElement x="399" y="0" width="100" height="20" uuid="9a2875f5-197d-43d7-9c9b-b98591e1156e"/>
 				<textFieldExpression><![CDATA[$F{ph.precioproductoneto*po.cantidadproductoordencompra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="445d8181-9dfe-4ba2-b961-8f3819463e1b"/>
+				<textFieldExpression><![CDATA[$F{codigounico}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

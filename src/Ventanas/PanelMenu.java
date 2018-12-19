@@ -7283,7 +7283,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 + "FROM producto p, preciohistoricoproducto PH, planta pl, tipo t, especie e \n "
                                 + "where p.codproducto = PH.codproducto AND pl.codproducto = p.codproducto AND \n"
                                 + "pl.codespecie = e.codespecie AND t.codtipo = e.codtipo AND \n"
-                                + "p.codproducto = " + "\"" + id + "\" AND \n"
+                                + "p.codigounico = " + "\"" + id + "\" AND \n"
                                 + "PH.fechaproducto = (select MAX(fechaproducto) \n"
                                 + "from preciohistoricoproducto AS PH2 \n"
                                 + "where PH.codproducto = PH2.codproducto)";
@@ -7585,7 +7585,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 try {
                     String sql = "UPDATE `producto` SET `nombreproducto`=?,`cantidadproductoventa`=?,`cantidadproductoproduccion`=?,`descripcionproducto`=?  , `stockminimo` = ? WHERE codproducto = '" + cod + "'";
                     String sq2 = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                    String sql3 = "SELECT PH.precioproductoneto,p.cantidadproductoventa,p.cantidadproductoproduccion \n"
+                    String sql3 = "SELECT PH.precioproductoneto,p.cantidadproductoventa,p.cantidadproductoproduccion, p.codigounico \n"
                             + "FROM producto p, preciohistoricoproducto PH \n"
                             + "where p.codproducto = PH.codproducto AND \n"
                             + "p.codproducto = " + "\"" + cod + "\" AND \n"
@@ -7598,10 +7598,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     int precioAnterior = 0;
                     int cantVentaAnterior = 0;
                     int cantProduAnterior = 0;
+                    String codigoUnico= "";
                     while (rs.next()) {
                         precioAnterior = rs.getInt(1);
                         cantVentaAnterior = rs.getInt(2);
                         cantProduAnterior = rs.getInt(3);
+                        codigoUnico= rs.getString(4);
                     }
 
                     PreparedStatement st = conexion.getConnection().prepareStatement(sql);
@@ -7616,7 +7618,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                         st9 = conexion.getConnection().prepareStatement(sql9);
                         st9.setString(1, datos[0]);
-                        st9.setString(2, "El usuario cambio el precio del producto: " + cod + ", a: $" + precio);
+                        st9.setString(2, "El usuario cambio el precio del producto: " + codigoUnico + ", a: $" + precio);
                         st9.executeUpdate();
 
                     }

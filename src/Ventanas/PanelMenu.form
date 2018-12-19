@@ -2915,7 +2915,7 @@
                           <Component id="jButtonEditarCheque" alignment="0" max="32767" attributes="0"/>
                           <Component id="jButtonAgregarCheque" alignment="0" min="-2" pref="177" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="1088" max="32767" attributes="0"/>
+                      <EmptySpace pref="1095" max="32767" attributes="0"/>
                   </Group>
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
@@ -2933,7 +2933,7 @@
                       <Component id="jButtonAgregarCheque" min="-2" pref="36" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
                       <Component id="jButtonEditarCheque" min="-2" pref="36" max="-2" attributes="0"/>
-                      <EmptySpace pref="359" max="32767" attributes="0"/>
+                      <EmptySpace pref="369" max="32767" attributes="0"/>
                   </Group>
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
@@ -3095,7 +3095,7 @@
                                       <Component id="jLabel73" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
-                                  <Component id="jScrollPane15" pref="153" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane15" pref="163" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jButtonConfirmarAgregar3" min="-2" pref="42" max="-2" attributes="0"/>

@@ -5,11 +5,11 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[SELECT p.codproducto as codigo,p.nombreproducto as nombre, p.stockminimo as 'stock minimo' ,p.cantidadproductoventa as 'cantidad en ventas',p.cantidadproductoproduccion as ' cantidad en produccion' ,(CASE when pl.codproducto is null then 'accesorio' else 'planta' end) as tipo, ph.precioproductoneto as precio
+		<![CDATA[SELECT p.codigounico as codigo,p.nombreproducto as nombre, p.stockminimo as 'stock minimo' ,p.cantidadproductoventa as 'cantidad en ventas',p.cantidadproductoproduccion as ' cantidad en produccion' ,(CASE when pl.codproducto is null then 'accesorio' else 'planta' end) as tipo, ph.precioproductoneto as precio
 from preciohistoricoproducto ph, producto p left OUTER JOIN planta pl on p.codproducto= pl.codproducto LEFT OUTER JOIN accesorio a  on p.codproducto= a.codproducto 
 WHERE ph.codproducto = p.codproducto and ph.fechaproducto = ( SELECT max(ph2.fechaproducto) from preciohistoricoproducto ph2 where ph2.codproducto = p.codproducto)]]>
 	</queryString>
-	<field name="codigo" class="java.lang.Integer"/>
+	<field name="codigo" class="java.lang.String"/>
 	<field name="nombre" class="java.lang.String"/>
 	<field name="stock minimo" class="java.lang.String"/>
 	<field name="cantidad en ventas" class="java.lang.Integer"/>
@@ -105,10 +105,6 @@ WHERE ph.codproducto = p.codproducto and ph.fechaproducto = ( SELECT max(ph2.fec
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement x="12" y="1" width="47" height="20" uuid="60e605fe-2bae-450a-ab14-c0b49d82ba3c"/>
-				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="264" y="1" width="74" height="20" uuid="a6374174-e1f4-485a-8695-55272c6b4a5b"/>
 				<textFieldExpression><![CDATA[$F{cantidad en ventas}]]></textFieldExpression>
 			</textField>
@@ -131,6 +127,10 @@ WHERE ph.codproducto = p.codproducto and ph.fechaproducto = ( SELECT max(ph2.fec
 			<textField>
 				<reportElement x="177" y="1" width="69" height="20" uuid="4ffbb27c-d92b-42fc-9ca5-e8e2dcf0aacb"/>
 				<textFieldExpression><![CDATA[$F{stock minimo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="1" width="47" height="20" uuid="e79b138e-da8e-4eb6-ac16-41de4abe0a27"/>
+				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
