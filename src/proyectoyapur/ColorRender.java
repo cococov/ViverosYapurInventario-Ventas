@@ -36,19 +36,29 @@ public class ColorRender extends DefaultTableCellRenderer {
         java.util.Date fechaVenc = (java.util.Date) table.getValueAt(row, 4);
         int difDias = (int) ((fechaVenc.getTime() - fechaRecepcion.getTime()) / 86400000);
         this.setFont(this.getFont().deriveFont(Font.BOLD));
-        if (difDias <= 0) {
+        String cobrado = "";
+        if (!(table.getValueAt(row, 7) instanceof javax.swing.JButton)) {
+            cobrado = (String) table.getValueAt(row, 7);
+        }
+        if (cobrado.equals("Cobrado")) {
             this.setOpaque(true);
-            this.setBackground(Color.RED);
-            this.setForeground(Color.BLACK);
+            this.setBackground(Color.BLACK);
+            this.setForeground(Color.WHITE);
         } else {
-            if (difDias <= 10) {
+            if (difDias <= 0) {
                 this.setOpaque(true);
-                this.setBackground(Color.YELLOW);
+                this.setBackground(Color.RED);
                 this.setForeground(Color.BLACK);
             } else {
-                this.setOpaque(true);
-                this.setBackground(Color.GREEN);
-                this.setForeground(Color.BLACK);
+                if (difDias <= 10) {
+                    this.setOpaque(true);
+                    this.setBackground(Color.YELLOW);
+                    this.setForeground(Color.BLACK);
+                } else {
+                    this.setOpaque(true);
+                    this.setBackground(Color.GREEN);
+                    this.setForeground(Color.BLACK);
+                }
             }
         }
 
