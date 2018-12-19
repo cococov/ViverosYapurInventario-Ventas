@@ -798,9 +798,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 //Ingresar orden compra
                 String sql1;
                 PreparedStatement st1;
-                sql1 = "INSERT INTO `presupuesto`(`codpresupuesto`) VALUES (?)";
+                sql1 = "INSERT INTO `presupuesto`(`codpresupuesto`, `descripcion`) VALUES (?, ?)";
                 st1 = conexion.getConnection().prepareStatement(sql1);
                 st1.setInt(1, codCompra);
+                st1.setString(2, jTextAreaDescripcionPresupuesto.getText());
                 st1.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Presupuesto realizado exitosamente");
                 Clear_Table1(jTablePresupuesto);
@@ -808,6 +809,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 CalcularIVAPresupuesto.setText("0");
                 jTextFieldDescuentoPresupuesto.setText("");
                 jLabelPrecioAPagarPresupuesto.setText("0");
+                jTextAreaDescripcionPresupuesto.setText("");
                 limpiarCarrito();
                 return true;
 
@@ -2108,6 +2110,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel124 = new javax.swing.JLabel();
         jLabel125 = new javax.swing.JLabel();
         jLabel126 = new javax.swing.JLabel();
+        jScrollPane13 = new javax.swing.JScrollPane();
+        jTextAreaDescripcionPresupuesto = new javax.swing.JTextArea();
+        jLabel146 = new javax.swing.JLabel();
         jPanelListaPresupuestos = new javax.swing.JPanel();
         jLabel123 = new javax.swing.JLabel();
         jScrollPane14 = new javax.swing.JScrollPane();
@@ -2136,6 +2141,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel149 = new javax.swing.JLabel();
         jLabelDescuentoDetallesPresupuesto = new javax.swing.JLabel();
         jButtonImpimirBoletaPresupuesto = new javax.swing.JButton();
+        jScrollPane23 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jLabel147 = new javax.swing.JLabel();
         jButtonListaPresupuestos = new javax.swing.JButton();
         jPanelReportes = new javax.swing.JPanel();
         jButtonAgregarProveedor1 = new javax.swing.JButton();
@@ -5740,6 +5748,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel126.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel126.setText("$");
 
+        jTextAreaDescripcionPresupuesto.setColumns(20);
+        jTextAreaDescripcionPresupuesto.setRows(5);
+        jScrollPane13.setViewportView(jTextAreaDescripcionPresupuesto);
+
+        jLabel146.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel146.setText("Descripción:");
+
         javax.swing.GroupLayout jPanelRealizarPresupuestoLayout = new javax.swing.GroupLayout(jPanelRealizarPresupuesto);
         jPanelRealizarPresupuesto.setLayout(jPanelRealizarPresupuestoLayout);
         jPanelRealizarPresupuestoLayout.setHorizontalGroup(
@@ -5750,9 +5765,16 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         .addGap(306, 306, 306)
                         .addComponent(jLabel118))
                     .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 605, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                                .addGap(17, 17, 17)
+                                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel146))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
                                         .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -5777,13 +5799,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabelPrecioAPagarPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBoxDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 605, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jComboBoxDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButtonConfirmarPresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButtonAgregarProductoAPresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(128, Short.MAX_VALUE))
+                .addContainerGap(144, Short.MAX_VALUE))
         );
         jPanelRealizarPresupuestoLayout.setVerticalGroup(
             jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -5800,28 +5821,34 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         .addGap(13, 13, 13)
                         .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel122)
-                    .addComponent(jLabelCalcularNetoPresupuesto)
-                    .addComponent(jLabel124))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel121)
-                    .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(CalcularIVAPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel125)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextFieldDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBoxDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel120))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel119)
-                    .addComponent(jLabelPrecioAPagarPresupuesto)
-                    .addComponent(jLabel126))
-                .addGap(66, 66, 66))
+                    .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel122)
+                            .addComponent(jLabelCalcularNetoPresupuesto)
+                            .addComponent(jLabel124)
+                            .addComponent(jLabel146))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel121)
+                            .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(CalcularIVAPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel125)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jTextFieldDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jComboBoxDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel120))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel119)
+                            .addComponent(jLabelPrecioAPagarPresupuesto)
+                            .addComponent(jLabel126))
+                        .addGap(66, 66, 66))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                        .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29))))
         );
 
         jPanel7.add(jPanelRealizarPresupuesto, "card2");
@@ -6061,6 +6088,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             }
         });
 
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane23.setViewportView(jTextArea1);
+
+        jLabel147.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        jLabel147.setText("Descripción:");
+
         javax.swing.GroupLayout jPanelDetallesPresupuestoLayout = new javax.swing.GroupLayout(jPanelDetallesPresupuesto);
         jPanelDetallesPresupuesto.setLayout(jPanelDetallesPresupuestoLayout);
         jPanelDetallesPresupuestoLayout.setHorizontalGroup(
@@ -6074,43 +6108,48 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
                         .addGap(65, 65, 65)
                         .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                                .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonImpimirBoletaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(215, 215, 215)
+                                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                                        .addComponent(jLabel144)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel148)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabelPrecioAPagarDetallesPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                                        .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                                                .addGap(4, 4, 4)
+                                                .addComponent(jLabel142)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel141)
+                                                .addGap(4, 4, 4)
+                                                .addComponent(jLabelCalcularNetoDetallesPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                                                .addComponent(jLabel143)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(jLabel149)
+                                                .addGap(2, 2, 2)
+                                                .addComponent(jLabelDescuentoDetallesPresupuesto)
+                                                .addGap(72, 72, 72)))
+                                        .addGap(8, 8, 8))))
                             .addComponent(jScrollPane24, javax.swing.GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE)
                             .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
-                                .addComponent(jLabel130)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextFieldCodPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)
-                                .addComponent(jLabel139)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jDateChooserFechaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButtonImpimirBoletaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(215, 215, 215)
-                        .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
-                                .addComponent(jLabel144)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel148)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabelPrecioAPagarDetallesPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
                                 .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel147)
                                     .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
-                                        .addGap(4, 4, 4)
-                                        .addComponent(jLabel142)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel141)
-                                        .addGap(4, 4, 4)
-                                        .addComponent(jLabelCalcularNetoDetallesPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
-                                        .addComponent(jLabel143)
+                                        .addComponent(jLabel130)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel149)
-                                        .addGap(2, 2, 2)
-                                        .addComponent(jLabelDescuentoDetallesPresupuesto)
-                                        .addGap(72, 72, 72)))
-                                .addGap(8, 8, 8)))))
+                                        .addComponent(jTextFieldCodPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(29, 29, 29)
+                                        .addComponent(jLabel139)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jDateChooserFechaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(57, 57, 57))
         );
         jPanelDetallesPresupuestoLayout.setVerticalGroup(
@@ -6125,27 +6164,34 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     .addComponent(jLabel139)
                     .addComponent(jDateChooserFechaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
-                .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
-                        .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel142)
-                            .addComponent(jLabelCalcularNetoDetallesPresupuesto)
-                            .addComponent(jLabel141))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel143)
-                            .addComponent(jLabel149)
-                            .addComponent(jLabelDescuentoDetallesPresupuesto))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel144)
-                            .addComponent(jLabelPrecioAPagarDetallesPresupuesto)
-                            .addComponent(jLabel148)))
-                    .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonImpimirBoletaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(35, Short.MAX_VALUE))
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel142)
+                                    .addComponent(jLabelCalcularNetoDetallesPresupuesto)
+                                    .addComponent(jLabel141))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel143)
+                                    .addComponent(jLabel149)
+                                    .addComponent(jLabelDescuentoDetallesPresupuesto))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel144)
+                                    .addComponent(jLabelPrecioAPagarDetallesPresupuesto)
+                                    .addComponent(jLabel148)))
+                            .addComponent(jButtonImpimirBoletaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesPresupuestoLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel147)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane23, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         jPanel7.add(jPanelDetallesPresupuesto, "card4");
@@ -8327,7 +8373,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     String sql;
                     Statement st;
                     ResultSet rs;
-                    sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo FROM ordencompra oc, compra c WHERE oc.codordencompra=" + "\"" + codVentaSeleccionada + "\"";
+                    sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo, p.descripcion FROM ordencompra oc, presupuesto p WHERE oc.codordencompra= " + "\"" + codVentaSeleccionada + "\" AND p.codpresupuesto=oc.codordencompra";
                     try {
                         st = conexion.getConnection().createStatement();
                         rs = st.executeQuery(sql);
@@ -8335,6 +8381,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         while (rs.next()) {
                             jTextFieldCodPresupuesto.setText("" + rs.getInt(1));
                             jDateChooserFechaPresupuesto.setDate(rs.getDate(4));
+                            jTextAreaDescripcionPresupuesto.setText(sql);
 
                         }
 
@@ -8372,6 +8419,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     } catch (SQLException ex) {
                         Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    
+                    
 
                     jTextFieldCodPresupuesto.setEnabled(false);
                     jTextFieldCodPresupuesto.setEditable(false);
@@ -8941,6 +8990,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JLabel jLabel143;
     private javax.swing.JLabel jLabel144;
     private javax.swing.JLabel jLabel145;
+    private javax.swing.JLabel jLabel146;
+    private javax.swing.JLabel jLabel147;
     private javax.swing.JLabel jLabel148;
     private javax.swing.JLabel jLabel149;
     private javax.swing.JLabel jLabel15;
@@ -9123,6 +9174,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
+    private javax.swing.JScrollPane jScrollPane13;
     private javax.swing.JScrollPane jScrollPane14;
     private javax.swing.JScrollPane jScrollPane15;
     private javax.swing.JScrollPane jScrollPane16;
@@ -9133,6 +9185,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JScrollPane jScrollPane20;
     private javax.swing.JScrollPane jScrollPane21;
     private javax.swing.JScrollPane jScrollPane22;
+    private javax.swing.JScrollPane jScrollPane23;
     private javax.swing.JScrollPane jScrollPane24;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -9156,8 +9209,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private static javax.swing.JTable jTableListaVentas;
     private static javax.swing.JTable jTablePresupuesto;
     private static javax.swing.JTable jTableVenta;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextAreaDescripcionAgregarProducto;
     private javax.swing.JTextArea jTextAreaDescripcionMerma;
+    private javax.swing.JTextArea jTextAreaDescripcionPresupuesto;
     private javax.swing.JTextArea jTextAreaEditarDescripcionMerma;
     private javax.swing.JTextArea jTextAreaEditarDescripcionProveedor;
     private javax.swing.JTextArea jTextAreaEditarProducto;
