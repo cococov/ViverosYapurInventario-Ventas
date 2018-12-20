@@ -5,7 +5,7 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[SELECT p.codigounico as codigo,p.nombreproducto as nombre, p.stockminimo as 'stock minimo' ,p.cantidadproductoventa as 'cantidad en ventas',p.cantidadproductoproduccion as ' cantidad en produccion' ,(CASE when pl.codproducto is null then 'accesorio' else 'planta' end) as tipo, ph.precioproductoneto as precio
+		<![CDATA[SELECT p.codproducto as codigo,p.nombreproducto as nombre, p.stockminimo as 'stock minimo' ,p.cantidadproductoventa as 'cantidad en ventas',p.cantidadproductoproduccion as ' cantidad en produccion' ,(CASE when pl.codproducto is null then 'accesorio' else 'planta' end) as tipo, ph.precioproductoneto as precio
 from preciohistoricoproducto ph, producto p left OUTER JOIN planta pl on p.codproducto= pl.codproducto LEFT OUTER JOIN accesorio a  on p.codproducto= a.codproducto 
 WHERE ph.codproducto = p.codproducto and ph.fechaproducto = ( SELECT max(ph2.fechaproducto) from preciohistoricoproducto ph2 where ph2.codproducto = p.codproducto)]]>
 	</queryString>
@@ -129,7 +129,7 @@ WHERE ph.codproducto = p.codproducto and ph.fechaproducto = ( SELECT max(ph2.fec
 				<textFieldExpression><![CDATA[$F{stock minimo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="1" width="47" height="20" uuid="e79b138e-da8e-4eb6-ac16-41de4abe0a27"/>
+				<reportElement x="0" y="1" width="100" height="20" uuid="b7c3b7f4-f3a7-48ab-9306-9d302ec2571f"/>
 				<textFieldExpression><![CDATA[$F{codigo}]]></textFieldExpression>
 			</textField>
 		</band>

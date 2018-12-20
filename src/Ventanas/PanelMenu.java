@@ -59,6 +59,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         mermaSeleccionada = "";
         TableColumnModel tcm = this.jTableEditarProveedor1.getColumnModel();
         tcm.removeColumn(tcm.getColumn(5));
+        // TableColumnModel tcm5 = this.jTableListaProductos.getColumnModel();
+        //tcm5.removeColumn(tcm5.getColumn(7));
+
+        /*jTableVenta.getColumn(jTableVenta.getColumnName(1)).setWidth(0);
+        jTableVenta.getColumn(jTableVenta.getColumnName(1)).setMinWidth(0);
+        jTableVenta.getColumn(jTableVenta.getColumnName(1)).setMaxWidth(0);*/
         TableColumnModel tcm2 = this.jTableEliminarProveedor2.getColumnModel();
         tcm2.removeColumn(tcm2.getColumn(5));
         TableColumnModel tcm3 = this.jTableListaMermas.getColumnModel();
@@ -365,19 +371,31 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             CalcularIVA.setText(formatearAEntero("" + iva));
             int neto = pasarAinteger(jLabelCalcularNeto.getText());
             if (jTextFieldDescuentoVenta.getText().equals("")) {
-                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((neto + iva))));
+                jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+                iva = (int) (totalGlobal * 0.19);
+                CalcularIVA.setText(formatearAEntero("" + iva));
+                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
+
             } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
                 if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
-                    int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
-                    jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                    jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    iva = (int) (totalConDescuento * 0.19);
+                    CalcularIVA.setText(formatearAEntero("" + iva));
+                    int total = iva + totalConDescuento;
+                    jLabelPrecioAPagar.setText(formatearAEntero("" + total));
 
                 }
             } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
 
-                if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
+                if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
 
-                    int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
-                    jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
+                    jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    iva = (int) (totalConDescuento * 0.19);
+                    CalcularIVA.setText(formatearAEntero("" + iva));
+                    int total = iva + totalConDescuento;
+                    jLabelPrecioAPagar.setText(formatearAEntero("" + total));
                 } else {
                     JOptionPane.showMessageDialog(null, "Descuento excedido");
                 }
@@ -451,20 +469,30 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
             int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
             if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
-                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((neto + iva))));
+                jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+                iva = (int) (totalGlobal * 0.19);
+                CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
             } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
-
                 if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
-                    int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
-                    jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-                }
+                    int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
+                    jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    iva = (int) (totalConDescuento * 0.19);
+                    CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                    int total = iva + totalConDescuento;
+                    jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
 
+                }
             } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
 
-                if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
+                if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
 
-                    int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
-                    jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
+                    jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    iva = (int) (totalConDescuento * 0.19);
+                    CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                    int total = iva + totalConDescuento;
+                    jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
                 } else {
                     JOptionPane.showMessageDialog(null, "Descuento excedido");
                 }
@@ -547,12 +575,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     } else {
                         String sql4;
                         PreparedStatement st4;
-                        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
+                        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
                         st4 = conexion.getConnection().prepareStatement(sql4);
                         st4.setInt(1, pasarAinteger(totalConDescuento));
                         st4.setInt(2, pasarAinteger(totalSinDescuento));
                         st4.setInt(3, pasarAinteger(jLabelCalcularNeto.getText()));
                         st4.setInt(4, pasarAinteger(jTextFieldEfectivo.getText()));
+                        st4.setString(5, jTextFieldFolioVenta.getText());
                         st4.executeUpdate();
 
                         //obtener id de la compra
@@ -573,7 +602,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         for (int i = 0; i < cantProductosCarrito; i++) {
                             sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
                             st3 = conexion.getConnection().prepareStatement(sql3);
-                            st3.setInt(1, carrito[i].getId());
+                            st3.setString(1, String.valueOf(carrito[i].getId()));
                             st3.setInt(2, codCompra);
                             st3.setInt(3, carrito[i].getCantidad());
                             st3.executeUpdate();
@@ -596,7 +625,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
                                 st9 = conexion.getConnection().prepareStatement(sql9);
                                 st9.setInt(1, (cantStock - carrito[i].getCantidad()));
-                                st9.setInt(2, carrito[i].getId());
+                                st9.setString(2,String.valueOf(carrito[i].getId()));
                                 st9.executeUpdate();
 
                             }
@@ -621,7 +650,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                         st9 = conexion.getConnection().prepareStatement(sql9);
                         st9.setString(1, datos[0]);
-                        st9.setString(2, "El usuario realizo la venta ID: " + codCompra);
+                        st9.setString(2, "El usuario: "+datos[0]+" realizo la venta ID: " + codCompra);
                         st9.executeUpdate();
 
                         JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
@@ -638,12 +667,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 } else {
                     String sql4;
                     PreparedStatement st4;
-                    sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
+                    sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
                     st4 = conexion.getConnection().prepareStatement(sql4);
                     st4.setInt(1, pasarAinteger(totalConDescuento));
                     st4.setInt(2, pasarAinteger(totalSinDescuento));
                     st4.setInt(3, pasarAinteger(jLabelCalcularNeto.getText()));
                     st4.setInt(4, pasarAinteger(jTextFieldEfectivo.getText()));
+                    st4.setString(5, jTextFieldFolioVenta.getText());
                     st4.executeUpdate();
 
                     //obtener id de la compra
@@ -664,7 +694,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     for (int i = 0; i < cantProductosCarrito; i++) {
                         sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
                         st3 = conexion.getConnection().prepareStatement(sql3);
-                        st3.setInt(1, carrito[i].getId());
+                        st3.setString(1, String.valueOf(carrito[i].getId()));
                         st3.setInt(2, codCompra);
                         st3.setInt(3, carrito[i].getCantidad());
                         st3.executeUpdate();
@@ -687,7 +717,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
                             st9 = conexion.getConnection().prepareStatement(sql9);
                             st9.setInt(1, (cantStock - carrito[i].getCantidad()));
-                            st9.setInt(2, carrito[i].getId());
+                            st9.setString(2, String.valueOf(carrito[i].getId()));
                             st9.executeUpdate();
 
                         }
@@ -711,7 +741,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                     st9 = conexion.getConnection().prepareStatement(sql9);
                     st9.setString(1, datos[0]);
-                    st9.setString(2, "El usuario realizo la venta ID: " + codCompra);
+                    st9.setString(2, "El usuario: "+datos[0]+" realizo la venta ID: " + codCompra);
                     st9.executeUpdate();
 
                     JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
@@ -723,6 +753,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     jLabelPrecioAPagar.setText("0");
                     jTextFieldEfectivo.setText("");
                     jLabelVuelto.setText("0");
+                     jTextFieldFolioVenta.setText("");
                     limpiarCarrito();
                     return true;
                 }
@@ -738,7 +769,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 jLabelPrecioAPagar.setText("0");
                 jTextFieldEfectivo.setText("");
                 jLabelVuelto.setText("0");
-                limpiarCarrito();
+                jTextFieldFolioVenta.setText("");
+               limpiarCarrito();
                 return false;
             }
         } else {
@@ -765,12 +797,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
                 String sql4;
                 PreparedStatement st4;
-                sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
+                sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
                 st4 = conexion.getConnection().prepareStatement(sql4);
                 st4.setInt(1, pasarAinteger(totalConDescuento));
                 st4.setInt(2, pasarAinteger(totalSinDescuento));
                 st4.setInt(3, pasarAinteger(jLabelCalcularNetoPresupuesto.getText()));
                 st4.setInt(4, 0);
+                st4.setString(5, jTextFieldFolioPresupuesto.getText());
                 st4.executeUpdate();
 
                 //obtener id de la compra
@@ -791,7 +824,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 for (int i = 0; i < cantProductosCarrito; i++) {
                     sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
                     st3 = conexion.getConnection().prepareStatement(sql3);
-                    st3.setInt(1, carrito[i].getId());
+                    st3.setString(1, String.valueOf(carrito[i].getId()));
                     st3.setInt(2, codCompra);
                     st3.setInt(3, carrito[i].getCantidad());
                     st3.executeUpdate();
@@ -811,6 +844,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 jTextFieldDescuentoPresupuesto.setText("");
                 jLabelPrecioAPagarPresupuesto.setText("0");
                 jTextAreaDescripcionPresupuesto.setText("");
+                jTextFieldFolioPresupuesto.setText("");
                 limpiarCarrito();
                 return true;
 
@@ -1117,7 +1151,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         if (!jTextFieldCantidadProdAgregaProducto.getText().equalsIgnoreCase("")) {
             cantidadProduccion = Integer.parseInt(jTextFieldCantidadProdAgregaProducto.getText());
         }
-        String codigoUnico= jTextFieldCodigoProducto.getText();
+        String codigoUnico = jTextFieldCodigoProducto.getText();
         String precioProducto = jTextFieldPrecioAgregarProducto.getText();
         int tipoProducto = jComboBoxTipoAgregarProducto.getSelectedIndex();
         int tipoPlanta = jComboBoxAgregarTipoPlanta.getSelectedIndex();
@@ -1139,98 +1173,143 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             while (rsAux.next()) {
                 cant = rsAux.getInt(1);
             }
-            
+
             String sqlcontCodigoUnico;
             PreparedStatement stcontCodigoUnico;
-            sqlcontCodigoUnico="SELECT COUNT(*) FROM producto P WHERE P.codigounico = '" + codigoUnico + "'";
-            stcontCodigoUnico= conexion.getConnection().prepareStatement(sqlcontCodigoUnico);
+            sqlcontCodigoUnico = "SELECT COUNT(*) FROM producto P WHERE P.codproducto = '" + codigoUnico + "'";
+            stcontCodigoUnico = conexion.getConnection().prepareStatement(sqlcontCodigoUnico);
             ResultSet rscontCodigoUnico;
-            rscontCodigoUnico= stcontCodigoUnico.executeQuery(sqlcontCodigoUnico);
-            int cantCodigoUnico=0;
-            while(rscontCodigoUnico.next()){
-                cantCodigoUnico= rscontCodigoUnico.getInt(1);
+            rscontCodigoUnico = stcontCodigoUnico.executeQuery(sqlcontCodigoUnico);
+            int cantCodigoUnico = 0;
+            while (rscontCodigoUnico.next()) {
+                cantCodigoUnico = rscontCodigoUnico.getInt(1);
             }
-            
+
             if (cant < 1) {
-                if(cantCodigoUnico<1){
-                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este producto?");
-                if (confirmar == JOptionPane.YES_OPTION) {
-                    switch (tipoProducto) {
-                        case 1:
-                            if (jComboBoxAgregarTipoPlanta.getSelectedIndex() != 0) {
-                                //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
-                                int codTipoPlanta = 0;
-                                int codEspeciePlanta = 0;
-                                if (tipoPlanta == 1) {
-                                    if (!jTextFieldAgregarTipoPlanta.getText().equalsIgnoreCase("") && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
-                                        String sqlAux2;
-                                        PreparedStatement stAux2;
-                                        sqlAux2 = "SELECT COUNT(*) FROM TIPO T WHERE T.nombretipo = '" + nuevoTipoPlanta + "'";
-                                        stAux2 = conexion.getConnection().prepareStatement(sqlAux2);
-                                        ResultSet rsAux2;
-                                        rsAux2 = stAux2.executeQuery(sqlAux2);
-                                        int cant2 = 0;
-                                        while (rsAux2.next()) {
-                                            cant2 = rsAux2.getInt(1);
-                                        }
-                                        if (cant2 < 1) {
-                                            //ingresar tipo de planta
-                                            String sql;
-                                            PreparedStatement st;
-                                            sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
-                                            st = conexion.getConnection().prepareStatement(sql);
-                                            st.setString(1, nuevoTipoPlanta);
-                                            st.executeUpdate();
-                                            //obtener codigo de tipo de planta
-                                            PreparedStatement st2;
-                                            ResultSet rs2;
-                                            sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
-                                            st2 = conexion.getConnection().prepareStatement(sql);
-                                            rs2 = st2.executeQuery(sql);
-                                            while (rs2.next()) {
-                                                codTipoPlanta = rs2.getInt(1);
+                if (cantCodigoUnico < 1) {
+                    int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este producto?");
+                    if (confirmar == JOptionPane.YES_OPTION) {
+                        switch (tipoProducto) {
+                            case 1:
+                                if (jComboBoxAgregarTipoPlanta.getSelectedIndex() != 0) {
+                                    //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
+                                    int codTipoPlanta = 0;
+                                    int codEspeciePlanta = 0;
+                                    if (tipoPlanta == 1) {
+                                        if (!jTextFieldAgregarTipoPlanta.getText().equalsIgnoreCase("") && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
+                                            String sqlAux2;
+                                            PreparedStatement stAux2;
+                                            sqlAux2 = "SELECT COUNT(*) FROM TIPO T WHERE T.nombretipo = '" + nuevoTipoPlanta + "'";
+                                            stAux2 = conexion.getConnection().prepareStatement(sqlAux2);
+                                            ResultSet rsAux2;
+                                            rsAux2 = stAux2.executeQuery(sqlAux2);
+                                            int cant2 = 0;
+                                            while (rsAux2.next()) {
+                                                cant2 = rsAux2.getInt(1);
                                             }
-                                            String sqlAux3;
-                                            PreparedStatement stAux3;
-                                            sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
-                                            stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
-                                            ResultSet rsAux3;
-                                            rsAux3 = stAux3.executeQuery(sqlAux3);
-                                            int cant3 = 0;
-                                            while (rsAux3.next()) {
-                                                cant3 = rsAux3.getInt(1);
-                                            }
-                                            if (cant3 < 1) {
-                                                //INGRESAR ESPECIE DE PLANTA
-                                                PreparedStatement st3;
-                                                sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
-                                                st3 = conexion.getConnection().prepareStatement(sql);
-                                                st3.setInt(1, codTipoPlanta);
-                                                st3.setString(2, nuevaEspeciePlanta);
-                                                st3.executeUpdate();
-                                                //obtener codigo de especie de planta
-                                                PreparedStatement st4;
-                                                ResultSet rs4;
-                                                sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
-                                                st4 = conexion.getConnection().prepareStatement(sql);
-                                                rs4 = st4.executeQuery(sql);
-                                                while (rs4.next()) {
-                                                    codEspeciePlanta = rs4.getInt(1);
+                                            if (cant2 < 1) {
+                                                //ingresar tipo de planta
+                                                String sql;
+                                                PreparedStatement st;
+                                                sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
+                                                st = conexion.getConnection().prepareStatement(sql);
+                                                st.setString(1, nuevoTipoPlanta);
+                                                st.executeUpdate();
+                                                //obtener codigo de tipo de planta
+                                                PreparedStatement st2;
+                                                ResultSet rs2;
+                                                sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
+                                                st2 = conexion.getConnection().prepareStatement(sql);
+                                                rs2 = st2.executeQuery(sql);
+                                                while (rs2.next()) {
+                                                    codTipoPlanta = rs2.getInt(1);
                                                 }
-                                                todoBien = true;
+                                                String sqlAux3;
+                                                PreparedStatement stAux3;
+                                                sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
+                                                stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
+                                                ResultSet rsAux3;
+                                                rsAux3 = stAux3.executeQuery(sqlAux3);
+                                                int cant3 = 0;
+                                                while (rsAux3.next()) {
+                                                    cant3 = rsAux3.getInt(1);
+                                                }
+                                                if (cant3 < 1) {
+                                                    //INGRESAR ESPECIE DE PLANTA
+                                                    PreparedStatement st3;
+                                                    sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                                                    st3 = conexion.getConnection().prepareStatement(sql);
+                                                    st3.setInt(1, codTipoPlanta);
+                                                    st3.setString(2, nuevaEspeciePlanta);
+                                                    st3.executeUpdate();
+                                                    //obtener codigo de especie de planta
+                                                    PreparedStatement st4;
+                                                    ResultSet rs4;
+                                                    sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                                                    st4 = conexion.getConnection().prepareStatement(sql);
+                                                    rs4 = st4.executeQuery(sql);
+                                                    while (rs4.next()) {
+                                                        codEspeciePlanta = rs4.getInt(1);
+                                                    }
+                                                    todoBien = true;
+                                                } else {
+                                                    JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
+                                                }
                                             } else {
-                                                JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
+                                                JOptionPane.showMessageDialog(null, "ya se encuentra un tipo con ese nombre");
                                             }
                                         } else {
-                                            JOptionPane.showMessageDialog(null, "ya se encuentra un tipo con ese nombre");
+                                            JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
                                         }
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
-                                    }
-                                } else //SOLO AGREGAR ESPECIE DE PLANTA
-                                if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() != 0) {
-                                    if (especiePlanta == 1) {
-                                        if (jComboBoxAgregarTipoPlanta.getSelectedIndex() > 1 && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
+                                    } else //SOLO AGREGAR ESPECIE DE PLANTA
+                                    if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() != 0) {
+                                        if (especiePlanta == 1) {
+                                            if (jComboBoxAgregarTipoPlanta.getSelectedIndex() > 1 && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
+                                                String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                                                PreparedStatement st;
+                                                ResultSet rs;
+                                                String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                                                st = conexion.getConnection().prepareStatement(sql);
+                                                rs = st.executeQuery(sql);
+                                                while (rs.next()) {
+                                                    codTipoPlanta = rs.getInt(1);
+                                                }
+
+                                                String sqlAux3;
+                                                PreparedStatement stAux3;
+                                                sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
+                                                stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
+                                                ResultSet rsAux3;
+                                                rsAux3 = stAux3.executeQuery(sqlAux3);
+                                                int cant3 = 0;
+                                                while (rsAux3.next()) {
+                                                    cant3 = rsAux3.getInt(1);
+                                                }
+                                                if (cant3 < 1) {
+
+                                                    PreparedStatement st2;
+                                                    sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                                                    st2 = conexion.getConnection().prepareStatement(sql);
+                                                    st2.setInt(1, codTipoPlanta);
+                                                    st2.setString(2, nuevaEspeciePlanta);
+                                                    st2.executeUpdate();
+
+                                                    PreparedStatement st4;
+                                                    ResultSet rs4;
+                                                    sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                                                    st4 = conexion.getConnection().prepareStatement(sql);
+                                                    rs4 = st4.executeQuery(sql);
+                                                    while (rs4.next()) {
+                                                        codEspeciePlanta = rs4.getInt(1);
+                                                    }
+                                                    todoBien = true;
+                                                } else {
+                                                    JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
+                                                }
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
+                                            }
+                                        } else {
                                             String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
                                             PreparedStatement st;
                                             ResultSet rs;
@@ -1241,165 +1320,120 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                                 codTipoPlanta = rs.getInt(1);
                                             }
 
-                                            String sqlAux3;
-                                            PreparedStatement stAux3;
-                                            sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
-                                            stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
-                                            ResultSet rsAux3;
-                                            rsAux3 = stAux3.executeQuery(sqlAux3);
-                                            int cant3 = 0;
-                                            while (rsAux3.next()) {
-                                                cant3 = rsAux3.getInt(1);
+                                            PreparedStatement st2;
+                                            ResultSet rs2;
+                                            String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "'";
+                                            st2 = conexion.getConnection().prepareStatement(sql2);
+                                            rs2 = st.executeQuery(sql2);
+                                            while (rs2.next()) {
+                                                codEspeciePlanta = rs2.getInt(1);
                                             }
-                                            if (cant3 < 1) {
-
-                                                PreparedStatement st2;
-                                                sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
-                                                st2 = conexion.getConnection().prepareStatement(sql);
-                                                st2.setInt(1, codTipoPlanta);
-                                                st2.setString(2, nuevaEspeciePlanta);
-                                                st2.executeUpdate();
-
-                                                PreparedStatement st4;
-                                                ResultSet rs4;
-                                                sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
-                                                st4 = conexion.getConnection().prepareStatement(sql);
-                                                rs4 = st4.executeQuery(sql);
-                                                while (rs4.next()) {
-                                                    codEspeciePlanta = rs4.getInt(1);
-                                                }
-                                                todoBien = true;
-                                            } else {
-                                                JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
-                                            }
-                                        } else {
-                                            JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
+                                            todoBien = true;
                                         }
                                     } else {
-                                        String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                                        JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
+                                    }
+
+                                    if (todoBien) {
+                                        //ESPECIE Y TIPO YA ESTAN EN LA LISTA
+                                        PreparedStatement st5;
+                                        String sql = "INSERT INTO `producto`(`codproducto`,`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`) VALUES (?,?,?,?,?,?)";
+                                        st5 = conexion.getConnection().prepareStatement(sql);
+                                        st5.setString(1, codigoUnico);
+                                        st5.setString(2, nomProducto);
+                                        st5.setInt(3, cantidadVenta);
+                                        st5.setInt(4, cantidadProduccion);
+                                        st5.setString(5, descripcion);
+                                        st5.setString(6, stock);
+
+                                        st5.executeUpdate();
+
+                                        int codProduto = 0;
                                         PreparedStatement st;
                                         ResultSet rs;
-                                        String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                                        sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
                                         st = conexion.getConnection().prepareStatement(sql);
                                         rs = st.executeQuery(sql);
                                         while (rs.next()) {
-                                            codTipoPlanta = rs.getInt(1);
+                                            codProduto = rs.getInt(1);
                                         }
 
-                                        PreparedStatement st2;
-                                        ResultSet rs2;
-                                        String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "'";
-                                        st2 = conexion.getConnection().prepareStatement(sql2);
-                                        rs2 = st.executeQuery(sql2);
-                                        while (rs2.next()) {
-                                            codEspeciePlanta = rs2.getInt(1);
-                                        }
-                                        todoBien = true;
+                                        PreparedStatement st6;
+                                        sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
+                                        st6 = conexion.getConnection().prepareStatement(sql);
+                                        st6.setInt(1, codProduto);
+                                        st6.setInt(2, codEspeciePlanta);
+                                        st6.executeUpdate();
+
+                                        PreparedStatement st7;
+                                        sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                                        st7 = conexion.getConnection().prepareStatement(sql);
+                                        st7.setInt(1, codProduto);
+                                        st7.setString(2, precioProducto);
+                                        st7.executeUpdate();
+                                        JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
+                                        jTextFieldNombreAgregarProducto.setText("");
+                                        jTextFieldCantidadVentaAgregarProducto.setText("");
+                                        jTextFieldCantidadProdAgregaProducto.setText("");
+                                        jTextFieldPrecioAgregarProducto.setText("");
+                                        jTextFieldStockAgregarProducto.setText("");
+                                        jTextAreaDescripcionAgregarProducto.setText("");
+                                        jTextFieldAgregarTipoPlanta.setText("");
+                                        jTextFieldAgregarEspeciePlanta.setText("");
+                                        jComboBoxTipoAgregarProducto.setSelectedIndex(0);
+                                        jTextFieldCodigoProducto.setText("");
                                     }
                                 } else {
-                                    JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
+                                    JOptionPane.showMessageDialog(null, "Algunos campos vacios");
+
                                 }
-
-                                if (todoBien) {
-                                    //ESPECIE Y TIPO YA ESTAN EN LA LISTA
-                                    PreparedStatement st5;
-                                    String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`,`codigounico`) VALUES (?,?,?,?,?,?)";
-                                    st5 = conexion.getConnection().prepareStatement(sql);
-                                    st5.setString(1, nomProducto);
-                                    st5.setInt(2, cantidadVenta);
-                                    st5.setInt(3, cantidadProduccion);
-                                    st5.setString(4, descripcion);
-                                    st5.setString(5, stock);
-                                    st5.setString(6, codigoUnico);
-                                    st5.executeUpdate();
-
-                                    int codProduto = 0;
-                                    PreparedStatement st;
-                                    ResultSet rs;
-                                    sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
-                                    st = conexion.getConnection().prepareStatement(sql);
-                                    rs = st.executeQuery(sql);
-                                    while (rs.next()) {
-                                        codProduto = rs.getInt(1);
-                                    }
-
-                                    PreparedStatement st6;
-                                    sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
-                                    st6 = conexion.getConnection().prepareStatement(sql);
-                                    st6.setInt(1, codProduto);
-                                    st6.setInt(2, codEspeciePlanta);
-                                    st6.executeUpdate();
-
-                                    PreparedStatement st7;
-                                    sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                                    st7 = conexion.getConnection().prepareStatement(sql);
-                                    st7.setInt(1, codProduto);
-                                    st7.setString(2, precioProducto);
-                                    st7.executeUpdate();
-                                    JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
-                                    jTextFieldNombreAgregarProducto.setText("");
-                                    jTextFieldCantidadVentaAgregarProducto.setText("");
-                                    jTextFieldCantidadProdAgregaProducto.setText("");
-                                    jTextFieldPrecioAgregarProducto.setText("");
-                                    jTextFieldStockAgregarProducto.setText("");
-                                    jTextAreaDescripcionAgregarProducto.setText("");
-                                    jTextFieldAgregarTipoPlanta.setText("");
-                                    jTextFieldAgregarEspeciePlanta.setText("");
-                                    jComboBoxTipoAgregarProducto.setSelectedIndex(0);
-                                    jTextFieldCodigoProducto.setText("");
+                                break;
+                            case 2:
+                                PreparedStatement st5;
+                                String sql = "INSERT INTO `producto`(`codproducto`,`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`) VALUES (?,?,?,?,?,?)";
+                                st5 = conexion.getConnection().prepareStatement(sql);
+                                st5.setString(1, codigoUnico);
+                                st5.setString(2, nomProducto);
+                                st5.setInt(3, cantidadVenta);
+                                st5.setInt(4, cantidadProduccion);
+                                st5.setString(5, descripcion);
+                                st5.setString(6, stock);
+                                int codProduto = 0;
+                                PreparedStatement st;
+                                ResultSet rs;
+                                sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
+                                st = conexion.getConnection().prepareStatement(sql);
+                                rs = st.executeQuery(sql);
+                                while (rs.next()) {
+                                    codProduto = rs.getInt(1);
                                 }
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Algunos campos vacios");
-
-                            }
-                            break;
-                        case 2:
-                            PreparedStatement st5;
-                            String sql = "INSERT INTO `producto`(`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`,`codigounico`) VALUES (?,?,?,?,?,?)";
-                            st5 = conexion.getConnection().prepareStatement(sql);
-                            st5.setString(1, nomProducto);
-                            st5.setInt(2, cantidadVenta);
-                            st5.setInt(3, cantidadProduccion);
-                            st5.setString(4, descripcion);
-                            st5.setString(5, stock);
-                            st5.setString(6, codigoUnico);
-                            st5.executeUpdate();
-                            int codProduto = 0;
-                            PreparedStatement st;
-                            ResultSet rs;
-                            sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
-                            st = conexion.getConnection().prepareStatement(sql);
-                            rs = st.executeQuery(sql);
-                            while (rs.next()) {
-                                codProduto = rs.getInt(1);
-                            }
-                            PreparedStatement st6;
-                            sql = "INSERT INTO `accesorio`(`codproducto`) VALUES (?)";
-                            st6 = conexion.getConnection().prepareStatement(sql);
-                            st6.setInt(1, codProduto);
-                            st6.executeUpdate();
-                            PreparedStatement st7;
-                            sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                            st7 = conexion.getConnection().prepareStatement(sql);
-                            st7.setInt(1, codProduto);
-                            st7.setString(2, precioProducto);
-                            st7.executeUpdate();
-                            JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
-                            jTextFieldNombreAgregarProducto.setText("");
-                            jTextFieldCantidadVentaAgregarProducto.setText("");
-                            jTextFieldCantidadProdAgregaProducto.setText("");
-                            jTextFieldPrecioAgregarProducto.setText("");
-                            jTextFieldStockAgregarProducto.setText("");
-                            jTextAreaDescripcionAgregarProducto.setText("");
-                            jComboBoxTipoAgregarProducto.setSelectedIndex(0);
-                            jTextFieldCodigoProducto.setText("");
-                            break;
-                        default:
-                            JOptionPane.showMessageDialog(null, "Seleccione un tipo de producto");
-                            break;
+                                PreparedStatement st6;
+                                sql = "INSERT INTO `accesorio`(`codproducto`) VALUES (?)";
+                                st6 = conexion.getConnection().prepareStatement(sql);
+                                st6.setInt(1, codProduto);
+                                st6.executeUpdate();
+                                PreparedStatement st7;
+                                sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                                st7 = conexion.getConnection().prepareStatement(sql);
+                                st7.setInt(1, codProduto);
+                                st7.setString(2, precioProducto);
+                                st7.executeUpdate();
+                                JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
+                                jTextFieldNombreAgregarProducto.setText("");
+                                jTextFieldCantidadVentaAgregarProducto.setText("");
+                                jTextFieldCantidadProdAgregaProducto.setText("");
+                                jTextFieldPrecioAgregarProducto.setText("");
+                                jTextFieldStockAgregarProducto.setText("");
+                                jTextAreaDescripcionAgregarProducto.setText("");
+                                jComboBoxTipoAgregarProducto.setSelectedIndex(0);
+                                jTextFieldCodigoProducto.setText("");
+                                break;
+                            default:
+                                JOptionPane.showMessageDialog(null, "Seleccione un tipo de producto");
+                                break;
+                        }
                     }
-                }
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "ya se encuentra un producto con este codigo");
                 }
             } else {
@@ -2078,6 +2112,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabelDescuentoDetallesVenta = new javax.swing.JLabel();
         jLabelEfectivoDetallesVenta1 = new javax.swing.JLabel();
         jButtonImpimirBoletaVenta = new javax.swing.JButton();
+        jLabel153 = new javax.swing.JLabel();
+        jTextFieldFolioDetalleVenta = new javax.swing.JTextField();
         jPanelListaVentas = new javax.swing.JPanel();
         jLabel81 = new javax.swing.JLabel();
         jScrollPane7 = new javax.swing.JScrollPane();
@@ -2116,6 +2152,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel102 = new javax.swing.JLabel();
         jLabel103 = new javax.swing.JLabel();
         jLabelVuelto = new javax.swing.JLabel();
+        jLabel151 = new javax.swing.JLabel();
+        jTextFieldFolioVenta = new javax.swing.JTextField();
         jPanelRealizarPresupuesto = new javax.swing.JPanel();
         jLabel118 = new javax.swing.JLabel();
         jScrollPane22 = new javax.swing.JScrollPane();
@@ -2137,6 +2175,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jScrollPane13 = new javax.swing.JScrollPane();
         jTextAreaDescripcionPresupuesto = new javax.swing.JTextArea();
         jLabel146 = new javax.swing.JLabel();
+        jLabel152 = new javax.swing.JLabel();
+        jTextFieldFolioPresupuesto = new javax.swing.JTextField();
         jPanelListaPresupuestos = new javax.swing.JPanel();
         jLabel123 = new javax.swing.JLabel();
         jScrollPane14 = new javax.swing.JScrollPane();
@@ -2168,6 +2208,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jScrollPane23 = new javax.swing.JScrollPane();
         jTextAreaDescripcionDetallesPresupuesto = new javax.swing.JTextArea();
         jLabel147 = new javax.swing.JLabel();
+        jLabel154 = new javax.swing.JLabel();
+        jTextFieldFolioDetallePresupuesto = new javax.swing.JTextField();
         jButtonListaPresupuestos = new javax.swing.JButton();
         jPanelReportes = new javax.swing.JPanel();
         jButtonAgregarProveedor1 = new javax.swing.JButton();
@@ -2814,7 +2856,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     .addComponent(jLabelEspeciePlanta)
                     .addComponent(jComboBoxAgregarEspeciePlanta, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldAgregarEspeciePlanta, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         jComboBoxTipoAgregarProducto.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -3333,7 +3375,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 .addGroup(jPanelEditarMermaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldEditarFechaMerma, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel98))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
                 .addGroup(jPanelEditarMermaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldEditarNombreMerma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel91))
@@ -3576,7 +3618,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 .addGroup(jPanelTipoPlanta1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jComboBoxEditarTipoPlanta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jComboBoxEditarEspeciePlanta, 0, 179, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
                 .addComponent(jTextFieldIDeditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(85, 85, 85))
         );
@@ -3655,28 +3697,27 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 .addGap(266, 266, 266)
                 .addComponent(jPanelTipoPlanta1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEditarProductoFormLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonConfirmarEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(95, 95, 95)
-                .addComponent(jRadioButton5)
-                .addGap(90, 90, 90))
             .addGroup(jPanelEditarProductoFormLayout.createSequentialGroup()
                 .addGap(354, 354, 354)
                 .addComponent(jLabel110)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEditarProductoFormLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonConfirmarEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(94, 94, 94)
+                .addComponent(jRadioButton5)
+                .addGap(90, 90, 90))
+            .addGroup(jPanelEditarProductoFormLayout.createSequentialGroup()
                 .addGap(168, 168, 168)
                 .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel111)
-                        .addComponent(jLabel115)
                         .addComponent(jLabel114))
                     .addComponent(jLabel112)
-                    .addComponent(jLabel113))
+                    .addComponent(jLabel113)
+                    .addComponent(jLabel115))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextFieldPrecioEditarProducto)
                     .addComponent(jTextFieldNombreEditarProducto, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jComboBoxTipoEditarProducto, 0, 243, Short.MAX_VALUE)
                     .addGroup(jPanelEditarProductoFormLayout.createSequentialGroup()
@@ -3692,7 +3733,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             .addGroup(jPanelEditarProductoFormLayout.createSequentialGroup()
                                 .addComponent(jLabel109)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cantVentaActual)))))
+                                .addComponent(cantVentaActual))))
+                    .addComponent(jTextFieldPrecioEditarProducto))
                 .addGap(25, 25, 25)
                 .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel31)
@@ -3712,11 +3754,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextFieldNombreEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel111)))
-                .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelEditarProductoFormLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jScrollPane21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelEditarProductoFormLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel112)
@@ -3732,8 +3771,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel115)
-                            .addComponent(jTextFieldPrecioEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jTextFieldPrecioEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(14, 14, 14))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEditarProductoFormLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jScrollPane21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelEditarProductoFormLayout.createSequentialGroup()
                         .addGap(7, 7, 7)
@@ -3744,13 +3787,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         .addComponent(jLabel31)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jTextFieldStockEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(25, 25, 25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanelTipoPlanta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jRadioButton5)
-                    .addComponent(jButtonConfirmarEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                    .addComponent(jButtonConfirmarEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRadioButton5))
+                .addGap(21, 21, 21))
         );
 
         jPanel6.add(jPanelEditarProductoForm, "card2");
@@ -3989,7 +4032,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     .addGroup(jPanelAgregarChequeLayout.createSequentialGroup()
                         .addComponent(jLabel73)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE))
+                    .addComponent(jScrollPane15, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonConfirmarAgregar3, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31))
@@ -4393,7 +4436,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 .addGroup(jPanelChequesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButtonEditarCheque, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButtonAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(1088, Short.MAX_VALUE))
+                .addContainerGap(1095, Short.MAX_VALUE))
             .addGroup(jPanelChequesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelChequesLayout.createSequentialGroup()
                     .addContainerGap(247, Short.MAX_VALUE)
@@ -4407,7 +4450,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 .addComponent(jButtonAgregarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
                 .addComponent(jButtonEditarCheque, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(359, Short.MAX_VALUE))
+                .addContainerGap(369, Short.MAX_VALUE))
             .addGroup(jPanelChequesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanelChequesLayout.createSequentialGroup()
                     .addContainerGap()
@@ -5063,6 +5106,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             }
         });
 
+        jLabel153.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel153.setText("Folio:");
+
         javax.swing.GroupLayout jPanelDetallesVentaLayout = new javax.swing.GroupLayout(jPanelDetallesVenta);
         jPanelDetallesVenta.setLayout(jPanelDetallesVentaLayout);
         jPanelDetallesVentaLayout.setHorizontalGroup(
@@ -5137,9 +5183,12 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
                         .addGap(64, 64, 64)
                         .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 664, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonImpimirBoletaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(110, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonImpimirBoletaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldFolioDetalleVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel153))))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanelDetallesVentaLayout.setVerticalGroup(
             jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -5158,13 +5207,17 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         .addComponent(jLabel86)
                         .addComponent(jComboBoxTipoDePago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jRadioButton4)))
-                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDetallesVentaLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanelDetallesVentaLayout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(jLabel153)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextFieldFolioDetalleVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonImpimirBoletaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)))
                 .addGroup(jPanelDetallesVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -5535,15 +5588,15 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabelVuelto.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabelVuelto.setText("0");
 
+        jLabel151.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel151.setText("Folio :");
+
         javax.swing.GroupLayout jPanelRealizarVentaLayout = new javax.swing.GroupLayout(jPanelRealizarVenta);
         jPanelRealizarVenta.setLayout(jPanelRealizarVentaLayout);
         jPanelRealizarVentaLayout.setHorizontalGroup(
             jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
-                .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
-                        .addGap(306, 306, 306)
-                        .addComponent(jLabel33))
+                .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -5585,25 +5638,35 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                             .addComponent(jLabelVuelto))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jComboBoxDescuentoVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 608, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jButtonConfirmarVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jRadioButtonBoleta)
-                                .addComponent(jRadioButtonFactura)
-                                .addComponent(jButtonAgregarProductoAVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBoxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addComponent(jLabel39)))))
-                .addContainerGap(158, Short.MAX_VALUE))
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 608, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
+                        .addGap(306, 306, 306)
+                        .addComponent(jLabel33)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel151)))
+                .addGap(29, 29, 29)
+                .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldFolioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jButtonConfirmarVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jRadioButtonBoleta)
+                        .addComponent(jRadioButtonFactura)
+                        .addComponent(jButtonAgregarProductoAVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jComboBoxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel39)))
+                .addContainerGap(149, Short.MAX_VALUE))
         );
         jPanelRealizarVentaLayout.setVerticalGroup(
             jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel33)
+                .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel33)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel151)
+                        .addComponent(jTextFieldFolioVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(jPanelRealizarVentaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelRealizarVentaLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -5790,55 +5853,59 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel146.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel146.setText("Descripción:");
 
+        jLabel152.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel152.setText("Folio :");
+
         javax.swing.GroupLayout jPanelRealizarPresupuestoLayout = new javax.swing.GroupLayout(jPanelRealizarPresupuesto);
         jPanelRealizarPresupuesto.setLayout(jPanelRealizarPresupuestoLayout);
         jPanelRealizarPresupuestoLayout.setHorizontalGroup(
             jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
-                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
                         .addGap(306, 306, 306)
-                        .addComponent(jLabel118))
-                    .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
-                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 605, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
-                                .addGap(17, 17, 17)
-                                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel146)
-                                    .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
-                                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel120)
-                                            .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
-                                                .addComponent(jLabel121, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jLabel125))
-                                            .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
-                                                .addComponent(jLabel122)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jLabel124)))
-                                        .addGap(4, 4, 4)
-                                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(CalcularIVAPresupuesto)
-                                            .addComponent(jTextFieldDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabelCalcularNetoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarPresupuestoLayout.createSequentialGroup()
-                                        .addComponent(jLabel119)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel126)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabelPrecioAPagarPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBoxDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel118)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel152))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 605, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel146)
+                            .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButtonConfirmarPresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonAgregarProductoAPresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel120)
+                                    .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                                        .addComponent(jLabel121, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel125))
+                                    .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                                        .addComponent(jLabel122)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel124)))
+                                .addGap(4, 4, 4)
+                                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(CalcularIVAPresupuesto)
+                                    .addComponent(jTextFieldDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabelCalcularNetoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelRealizarPresupuestoLayout.createSequentialGroup()
+                                .addComponent(jLabel119)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel126)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelPrecioAPagarPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBoxDescuentoPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonConfirmarPresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonAgregarProductoAPresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldFolioPresupuesto))
                 .addContainerGap(144, Short.MAX_VALUE))
         );
         jPanelRealizarPresupuestoLayout.setVerticalGroup(
@@ -5852,7 +5919,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         .addComponent(jButtonConfirmarPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanelRealizarPresupuestoLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel118)
+                        .addGroup(jPanelRealizarPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel118)
+                            .addComponent(jLabel152)
+                            .addComponent(jTextFieldFolioPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(13, 13, 13)
                         .addComponent(jScrollPane22, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -6128,6 +6198,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         jLabel147.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel147.setText("Descripción:");
 
+        jLabel154.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel154.setText("Folio :");
+
         javax.swing.GroupLayout jPanelDetallesPresupuestoLayout = new javax.swing.GroupLayout(jPanelDetallesPresupuesto);
         jPanelDetallesPresupuesto.setLayout(jPanelDetallesPresupuestoLayout);
         jPanelDetallesPresupuestoLayout.setHorizontalGroup(
@@ -6150,6 +6223,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 .addComponent(jLabel139)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jDateChooserFechaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel154)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldFolioDetallePresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanelDetallesPresupuestoLayout.createSequentialGroup()
                                 .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -6194,9 +6271,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 .addGap(18, 18, 18)
                 .addGroup(jPanelDetallesPresupuestoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel130)
-                    .addComponent(jTextFieldCodPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldCodPresupuesto)
                     .addComponent(jLabel139)
-                    .addComponent(jDateChooserFechaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jDateChooserFechaPresupuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel154, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldFolioDetallePresupuesto, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane24, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
@@ -6225,7 +6304,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             .addComponent(jLabelPrecioAPagarDetallesPresupuesto)
                             .addComponent(jLabel148))
                         .addGap(19, 19, 19)))
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addGap(93, 93, 93))
         );
 
         jPanel7.add(jPanelDetallesPresupuesto, "card4");
@@ -7275,6 +7354,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 JButton boton = (JButton) value;
                 if (boton.getText().equals("Editar")) {
                     String id = String.valueOf(jTableListaProductos.getValueAt(jTableListaProductos.getSelectedRow(), 0));
+                    System.out.println(id);
                     String sql;
                     Statement st;
                     ResultSet rs;
@@ -7283,7 +7363,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 + "FROM producto p, preciohistoricoproducto PH, planta pl, tipo t, especie e \n "
                                 + "where p.codproducto = PH.codproducto AND pl.codproducto = p.codproducto AND \n"
                                 + "pl.codespecie = e.codespecie AND t.codtipo = e.codtipo AND \n"
-                                + "p.codigounico = " + "\"" + id + "\" AND \n"
+                                + "p.codproducto = " + "\"" + id + "\" AND \n"
                                 + "PH.fechaproducto = (select MAX(fechaproducto) \n"
                                 + "from preciohistoricoproducto AS PH2 \n"
                                 + "where PH.codproducto = PH2.codproducto)";
@@ -7559,157 +7639,6 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldNumeroCuentaEditarChequeActionPerformed
 
-    private void jTextFieldCantidadVentaEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCantidadVentaEditarProductoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldCantidadVentaEditarProductoActionPerformed
-
-    private void jTextFieldCantidadProdEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCantidadProdEditarProductoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldCantidadProdEditarProductoActionPerformed
-
-    private void jButtonConfirmarEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarProductoActionPerformed
-        String nombreproducto = jTextFieldNombreEditarProducto.getText();
-        String cantVentas = jTextFieldCantidadVentaEditarProducto.getText();
-        String cantPro = jTextFieldCantidadProdEditarProducto.getText();
-        String precio = jTextFieldPrecioEditarProducto.getText();
-        String cod = jTextFieldIDeditarProducto.getText();
-        String descripcion = jTextAreaEditarProducto.getText();
-        String stock = jTextFieldStockEditarProducto.getText();
-        if (!nombreproducto.equalsIgnoreCase("") && !cantVentas.equalsIgnoreCase("") && !cantPro.equalsIgnoreCase("")
-                && !precio.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !stock.equalsIgnoreCase("")) {
-
-            int total = Integer.parseInt(cantPro) + Integer.parseInt(cantVentas);
-
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea editar este producto?");
-            if (confirmar == JOptionPane.YES_OPTION) {
-                try {
-                    String sql = "UPDATE `producto` SET `nombreproducto`=?,`cantidadproductoventa`=?,`cantidadproductoproduccion`=?,`descripcionproducto`=?  , `stockminimo` = ? WHERE codproducto = '" + cod + "'";
-                    String sq2 = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                    String sql3 = "SELECT PH.precioproductoneto,p.cantidadproductoventa,p.cantidadproductoproduccion, p.codigounico \n"
-                            + "FROM producto p, preciohistoricoproducto PH \n"
-                            + "where p.codproducto = PH.codproducto AND \n"
-                            + "p.codproducto = " + "\"" + cod + "\" AND \n"
-                            + "PH.fechaproducto = (select MAX(fechaproducto) \n"
-                            + "from preciohistoricoproducto AS PH2 \n"
-                            + "where PH.codproducto = PH2.codproducto)";
-                    PreparedStatement st3 = conexion.getConnection().prepareStatement(sql3);
-                    ResultSet rs;
-                    rs = st3.executeQuery(sql3);
-                    int precioAnterior = 0;
-                    int cantVentaAnterior = 0;
-                    int cantProduAnterior = 0;
-                    String codigoUnico= "";
-                    while (rs.next()) {
-                        precioAnterior = rs.getInt(1);
-                        cantVentaAnterior = rs.getInt(2);
-                        cantProduAnterior = rs.getInt(3);
-                        codigoUnico= rs.getString(4);
-                    }
-
-                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-                    if (precioAnterior != Integer.parseInt(precio)) {
-                        PreparedStatement st2 = conexion.getConnection().prepareStatement(sq2);
-                        st2.setInt(1, Integer.parseInt(cod));
-                        st2.setString(2, precio);
-                        st2.executeUpdate();
-
-                        String sql9;
-                        PreparedStatement st9;
-                        sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
-                        st9 = conexion.getConnection().prepareStatement(sql9);
-                        st9.setString(1, datos[0]);
-                        st9.setString(2, "El usuario cambio el precio del producto: " + codigoUnico + ", a: $" + precio);
-                        st9.executeUpdate();
-
-                    }
-                    st.setString(1, nombreproducto);
-                    st.setInt(2, cantVentaAnterior + Integer.parseInt(cantVentas));
-                    st.setInt(3, cantProduAnterior + Integer.parseInt(cantPro));
-                    st.setString(4, descripcion);
-                    st.setString(5, stock);
-                    st.executeUpdate();
-                    // TODO add your handling code here:
-                    if (st.executeUpdate() > 0) {
-                        JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
-                                JOptionPane.INFORMATION_MESSAGE);
-                        refrescarTablaListaProductos();
-                        jPanelAgregarProducto.show(false);
-                        this.jPanelAgregarMerma.show(false);
-                        this.jPanelListaMermas.show(false);
-                        this.jPanelEditarMerma.show(false);
-                        jPanelEditarProductoForm.show(false);
-                        jPanelEditarProducto.show(true);
-                        if (jComboBoxTipoEditarProducto.getSelectedIndex() == 0) {
-                            jTextFieldIDeditarProducto.setText("");
-                            jTextFieldIDeditarProducto.setText("");
-                            jTextFieldStockEditarProducto.setText("");
-                            jTextFieldNombreEditarProducto.setText("");
-                            jTextFieldCantidadVentaEditarProducto.setText("");
-                            jTextFieldCantidadProdEditarProducto.setText("");
-                            jTextFieldPrecioEditarProducto.setText("");
-                            jTextAreaEditarProducto.setText("");
-                            jTextFieldStockEditarProducto.setText("");
-                            cantProdActual.setText("");
-                            cantVentaActual.setText("");
-                        } else {
-                            jTextFieldStockEditarProducto.setText("");
-                            jTextFieldIDeditarProducto.setText("");
-                            jTextFieldIDeditarProducto.setText("");
-                            jTextFieldNombreEditarProducto.setText("");
-                            jTextAreaEditarProducto.setText("");
-                            jTextFieldCantidadVentaEditarProducto.setText("");
-                            jTextFieldCantidadProdEditarProducto.setText("");
-                            jTextFieldPrecioEditarProducto.setText("");
-                            jTextFieldStockEditarProducto.setText("");
-                            cantProdActual.setText("");
-                            cantVentaActual.setText("");
-                        }
-                    }
-
-                } catch (SQLException ex) {
-                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
-        } else {
-            JOptionPane.showMessageDialog(null, " hay campos que se encuentran vacios");
-        }
-    }//GEN-LAST:event_jButtonConfirmarEditarProductoActionPerformed
-
-    private void jComboBoxEditarEspeciePlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEditarEspeciePlantaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxEditarEspeciePlantaActionPerformed
-
-    private void jComboBoxEditarTipoPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEditarTipoPlantaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxEditarTipoPlantaActionPerformed
-
-    private void jTextFieldIDeditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIDeditarProductoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldIDeditarProductoActionPerformed
-
-    private void jComboBoxTipoEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoEditarProductoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxTipoEditarProductoActionPerformed
-
-    private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton5ActionPerformed
-        if (jRadioButton5.isSelected()) {
-            jTextFieldNombreEditarProducto.setEnabled(true);
-            jTextFieldCantidadVentaEditarProducto.setEnabled(true);
-            jTextFieldCantidadProdEditarProducto.setEnabled(true);
-            jTextFieldPrecioEditarProducto.setEnabled(true);
-            jTextAreaEditarProducto.setEnabled(true);
-            jTextFieldStockEditarProducto.setEnabled(true);
-        } else {
-            jTextFieldNombreEditarProducto.setEnabled(false);
-            jTextFieldCantidadVentaEditarProducto.setEnabled(false);
-            jTextFieldCantidadProdEditarProducto.setEnabled(false);
-            jTextFieldPrecioEditarProducto.setEnabled(false);
-            jTextAreaEditarProducto.setEnabled(false);
-            jTextFieldStockEditarProducto.setEnabled(false);
-        }
-    }//GEN-LAST:event_jRadioButton5ActionPerformed
-
     private void jComboBoxTipoAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoAgregarProductoActionPerformed
         if (jComboBoxTipoAgregarProducto.getSelectedIndex() == 1) {
             try {
@@ -7900,7 +7829,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     String sql;
                     Statement st;
                     ResultSet rs;
-                    sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra=" + "\"" + codVentaSeleccionada + "\"";
+                    sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo, c.tipopago, c.metodopago,oc.folio FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra=" + "\"" + codVentaSeleccionada + "\"";
                     try {
                         st = conexion.getConnection().createStatement();
                         rs = st.executeQuery(sql);
@@ -7921,7 +7850,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             //jComboBoxTipoDePago.setModel(modelo);
                             jComboBoxTipoDePago.addItem(rs.getString(8));
                             jComboBoxTipoDePago.setSelectedItem(rs.getString(8));
-
+                            jTextFieldFolioDetalleVenta.setText(rs.getString(9));
+                            jTextFieldFolioDetalleVenta.setEnabled(false);
                         }
 
                         String sql1;
@@ -8176,19 +8106,30 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         int neto = pasarAinteger(jLabelCalcularNeto.getText());
         int iva = pasarAinteger(CalcularIVA.getText());
         if (jTextFieldDescuentoVenta.getText().equals("")) {
-            jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((neto + iva))));
+            jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+            iva = (int) (totalGlobal * 0.19);
+            CalcularIVA.setText(formatearAEntero("" + iva));
+            jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
         } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
             if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
-                int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
-                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-
+                int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                System.out.println(totalConDescuento);
+                jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVA.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagar.setText(formatearAEntero("" + total));
             }
         } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
 
-            if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
+            if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
 
-                int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
-                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
+                jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVA.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagar.setText(formatearAEntero("" + total));
             } else {
                 JOptionPane.showMessageDialog(null, "Descuento excedido");
             }
@@ -8220,20 +8161,31 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         int neto = pasarAinteger(jLabelCalcularNeto.getText());
         int iva = pasarAinteger(CalcularIVA.getText());
         if (jTextFieldDescuentoVenta.getText().equals("")) {
-            jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((neto + iva))));
+            jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+            iva = (int) (totalGlobal * 0.19);
+            CalcularIVA.setText(formatearAEntero("" + iva));
+            jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
 
         } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
             if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
-                int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
-                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVA.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagar.setText(formatearAEntero("" + total));
 
             }
         } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
 
-            if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
+            if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
 
-                int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
-                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
+                jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVA.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagar.setText(formatearAEntero("" + total));
             } else {
                 JOptionPane.showMessageDialog(null, "Descuento excedido");
             }
@@ -8344,19 +8296,30 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
         int iva = pasarAinteger(CalcularIVAPresupuesto.getText());
         if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
-            jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((neto + iva))));
+            jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+            iva = (int) (totalGlobal * 0.19);
+            CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+            jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
         } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
             if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
-                int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
-                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
+                jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
 
             }
         } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
 
-            if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
+            if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
 
-                int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
-                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
+                jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
             } else {
                 JOptionPane.showMessageDialog(null, "Descuento excedido");
             }
@@ -8370,20 +8333,30 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
         int iva = pasarAinteger(CalcularIVAPresupuesto.getText());
         if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
-            jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((neto + iva))));
-
+            jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+            iva = (int) (totalGlobal * 0.19);
+            CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+            jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
         } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
             if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
-                int totalConDescuento = (int) ((double) (neto + iva) - (double) ((neto + iva) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
-                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
+                jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
 
             }
         } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
 
-            if (((neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
+            if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
 
-                int totalConDescuento = (neto + iva) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
-                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
+                jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
             } else {
                 JOptionPane.showMessageDialog(null, "Descuento excedido");
             }
@@ -8409,7 +8382,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     String sql;
                     Statement st;
                     ResultSet rs;
-                    sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo, p.descripcion FROM ordencompra oc, presupuesto p WHERE oc.codordencompra= " + "\"" + codVentaSeleccionada + "\" AND p.codpresupuesto=oc.codordencompra";
+                    sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo, p.descripcion,oc.folio FROM ordencompra oc, presupuesto p WHERE oc.codordencompra= " + "\"" + codVentaSeleccionada + "\" AND p.codpresupuesto=oc.codordencompra";
                     try {
                         st = conexion.getConnection().createStatement();
                         rs = st.executeQuery(sql);
@@ -8418,9 +8391,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             jTextFieldCodPresupuesto.setText("" + rs.getInt(1));
                             jDateChooserFechaPresupuesto.setDate(rs.getDate(4));
                             jTextAreaDescripcionDetallesPresupuesto.setText(rs.getString(7));
-
+                            jTextFieldFolioDetallePresupuesto.setText(rs.getString(8));
                         }
-
+                        jTextFieldFolioDetallePresupuesto.setEnabled(false);
                         String sql1;
                         Statement st1;
                         ResultSet rs1;
@@ -8717,6 +8690,156 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton8ActionPerformed
 
+    private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton5ActionPerformed
+        if (jRadioButton5.isSelected()) {
+            jTextFieldNombreEditarProducto.setEnabled(true);
+            jTextFieldCantidadVentaEditarProducto.setEnabled(true);
+            jTextFieldCantidadProdEditarProducto.setEnabled(true);
+            jTextFieldPrecioEditarProducto.setEnabled(true);
+            jTextAreaEditarProducto.setEnabled(true);
+            jTextFieldStockEditarProducto.setEnabled(true);
+        } else {
+            jTextFieldNombreEditarProducto.setEnabled(false);
+            jTextFieldCantidadVentaEditarProducto.setEnabled(false);
+            jTextFieldCantidadProdEditarProducto.setEnabled(false);
+            jTextFieldPrecioEditarProducto.setEnabled(false);
+            jTextAreaEditarProducto.setEnabled(false);
+            jTextFieldStockEditarProducto.setEnabled(false);
+        }
+    }//GEN-LAST:event_jRadioButton5ActionPerformed
+
+    private void jButtonConfirmarEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarProductoActionPerformed
+        String nombreproducto = jTextFieldNombreEditarProducto.getText();
+        String cantVentas = jTextFieldCantidadVentaEditarProducto.getText();
+        String cantPro = jTextFieldCantidadProdEditarProducto.getText();
+        String precio = jTextFieldPrecioEditarProducto.getText();
+        String cod = jTextFieldIDeditarProducto.getText();
+        String descripcion = jTextAreaEditarProducto.getText();
+        String stock = jTextFieldStockEditarProducto.getText();
+        if (!nombreproducto.equalsIgnoreCase("") && !cantVentas.equalsIgnoreCase("") && !cantPro.equalsIgnoreCase("")
+                && !precio.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !stock.equalsIgnoreCase("")) {
+
+            int total = Integer.parseInt(cantPro) + Integer.parseInt(cantVentas);
+
+            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea editar este producto?");
+            if (confirmar == JOptionPane.YES_OPTION) {
+                try {
+                    String sql = "UPDATE `producto` SET `nombreproducto`=?,`cantidadproductoventa`=?,`cantidadproductoproduccion`=?,`descripcionproducto`=?  , `stockminimo` = ? WHERE codproducto = '" + cod + "'";
+                    String sq2 = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                    String sql3 = "SELECT PH.precioproductoneto,p.cantidadproductoventa,p.cantidadproductoproduccion \n"
+                            + "FROM producto p, preciohistoricoproducto PH \n"
+                            + "where p.codproducto = PH.codproducto AND \n"
+                            + "p.codproducto = " + "\"" + cod + "\" AND \n"
+                            + "PH.fechaproducto = (select MAX(fechaproducto) \n"
+                            + "from preciohistoricoproducto AS PH2 \n"
+                            + "where PH.codproducto = PH2.codproducto)";
+                    PreparedStatement st3 = conexion.getConnection().prepareStatement(sql3);
+                    ResultSet rs;
+                    rs = st3.executeQuery(sql3);
+                    int precioAnterior = 0;
+                    int cantVentaAnterior = 0;
+                    int cantProduAnterior = 0;
+                    String codigoUnico = "";
+                    while (rs.next()) {
+                        precioAnterior = rs.getInt(1);
+                        cantVentaAnterior = rs.getInt(2);
+                        cantProduAnterior = rs.getInt(3);
+                    }
+
+                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                    if (precioAnterior != Integer.parseInt(precio)) {
+                        PreparedStatement st2 = conexion.getConnection().prepareStatement(sq2);
+                        st2.setInt(1, Integer.parseInt(cod));
+                        st2.setString(2, precio);
+                        st2.executeUpdate();
+
+                        String sql9;
+                        PreparedStatement st9;
+                        sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                        st9 = conexion.getConnection().prepareStatement(sql9);
+                        st9.setString(1, datos[0]);
+                        st9.setString(2, "El usuario cambio el precio del producto: " + codigoUnico + ", a: $" + precio);
+                        st9.executeUpdate();
+
+                    }
+                    st.setString(1, nombreproducto);
+                    st.setInt(2, cantVentaAnterior + Integer.parseInt(cantVentas));
+                    st.setInt(3, cantProduAnterior + Integer.parseInt(cantPro));
+                    st.setString(4, descripcion);
+                    st.setString(5, stock);
+                    st.executeUpdate();
+                    // TODO add your handling code here:
+                    if (st.executeUpdate() > 0) {
+                        JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        refrescarTablaListaProductos();
+                        jPanelAgregarProducto.show(false);
+                        this.jPanelAgregarMerma.show(false);
+                        this.jPanelListaMermas.show(false);
+                        this.jPanelEditarMerma.show(false);
+                        jPanelEditarProductoForm.show(false);
+                        jPanelEditarProducto.show(true);
+                        if (jComboBoxTipoEditarProducto.getSelectedIndex() == 0) {
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldStockEditarProducto.setText("");
+                            jTextFieldNombreEditarProducto.setText("");
+                            jTextFieldCantidadVentaEditarProducto.setText("");
+                            jTextFieldCantidadProdEditarProducto.setText("");
+                            jTextFieldPrecioEditarProducto.setText("");
+                            jTextAreaEditarProducto.setText("");
+                            jTextFieldStockEditarProducto.setText("");
+                            cantProdActual.setText("");
+                            cantVentaActual.setText("");
+                        } else {
+                            jTextFieldStockEditarProducto.setText("");
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldNombreEditarProducto.setText("");
+                            jTextAreaEditarProducto.setText("");
+                            jTextFieldCantidadVentaEditarProducto.setText("");
+                            jTextFieldCantidadProdEditarProducto.setText("");
+                            jTextFieldPrecioEditarProducto.setText("");
+                            jTextFieldStockEditarProducto.setText("");
+                            cantProdActual.setText("");
+                            cantVentaActual.setText("");
+                        }
+                    }
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, " hay campos que se encuentran vacios");
+        }
+    }//GEN-LAST:event_jButtonConfirmarEditarProductoActionPerformed
+
+    private void jComboBoxTipoEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoEditarProductoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxTipoEditarProductoActionPerformed
+
+    private void jTextFieldIDeditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIDeditarProductoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldIDeditarProductoActionPerformed
+
+    private void jComboBoxEditarTipoPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEditarTipoPlantaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxEditarTipoPlantaActionPerformed
+
+    private void jComboBoxEditarEspeciePlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEditarEspeciePlantaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxEditarEspeciePlantaActionPerformed
+
+    private void jTextFieldCantidadProdEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCantidadProdEditarProductoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldCantidadProdEditarProductoActionPerformed
+
+    private void jTextFieldCantidadVentaEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCantidadVentaEditarProductoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldCantidadVentaEditarProductoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -8772,28 +8895,28 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     especie = "--Seleccionar especie--";
                 }
                 if (tipo.equals("--Seleccionar tipo--")) {
-                    sql1 = "SELECT P.codigounico, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
                             + "FROM producto P, preciohistoricoproducto PH, planta pl "
-                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codigounico LIKE '%" + filtroNombre + "%')";
+                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 } else if (especie.equals("--Seleccionar especie--")) {
-                    sql1 = "SELECT P.codigounico, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
                             + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
-                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codigounico LIKE '%" + filtroNombre + "%')";
+                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 } else {
-                    sql1 = "SELECT P.codigounico, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto, P.stockminimo "
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto, P.stockminimo "
                             + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
-                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codigounico LIKE '%" + filtroNombre + "%')";
+                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 }
                 break;
             case "Accesorio":
-                sql1 = "SELECT P.codigounico, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
                         + "FROM producto P, preciohistoricoproducto PH, accesorio a "
-                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codigounico LIKE '%" + filtroNombre + "%')";
+                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 break;
             default:
-                sql1 = "SELECT P.codigounico, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
                         + "FROM producto P, preciohistoricoproducto PH "
-                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codigounico LIKE '%" + filtroNombre + "%')";
+                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 break;
         }
         DefaultTableModel modelo = (DefaultTableModel) jTableListaProductos.getModel();
@@ -8838,28 +8961,28 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     especie = "--Seleccionar especie--";
                 }
                 if (tipo.equals("--Seleccionar tipo--")) {
-                    sql1 = "SELECT P.codigounico, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
                             + "FROM producto P, preciohistoricoproducto PH, planta pl "
-                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codigounico LIKE '%" + filtroNombre + "%')";
+                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 } else if (especie.equals("--Seleccionar especie--")) {
-                    sql1 = "SELECT P.codigounico, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
                             + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
-                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codigounico LIKE '%" + filtroNombre + "%')";
+                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 } else {
-                    sql1 = "SELECT P.codigounico, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto, P.stockminimo "
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto, P.stockminimo "
                             + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
-                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codigounico LIKE '%" + filtroNombre + "%')";
+                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 }
                 break;
             case "Accesorio":
-                sql1 = "SELECT P.codigounico, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
                         + "FROM producto P, preciohistoricoproducto PH, accesorio a "
-                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codigounico LIKE '%" + filtroNombre + "%')";
+                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 break;
             default:
-                sql1 = "SELECT P.codigounico, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
                         + "FROM producto P, preciohistoricoproducto PH "
-                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codigounico LIKE '%" + filtroNombre + "%')";
+                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 break;
         }
         DefaultTableModel modelo = (DefaultTableModel) jTableListaProductosMerma.getModel();
@@ -9030,6 +9153,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JLabel jLabel149;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel150;
+    private javax.swing.JLabel jLabel151;
+    private javax.swing.JLabel jLabel152;
+    private javax.swing.JLabel jLabel153;
+    private javax.swing.JLabel jLabel154;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
@@ -9292,6 +9419,10 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private javax.swing.JTextField jTextFieldFiltroCodigoListaDeVentas;
     private javax.swing.JTextField jTextFieldFiltroCodigoListaDeVentas1;
     private javax.swing.JTextField jTextFieldFiltroRutListaUsuarios;
+    private javax.swing.JTextField jTextFieldFolioDetallePresupuesto;
+    private javax.swing.JTextField jTextFieldFolioDetalleVenta;
+    private javax.swing.JTextField jTextFieldFolioPresupuesto;
+    private javax.swing.JTextField jTextFieldFolioVenta;
     private javax.swing.JTextField jTextFieldIDeditarProducto;
     private javax.swing.JTextField jTextFieldMontoCheque;
     private javax.swing.JTextField jTextFieldMontoEditarCheque;

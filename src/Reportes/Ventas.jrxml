@@ -11,7 +11,7 @@
 	</parameter>
 	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[SELECT oc.codordencompra, oc.totalcondescuento,oc.fecha, c.tipopago,c.metodopago from ordencompra oc, compra c where oc.codordencompra = c.codcompra  and oc.fecha between $P{fecha1} and $P{fecha2}]]>
+		<![CDATA[SELECT oc.codordencompra, oc.totalcondescuento,oc.fecha,oc.folio, c.tipopago,c.metodopago from ordencompra oc, compra c where oc.codordencompra = c.codcompra  and oc.fecha between $P{fecha1} and $P{fecha2}]]>
 	</queryString>
 	<field name="codordencompra" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -20,6 +20,9 @@
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="fecha" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="folio" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="tipopago" class="java.lang.String">
@@ -71,21 +74,21 @@
 				<text><![CDATA[Codigo de la venta]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="139" y="2" width="100" height="20" uuid="27b2aa55-df7e-4c89-82ce-6d1998a66d53"/>
+				<reportElement x="234" y="2" width="100" height="20" uuid="27b2aa55-df7e-4c89-82ce-6d1998a66d53"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="256" y="0" width="100" height="20" uuid="7b98e681-329c-4ccd-8b00-456a0b38b2c4"/>
+				<reportElement x="306" y="2" width="100" height="20" uuid="7b98e681-329c-4ccd-8b00-456a0b38b2c4"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="375" y="4" width="100" height="20" uuid="bcdaef7e-f68a-42c7-b8b9-ee9a03360a2e"/>
+				<reportElement x="391" y="4" width="100" height="20" uuid="bcdaef7e-f68a-42c7-b8b9-ee9a03360a2e"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -98,6 +101,13 @@
 				</textElement>
 				<text><![CDATA[Metodo de pago]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="119" y="2" width="100" height="20" uuid="c210c19b-23ef-4d2d-97e1-aebe3e644490"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Folio]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -107,20 +117,24 @@
 				<textFieldExpression><![CDATA[$F{codordencompra}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="139" y="2" width="100" height="20" uuid="6fe59e70-77a5-4a4d-ae96-ce9623531641"/>
+				<reportElement x="234" y="2" width="100" height="20" uuid="6fe59e70-77a5-4a4d-ae96-ce9623531641"/>
 				<textFieldExpression><![CDATA[$F{totalcondescuento}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="256" y="0" width="100" height="20" uuid="71654bc4-93e4-4c31-bf46-fd50df26ae91"/>
+				<reportElement x="306" y="0" width="100" height="20" uuid="71654bc4-93e4-4c31-bf46-fd50df26ae91"/>
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="375" y="2" width="100" height="20" uuid="9604f149-eec1-4c28-8ac8-23d59bfeedb7"/>
+				<reportElement x="391" y="2" width="100" height="20" uuid="9604f149-eec1-4c28-8ac8-23d59bfeedb7"/>
 				<textFieldExpression><![CDATA[$F{tipopago}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="491" y="2" width="100" height="20" uuid="a0879305-edd7-46d6-9c59-ac1c33ce26d2"/>
 				<textFieldExpression><![CDATA[$F{metodopago}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="123" y="0" width="100" height="20" uuid="6db4788b-ea7f-4989-913c-1099375ee573"/>
+				<textFieldExpression><![CDATA[$F{folio}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
