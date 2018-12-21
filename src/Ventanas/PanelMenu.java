@@ -1209,7 +1209,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                         if (!jTextFieldAgregarTipoPlanta.getText().equalsIgnoreCase("") && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
                                             String sqlAux2;
                                             PreparedStatement stAux2;
-                                            sqlAux2 = "SELECT COUNT(*) FROM TIPO T WHERE T.nombretipo = '" + nuevoTipoPlanta + "'";
+                                            sqlAux2 = "SELECT COUNT(*) FROM tipo t WHERE t.nombretipo = '" + nuevoTipoPlanta + "'";
                                             stAux2 = conexion.getConnection().prepareStatement(sqlAux2);
                                             ResultSet rsAux2;
                                             rsAux2 = stAux2.executeQuery(sqlAux2);
@@ -1236,7 +1236,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                                 }
                                                 String sqlAux3;
                                                 PreparedStatement stAux3;
-                                                sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
+                                                sqlAux3 = "SELECT COUNT(*) FROM tipo t ,especie e WHERE e.codtipo = '" + codTipoPlanta + "' AND e.nombreespecie = '" + nuevaEspeciePlanta + "'";
                                                 stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
                                                 ResultSet rsAux3;
                                                 rsAux3 = stAux3.executeQuery(sqlAux3);
@@ -1287,7 +1287,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
                                                 String sqlAux3;
                                                 PreparedStatement stAux3;
-                                                sqlAux3 = "SELECT COUNT(*) FROM TIPO T ,ESPECIE E WHERE E.codtipo = '" + codTipoPlanta + "' AND E.nombreespecie = '" + nuevaEspeciePlanta + "'";
+                                                sqlAux3 = "SELECT COUNT(*) FROM tipo t ,especie e WHERE e.codtipo = '" + codTipoPlanta + "' AND e.nombreespecie = '" + nuevaEspeciePlanta + "'";
                                                 stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
                                                 ResultSet rsAux3;
                                                 rsAux3 = stAux3.executeQuery(sqlAux3);
@@ -7393,14 +7393,14 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     Statement st;
                     ResultSet rs;
                     if (jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedIndex() == 0) {
-                        sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, PH.precioproductoneto,t.nombretipo ,e.nombreespecie, p.descripcionproducto,p.stockminimo \n"
-                                + "FROM producto p, preciohistoricoproducto PH, planta pl, tipo t, especie e \n "
-                                + "where p.codproducto = PH.codproducto AND pl.codproducto = p.codproducto AND \n"
+                        sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, ph.precioproductoneto,t.nombretipo ,e.nombreespecie, p.descripcionproducto,p.stockminimo \n"
+                                + "FROM producto p, preciohistoricoproducto ph, planta pl, tipo t, especie e \n "
+                                + "where p.codproducto = ph.codproducto AND pl.codproducto = p.codproducto AND \n"
                                 + "pl.codespecie = e.codespecie AND t.codtipo = e.codtipo AND \n"
                                 + "p.codproducto = " + "\"" + id + "\" AND \n"
-                                + "PH.fechaproducto = (select MAX(fechaproducto) \n"
-                                + "from preciohistoricoproducto AS PH2 \n"
-                                + "where PH.codproducto = PH2.codproducto)";
+                                + "ph.fechaproducto = (select MAX(fechaproducto) \n"
+                                + "from preciohistoricoproducto AS ph2 \n"
+                                + "where ph.codproducto = ph2.codproducto)";
                         try {
                             st = conexion.getConnection().createStatement();
                             rs = st.executeQuery(sql);
@@ -7442,13 +7442,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {
-                        sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, PH.precioproductoneto,p.descripcionproducto,p.stockminimo \n"
-                                + "FROM producto p, preciohistoricoproducto PH,accesorio a \n"
-                                + "where p.codproducto = PH.codproducto AND a.codproducto = p.codproducto AND \n"
+                        sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, ph.precioproductoneto,p.descripcionproducto,p.stockminimo \n"
+                                + "FROM producto p, preciohistoricoproducto ph,accesorio a \n"
+                                + "where p.codproducto = ph.codproducto AND a.codproducto = p.codproducto AND \n"
                                 + "p.codproducto = " + "\"" + id + "\" AND \n"
-                                + "PH.fechaproducto = (select MAX(fechaproducto) \n"
-                                + "from preciohistoricoproducto AS PH2 \n"
-                                + "where PH.codproducto = PH2.codproducto)";
+                                + "ph.fechaproducto = (select MAX(fechaproducto) \n"
+                                + "from preciohistoricoproducto AS ph2 \n"
+                                + "where ph.codproducto = ph2.codproducto)";
                         try {
                             st = conexion.getConnection().createStatement();
                             rs = st.executeQuery(sql);
@@ -7981,7 +7981,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         String sql1;
                         Statement st1;
                         ResultSet rs1;
-                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE ph.codproducto = PH2.codproducto AND PH2.fechaproducto<oc.fecha)";
+                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto AND ph2.fechaproducto<oc.fecha)";
                         st1 = conexion.getConnection().createStatement();
                         rs1 = st1.executeQuery(sql1);
                         DefaultTableModel modelo = (DefaultTableModel) jTableDetallesVenta.getModel();
@@ -8521,7 +8521,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         String sql1;
                         Statement st1;
                         ResultSet rs1;
-                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE ph.codproducto = PH2.codproducto AND PH2.fechaproducto<oc.fecha)";
+                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto AND ph2.fechaproducto<oc.fecha)";
                         st1 = conexion.getConnection().createStatement();
                         rs1 = st1.executeQuery(sql1);
                         DefaultTableModel modelo = (DefaultTableModel) jTableDetallesPresupuesto.getModel();
@@ -8850,13 +8850,13 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 try {
                     String sql = "UPDATE `producto` SET `nombreproducto`=?,`cantidadproductoventa`=?,`cantidadproductoproduccion`=?,`descripcionproducto`=?  , `stockminimo` = ? WHERE codproducto = '" + cod + "'";
                     String sq2 = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                    String sql3 = "SELECT PH.precioproductoneto,p.cantidadproductoventa,p.cantidadproductoproduccion \n"
-                            + "FROM producto p, preciohistoricoproducto PH \n"
-                            + "where p.codproducto = PH.codproducto AND \n"
+                    String sql3 = "SELECT ph.precioproductoneto,p.cantidadproductoventa,p.cantidadproductoproduccion \n"
+                            + "FROM producto p, preciohistoricoproducto ph \n"
+                            + "where p.codproducto = ph.codproducto AND \n"
                             + "p.codproducto = " + "\"" + cod + "\" AND \n"
-                            + "PH.fechaproducto = (select MAX(fechaproducto) \n"
-                            + "from preciohistoricoproducto AS PH2 \n"
-                            + "where PH.codproducto = PH2.codproducto)";
+                            + "ph.fechaproducto = (select MAX(fechaproducto) \n"
+                            + "from preciohistoricoproducto AS ph2 \n"
+                            + "where ph.codproducto = ph2.codproducto)";
                     PreparedStatement st3 = conexion.getConnection().prepareStatement(sql3);
                     ResultSet rs;
                     rs = st3.executeQuery(sql3);
@@ -9020,9 +9020,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     especie = "--Seleccionar especie--";
                 }
                 if (tipo.equals("--Seleccionar tipo--")) {
-                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
-                            + "FROM producto P, preciohistoricoproducto PH, planta pl "
-                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, ph.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                            + "FROM producto P, preciohistoricoproducto ph, planta pl "
+                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = ph.codproducto AND ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
                 } else if (especie.equals("--Seleccionar especie--")) {
                     sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
                             + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
