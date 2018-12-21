@@ -7525,26 +7525,49 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             int cantidad = Integer.parseInt(cant.getText());
                             String sql = "UPDATE `producto` SET `cantidadproductoventa`=?,`cantidadproductoproduccion`=? WHERE codproducto = '" + id + "'";
                             PreparedStatement st;
-                            if (cantidad > cantStockVenta || cantidad > cantStockProduccion) {
-                                JOptionPane.showMessageDialog(null, "cantidad excede el maximo");
-                            } else {
-                                try {
-                                    st = conexion.getConnection().prepareStatement(sql);
-                                    if (De.equalsIgnoreCase("Venta")) {
+                            try {
+                                String cambio = "";
+                                st = conexion.getConnection().prepareStatement(sql);
+                                if (De.equalsIgnoreCase("Venta")) {
+                                    if (cantidad > cantStockVenta) {
+                                        JOptionPane.showMessageDialog(null, "cantidad excede el maximo");
+                                    } else {
                                         st.setInt(1, cantStockVenta - cantidad);
                                         st.setInt(2, cantStockProduccion + cantidad);
                                         JOptionPane.showMessageDialog(null, "Operacion exitosa");
+                                        cambio = "Usuario: " + datos[0] + " movio : " + cantidad + " a produccion del producto: " + id;
+                                        st.executeUpdate();
+                                        String sql9;
+                                        PreparedStatement st9;
+                                        sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                                        st9 = conexion.getConnection().prepareStatement(sql9);
+                                        st9.setString(1, datos[0]);
+                                        st9.setString(2, cambio);
+                                        st9.executeUpdate();
+                                    }
+                                } else {
+                                    if (cantidad > cantStockProduccion) {
+                                        JOptionPane.showMessageDialog(null, "cantidad excede el maximo");
                                     } else {
                                         st.setInt(1, cantStockVenta + cantidad);
                                         st.setInt(2, cantStockProduccion - cantidad);
                                         JOptionPane.showMessageDialog(null, "Operacion exitosa");
+                                        cambio = "Usuario: " + datos[0] + " movio : " + cantidad + " a venta del producto: " + id;
+                                        st.executeUpdate();
+                                        String sql9;
+                                        PreparedStatement st9;
+                                        sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                                        st9 = conexion.getConnection().prepareStatement(sql9);
+                                        st9.setString(1, datos[0]);
+                                        st9.setString(2, cambio);
+                                        st9.executeUpdate();
                                     }
-                                    st.executeUpdate();
-                                } catch (SQLException ex) {
-                                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                                 }
+                            } catch (SQLException ex) {
+                                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        }     
+
+                        }
                         refrescarTablaListaProductos();
                     } else {
                         JOptionPane.showMessageDialog(null, "Operacion Cancelada");
