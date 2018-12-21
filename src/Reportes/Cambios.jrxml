@@ -4,11 +4,17 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="logo" class="java.io.InputStream"/>
+	<parameter name="fecha1" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha2" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT idcambio as "codigo cambio", rutusuario as "rut", descripcioncambio as "Descripcion" from cambios]]>
+		<![CDATA[SELECT idcambio as "codigo cambio", fechacambio as "Fecha", descripcioncambio as "Descripcion" from cambios where fechacambio between $P{fecha1} and $P{fecha2}]]>
 	</queryString>
 	<field name="codigo cambio" class="java.lang.Integer"/>
-	<field name="rut" class="java.lang.String"/>
+	<field name="Fecha" class="java.sql.Timestamp"/>
 	<field name="Descripcion" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -46,41 +52,41 @@
 	<columnHeader>
 		<band height="23" splitType="Stretch">
 			<staticText>
-				<reportElement x="18" y="0" width="100" height="20" uuid="c859bc19-f574-4c45-85d7-67fd02295d58"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="c859bc19-f574-4c45-85d7-67fd02295d58"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Codigo cambio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="136" y="0" width="78" height="20" uuid="a18d5d91-8df7-46d5-97e3-779e6fd0a18a"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Rut]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="226" y="0" width="100" height="20" uuid="fdd5ae29-56b8-4ba3-90bc-d9d6292bfcaf"/>
+				<reportElement x="200" y="0" width="100" height="20" uuid="fdd5ae29-56b8-4ba3-90bc-d9d6292bfcaf"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="20" uuid="ff91344b-875e-455c-8013-fc5f7e1755ce"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="136" y="0" width="78" height="20" uuid="a8352933-59a5-4c84-9fe7-f649cbc10276"/>
-				<textFieldExpression><![CDATA[$F{rut}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="226" y="0" width="330" height="20" uuid="b1dbf66e-6ccd-464f-a13a-04bf928e3fe0"/>
-				<textFieldExpression><![CDATA[$F{Descripcion}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="36" y="0" width="100" height="20" uuid="9c729dbb-5461-4484-ac21-9444fea069eb"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="9c729dbb-5461-4484-ac21-9444fea069eb"/>
 				<textFieldExpression><![CDATA[$F{codigo cambio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="20" uuid="d66102f1-e8e9-411b-b235-1c9b1b90a2fc"/>
+				<textFieldExpression><![CDATA[$F{Fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="355" height="20" uuid="b1dbf66e-6ccd-464f-a13a-04bf928e3fe0"/>
+				<textFieldExpression><![CDATA[$F{Descripcion}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

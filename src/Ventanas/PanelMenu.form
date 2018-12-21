@@ -1986,6 +1986,7 @@
                                           <Component id="jLabel99" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel100" alignment="0" min="-2" pref="95" max="-2" attributes="0"/>
                                           <Component id="jLabel91" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel155" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="1" attributes="0">
@@ -1995,6 +1996,7 @@
                                           <Group type="102" alignment="0" attributes="0">
                                               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="jTextFieldCodigoProductoMerma" max="32767" attributes="0"/>
                                                   <Group type="102" alignment="0" attributes="0">
                                                       <EmptySpace min="-2" pref="171" max="-2" attributes="0"/>
                                                       <Component id="jLabelErrorRut4" min="-2" max="-2" attributes="0"/>
@@ -2009,7 +2011,7 @@
                                       <Component id="jRadioButtonHabilitarEdicionMerma" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="94" max="32767" attributes="0"/>
+                              <EmptySpace pref="97" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -2030,7 +2032,12 @@
                                   <Component id="jTextFieldEditarFechaMerma" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
                                   <Component id="jLabel98" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="70" max="32767" attributes="0"/>
+                              <EmptySpace pref="20" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel155" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jTextFieldCodigoProductoMerma" alignment="1" min="-2" pref="32" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jTextFieldEditarNombreMerma" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel91" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -2171,6 +2178,21 @@
                           <Font name="Tahoma" size="18" style="0"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="Nombre Producto:"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="jLabel155">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="18" style="0"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Codigo: "/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JTextField" name="jTextFieldCodigoProductoMerma">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="18" style="0"/>
+                        </Property>
                       </Properties>
                     </Component>
                   </SubComponents>
@@ -4992,7 +5014,7 @@
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace pref="23" max="32767" attributes="0"/>
+                              <EmptySpace pref="33" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -5361,6 +5383,11 @@
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextFieldFolioDetalleVenta">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="18" style="0"/>
+                        </Property>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -6124,6 +6151,11 @@
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextFieldFolioVenta">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="18" style="0"/>
+                        </Property>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -6488,6 +6520,11 @@
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextFieldFolioPresupuesto">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="18" style="0"/>
+                        </Property>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -6757,7 +6794,7 @@
                                   <Component id="jLabel139" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jDateChooserFechaPresupuesto" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel154" max="32767" attributes="0"/>
-                                  <Component id="jTextFieldFolioDetallePresupuesto" pref="30" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldFolioDetallePresupuesto" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jScrollPane24" min="-2" pref="200" max="-2" attributes="0"/>
@@ -6997,6 +7034,11 @@
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextFieldFolioDetallePresupuesto">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Tahoma" size="18" style="0"/>
+                        </Property>
+                      </Properties>
                     </Component>
                   </SubComponents>
                 </Container>

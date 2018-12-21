@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Presupuesto" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3358b0f3-01f7-4875-9e23-34eeb51bc4c7">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="codcompra" class="java.lang.Integer">
@@ -8,7 +8,7 @@
 	</parameter>
 	<parameter name="logo" class="java.io.InputStream"/>
 	<queryString>
-		<![CDATA[SELECT po.codordencompra,p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, oc.fecha, oc.totalneto, oc.totalcondescuento, (oc.totalsindescuento-oc.totalcondescuento) AS descuento, oc.totalsindescuento, ph.precioproductoneto 
+		<![CDATA[SELECT po.codordencompra,p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, oc.fecha, oc.totalneto, oc.totalcondescuento, (oc.totalsindescuento-oc.totalcondescuento) AS descuento, oc.totalsindescuento, ph.precioproductoneto,oc.folio 
 from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc
 WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra= $P{codcompra} and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto AND ph2.fechaproducto<oc.fecha)]]>
 	</queryString>
@@ -41,6 +41,9 @@ WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and 
 	<field name="precioproductoneto" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="folio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -64,13 +67,16 @@ WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and 
 		</band>
 	</title>
 	<pageHeader>
-		<band height="38" splitType="Stretch">
+		<band height="37" splitType="Stretch">
 			<textField>
 				<reportElement x="98" y="0" width="100" height="20" uuid="24c744b6-cba7-4b61-89e6-985237e90143"/>
 				<textFieldExpression><![CDATA[$F{codordencompra}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="0" width="100" height="20" uuid="062e8960-840c-4992-ac4e-c747f8817eeb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Codigo presuspuesto:]]></text>
 			</staticText>
 			<staticText>
@@ -80,29 +86,55 @@ WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and 
 				</textElement>
 				<text><![CDATA[Lista de productos:]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="334" y="0" width="38" height="20" uuid="34d6607e-729f-492c-8ef6-8138c0714421"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Folio :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="372" y="0" width="100" height="20" uuid="ae1eab13-7928-4353-ae3a-debbcfb32313"/>
+				<textFieldExpression><![CDATA[$F{folio}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="22" splitType="Stretch">
 			<staticText>
 				<reportElement x="98" y="0" width="100" height="20" uuid="b5ca9dd2-1ca4-4ddf-a137-c613661bef3f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Nombre deproducto]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="298" y="0" width="100" height="20" uuid="392b8981-f017-4bb6-9558-2559cc12947f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Precio neto unidad]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="198" y="0" width="100" height="20" uuid="12a213cc-7072-4977-805c-b58305819b06"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Cantidad]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="398" y="0" width="100" height="20" uuid="c5422e71-5318-4e47-877f-e041444f7e6b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Precio neto total]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="-2" y="0" width="100" height="20" uuid="6d3c6d36-421d-4586-b696-bdfe211fc044"/>
-				<text><![CDATA[Id]]></text>
+				<reportElement x="0" y="0" width="100" height="20" uuid="6d3c6d36-421d-4586-b696-bdfe211fc044"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codigo]]></text>
 			</staticText>
 		</band>
 	</columnHeader>

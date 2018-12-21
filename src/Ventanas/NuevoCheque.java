@@ -38,8 +38,8 @@ public class NuevoCheque extends javax.swing.JFrame {
     private String tipoPago;
     private int neto;
     private int efectivo;
-
-    public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo) {
+    private String folio;
+    public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo,String folio) {
         initComponents();
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.conexion = conexion;
@@ -54,6 +54,7 @@ public class NuevoCheque extends javax.swing.JFrame {
         this.jTextFieldMontoCheque.setEnabled(false);
         this.jTextFieldMontoCheque.setEditable(false);
         this.neto = neto;
+        this.folio= folio;
         this.efectivo = efectivo;
         validarSoloNumeros(jTextFieldMontoCheque);
         validarSoloNumeros(jTextFieldNumeroChequeAgregar);
@@ -294,12 +295,13 @@ public class NuevoCheque extends javax.swing.JFrame {
     private void ingresarVenta() throws SQLException {
         String sql4;
         PreparedStatement st4;
-        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` ) VALUES (?,?,?,?)";
+        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
         st4 = conexion.getConnection().prepareStatement(sql4);
         st4.setInt(1, PanelMenu.pasarAinteger(totalConDescuento));
         st4.setInt(2, PanelMenu.pasarAinteger(totalSinDescuento));
         st4.setInt(3, neto);
         st4.setInt(4, efectivo);
+        st4.setString(5, folio);
         st4.executeUpdate();
 
         //obtener id de la compra
