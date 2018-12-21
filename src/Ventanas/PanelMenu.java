@@ -7566,7 +7566,6 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             } catch (SQLException ex) {
                                 Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                             }
-
                         }
                         refrescarTablaListaProductos();
                     } else {
