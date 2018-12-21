@@ -42,8 +42,8 @@ public class ColorRender extends DefaultTableCellRenderer {
         }
         if (cobrado.equals("Cobrado")) {
             this.setOpaque(true);
-            this.setBackground(Color.BLACK);
-            this.setForeground(Color.WHITE);
+            this.setBackground(Color.lightGray);
+            this.setForeground(Color.BLACK);
         } else {
             if (difDias <= 0) {
                 this.setOpaque(true);

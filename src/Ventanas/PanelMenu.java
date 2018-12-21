@@ -21,9 +21,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -762,7 +767,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 } else {
                     int neto = pasarAinteger(jLabelCalcularNeto.getText());
                     int efectivo = pasarAinteger(jTextFieldEfectivo.getText());
-                    NuevoCheque nuevocheque = new NuevoCheque(conexion, datos, carrito, cantProductosCarrito, totalConDescuento, totalSinDescuento, metodoPago, tipoPago, neto, efectivo,jTextFieldFolioVenta.getText());
+                    NuevoCheque nuevocheque = new NuevoCheque(conexion, datos, carrito, cantProductosCarrito, totalConDescuento, totalSinDescuento, metodoPago, tipoPago, neto, efectivo, jTextFieldFolioVenta.getText());
                     nuevocheque.setVisible(true);
                     Clear_Table1(jTableVenta);
                     jLabelCalcularNeto.setText("0");
@@ -3423,20 +3428,20 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
         jTableListaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Nombre de producto", "Cantidad en venta", "Cantidad en producción", "Stock minimo", "Precio", "Editar"
+                "ID", "Nombre de producto", "Cantidad en venta", "Cantidad en producción", "Stock minimo", "Precio", "Editar", "Mover Stock"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -6362,7 +6367,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             jPanelVentasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelVentasLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 541, Short.MAX_VALUE)
                 .addGap(80, 80, 80))
             .addGroup(jPanelVentasLayout.createSequentialGroup()
                 .addGap(86, 86, 86)
@@ -7475,6 +7480,74 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         } catch (SQLException ex) {
                             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                    }
+                } else {
+                    JTextField cant = new JTextField();
+                    String[] list = {"Venta", "Produccion"};
+                    JComboBox jcb = new JComboBox(list);
+                    JComboBox jcb2 = new JComboBox(list);
+                    Object[] message = {
+                        "Desde:", jcb,
+                        "cantidad:", cant,
+                        "Hacia:", jcb2,};
+                    String id = String.valueOf(jTableListaProductos.getValueAt(jTableListaProductos.getSelectedRow(), 0));
+                    String sql8;
+                    Statement st8;
+                    ResultSet rs8;
+                    int cantStockVenta = 0;
+                    int cantStockProduccion = 0;
+                    sql8 = "SELECT `cantidadproductoventa`, `cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + id;
+                    try {
+                        st8 = conexion.getConnection().createStatement();
+                        rs8 = st8.executeQuery(sql8);
+                        while (rs8.next()) {
+                            cantStockVenta = rs8.getInt(1);
+                            cantStockProduccion = rs8.getInt(2);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    int option = JOptionPane.showConfirmDialog(null, message, "Mover Stock", JOptionPane.OK_CANCEL_OPTION);
+                    if (option == JOptionPane.OK_OPTION) {
+                        if (jcb.getSelectedIndex() == jcb2.getSelectedIndex()) {
+                            JOptionPane.showMessageDialog(null, "Selecione destinos distintos");
+                        } else {
+                            String De = "";
+                            String para = "";
+                            if (jcb.getSelectedIndex() == 0) {
+                                De = "Venta";
+                                para = "Produccion";
+                            } else {
+                                De = "Produccion";
+                                para = "Venta";
+                            }
+                            int cantidad = Integer.parseInt(cant.getText());
+                            String sql = "UPDATE `producto` SET `cantidadproductoventa`=?,`cantidadproductoproduccion`=? WHERE codproducto = '" + id + "'";
+                            PreparedStatement st;
+                            if (cantidad > cantStockVenta || cantidad > cantStockProduccion) {
+                                JOptionPane.showMessageDialog(null, "cantidad excede el maximo");
+                            } else {
+                                try {
+                                    st = conexion.getConnection().prepareStatement(sql);
+                                    if (De.equalsIgnoreCase("Venta")) {
+                                        st.setInt(1, cantStockVenta - cantidad);
+                                        st.setInt(2, cantStockProduccion + cantidad);
+                                        JOptionPane.showMessageDialog(null, "Operacion exitosa");
+                                    } else {
+                                        st.setInt(1, cantStockVenta + cantidad);
+                                        st.setInt(2, cantStockProduccion - cantidad);
+                                        JOptionPane.showMessageDialog(null, "Operacion exitosa");
+                                    }
+                                    st.executeUpdate();
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                        }     
+                        refrescarTablaListaProductos();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Operacion Cancelada");
                     }
                 }
             }
@@ -8786,7 +8859,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
                         st9 = conexion.getConnection().prepareStatement(sql9);
                         st9.setString(1, datos[0]);
-                        st9.setString(2, "El usuario: " + datos[0]+ " cambio el precio del producto: " + cod + " a: $" + precio);
+                        st9.setString(2, "El usuario: " + datos[0] + " cambio el precio del producto: " + cod + " a: $" + precio);
                         st9.executeUpdate();
 
                     }
@@ -8908,6 +8981,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     public void refrescarTablaListaProductos() {
         Clear_Table1(jTableListaProductos);
         JButton info = new JButton("Editar");
+        JButton info2 = new JButton("Mover Stock");
         String sql1;
         Statement st2;
         ResultSet rs2;
@@ -8952,7 +9026,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         try {
             st2 = conexion.getConnection().createStatement();
             rs2 = st2.executeQuery(sql1);
-            Object[] datosQuery = new Object[7];
+            Object[] datosQuery = new Object[8];
 
             while (rs2.next()) {
 
@@ -8963,6 +9037,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 datosQuery[4] = rs2.getString(7);
                 datosQuery[5] = formatearAEntero(rs2.getString(5));
                 datosQuery[6] = info;
+                datosQuery[7] = info2;
                 modelo.addRow(datosQuery);
             }
             jTableListaProductos.setModel(modelo);
