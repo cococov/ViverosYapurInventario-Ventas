@@ -1371,7 +1371,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                         PreparedStatement st6;
                                         sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
                                         st6 = conexion.getConnection().prepareStatement(sql);
-                                        st6.setString(1, codProduto);
+                                        st6.setString(1, codigoUnico);
                                         st6.setInt(2, codEspeciePlanta);
                                         st6.executeUpdate();
 
