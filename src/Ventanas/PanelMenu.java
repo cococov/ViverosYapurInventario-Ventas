@@ -5461,7 +5461,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Nombre", "Precio", "-", "Cantidad", "+", "Total", "X"
+                "Codigo", "Nombre", "Precio", "-", "Cantidad", "+", "Total", "X"
             }
         ) {
             Class[] types = new Class [] {
@@ -5773,7 +5773,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Id", "Nombre", "Precio", "-", "Cantidad", "+", "Total", "X"
+                "Codigo", "Nombre", "Precio", "-", "Cantidad", "+", "Total", "X"
             }
         ) {
             Class[] types = new Class [] {
