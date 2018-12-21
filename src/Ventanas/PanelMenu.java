@@ -1358,27 +1358,27 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
                                         st5.executeUpdate();
 
-                                        int codProduto = 0;
+                                        String codProduto = "";
                                         PreparedStatement st;
                                         ResultSet rs;
                                         sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
                                         st = conexion.getConnection().prepareStatement(sql);
                                         rs = st.executeQuery(sql);
                                         while (rs.next()) {
-                                            codProduto = rs.getInt(1);
+                                            codProduto = rs.getString(1);
                                         }
 
                                         PreparedStatement st6;
                                         sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
                                         st6 = conexion.getConnection().prepareStatement(sql);
-                                        st6.setInt(1, codProduto);
+                                        st6.setString(1, codProduto);
                                         st6.setInt(2, codEspeciePlanta);
                                         st6.executeUpdate();
 
                                         PreparedStatement st7;
                                         sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
                                         st7 = conexion.getConnection().prepareStatement(sql);
-                                        st7.setInt(1, codProduto);
+                                        st7.setString(1, codProduto);
                                         st7.setString(2, precioProducto);
                                         st7.executeUpdate();
                                         JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
@@ -1408,24 +1408,25 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 st5.setInt(4, cantidadProduccion);
                                 st5.setString(5, descripcion);
                                 st5.setString(6, stock);
-                                int codProduto = 0;
+                                st5.executeUpdate();
+                                String codProduto = "";
                                 PreparedStatement st;
                                 ResultSet rs;
                                 sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
                                 st = conexion.getConnection().prepareStatement(sql);
                                 rs = st.executeQuery(sql);
                                 while (rs.next()) {
-                                    codProduto = rs.getInt(1);
+                                    codProduto = rs.getString(1);
                                 }
                                 PreparedStatement st6;
                                 sql = "INSERT INTO `accesorio`(`codproducto`) VALUES (?)";
                                 st6 = conexion.getConnection().prepareStatement(sql);
-                                st6.setInt(1, codProduto);
+                                st6.setString(1, codProduto);
                                 st6.executeUpdate();
                                 PreparedStatement st7;
                                 sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
                                 st7 = conexion.getConnection().prepareStatement(sql);
-                                st7.setInt(1, codProduto);
+                                st7.setString(1, codigoUnico);
                                 st7.setString(2, precioProducto);
                                 st7.executeUpdate();
                                 JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
