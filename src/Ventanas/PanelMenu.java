@@ -123,7 +123,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         validarSoloNumeros(jTextFieldCantidadMerma);
         validarSoloNumeros(jTextFieldFolioVenta);
         validarSoloNumeros(jTextFieldFolioPresupuesto);
-        validarSoloNumeros(jTextFieldCodigoProducto);        
+        validarSoloNumeros(jTextFieldCodigoProducto);
         this.jTextFieldMontoCheque.addFocusListener(this);
         seleccionarProducto = new SeleccionarProducto(this.conexion, null);
 
@@ -1115,7 +1115,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     if (ActStockCorrecto) {
                         sql = "INSERT INTO merma(cantidadmerma,descripcionmerma,codproducto) values(?,?,?)";
                         st = conexion.getConnection().prepareStatement(sql);
-                        st.setInt(3, ID);
+                        st.setString(3, String.valueOf(ID));
                         st.setInt(1, cant);
                         st.setString(2, info);
                         st.executeUpdate();
@@ -1320,6 +1320,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                             }
                                         } else {
                                             String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                                            String nombreEspecie = (String) jComboBoxAgregarEspeciePlanta.getSelectedItem();
                                             PreparedStatement st;
                                             ResultSet rs;
                                             String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
@@ -1331,7 +1332,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
                                             PreparedStatement st2;
                                             ResultSet rs2;
-                                            String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "'";
+                                            String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "' and e.nombreespecie = '" + nombreEspecie + "'";
                                             st2 = conexion.getConnection().prepareStatement(sql2);
                                             rs2 = st.executeQuery(sql2);
                                             while (rs2.next()) {
@@ -3727,7 +3728,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEditarProductoFormLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonConfirmarEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(94, 94, 94)
+                .addGap(87, 87, 87)
                 .addComponent(jRadioButton5)
                 .addGap(90, 90, 90))
             .addGroup(jPanelEditarProductoFormLayout.createSequentialGroup()
@@ -3812,11 +3813,11 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         .addComponent(jTextFieldStockEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanelTipoPlanta1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
-                .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonConfirmarEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton5))
-                .addGap(21, 21, 21))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGroup(jPanelEditarProductoFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jRadioButton5)
+                    .addComponent(jButtonConfirmarEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27))
         );
 
         jPanel6.add(jPanelEditarProductoForm, "card2");
@@ -6492,7 +6493,17 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jButtonCambioUsuarioActionPerformed
 
     private void jButtonAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoActionPerformed
-
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        jTextFieldNombreEditarProducto.setText("");
+        jTextFieldCantidadVentaEditarProducto.setText("");
+        jTextFieldCantidadProdEditarProducto.setText("");
+        jTextFieldPrecioEditarProducto.setText("");
+        jTextAreaEditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        cantProdActual.setText("");
+        cantVentaActual.setText("");
         jPanelEditarProducto.show(false);
         this.jPanelAgregarMerma.show(false);
         this.jPanelListaMermas.show(false);
@@ -6797,6 +6808,17 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
     private void jButtonEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarProductoActionPerformed
         refrescarTablaListaProductos();
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        jTextFieldNombreEditarProducto.setText("");
+        jTextFieldCantidadVentaEditarProducto.setText("");
+        jTextFieldCantidadProdEditarProducto.setText("");
+        jTextFieldPrecioEditarProducto.setText("");
+        jTextAreaEditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        cantProdActual.setText("");
+        cantVentaActual.setText("");
         try {
             rellenarComboBoxTipoPlantaListado();
         } catch (SQLException ex) {
@@ -7222,6 +7244,17 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jButtonConfirmarAgregarMermaActionPerformed
 
     private void jButtonEditarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarMermaActionPerformed
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        jTextFieldNombreEditarProducto.setText("");
+        jTextFieldCantidadVentaEditarProducto.setText("");
+        jTextFieldCantidadProdEditarProducto.setText("");
+        jTextFieldPrecioEditarProducto.setText("");
+        jTextAreaEditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        cantProdActual.setText("");
+        cantVentaActual.setText("");
         jPanelEditarProducto.show(false);
         this.jPanelAgregarMerma.show(false);
         this.jPanelListaMermas.show(true);
@@ -7341,6 +7374,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     jTextFieldEditarNombreMerma.setText("");
                     jTextFieldEditarCantidadMerma.setText("");
                     jTextAreaEditarDescripcionMerma.setText("");
+                    jTextFieldCodigoProductoMerma.setText("");
                     JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
                             JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -7363,6 +7397,17 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
     private void jButtonAgregarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarMermaActionPerformed
         jRadioButtonVentaMerma.setSelected(true);
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        jTextFieldNombreEditarProducto.setText("");
+        jTextFieldCantidadVentaEditarProducto.setText("");
+        jTextFieldCantidadProdEditarProducto.setText("");
+        jTextFieldPrecioEditarProducto.setText("");
+        jTextAreaEditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        cantProdActual.setText("");
+        cantVentaActual.setText("");
         refrescarTablaListaProductosMerma();
         jPanelEditarProducto.show(false);
         jPanelEditarProductoForm.show(false);
