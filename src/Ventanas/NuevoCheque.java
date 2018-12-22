@@ -351,7 +351,7 @@ public class NuevoCheque extends javax.swing.JFrame {
                     st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
                     st9.setString(3, String.valueOf(carrito[i].getId()));
                     st9.executeUpdate();
-                } else if (carrito[i].getCantidad() < cantStock) {
+                } else if (carrito[i].getCantidad() <= cantStock) {
                     String sql9;
                     PreparedStatement st9;
                     sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";

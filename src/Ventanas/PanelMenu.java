@@ -686,8 +686,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             CalcularIVA.setText("0");
                             jTextFieldDescuentoVenta.setText("");
                             jLabelPrecioAPagar.setText("0");
-                            jTextFieldEfectivo.setText("");
+                            jTextFieldEfectivo.setText("0");
                             jLabelVuelto.setText("0");
+                            jTextFieldFolioVenta.setText("");
                             limpiarCarrito();
                             return true;
                         }
@@ -749,7 +750,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                     st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
                                     st9.setString(3, String.valueOf(carrito[i].getId()));
                                     st9.executeUpdate();
-                                } else if (carrito[i].getCantidad() < cantStock) {
+                                } else if (carrito[i].getCantidad() <= cantStock) {
                                     String sql9;
                                     PreparedStatement st9;
                                     sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
@@ -798,7 +799,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                         CalcularIVA.setText("0");
                         jTextFieldDescuentoVenta.setText("");
                         jLabelPrecioAPagar.setText("0");
-                        jTextFieldEfectivo.setText("");
+                        jTextFieldEfectivo.setText("0");
                         jLabelVuelto.setText("0");
                         jTextFieldFolioVenta.setText("");
                         limpiarCarrito();
@@ -808,16 +809,18 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     int neto = pasarAinteger(jLabelCalcularNeto.getText());
                     int efectivo = pasarAinteger(jTextFieldEfectivo.getText());
                     NuevoCheque nuevocheque = new NuevoCheque(conexion, datos, carrito, cantProductosCarrito, totalConDescuento, totalSinDescuento, metodoPago, tipoPago, neto, efectivo, jTextFieldFolioVenta.getText());
-                    nuevocheque.setVisible(true);
+                    nuevocheque.setVisible(true);                  
                     Clear_Table1(jTableVenta);
                     jLabelCalcularNeto.setText("0");
                     CalcularIVA.setText("0");
                     jTextFieldDescuentoVenta.setText("");
                     jLabelPrecioAPagar.setText("0");
-                    jTextFieldEfectivo.setText("");
+                    jTextFieldEfectivo.setText("0");
                     jLabelVuelto.setText("0");
                     jTextFieldFolioVenta.setText("");
                     limpiarCarrito();
+                    jPanelEditarProducto.show(false);
+                    refrescarTablaListaProductos();
                     return false;
                 }
             } else {
@@ -9002,6 +9005,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                 JasperViewer view = new JasperViewer(jprint, false);
                 view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
                 view.setVisible(true);
+            }else{
+                refrescarTablaListaProductos();
             }
             // TODO add your handling code here:
         } catch (SQLException | JRException ex) {
