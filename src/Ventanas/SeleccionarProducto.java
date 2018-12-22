@@ -3,6 +3,8 @@ package Ventanas;
 import Clases.Producto;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,6 +13,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import proyectoyapur.ConnectarBD;
@@ -39,9 +42,22 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
         this.jTableproductos.setDefaultRenderer(Object.class, new Render());
         refrescarTipo();
         refrescarTabla();
-
+        validarSoloNumeros(jTextFieldCantidad);
     }
 
+    
+    public void validarSoloNumeros(JTextField jtext) {
+        jtext.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                }
+            }
+        });
+    }
+    
     public SeleccionarProducto() {
         initComponents();
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -464,18 +480,41 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             int cantidadProduccion = Integer.parseInt(this.jTableproductos.getValueAt(row, 3).toString());
             int precio = PanelMenu.pasarAinteger(this.jTableproductos.getValueAt(row, 4).toString());
             int cantidad = Integer.parseInt(this.jTextFieldCantidad.getText());
-
-            Producto p = new Producto(ID, nombre, cantidad, precio);
-            if (PanelMenu.getEsVenta()) {
-                if (cantidad <= (cantidadVentas + cantidadProduccion)) {
-                    PanelMenu.agregarProductoCarrito(p);
+            Producto[] carritoActual = PanelMenu.carrito;
+            boolean esta = false;
+            int cantEsta = 0;
+            for (int i = 0; i < PanelMenu.cantProductosCarrito; i++) {
+                if (carritoActual[i].getId() == ID) {
+                    esta = true;
+                    cantEsta = carritoActual[i].getCantidad();
+                    break;
+                }
+            }
+            if (!esta) {
+                Producto p = new Producto(ID, nombre, cantidad, precio);
+                if (PanelMenu.getEsVenta()) {
+                    if (cantidad <= (cantidadVentas + cantidadProduccion)) {
+                        PanelMenu.agregarProductoCarrito(p);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Stock es insuficiente");
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Stock es insuficiente");
+                    PanelMenu.agregarProductoCarritoPresupuesto(p);
                 }
             } else {
-                PanelMenu.agregarProductoCarritoPresupuesto(p);
+                cantidad = cantidad+cantEsta;
+                Producto p = new Producto(ID, nombre, cantidad, precio);
+                if (PanelMenu.getEsVenta()) {
+                    if (cantidad <= (cantidadVentas + cantidadProduccion)) {
+                        PanelMenu.agregarProductoCarrito(p);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Stock es insuficiente");
+                    }
+                } else {
+                    PanelMenu.agregarProductoCarritoPresupuesto(p);
+                }
             }
-
+            jTextFieldCantidad.setText("1");
         }
     }//GEN-LAST:event_jButtonAgregarActionPerformed
 

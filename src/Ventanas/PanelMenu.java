@@ -1789,6 +1789,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             }
         });
     }
+    
+    
 
     public boolean validarRut(String rut) {
 
