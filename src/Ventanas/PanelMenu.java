@@ -560,6 +560,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             } else if (jRadioButtonFactura.isSelected()) {
                 tipoPago = "Factura";
             }
+            boolean restoBien = false;
             metodoPago = (String) jComboBoxMetodoPago.getSelectedItem();
             String totalConDescuento = jLabelPrecioAPagar.getText();
             int totalSinDesc = pasarAinteger(jLabelCalcularNeto.getText()) + pasarAinteger(CalcularIVA.getText());
@@ -617,23 +618,43 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 String sql8;
                                 Statement st8;
                                 ResultSet rs8;
-                                sql8 = "SELECT `cantidadproductoventa` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
+                                sql8 = "SELECT `cantidadproductoventa`,`cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
                                 st8 = conexion.getConnection().createStatement();
                                 rs8 = st8.executeQuery(sql8);
                                 int cantStock = 0;
+                                int cantStockPro = 0;
                                 while (rs8.next()) {
                                     cantStock = rs8.getInt(1);
+                                    cantStockPro = rs8.getInt(2);
                                 }
-
-                                if (cantStock - carrito[i].getCantidad() >= 0) {
-                                    String sql9;
-                                    PreparedStatement st9;
-                                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
-                                    st9 = conexion.getConnection().prepareStatement(sql9);
-                                    st9.setInt(1, (cantStock - carrito[i].getCantidad()));
-                                    st9.setString(2, String.valueOf(carrito[i].getId()));
-                                    st9.executeUpdate();
-
+                                if ((cantStock + cantStockPro) - carrito[i].getCantidad() >= 0) {
+                                    if (carrito[i].getCantidad() > cantStock) {
+                                        String sql9;
+                                        PreparedStatement st9;
+                                        sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+                                        st9 = conexion.getConnection().prepareStatement(sql9);
+                                        st9.setInt(1, 0);
+                                        st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
+                                        st9.setString(3, String.valueOf(carrito[i].getId()));
+                                        st9.executeUpdate();
+                                    } else if (carrito[i].getCantidad() < cantStock) {
+                                        String sql9;
+                                        PreparedStatement st9;
+                                        sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
+                                        st9 = conexion.getConnection().prepareStatement(sql9);
+                                        st9.setInt(1, (cantStock - carrito[i].getCantidad()));
+                                        st9.setString(2, String.valueOf(carrito[i].getId()));
+                                        st9.executeUpdate();
+                                    } else if (carrito[i].getCantidad() == (cantStock + cantStockPro)) {
+                                        String sql9;
+                                        PreparedStatement st9;
+                                        sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+                                        st9 = conexion.getConnection().prepareStatement(sql9);
+                                        st9.setInt(1, 0);
+                                        st9.setInt(2, 0);
+                                        st9.setString(3, String.valueOf(carrito[i].getId()));
+                                        st9.executeUpdate();
+                                    }
                                 }
                                 /*
                             MOSTRAR MENSAJE? HABRIA QUE CANCELAR LA VENTA---------------------------------------
@@ -709,23 +730,43 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             String sql8;
                             Statement st8;
                             ResultSet rs8;
-                            sql8 = "SELECT `cantidadproductoventa` FROM `producto` WHERE `codproducto`= " + carrito[i].getId();
+                            sql8 = "SELECT `cantidadproductoventa`,`cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
                             st8 = conexion.getConnection().createStatement();
                             rs8 = st8.executeQuery(sql8);
                             int cantStock = 0;
+                            int cantStockPro = 0;
                             while (rs8.next()) {
                                 cantStock = rs8.getInt(1);
+                                cantStockPro = rs8.getInt(2);
                             }
-
-                            if (cantStock - carrito[i].getCantidad() >= 0) {
-                                String sql9;
-                                PreparedStatement st9;
-                                sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
-                                st9 = conexion.getConnection().prepareStatement(sql9);
-                                st9.setInt(1, (cantStock - carrito[i].getCantidad()));
-                                st9.setString(2, String.valueOf(carrito[i].getId()));
-                                st9.executeUpdate();
-
+                            if ((cantStock + cantStockPro) - carrito[i].getCantidad() >= 0) {
+                                if (carrito[i].getCantidad() > cantStock) {
+                                    String sql9;
+                                    PreparedStatement st9;
+                                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+                                    st9 = conexion.getConnection().prepareStatement(sql9);
+                                    st9.setInt(1, 0);
+                                    st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
+                                    st9.setString(3, String.valueOf(carrito[i].getId()));
+                                    st9.executeUpdate();
+                                } else if (carrito[i].getCantidad() < cantStock) {
+                                    String sql9;
+                                    PreparedStatement st9;
+                                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
+                                    st9 = conexion.getConnection().prepareStatement(sql9);
+                                    st9.setInt(1, (cantStock - carrito[i].getCantidad()));
+                                    st9.setString(2, String.valueOf(carrito[i].getId()));
+                                    st9.executeUpdate();
+                                } else if (carrito[i].getCantidad() == (cantStock + cantStockPro)) {
+                                    String sql9;
+                                    PreparedStatement st9;
+                                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+                                    st9 = conexion.getConnection().prepareStatement(sql9);
+                                    st9.setInt(1, 0);
+                                    st9.setInt(2, 0);
+                                    st9.setString(3, String.valueOf(carrito[i].getId()));
+                                    st9.executeUpdate();
+                                }
                             }
                             /*
                             MOSTRAR MENSAJE? HABRIA QUE CANCELAR LA VENTA---------------------------------------
@@ -8937,6 +8978,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     private void jButtonConfirmarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVentaActionPerformed
         try {
             if (registrarVenta()) {
+                refrescarTablaListaProductos();
                 JasperReport reporte;
                 String path = "/Reportes/Boleta.jasper";
                 String sql2;
@@ -8969,7 +9011,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
         if (!seleccionarProducto.isVisible()) {
             SeleccionarProducto.refrescarTabla();
-            seleccionarProducto.setAlwaysOnTop(true);
+            seleccionarProducto.setAlwaysOnTop(false);
             seleccionarProducto.setTitle("Seleccionar producto");
             seleccionarProducto.setLocationRelativeTo(null);
             seleccionarProducto.setResizable(false);

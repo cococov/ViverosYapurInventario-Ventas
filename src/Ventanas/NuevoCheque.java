@@ -39,7 +39,8 @@ public class NuevoCheque extends javax.swing.JFrame {
     private int neto;
     private int efectivo;
     private String folio;
-    public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo,String folio) {
+
+    public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo, String folio) {
         initComponents();
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.conexion = conexion;
@@ -54,7 +55,7 @@ public class NuevoCheque extends javax.swing.JFrame {
         this.jTextFieldMontoCheque.setEnabled(false);
         this.jTextFieldMontoCheque.setEditable(false);
         this.neto = neto;
-        this.folio= folio;
+        this.folio = folio;
         this.efectivo = efectivo;
         validarSoloNumeros(jTextFieldMontoCheque);
         validarSoloNumeros(jTextFieldNumeroChequeAgregar);
@@ -331,23 +332,43 @@ public class NuevoCheque extends javax.swing.JFrame {
             String sql8;
             Statement st8;
             ResultSet rs8;
-            sql8 = "SELECT `cantidadproductoventa` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
+            sql8 = "SELECT `cantidadproductoventa`,`cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
             st8 = conexion.getConnection().createStatement();
             rs8 = st8.executeQuery(sql8);
             int cantStock = 0;
+            int cantStockPro = 0;
             while (rs8.next()) {
                 cantStock = rs8.getInt(1);
+                cantStockPro = rs8.getInt(2);
             }
-
-            if (cantStock - carrito[i].getCantidad() >= 0) {
-                String sql9;
-                PreparedStatement st9;
-                sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
-                st9 = conexion.getConnection().prepareStatement(sql9);
-                st9.setInt(1, (cantStock - carrito[i].getCantidad()));
-                st9.setInt(2, carrito[i].getId());
-                st9.executeUpdate();
-
+            if ((cantStock + cantStockPro) - carrito[i].getCantidad() >= 0) {
+                if (carrito[i].getCantidad() > cantStock) {
+                    String sql9;
+                    PreparedStatement st9;
+                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+                    st9 = conexion.getConnection().prepareStatement(sql9);
+                    st9.setInt(1, 0);
+                    st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
+                    st9.setString(3, String.valueOf(carrito[i].getId()));
+                    st9.executeUpdate();
+                } else if (carrito[i].getCantidad() < cantStock) {
+                    String sql9;
+                    PreparedStatement st9;
+                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
+                    st9 = conexion.getConnection().prepareStatement(sql9);
+                    st9.setInt(1, (cantStock - carrito[i].getCantidad()));
+                    st9.setString(2, String.valueOf(carrito[i].getId()));
+                    st9.executeUpdate();
+                } else if (carrito[i].getCantidad() == (cantStock + cantStockPro)) {
+                    String sql9;
+                    PreparedStatement st9;
+                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+                    st9 = conexion.getConnection().prepareStatement(sql9);
+                    st9.setInt(1, 0);
+                    st9.setInt(2, 0);
+                    st9.setString(3, String.valueOf(carrito[i].getId()));
+                    st9.executeUpdate();
+                }
             }
         }
         //Ingresar orden compra
@@ -365,7 +386,7 @@ public class NuevoCheque extends javax.swing.JFrame {
         sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
         st9 = conexion.getConnection().prepareStatement(sql9);
         st9.setString(1, datos[0]);
-        st9.setString(2, "El usuario: " +datos[0]+" realizo la venta ID: " + codCompra);
+        st9.setString(2, "El usuario: " + datos[0] + " realizo la venta ID: " + codCompra);
         st9.executeUpdate();
     }
 

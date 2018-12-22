@@ -464,16 +464,18 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
             int cantidadProduccion = Integer.parseInt(this.jTableproductos.getValueAt(row, 3).toString());
             int precio = PanelMenu.pasarAinteger(this.jTableproductos.getValueAt(row, 4).toString());
             int cantidad = Integer.parseInt(this.jTextFieldCantidad.getText());
-            if (cantidad <= (cantidadVentas + cantidadProduccion)) {
-                Producto p = new Producto(ID, nombre, cantidad, precio);
-                if (PanelMenu.getEsVenta()) {
+
+            Producto p = new Producto(ID, nombre, cantidad, precio);
+            if (PanelMenu.getEsVenta()) {
+                if (cantidad <= (cantidadVentas + cantidadProduccion)) {
                     PanelMenu.agregarProductoCarrito(p);
                 } else {
-                    PanelMenu.agregarProductoCarritoPresupuesto(p);
+                    JOptionPane.showMessageDialog(null, "Stock es insuficiente");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Cantidad insuficiente del producto!");
+                PanelMenu.agregarProductoCarritoPresupuesto(p);
             }
+
         }
     }//GEN-LAST:event_jButtonAgregarActionPerformed
 
