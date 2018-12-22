@@ -22,7 +22,7 @@ import proyectoyapur.Render;
  */
 public final class SeleccionarProducto extends javax.swing.JFrame {
 
-    private ConnectarBD conexion;
+    private static ConnectarBD conexion;
     private int column;
     private int row;
 
@@ -97,20 +97,20 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
         return retValue;
     }
 
-    public void refrescarTabla() {
+    public static void refrescarTabla() {
         Clear_Table1(jTableproductos);
         JButton info = new JButton("Info");
         String sql1;
         Statement st2;
         ResultSet rs2;
-        String producto = this.jComboBoxProducto.getSelectedItem().toString();
-        String tipo = this.jComboBoxTipo.getSelectedItem().toString();
+        String producto = SeleccionarProducto.jComboBoxProducto.getSelectedItem().toString();
+        String tipo = SeleccionarProducto.jComboBoxTipo.getSelectedItem().toString();
         String especie;
-        String filtroNombre = this.jTextFieldFiltroNombre.getText();
+        String filtroNombre = SeleccionarProducto.jTextFieldFiltroNombre.getText();
         switch (producto) {
             case "Planta":
-                if (this.jComboBoxEspecie.getSelectedItem() != null) {
-                    especie = this.jComboBoxEspecie.getSelectedItem().toString();
+                if (SeleccionarProducto.jComboBoxEspecie.getSelectedItem() != null) {
+                    especie = SeleccionarProducto.jComboBoxEspecie.getSelectedItem().toString();
                 } else {
                     especie = "--Seleccionar especie--";
                 }
@@ -157,12 +157,12 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                 modelo.addRow(datos);
             }
             jTableproductos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            jTableproductos.getColumnModel().getColumn(0).setPreferredWidth(38);
+            jTableproductos.getColumnModel().getColumn(0).setPreferredWidth(48);
             jTableproductos.getColumnModel().getColumn(1).setPreferredWidth(118);
-            jTableproductos.getColumnModel().getColumn(2).setPreferredWidth(58);
+            jTableproductos.getColumnModel().getColumn(2).setPreferredWidth(51);
             jTableproductos.getColumnModel().getColumn(3).setPreferredWidth(62);
             jTableproductos.getColumnModel().getColumn(4).setPreferredWidth(68);
-            jTableproductos.getColumnModel().getColumn(5).setPreferredWidth(67);
+            jTableproductos.getColumnModel().getColumn(5).setPreferredWidth(65);
             jTableproductos.setModel(modelo);
         } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,7 +170,7 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
 
     }
 
-    private void Clear_Table1(JTable tabla) {
+    private static void Clear_Table1(JTable tabla) {
         DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
         for (int i = 0; i < tabla.getRowCount(); i++) {
             modelo.removeRow(i);
@@ -393,33 +393,32 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(49, 49, 49)
                         .addComponent(jPanelTipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(49, 49, 49)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabel4)
-                                            .addGap(241, 241, 241)
-                                            .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(4, 4, 4))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(jLabel1)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jComboBoxProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(12, 12, 12))))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(jLabel5)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jTextFieldFiltroNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGap(0, 0, Short.MAX_VALUE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jButtonCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(49, 49, 49)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel4)
+                                        .addGap(241, 241, 241)
+                                        .addComponent(jTextFieldCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(4, 4, 4))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jComboBoxProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(12, 12, 12))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel5)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextFieldFiltroNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButtonCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -579,9 +578,9 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAgregar;
     private javax.swing.JButton jButtonCerrar;
-    private javax.swing.JComboBox<String> jComboBoxEspecie;
-    private javax.swing.JComboBox<String> jComboBoxProducto;
-    private javax.swing.JComboBox<String> jComboBoxTipo;
+    private static javax.swing.JComboBox<String> jComboBoxEspecie;
+    private static javax.swing.JComboBox<String> jComboBoxProducto;
+    private static javax.swing.JComboBox<String> jComboBoxTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -591,9 +590,9 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelTipo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTableproductos;
+    private static javax.swing.JTable jTableproductos;
     private javax.swing.JTextArea jTextAreaInfoProducto;
     private javax.swing.JTextField jTextFieldCantidad;
-    private javax.swing.JTextField jTextFieldFiltroNombre;
+    private static javax.swing.JTextField jTextFieldFiltroNombre;
     // End of variables declaration//GEN-END:variables
 }
