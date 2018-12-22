@@ -166,15 +166,15 @@ WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and 
 		<band height="99" splitType="Stretch">
 			<staticText>
 				<reportElement x="298" y="25" width="100" height="20" uuid="bbaf9a03-8645-472a-afca-66e4b9f1716e"/>
-				<text><![CDATA[Total:]]></text>
+				<text><![CDATA[Total + IVA :]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="298" y="5" width="100" height="20" uuid="9c34e287-4837-4a4a-b3b7-9e7f9f53810f"/>
 				<text><![CDATA[Total neto:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="280" y="65" width="118" height="20" uuid="fb641669-8fae-489e-b83d-129574d6fe19"/>
-				<text><![CDATA[Total con descuento:]]></text>
+				<reportElement x="298" y="65" width="100" height="20" uuid="fb641669-8fae-489e-b83d-129574d6fe19"/>
+				<text><![CDATA[Total :]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="298" y="45" width="100" height="20" uuid="c7ea4e0b-0d28-47cc-8f19-f8d21a7d1e3d"/>

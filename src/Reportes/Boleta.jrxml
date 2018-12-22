@@ -169,7 +169,7 @@
 			</staticText>
 			<staticText>
 				<reportElement x="299" y="20" width="100" height="20" uuid="9d4db405-5fd6-4f68-95ea-c4f9de70c0f0"/>
-				<text><![CDATA[Total:]]></text>
+				<text><![CDATA[Total + IVA:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="399" y="20" width="100" height="20" uuid="db208d6d-fb54-4724-9c0b-b5d1ac618eb8"/>
@@ -188,8 +188,8 @@
 				<textFieldExpression><![CDATA[$F{totalcondescuento}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="281" y="60" width="118" height="20" uuid="60558370-954b-47f5-85a0-28f4f560a63d"/>
-				<text><![CDATA[Total con descuento:]]></text>
+				<reportElement x="299" y="60" width="100" height="20" uuid="60558370-954b-47f5-85a0-28f4f560a63d"/>
+				<text><![CDATA[Total:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="399" y="80" width="100" height="20" uuid="54605c01-f16d-46ad-9f12-cd0a0105b0a8"/>
