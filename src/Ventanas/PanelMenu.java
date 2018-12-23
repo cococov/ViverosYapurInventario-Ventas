@@ -8204,6 +8204,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                             staux2.setString(1, datos[0]);
                             staux2.setString(2, "El usuario " + datos[0] + " cancelo la compra de codigo: " + aux);
                             staux2.executeUpdate();
+                            refrescarTablaListaProductos();
                         } catch (SQLException ex) {
                             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
                         }
