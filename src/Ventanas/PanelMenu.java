@@ -14,6 +14,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +29,7 @@ import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -41,1808 +45,2181 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import jxl.write.Number;
+import java.util.Locale;
+import javax.swing.JFileChooser;
 import proyectoyapur.ColorRender;
 import proyectoyapur.Render;
 
 public final class PanelMenu extends javax.swing.JFrame implements FocusListener {
 
-  private String datos[];
-  private ConnectarBD conexion;
-  private String rutAeditar;
-  public static Producto[] carrito;
-  public static int cantProductosCarrito;
-  public static int totalGlobal;
-  public static boolean apreto = false;
-  private String ProveedorSeleccionado;
-  private String mermaSeleccionada;
-  private SeleccionarProducto seleccionarProducto;
+    private String datos[];
+    private ConnectarBD conexion;
+    private String rutAeditar;
+    public static Producto[] carrito;
+    public static int cantProductosCarrito;
+    public static int totalGlobal;
+    public static boolean apreto = false;
+    private String ProveedorSeleccionado;
+    private String mermaSeleccionada;
+    private SeleccionarProducto seleccionarProducto;
 
-  public PanelMenu(ConnectarBD conexion, String datos[]) {
-    initComponents();    
-    //this.setExtendedState(MAXIMIZED_BOTH);
-    this.jRadioButtonTodosListaDeCheques.setSelected(true);
-    ProveedorSeleccionado = "";
-    mermaSeleccionada = "";
-    TableColumnModel tcm = this.jTableEditarProveedor1.getColumnModel();
-    tcm.removeColumn(tcm.getColumn(5));
-    TableColumnModel tcm2 = this.jTableEliminarProveedor2.getColumnModel();
-    tcm2.removeColumn(tcm2.getColumn(5));
-    TableColumnModel tcm3 = this.jTableListaMermas.getColumnModel();
-    tcm3.removeColumn(tcm3.getColumn(5));
-    limpiarCarrito();
-    this.setLocationRelativeTo(null);
-    this.conexion = conexion;
-    this.datos = datos;
-    this.jLabelNombreUsuario.setText(datos[1] + " " + datos[2] + " " + datos[3]);
-    this.jTableEditarUsuario.setDefaultRenderer(Object.class, new Render());
-    this.jTableBloquearUsuario.setDefaultRenderer(Object.class, new Render());
-    this.jTableEditarCheques.setDefaultRenderer(Object.class, new Render());
-    PanelMenu.jTableVenta.setDefaultRenderer(Object.class, new Render());
-    this.jTableListaProductos.setDefaultRenderer(Object.class, new ColorRenderInv());
-    this.jTableEditarProveedor1.setDefaultRenderer(Object.class, new Render());
-    PanelMenu.jTableListaVentas.setDefaultRenderer(Object.class, new Render());
-    this.jTableEliminarProveedor2.setDefaultRenderer(Object.class, new Render());
-    this.jTableListaMermas.setDefaultRenderer(Object.class, new Render());
-    this.jTablePresupuesto.setDefaultRenderer(Object.class, new Render());
-    this.jTableListaPresupuestos.setDefaultRenderer(Object.class, new Render());
-    this.jTextFieldDescuentoPresupuesto.setText("0");
-    this.jPanel4.setVisible(false);
-    this.jPanel7.setVisible(false);
-    this.jPanel6.setVisible(false);
-    this.jPanel9.setVisible(false);
-    this.jPanel12.setVisible(false);
-    this.jTextFieldRutEditarUsuario.setEditable(false);
-    this.jTextFieldRutEditarUsuario.setEnabled(false);
-    jComboBoxTipoUsuarioAgregar.setEditable(false);
-    jComboBoxTipoEditarUsuario.setEditable(false);
-    PanelMenu.jTextFieldDescuentoVenta.setEditable(false);
-    PanelMenu.jTextFieldDescuentoVenta.setEnabled(false);
-    PanelMenu.jTextFieldEfectivo.setEditable(false);
-    PanelMenu.jTextFieldEfectivo.setEnabled(false);
-    this.jPanelRealizarPresupuesto.setVisible(false);
-    this.jPanelRealizarVenta.setVisible(false);
-    jTextAreaDescripcionDetallesPresupuesto.setEnabled(false);
-    jTextAreaDescripcionDetallesPresupuesto.setEditable(false);
-    validarSoloNumeros(jTextFieldNumeroChequeAgregar);
-    validarSoloNumeros(jTextFieldMontoCheque);
-    validarSoloNumeros(jTextFieldNumeroChequeEditar);
-    validarSoloNumeros(jTextFieldMontoEditarCheque);
-    validarSoloNumeros(jTextFieldCantidadProdAgregaProducto);
-    validarSoloNumeros(jTextFieldCantidadVentaAgregarProducto);
-    validarSoloNumeros(jTextFieldDescuentoVenta);
-    validarSoloNumeros(jTextFieldEditarContactoProveedor);
-    validarSoloNumeros(jTextFieldContactoProveedor);
-    validarSoloNumeros(jTextFieldEfectivo);
-    validarSoloNumeros(jTextFieldNumeroCuentaAgregarCheque);
-    validarSoloNumeros(jTextFieldNumeroCuentaEditarCheque);
-    validarSoloNumeros(jTextFieldStockAgregarProducto);
-    validarSoloNumeros(jTextFieldPrecioAgregarProducto);
-    validarSoloNumeros(jTextFieldStockEditarProducto);
-    validarSoloNumeros(jTextFieldCantidadProdEditarProducto);
-    validarSoloNumeros(jTextFieldCantidadVentaEditarProducto);
-    validarSoloNumeros(jTextFieldPrecioEditarProducto);
-    validarSoloNumeros(jTextFieldCantidadMerma);
-    validarSoloNumeros(jTextFieldFolioVenta);
-    validarSoloNumeros(jTextFieldFolioPresupuesto);
-    validarSoloNumeros(jTextFieldCodigoProducto);
-    this.jTextFieldMontoCheque.addFocusListener(this);
-    seleccionarProducto = new SeleccionarProducto(this.conexion, null);
-
-    jPanelTipoPlanta.setVisible(false);
-
-    if (datos[5].equals("2")) {
-      this.jTabbedPane1.remove(3);
-      this.jTabbedPane1.remove(2);
-      this.jTabbedPane1.remove(1);
-      this.jTabbedPane1.remove(0);
-      this.jTabbedPane1.remove(1);
-      this.jButtonListaVentas.setVisible(false);
-      this.jButtonListaPresupuestos.setVisible(false);
-
-    } else if (datos[5].equals("3")) {
-      this.jTabbedPane1.remove(0);
-      this.jTabbedPane1.remove(1);
-      this.jTabbedPane1.remove(1);
-      this.jTabbedPane1.remove(1);
-      this.jTabbedPane1.remove(1);
-
-    }
-    refrescarTablaVenta();
-    refrescarTablaListaProductosMerma();
-    refrescarTablaMermas();
-    try {
-      rellenarComboBoxTipoPlantaListadoMerma();
-    } catch (SQLException ex) {
-      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-  public PanelMenu() {
-    initComponents();
-    this.setLocationRelativeTo(null);
-  }
-
-  public void reporteTodosProveedores() throws JRException {
-    JasperReport reporte;
-    String path = "/Reportes/Proveedores.jasper";
-    Map parametro = new HashMap();
-    String logo = "/Imagenes/logo-yapur.png";
-    parametro.put("logo", this.getClass().getResourceAsStream(logo));
-    reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-    JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-    JasperViewer view = new JasperViewer(jprint, false);
-    view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    view.setVisible(true);
-  }
-
-  public void reporteTodosInventario() throws JRException {
-    JasperReport reporte;
-    String path = "/Reportes/Inventario.jasper";
-    Map parametro = new HashMap();
-    String logo = "/Imagenes/logo-yapur.png";
-    parametro.put("logo", this.getClass().getResourceAsStream(logo));
-    reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-    JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-    JasperViewer view = new JasperViewer(jprint, false);
-    view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    view.setVisible(true);
-  }
-
-  public void reporteTodosUsuario() throws JRException {
-    JasperReport reporte;
-    String logo = "/Imagenes/logo-yapur.png";
-    String path = "/Reportes/Usuarios.jasper";
-    Map parametro = new HashMap();
-    parametro.put("logo", this.getClass().getResourceAsStream(logo));
-    reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-    JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-    JasperViewer view = new JasperViewer(jprint, false);
-    view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    view.setVisible(true);
-  }
-
-  public void reporteTodosVentas() throws JRException {
-    JasperReport reporte;
-    SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
-    JDateChooser jd = new JDateChooser();
-    String message = "Seleccione fecha Inicio :\n";
-    Object[] params = {message, jd};
-    JOptionPane.showConfirmDialog(null, params, "Fecha Inicio", JOptionPane.PLAIN_MESSAGE);
-    if (jd.getDate() == null) {
-      JOptionPane.showMessageDialog(null, "Seleccione un fecha de inicio.");
-    } else {
-      String fechaInicio = myFormat.format(jd.getDate());
-      JDateChooser jd2 = new JDateChooser();
-      String message2 = "Seleccione fecha Fin :\n";
-      Object[] params2 = {message2, jd2};
-      JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
-      if (jd2.getDate() == null) {
-        JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
-      } else {
-        String fechaFin = myFormat.format(jd2.getDate());
-        String logo = "/Imagenes/logo-yapur.png";
-        Map parametro = new HashMap();
-        parametro.put("fecha1", fechaInicio);
-        parametro.put("fecha2", fechaFin);
-        parametro.put("logo", this.getClass().getResourceAsStream(logo));
-        String path = "/Reportes/Ventas.jasper";
-        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-        JasperViewer view = new JasperViewer(jprint, false);
-        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        view.setVisible(true);
-      }
-    }
-  }
-
-  public void reporteTodosCheques() throws JRException, ParseException {
-    JasperReport reporte;
-    SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
-    JDateChooser jd = new JDateChooser();
-    String message = "Seleccione fecha Inicio :\n";
-    Object[] params = {message, jd};
-    JOptionPane.showConfirmDialog(null, params, "Fecha Inicio", JOptionPane.PLAIN_MESSAGE);
-    if (jd.getDate() == null) {
-      JOptionPane.showMessageDialog(null, "Seleccione un fecha de inicio.");
-    } else {
-      String fechaInicio = myFormat.format(jd.getDate());
-      JDateChooser jd2 = new JDateChooser();
-      String message2 = "Seleccione fecha Fin :\n";
-      Object[] params2 = {message2, jd2};
-      String logo = "/Imagenes/logo-yapur.png";
-      JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
-      if (jd2.getDate() == null) {
-        JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
-      } else {
-        String fechaFin = myFormat.format(jd2.getDate());
-        Map parametro = new HashMap();
-        parametro.put("fecha1", fechaInicio);
-        parametro.put("fecha2", fechaFin);
-        parametro.put("logo", this.getClass().getResourceAsStream(logo));
-        String path = "/Reportes/Cheques.jasper";
-        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-        JasperViewer view = new JasperViewer(jprint, false);
-        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        view.setVisible(true);
-      }
-    }
-  }
-
-  public static boolean eliminarDelCarrito(Producto[] carro, int x) {
-    if (x < cantProductosCarrito && x >= 0) {
-      carrito[x] = null;
-      for (int i = x; i <= cantProductosCarrito - 1; i++) {
-        carrito[x] = carrito[x + 1];
-      }
-      cantProductosCarrito--;
-      carrito[cantProductosCarrito] = null;
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public static void limpiarCarrito() {
-    carrito = new Producto[1000];
-    cantProductosCarrito = 0;
-
-  }
-
-  public static void agregarProductoCarrito(Producto p) {
-    boolean encontrado = false;
-    for (int i = 0; i < cantProductosCarrito; i++) {
-      if (carrito[i].getId() == p.getId()) {
-        carrito[i].setCantidad(carrito[i].getCantidad() + p.getCantidad());
-        encontrado = true;
-      }
-    }
-    if (!encontrado) {
-      carrito[cantProductosCarrito] = p;
-      cantProductosCarrito++;
-    }
-    apreto = false;
-    refrescarTablaVenta();
-  }
-
-  public static boolean getEsVenta() {
-    if (jPanelRealizarVenta.isVisible()) {
-      return true;
-    }
-    return false;
-  }
-
-  public static void agregarProductoCarritoPresupuesto(Producto p) {
-    boolean encontrado = false;
-    for (int i = 0; i < cantProductosCarrito; i++) {
-      if (carrito[i].getId() == p.getId()) {
-        carrito[i].setCantidad(carrito[i].getCantidad() + p.getCantidad());
-        encontrado = true;
-      }
-    }
-    if (!encontrado) {
-      carrito[cantProductosCarrito] = p;
-      cantProductosCarrito++;
-    }
-    apreto = false;
-    refrescarTablaPresupuesto();
-  }
-
-  public static void refrescarTablaVenta() {
-    Clear_Table1(jTableVenta);
-    DefaultTableModel modelo = (DefaultTableModel) jTableVenta.getModel();
-    Object[] datos = new Object[8];
-    totalGlobal = 0;
-    for (int i = 0; i < cantProductosCarrito; i++) {
-      datos[0] = carrito[i].getId();
-      datos[1] = carrito[i].getNombre();
-      datos[2] = formatearAEntero("" + carrito[i].getPrecio());
-
-      JButton menos = new JButton("-");
-      if (carrito[i].getCantidad() == 1) {
-        menos.setEnabled(false);
-      }
-      datos[3] = menos;
-      datos[4] = carrito[i].getCantidad();
-      JButton mas = new JButton("+");
-      datos[5] = mas;
-      int total = carrito[i].getCantidad() * carrito[i].getPrecio();
-      datos[6] = formatearAEntero("" + total);
-      JButton eliminar = new JButton("X");
-      datos[7] = eliminar;
-      modelo.addRow(datos);
-      totalGlobal = totalGlobal + total;
-    }
-    jTableVenta.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    jTableVenta.getColumnModel().getColumn(0).setPreferredWidth(75);
-    jTableVenta.getColumnModel().getColumn(1).setPreferredWidth(157);
-    jTableVenta.getColumnModel().getColumn(2).setPreferredWidth(87);
-    jTableVenta.getColumnModel().getColumn(3).setPreferredWidth(45);
-    jTableVenta.getColumnModel().getColumn(4).setPreferredWidth(58);
-    jTableVenta.getColumnModel().getColumn(5).setPreferredWidth(45);
-    jTableVenta.getColumnModel().getColumn(6).setPreferredWidth(94);
-    jTableVenta.getColumnModel().getColumn(7).setPreferredWidth(45);
-    jTableVenta.setModel(modelo);
-    String des = jTextFieldDescuentoVenta.getText();
-    if (des.equalsIgnoreCase("")) {
-      jLabelCalcularNeto.setText(formatearAEntero("" + totalGlobal));
-      int iva = (int) (totalGlobal * 0.19);
-      CalcularIVA.setText(formatearAEntero("" + iva));
-      int total = iva + totalGlobal;
-      jLabelPrecioAPagar.setText(formatearAEntero("" + total));
-    } else {
-      jLabelCalcularNeto.setText(formatearAEntero("" + totalGlobal));
-      int iva = (int) (totalGlobal * 0.19);
-      CalcularIVA.setText(formatearAEntero("" + iva));
-      int neto = pasarAinteger(jLabelCalcularNeto.getText());
-      if (jTextFieldDescuentoVenta.getText().equals("")) {
-        jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
-        iva = (int) (totalGlobal * 0.19);
-        CalcularIVA.setText(formatearAEntero("" + iva));
-        jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
-
-      } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
-        if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
-          int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
-          jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVA.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagar.setText(formatearAEntero("" + total));
-
-        }
-      } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
-
-        if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
-
-          int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
-          jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVA.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagar.setText(formatearAEntero("" + total));
-        } else {
-          JOptionPane.showMessageDialog(null, "Descuento excedido");
-        }
-
-      }
-      if (jTextFieldEfectivo.getText().equals("")) {
-        jLabelVuelto.setText("0");
-      } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
-        jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
-      } else {
-        jLabelVuelto.setText("0");
-      }
-    }
-    if (datos[0] == null) {
-      jTextFieldDescuentoVenta.setEditable(false);
-      jTextFieldDescuentoVenta.setEnabled(false);
-      jTextFieldEfectivo.setEditable(false);
-      jTextFieldEfectivo.setEnabled(false);
-    } else {
-      jTextFieldDescuentoVenta.setEditable(true);
-      jTextFieldDescuentoVenta.setEnabled(true);
-      jTextFieldEfectivo.setEditable(true);
-      jTextFieldEfectivo.setEnabled(true);
-    }
-
-  }
-
-  public static void refrescarTablaPresupuesto() {
-    Clear_Table1(jTablePresupuesto);
-    DefaultTableModel modelo = (DefaultTableModel) jTablePresupuesto.getModel();
-    Object[] datos = new Object[8];
-    totalGlobal = 0;
-    for (int i = 0; i < cantProductosCarrito; i++) {
-      datos[0] = carrito[i].getId();
-      datos[1] = carrito[i].getNombre();
-      datos[2] = formatearAEntero("" + carrito[i].getPrecio());
-
-      JButton menos = new JButton("-");
-      if (carrito[i].getCantidad() == 1) {
-        menos.setEnabled(false);
-      }
-      datos[3] = menos;
-      datos[4] = carrito[i].getCantidad();
-      JButton mas = new JButton("+");
-      datos[5] = mas;
-      int total = carrito[i].getCantidad() * carrito[i].getPrecio();
-      datos[6] = formatearAEntero("" + total);
-      JButton eliminar = new JButton("X");
-      datos[7] = eliminar;
-      modelo.addRow(datos);
-      totalGlobal = totalGlobal + total;
-    }
-    jTablePresupuesto.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    jTablePresupuesto.getColumnModel().getColumn(0).setPreferredWidth(75);
-    jTablePresupuesto.getColumnModel().getColumn(1).setPreferredWidth(157);
-    jTablePresupuesto.getColumnModel().getColumn(2).setPreferredWidth(87);
-    jTablePresupuesto.getColumnModel().getColumn(3).setPreferredWidth(45);
-    jTablePresupuesto.getColumnModel().getColumn(4).setPreferredWidth(58);
-    jTablePresupuesto.getColumnModel().getColumn(5).setPreferredWidth(45);
-    jTablePresupuesto.getColumnModel().getColumn(6).setPreferredWidth(94);
-    jTablePresupuesto.getColumnModel().getColumn(7).setPreferredWidth(50);
-    jTablePresupuesto.setModel(modelo);
-    String des = jTextFieldDescuentoPresupuesto.getText();
-    if (des.equalsIgnoreCase("")) {
-      jLabelCalcularNetoPresupuesto.setText(formatearAEntero("" + totalGlobal));
-      int iva = (int) (totalGlobal * 0.19);
-      CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-      int total = iva + totalGlobal;
-      jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
-    } else {
-      jLabelCalcularNetoPresupuesto.setText(formatearAEntero("" + totalGlobal));
-      int iva = (int) (totalGlobal * 0.19);
-      CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-      int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
-      if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
-        jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
-        iva = (int) (totalGlobal * 0.19);
-        CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-        jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
-      } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
-        if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
-          int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
-          jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
-
-        }
-      } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
-
-        if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
-
-          int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
-          jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
-        } else {
-          JOptionPane.showMessageDialog(null, "Descuento excedido");
-        }
-
-      }
-
-    }
-    if (datos[0] == null) {
-      jTextFieldDescuentoPresupuesto.setEditable(false);
-      jTextFieldDescuentoPresupuesto.setEnabled(false);
-    } else {
-      jTextFieldDescuentoPresupuesto.setEditable(true);
-      jTextFieldDescuentoPresupuesto.setEnabled(true);
-    }
-
-  }
-
-  public void reporteTodosCambios() throws JRException {
-    JasperReport reporte;
-    SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
-    JDateChooser jd = new JDateChooser();
-    String message = "Seleccione fecha Inicio :\n";
-    Object[] params = {message, jd};
-    JOptionPane.showConfirmDialog(null, params, "Fecha Inicio", JOptionPane.PLAIN_MESSAGE);
-    if (jd.getDate() == null) {
-      JOptionPane.showMessageDialog(null, "Seleccione un fecha de inicio.");
-    } else {
-      String fechaInicio = myFormat.format(jd.getDate());
-      JDateChooser jd2 = new JDateChooser();
-      String message2 = "Seleccione fecha Fin :\n";
-      Object[] params2 = {message2, jd2};
-      String logo = "/Imagenes/logo-yapur.png";
-      JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
-      if (jd2.getDate() == null) {
-        JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
-      } else {
-        String fechaFin = myFormat.format(jd2.getDate());
-        Map parametro = new HashMap();
-        parametro.put("fecha1", fechaInicio);
-        parametro.put("fecha2", fechaFin);
-        String path = "/Reportes/Cambios.jasper";
-        System.out.println(getClass().getResource(logo));
-        parametro.put("logo", this.getClass().getResourceAsStream(logo));
-        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-        JasperViewer view = new JasperViewer(jprint, false);
-        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        view.setVisible(true);
-      }
-    }
-  }
-
-  public boolean registrarVenta() throws SQLException {
-    if (carrito[0] != null) {
-      String tipoPago = "";
-      String metodoPago = "";
-      if (jRadioButtonBoleta.isSelected()) {
-        tipoPago = "Boleta";
-      } else if (jRadioButtonFactura.isSelected()) {
-        tipoPago = "Factura";
-      }
-      boolean restoBien = false;
-      metodoPago = (String) jComboBoxMetodoPago.getSelectedItem();
-      String totalConDescuento = jLabelPrecioAPagar.getText();
-      int totalSinDesc = pasarAinteger(jLabelCalcularNeto.getText()) + pasarAinteger(CalcularIVA.getText());
-      String totalSinDescuento = formatearAEntero("" + totalSinDesc);
-      if (!jTextFieldFolioVenta.getText().equalsIgnoreCase("")) {
-        //si no es cheque
-        if (jComboBoxMetodoPago.getSelectedIndex() != 4) {
-          //Ingresar orden Compra
-          if (jComboBoxMetodoPago.getSelectedIndex() == 0) {
-            int efectivo;
-            if (!jTextFieldEfectivo.getText().equalsIgnoreCase("")) {
-              efectivo = pasarAinteger(jTextFieldEfectivo.getText());
-            } else {
-              efectivo = 0;
-            }
-            int total = pasarAinteger(jLabelPrecioAPagar.getText());
-            if (efectivo < total) {
-              JOptionPane.showMessageDialog(null, "Efectivo es menor que el total");
-            } else {
-              String sql4;
-              PreparedStatement st4;
-              sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
-              st4 = conexion.getConnection().prepareStatement(sql4);
-              st4.setInt(1, pasarAinteger(totalConDescuento));
-              st4.setInt(2, pasarAinteger(totalSinDescuento));
-              st4.setInt(3, pasarAinteger(jLabelCalcularNeto.getText()));
-              st4.setInt(4, pasarAinteger(jTextFieldEfectivo.getText()));
-              st4.setString(5, jTextFieldFolioVenta.getText());
-              st4.executeUpdate();
-
-              //obtener id de la compra
-              String sql2;
-              Statement st2;
-              ResultSet rs2;
-              sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
-              st2 = conexion.getConnection().createStatement();
-              rs2 = st2.executeQuery(sql2);
-              int codCompra = 0;
-              while (rs2.next()) {
-                codCompra = rs2.getInt(1);
-              }
-
-              String sql3;
-              PreparedStatement st3;
-              //ingresar productos
-              for (int i = 0; i < cantProductosCarrito; i++) {
-                sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
-                st3 = conexion.getConnection().prepareStatement(sql3);
-                st3.setString(1, String.valueOf(carrito[i].getId()));
-                st3.setInt(2, codCompra);
-                st3.setInt(3, carrito[i].getCantidad());
-                st3.executeUpdate();
-
-                //obtener cantidades de stock por producto
-                String sql8;
-                Statement st8;
-                ResultSet rs8;
-                sql8 = "SELECT `cantidadproductoventa`,`cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
-                st8 = conexion.getConnection().createStatement();
-                rs8 = st8.executeQuery(sql8);
-                int cantStock = 0;
-                int cantStockPro = 0;
-                while (rs8.next()) {
-                  cantStock = rs8.getInt(1);
-                  cantStockPro = rs8.getInt(2);
-                }
-                if ((cantStock + cantStockPro) - carrito[i].getCantidad() >= 0) {
-                  if (carrito[i].getCantidad() > cantStock) {
-                    String sql9;
-                    PreparedStatement st9;
-                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
-                    st9 = conexion.getConnection().prepareStatement(sql9);
-                    st9.setInt(1, 0);
-                    st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
-                    st9.setString(3, String.valueOf(carrito[i].getId()));
-                    st9.executeUpdate();
-                  } else if (carrito[i].getCantidad() < cantStock) {
-                    String sql9;
-                    PreparedStatement st9;
-                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
-                    st9 = conexion.getConnection().prepareStatement(sql9);
-                    st9.setInt(1, (cantStock - carrito[i].getCantidad()));
-                    st9.setString(2, String.valueOf(carrito[i].getId()));
-                    st9.executeUpdate();
-                  } else if (carrito[i].getCantidad() == (cantStock + cantStockPro)) {
-                    String sql9;
-                    PreparedStatement st9;
-                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
-                    st9 = conexion.getConnection().prepareStatement(sql9);
-                    st9.setInt(1, 0);
-                    st9.setInt(2, 0);
-                    st9.setString(3, String.valueOf(carrito[i].getId()));
-                    st9.executeUpdate();
-                  }
-                }
-                /*
-                            MOSTRAR MENSAJE? HABRIA QUE CANCELAR LA VENTA---------------------------------------
-                 */
-
-              }
-
-              //Ingresar orden compra
-              String sql1;
-              PreparedStatement st1;
-              sql1 = "INSERT INTO `compra`(`codcompra`, `tipopago`, `metodopago`) VALUES (?,?,?)";
-              st1 = conexion.getConnection().prepareStatement(sql1);
-              st1.setInt(1, codCompra);
-              st1.setString(2, tipoPago);
-              st1.setString(3, metodoPago);
-              st1.executeUpdate();
-
-              String sql9;
-              PreparedStatement st9;
-              sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
-              st9 = conexion.getConnection().prepareStatement(sql9);
-              st9.setString(1, datos[0]);
-              st9.setString(2, "El usuario: " + datos[0] + " realizo la venta de codigo: " + codCompra);
-              st9.executeUpdate();
-
-              JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
-              Clear_Table1(jTableVenta);
-              jLabelCalcularNeto.setText("0");
-              CalcularIVA.setText("0");
-              jTextFieldDescuentoVenta.setText("");
-              jLabelPrecioAPagar.setText("0");
-              jTextFieldEfectivo.setText("0");
-              jLabelVuelto.setText("0");
-              jTextFieldFolioVenta.setText("");
-              limpiarCarrito();
-              return true;
-            }
-          } else {
-            String sql4;
-            PreparedStatement st4;
-            sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
-            st4 = conexion.getConnection().prepareStatement(sql4);
-            st4.setInt(1, pasarAinteger(totalConDescuento));
-            st4.setInt(2, pasarAinteger(totalSinDescuento));
-            st4.setInt(3, pasarAinteger(jLabelCalcularNeto.getText()));
-            st4.setInt(4, pasarAinteger(jTextFieldEfectivo.getText()));
-            st4.setString(5, jTextFieldFolioVenta.getText());
-            st4.executeUpdate();
-
-            //obtener id de la compra
-            String sql2;
-            Statement st2;
-            ResultSet rs2;
-            sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
-            st2 = conexion.getConnection().createStatement();
-            rs2 = st2.executeQuery(sql2);
-            int codCompra = 0;
-            while (rs2.next()) {
-              codCompra = rs2.getInt(1);
-            }
-
-            String sql3;
-            PreparedStatement st3;
-            //ingresar productos
-            for (int i = 0; i < cantProductosCarrito; i++) {
-              sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
-              st3 = conexion.getConnection().prepareStatement(sql3);
-              st3.setString(1, String.valueOf(carrito[i].getId()));
-              st3.setInt(2, codCompra);
-              st3.setInt(3, carrito[i].getCantidad());
-              st3.executeUpdate();
-
-              //obtener cantidades de stock por producto
-              String sql8;
-              Statement st8;
-              ResultSet rs8;
-              sql8 = "SELECT `cantidadproductoventa`,`cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
-              st8 = conexion.getConnection().createStatement();
-              rs8 = st8.executeQuery(sql8);
-              int cantStock = 0;
-              int cantStockPro = 0;
-              while (rs8.next()) {
-                cantStock = rs8.getInt(1);
-                cantStockPro = rs8.getInt(2);
-              }
-              if ((cantStock + cantStockPro) - carrito[i].getCantidad() >= 0) {
-                if (carrito[i].getCantidad() > cantStock) {
-                  String sql9;
-                  PreparedStatement st9;
-                  sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
-                  st9 = conexion.getConnection().prepareStatement(sql9);
-                  st9.setInt(1, 0);
-                  st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
-                  st9.setString(3, String.valueOf(carrito[i].getId()));
-                  st9.executeUpdate();
-                } else if (carrito[i].getCantidad() <= cantStock) {
-                  String sql9;
-                  PreparedStatement st9;
-                  sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
-                  st9 = conexion.getConnection().prepareStatement(sql9);
-                  st9.setInt(1, (cantStock - carrito[i].getCantidad()));
-                  st9.setString(2, String.valueOf(carrito[i].getId()));
-                  st9.executeUpdate();
-                } else if (carrito[i].getCantidad() == (cantStock + cantStockPro)) {
-                  String sql9;
-                  PreparedStatement st9;
-                  sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
-                  st9 = conexion.getConnection().prepareStatement(sql9);
-                  st9.setInt(1, 0);
-                  st9.setInt(2, 0);
-                  st9.setString(3, String.valueOf(carrito[i].getId()));
-                  st9.executeUpdate();
-                }
-              }
-              /*
-                            MOSTRAR MENSAJE? HABRIA QUE CANCELAR LA VENTA---------------------------------------
-               */
-
-            }
-            //Ingresar orden compra
-            String sql1;
-            PreparedStatement st1;
-            sql1 = "INSERT INTO `compra`(`codcompra`, `tipopago`, `metodopago`) VALUES (?,?,?)";
-            st1 = conexion.getConnection().prepareStatement(sql1);
-            st1.setInt(1, codCompra);
-            st1.setString(2, tipoPago);
-            st1.setString(3, metodoPago);
-            st1.executeUpdate();
-
-            String sql9;
-            PreparedStatement st9;
-            sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
-            st9 = conexion.getConnection().prepareStatement(sql9);
-            st9.setString(1, datos[0]);
-            st9.setString(2, "El usuario: " + datos[0] + " realizo la venta de Codigo: " + codCompra);
-            st9.executeUpdate();
-
-            JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
-
-            Clear_Table1(jTableVenta);
-            jLabelCalcularNeto.setText("0");
-            CalcularIVA.setText("0");
-            jTextFieldDescuentoVenta.setText("");
-            jLabelPrecioAPagar.setText("0");
-            jTextFieldEfectivo.setText("0");
-            jLabelVuelto.setText("0");
-            jTextFieldFolioVenta.setText("");
-            limpiarCarrito();
-            return true;
-          }
-        } else {
-          int neto = pasarAinteger(jLabelCalcularNeto.getText());
-          int efectivo = pasarAinteger(jTextFieldEfectivo.getText());
-          NuevoCheque nuevocheque = new NuevoCheque(conexion, datos, carrito, cantProductosCarrito, totalConDescuento, totalSinDescuento, metodoPago, tipoPago, neto, efectivo, jTextFieldFolioVenta.getText());
-          nuevocheque.setVisible(true);
-          Clear_Table1(jTableVenta);
-          jLabelCalcularNeto.setText("0");
-          CalcularIVA.setText("0");
-          jTextFieldDescuentoVenta.setText("");
-          jLabelPrecioAPagar.setText("0");
-          jTextFieldEfectivo.setText("0");
-          jLabelVuelto.setText("0");
-          jTextFieldFolioVenta.setText("");
-          limpiarCarrito();
-          jPanelEditarProducto.show(false);
-          refrescarTablaListaProductos();
-          return false;
-        }
-      } else {
-        JOptionPane.showMessageDialog(null, "Folio se encuentra vacio");
-      }
-    } else {
-      JOptionPane.showMessageDialog(null, "Aun no a agregado productos a la venta");
-    }
-    return false;
-  }
-
-  public boolean registrarPresupuesto() throws SQLException {
-    if (carrito[0] != null) {
-      String tipoPago = "";
-      String metodoPago = "";
-      String totalConDescuento = jLabelPrecioAPagarPresupuesto.getText();
-      int totalSinDesc = pasarAinteger(jLabelCalcularNetoPresupuesto.getText()) + pasarAinteger(CalcularIVAPresupuesto.getText());
-      String totalSinDescuento = formatearAEntero("" + totalSinDesc);
-
-      //si no es cheque
-      //Ingresar orden Compra
-      if (jTextFieldDescuentoPresupuesto.getText().equals("0")) {
-        jTextFieldDescuentoPresupuesto.setText("0");
-      }
-
-      if ((jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0 && pasarAinteger(jTextFieldDescuentoPresupuesto.getText()) < 100) || (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1 && pasarAinteger(jTextFieldDescuentoPresupuesto.getText()) < totalSinDesc)) {
-
-        String sql4;
-        PreparedStatement st4;
-        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
-        st4 = conexion.getConnection().prepareStatement(sql4);
-        st4.setInt(1, pasarAinteger(totalConDescuento));
-        st4.setInt(2, pasarAinteger(totalSinDescuento));
-        st4.setInt(3, pasarAinteger(jLabelCalcularNetoPresupuesto.getText()));
-        st4.setInt(4, 0);
-        st4.setString(5, jTextFieldFolioPresupuesto.getText());
-        st4.executeUpdate();
-
-        //obtener id de la compra
-        String sql2;
-        Statement st2;
-        ResultSet rs2;
-        sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
-        st2 = conexion.getConnection().createStatement();
-        rs2 = st2.executeQuery(sql2);
-        int codCompra = 0;
-        while (rs2.next()) {
-          codCompra = rs2.getInt(1);
-        }
-
-        String sql3;
-        PreparedStatement st3;
-        //ingresar productos
-        for (int i = 0; i < cantProductosCarrito; i++) {
-          sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
-          st3 = conexion.getConnection().prepareStatement(sql3);
-          st3.setString(1, String.valueOf(carrito[i].getId()));
-          st3.setInt(2, codCompra);
-          st3.setInt(3, carrito[i].getCantidad());
-          st3.executeUpdate();
-        }
-        //Ingresar orden compra
-        String sql1;
-        PreparedStatement st1;
-        sql1 = "INSERT INTO `presupuesto`(`codpresupuesto`, `descripcion`) VALUES (?, ?)";
-        st1 = conexion.getConnection().prepareStatement(sql1);
-        st1.setInt(1, codCompra);
-        st1.setString(2, jTextAreaDescripcionPresupuesto.getText());
-        st1.executeUpdate();
-        JOptionPane.showMessageDialog(null, "Presupuesto realizado exitosamente");
-        Clear_Table1(jTablePresupuesto);
-        jLabelCalcularNetoPresupuesto.setText("0");
-        CalcularIVAPresupuesto.setText("0");
-        jTextFieldDescuentoPresupuesto.setText("");
-        jLabelPrecioAPagarPresupuesto.setText("0");
-        jTextAreaDescripcionPresupuesto.setText("");
-        jTextFieldFolioPresupuesto.setText("");
+    public PanelMenu(ConnectarBD conexion, String datos[]) {
+        initComponents();
+        //this.setExtendedState(MAXIMIZED_BOTH);
+        this.jRadioButtonTodosListaDeCheques.setSelected(true);
+        ProveedorSeleccionado = "";
+        mermaSeleccionada = "";
+        TableColumnModel tcm = this.jTableEditarProveedor1.getColumnModel();
+        tcm.removeColumn(tcm.getColumn(5));
+        TableColumnModel tcm2 = this.jTableEliminarProveedor2.getColumnModel();
+        tcm2.removeColumn(tcm2.getColumn(5));
+        TableColumnModel tcm3 = this.jTableListaMermas.getColumnModel();
+        tcm3.removeColumn(tcm3.getColumn(5));
         limpiarCarrito();
-        return true;
+        this.setLocationRelativeTo(null);
+        this.conexion = conexion;
+        this.datos = datos;
+        this.jLabelNombreUsuario.setText(datos[1] + " " + datos[2] + " " + datos[3]);
+        this.jTableEditarUsuario.setDefaultRenderer(Object.class, new Render());
+        this.jTableBloquearUsuario.setDefaultRenderer(Object.class, new Render());
+        this.jTableEditarCheques.setDefaultRenderer(Object.class, new Render());
+        PanelMenu.jTableVenta.setDefaultRenderer(Object.class, new Render());
+        this.jTableListaProductos.setDefaultRenderer(Object.class, new ColorRenderInv());
+        this.jTableEditarProveedor1.setDefaultRenderer(Object.class, new Render());
+        PanelMenu.jTableListaVentas.setDefaultRenderer(Object.class, new Render());
+        this.jTableEliminarProveedor2.setDefaultRenderer(Object.class, new Render());
+        this.jTableListaMermas.setDefaultRenderer(Object.class, new Render());
+        this.jTablePresupuesto.setDefaultRenderer(Object.class, new Render());
+        this.jTableListaPresupuestos.setDefaultRenderer(Object.class, new Render());
+        this.jTextFieldDescuentoPresupuesto.setText("0");
+        this.jPanel4.setVisible(false);
+        this.jPanel7.setVisible(false);
+        this.jPanel6.setVisible(false);
+        this.jPanel9.setVisible(false);
+        this.jPanel12.setVisible(false);
+        this.jTextFieldRutEditarUsuario.setEditable(false);
+        this.jTextFieldRutEditarUsuario.setEnabled(false);
+        jComboBoxTipoUsuarioAgregar.setEditable(false);
+        jComboBoxTipoEditarUsuario.setEditable(false);
+        PanelMenu.jTextFieldDescuentoVenta.setEditable(false);
+        PanelMenu.jTextFieldDescuentoVenta.setEnabled(false);
+        PanelMenu.jTextFieldEfectivo.setEditable(false);
+        PanelMenu.jTextFieldEfectivo.setEnabled(false);
+        this.jPanelRealizarPresupuesto.setVisible(false);
+        this.jPanelRealizarVenta.setVisible(false);
+        jTextAreaDescripcionDetallesPresupuesto.setEnabled(false);
+        jTextAreaDescripcionDetallesPresupuesto.setEditable(false);
+        validarSoloNumeros(jTextFieldNumeroChequeAgregar);
+        validarSoloNumeros(jTextFieldMontoCheque);
+        validarSoloNumeros(jTextFieldNumeroChequeEditar);
+        validarSoloNumeros(jTextFieldMontoEditarCheque);
+        validarSoloNumeros(jTextFieldCantidadProdAgregaProducto);
+        validarSoloNumeros(jTextFieldCantidadVentaAgregarProducto);
+        validarSoloNumeros(jTextFieldDescuentoVenta);
+        validarSoloNumeros(jTextFieldEditarContactoProveedor);
+        validarSoloNumeros(jTextFieldContactoProveedor);
+        validarSoloNumeros(jTextFieldEfectivo);
+        validarSoloNumeros(jTextFieldNumeroCuentaAgregarCheque);
+        validarSoloNumeros(jTextFieldNumeroCuentaEditarCheque);
+        validarSoloNumeros(jTextFieldStockAgregarProducto);
+        validarSoloNumeros(jTextFieldPrecioAgregarProducto);
+        validarSoloNumeros(jTextFieldStockEditarProducto);
+        validarSoloNumeros(jTextFieldCantidadProdEditarProducto);
+        validarSoloNumeros(jTextFieldCantidadVentaEditarProducto);
+        validarSoloNumeros(jTextFieldPrecioEditarProducto);
+        validarSoloNumeros(jTextFieldCantidadMerma);
+        validarSoloNumeros(jTextFieldFolioVenta);
+        validarSoloNumeros(jTextFieldFolioPresupuesto);
+        validarSoloNumeros(jTextFieldCodigoProducto);
+        this.jTextFieldMontoCheque.addFocusListener(this);
+        seleccionarProducto = new SeleccionarProducto(this.conexion, null);
 
-      } else {
-        JOptionPane.showMessageDialog(null, "Descuento excedido");
-      }
-    } else {
-      JOptionPane.showMessageDialog(null, "No hay productos en el carro de presupuesto");
+        jPanelTipoPlanta.setVisible(false);
+
+        if (datos[5].equals("2")) {
+            this.jTabbedPane1.remove(3);
+            this.jTabbedPane1.remove(2);
+            this.jTabbedPane1.remove(1);
+            this.jTabbedPane1.remove(0);
+            this.jTabbedPane1.remove(1);
+            this.jButtonListaVentas.setVisible(false);
+            this.jButtonListaPresupuestos.setVisible(false);
+
+        } else if (datos[5].equals("3")) {
+            this.jTabbedPane1.remove(0);
+            this.jTabbedPane1.remove(1);
+            this.jTabbedPane1.remove(1);
+            this.jTabbedPane1.remove(1);
+            this.jTabbedPane1.remove(1);
+
+        }
+        refrescarTablaVenta();
+        refrescarTablaListaProductosMerma();
+        refrescarTablaMermas();
+        try {
+            rellenarComboBoxTipoPlantaListadoMerma();
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    return false;
-  }
+    public PanelMenu() {
+        initComponents();
+        this.setLocationRelativeTo(null);
+    }
 
-  public void refrescarTablaBloquearUsuario() {
-    Clear_Table1(jTableBloquearUsuario);
-    JButton bloquear = new JButton("Bloquear");
-    JButton desbloquear = new JButton("Desbloquear");
-    String sql1;
-    Statement st2;
-    ResultSet rs2;
-    String filtro = this.jTextFieldFiltrarRutBloquearUsuario.getText();
-    sql1 = "SELECT u.rutusuario, u.nombreusuario, u.apellidopaterno, u.apellidomaterno, r.nombrerol, u.bloqueadoS_N FROM usuario u, rol r WHERE u.idrol=r.idrol AND u.rutusuario LIKE '%" + filtro + "%'";
-    DefaultTableModel modelo = (DefaultTableModel) jTableBloquearUsuario.getModel();
-    try {
-      st2 = conexion.getConnection().createStatement();
-      rs2 = st2.executeQuery(sql1);
-      Object[] datosQuery = new Object[6];
+    public void reporteTodosProveedores() throws JRException {
+        JasperReport reporte;
+        String path = "/Reportes/Proveedores.jasper";
+        Map parametro = new HashMap();
+        String logo = "/Imagenes/logo-yapur.png";
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
+        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+        JasperViewer view = new JasperViewer(jprint, false);
+        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        view.setVisible(true);
+    }
 
-      while (rs2.next()) {
+    public void reporteProveedoresExcel() throws SQLException {
+        HSSFWorkbook libro = new HSSFWorkbook();
+        HSSFSheet hoja = libro.createSheet("proveedores");
+        HSSFRow fila = hoja.createRow(0);
+        HSSFCell celda = fila.createCell(0);
+        HSSFCell celda2 = fila.createCell(1);
+        HSSFCell celda3 = fila.createCell(2);
+        HSSFCell celda4 = fila.createCell(3);
+        celda.setCellValue("Nombre");
+        celda2.setCellValue("Contacto");
+        celda3.setCellValue("Correo");
+        celda4.setCellValue("Descripcion");
+        PreparedStatement st;
+        String sql;
+        ResultSet rs;
+        sql = "SELECT nombreproveedor, contactoproveedor, correoproveedor,descripcionproveedor FROM proveedor ";
+        st = conexion.getConnection().prepareStatement(sql);
+        rs = st.executeQuery(sql);
+        int i = 1;
+        while (rs.next()) {
+            fila = hoja.createRow(i);
+            celda = fila.createCell(0);
+            celda2 = fila.createCell(1);
+            celda3 = fila.createCell(2);
+            celda4 = fila.createCell(3);
+            celda.setCellValue(rs.getString(1));
+            celda2.setCellValue(rs.getString(2));
+            celda3.setCellValue(rs.getString(3));
+            celda4.setCellValue(rs.getString(4));
+            i++;
+        }
+        try {
+            JFileChooser js = new JFileChooser();
+            js.setApproveButtonText("guardar");
+            js.showSaveDialog(null);
+            FileOutputStream archivo = new FileOutputStream(js.getSelectedFile() + ".xls");
+            libro.write(archivo);
+            archivo.close();
+            JOptionPane.showMessageDialog(null, "Archivo generado exitosamente");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Hubo un error al generar el archivo excel");
+        }
+    }
 
-        datosQuery[0] = rs2.getString(1);
-        datosQuery[1] = rs2.getString(2);
-        datosQuery[2] = rs2.getString(3);
-        datosQuery[3] = rs2.getString(4);
-        datosQuery[4] = rs2.getString(5);
+    public void reporteTodosInventario() throws JRException {
+        JasperReport reporte;
+        String path = "/Reportes/Inventario.jasper";
+        Map parametro = new HashMap();
+        String logo = "/Imagenes/logo-yapur.png";
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
+        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+        JasperViewer view = new JasperViewer(jprint, false);
+        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        view.setVisible(true);
+    }
 
-        if (rs2.getBoolean(6)) {
-          if (datosQuery[0].equals(this.datos[0])) {
-            JButton elMismo1 = new JButton("Desbloquear");
-            elMismo1.setEnabled(false);
-            datosQuery[5] = elMismo1;
-          } else {
-            datosQuery[5] = desbloquear;
-          }
-        } else if (datosQuery[0].equals(this.datos[0])) {
-          JButton elMismo = new JButton("Bloquear");
-          elMismo.setEnabled(false);
-          datosQuery[5] = elMismo;
+    public void reporteInventarioExcel() throws FileNotFoundException, IOException, SQLException {
+        HSSFWorkbook libro = new HSSFWorkbook();
+        HSSFSheet hoja = libro.createSheet("inventario");
+        HSSFRow fila = hoja.createRow(0);
+        HSSFCell celda = fila.createCell(0);
+        HSSFCell celda2 = fila.createCell(1);
+        HSSFCell celda3 = fila.createCell(2);
+        HSSFCell celda4 = fila.createCell(3);
+        HSSFCell celda5 = fila.createCell(4);
+        HSSFCell celda6 = fila.createCell(5);
+        HSSFCell celda7 = fila.createCell(6);
+        celda.setCellValue("Codigo producto");
+        celda2.setCellValue("Nombre producto");
+        celda3.setCellValue("Stock minimo");
+        celda4.setCellValue("Cantidad en ventas");
+        celda5.setCellValue("Cantidad en produccion");
+        celda6.setCellValue("Tipo");
+        celda7.setCellValue("Precio");
+        PreparedStatement st;
+        String sql;
+        ResultSet rs;
+        sql = "SELECT p.codproducto as codigo,p.nombreproducto as nombre, p.stockminimo as 'stock minimo' ,p.cantidadproductoventa as 'cantidad en ventas',p.cantidadproductoproduccion as ' cantidad en produccion' ,(CASE when pl.codproducto is null then 'accesorio' else 'planta' end) as tipo, ph.precioproductoneto as precio\n" +
+                "from preciohistoricoproducto ph, producto p left OUTER JOIN planta pl on p.codproducto= pl.codproducto LEFT OUTER JOIN accesorio a  on p.codproducto= a.codproducto \n" +
+                "WHERE ph.codproducto = p.codproducto and ph.fechaproducto = ( SELECT max(ph2.fechaproducto) from preciohistoricoproducto ph2 where ph2.codproducto = p.codproducto)";
+        st = conexion.getConnection().prepareStatement(sql);
+        rs = st.executeQuery(sql);
+        int i = 1;
+        while (rs.next()) {
+            fila = hoja.createRow(i);
+            celda = fila.createCell(0);
+            celda2 = fila.createCell(1);
+            celda3 = fila.createCell(2);
+            celda4 = fila.createCell(3);
+            celda5 = fila.createCell(4);
+            celda6 = fila.createCell(5);
+            celda7 = fila.createCell(6);
+            celda.setCellValue(rs.getString(1));
+            celda2.setCellValue(rs.getString(2));
+            celda3.setCellValue(rs.getString(3));
+            celda4.setCellValue(rs.getInt(4));
+            celda5.setCellValue(rs.getInt(5));
+            celda6.setCellValue(rs.getString(6));
+            celda7.setCellValue(rs.getString(7));
+            i++;
+        }
+        try {
+            JFileChooser js = new JFileChooser();
+            js.setApproveButtonText("guardar");
+            js.showSaveDialog(null);
+            FileOutputStream archivo = new FileOutputStream(js.getSelectedFile() + ".xls");
+            libro.write(archivo);
+            archivo.close();
+            JOptionPane.showMessageDialog(null, "Archivo generado exitosamente");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Hubo un error al generar el archivo excel");
+        }
+    }
 
+    public void reporteTodosUsuario() throws JRException {
+        JasperReport reporte;
+        String logo = "/Imagenes/logo-yapur.png";
+        String path = "/Reportes/Usuarios.jasper";
+        Map parametro = new HashMap();
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
+        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+        JasperViewer view = new JasperViewer(jprint, false);
+        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        view.setVisible(true);
+    }
+    
+    public void reporteUsuariosExcel () throws SQLException{
+        HSSFWorkbook libro = new HSSFWorkbook();
+        HSSFSheet hoja = libro.createSheet("inventario");
+        HSSFRow fila = hoja.createRow(0);
+        HSSFCell celda = fila.createCell(0);
+        HSSFCell celda2 = fila.createCell(1);
+        HSSFCell celda3 = fila.createCell(2);
+        HSSFCell celda4 = fila.createCell(3);
+        celda.setCellValue("Rut");
+        celda2.setCellValue("Nombres");
+        celda3.setCellValue("Apellidos");
+        celda4.setCellValue("Cargo");
+        PreparedStatement st;
+        String sql;
+        ResultSet rs;
+        sql = "SELECT u.rutusuario, u.nombreusuario ,CONCAT(u.apellidopaterno,' ',u.apellidomaterno) as apellidos, r.nombrerol"
+                +" FROM usuario u, rol r WHERE u.idrol = r.idrol";
+        st = conexion.getConnection().prepareStatement(sql);
+        rs = st.executeQuery(sql);
+        int i = 1;
+        while (rs.next()) {
+            fila = hoja.createRow(i);
+            celda = fila.createCell(0);
+            celda2 = fila.createCell(1);
+            celda3 = fila.createCell(2);
+            celda4 = fila.createCell(3);
+            celda.setCellValue(rs.getString(1));
+            celda2.setCellValue(rs.getString(2));
+            celda3.setCellValue(rs.getString(3));
+            celda4.setCellValue(rs.getString(4));
+            i++;
+        }
+        try {
+            JFileChooser js = new JFileChooser();
+            js.setApproveButtonText("guardar");
+            js.showSaveDialog(null);
+            FileOutputStream archivo = new FileOutputStream(js.getSelectedFile() + ".xls");
+            libro.write(archivo);
+            archivo.close();
+            JOptionPane.showMessageDialog(null, "Archivo generado exitosamente");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Hubo un error al generar el archivo excel");
+        }
+    }
+
+    public void reporteTodosVentas() throws JRException {
+        JasperReport reporte;
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+        JDateChooser jd = new JDateChooser();
+        String message = "Seleccione fecha Inicio :\n";
+        Object[] params = {message, jd};
+        JOptionPane.showConfirmDialog(null, params, "Fecha Inicio", JOptionPane.PLAIN_MESSAGE);
+        if (jd.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Seleccione un fecha de inicio.");
         } else {
-          datosQuery[5] = bloquear;
-        }
-        modelo.addRow(datosQuery);
-
-      }
-      jTableBloquearUsuario.setModel(modelo);
-
-    } catch (SQLException ex) {
-      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-    }
-
-  }
-
-  public void refrescarTablaEditarCheque() {
-    Clear_Table1(jTableEditarCheques);
-    JButton cobrar = new JButton("Cobrar");
-    JButton detalles = new JButton("Detalles");
-    String sql1;
-    Statement st2;
-    ResultSet rs2;
-    String filtroNumero = this.jTextFieldFiltrarNumeroListaDeCheques.getText();
-    java.util.Date fecha1 = this.jDateChooserFiltrarFechaListaDeCheques1.getDate();
-    java.util.Date fecha2 = this.jDateChooserFiltrarFechaListaDeCheques2.getDate();
-    java.sql.Date filtroFecha1;
-    java.sql.Date filtroFecha2;
-    boolean cobrado = this.jRadioButtonFiltrarCobradoListaDeCheques.isSelected();
-    String filtroCobrado;
-    if (cobrado) {
-      filtroCobrado = "1";
-    } else {
-      filtroCobrado = "0";
-    }
-    if (jRadioButtonTodosListaDeCheques.isSelected()) {
-      if (fecha1 != null && fecha2 != null) {
-        filtroFecha1 = new java.sql.Date(fecha1.getTime());
-        filtroFecha2 = new java.sql.Date(fecha2.getTime());
-        sql1 = "SELECT `numerocheque`, `nombresemisor`, `apellidosemisor`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `chequescobrados_n` FROM `cheques` WHERE `numerocheque` LIKE '%" + filtroNumero + "%' AND `fecharecepcion` BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "' order by  chequescobrados_n LIKE 0 DESC";
-      } else {
-        sql1 = "SELECT `numerocheque`, `nombresemisor`, `apellidosemisor`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `chequescobrados_n` FROM `cheques` WHERE `numerocheque` LIKE '%" + filtroNumero + "%' order by  chequescobrados_n LIKE 0 DESC";
-      }
-    } else if (fecha1 != null && fecha2 != null) {
-      filtroFecha1 = new java.sql.Date(fecha1.getTime());
-      filtroFecha2 = new java.sql.Date(fecha2.getTime());
-      sql1 = "SELECT `numerocheque`, `nombresemisor`, `apellidosemisor`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `chequescobrados_n` FROM `cheques` WHERE `numerocheque` LIKE '%" + filtroNumero + "%' AND `fecharecepcion` BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "' AND `chequescobrados_n` = '" + filtroCobrado + "' order by  chequescobrados_n LIKE 0 DESC";
-    } else {
-      sql1 = "SELECT `numerocheque`, `nombresemisor`, `apellidosemisor`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `chequescobrados_n` FROM `cheques` WHERE `numerocheque` LIKE '%" + filtroNumero + "%' AND `chequescobrados_n` = '" + filtroCobrado + "' order by  chequescobrados_n LIKE 0 DESC";
-    }
-    DefaultTableModel modelo = (DefaultTableModel) jTableEditarCheques.getModel();
-    //editar lo de abajo
-    try {
-      st2 = conexion.getConnection().createStatement();
-      rs2 = st2.executeQuery(sql1);
-      Object[] datosQuery = new Object[8];
-
-      while (rs2.next()) {
-
-        datosQuery[0] = rs2.getInt(1);
-        datosQuery[1] = rs2.getString(2);
-        datosQuery[2] = rs2.getString(3);
-        datosQuery[3] = rs2.getDate(4);
-        datosQuery[4] = rs2.getDate(5);
-        datosQuery[5] = rs2.getString(6);
-        datosQuery[6] = detalles;
-        if (!rs2.getBoolean(7)) {
-          datosQuery[7] = cobrar;
-        } else {
-          datosQuery[7] = "Cobrado";
-        }
-        modelo.addRow(datosQuery);
-      }
-      jTableEditarCheques.setModel(modelo);
-    } catch (SQLException ex) {
-      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-  @Override
-  public void focusLost(FocusEvent e) {
-    if (e.getSource() == jTextFieldRutAgregarU) {
-      if (!jTextFieldRutAgregarU.getText().equals("")) {
-        if (validarRut(FormatearRUT(jTextFieldRutAgregarU.getText()))) {
-          jTextFieldRutAgregarU.setText(FormatearRUT(jTextFieldRutAgregarU.getText()));
-          jLabelErrorRut.setText("");
-        } else {
-          jLabelErrorRut.setText("Rut no valido!");
-          jTextFieldRutAgregarU.addFocusListener(this);
-        }
-      }
-    }
-
-    if (e.getSource() == jTextFieldMontoCheque) {
-      jTextFieldMontoCheque.setText(formatearAEntero(jTextFieldMontoCheque.getText()));
-
-    }
-  }
-
-  public static String formatearAEntero(String n) {
-    char[] vector = n.toCharArray();
-    String resultado = "";
-    int cont = 0;
-    boolean hizo = false;
-    for (int i = vector.length - 1; i >= 0; i--) {
-      if (vector.length > 3) {
-        hizo = true;
-        if (vector[i] != '.') {
-          if (cont == 3) {
-            cont = 0;
-            resultado = resultado + ".";
-          }
-          resultado = resultado + vector[i];
-          cont++;
-        }
-
-      } else {
-        resultado = n;
-        break;
-      }
-    }
-    String resultadoFinal;
-    if (hizo) {
-      char[] vector2 = resultado.toCharArray();
-      String listo = "";
-      for (int i = vector2.length - 1; i >= 0; i--) {
-        listo = listo + vector2[i];
-      }
-      resultadoFinal = listo;
-    } else {
-      resultadoFinal = n;
-    }
-    return resultadoFinal;
-
-  }
-
-  public static int pasarAinteger(String entero) {
-    char[] numero = entero.toCharArray();
-    String resultado = "";
-    for (int i = 0; i < numero.length; i++) {
-      if (numero[i] != '.') {
-        resultado = resultado + numero[i];
-      }
-    }
-    return Integer.parseInt(resultado);
-  }
-
-  public void agregarProveedor() {
-    String sql;
-    PreparedStatement st;
-    try {
-      String nombres = jTextFieldNombresAgregarP1.getText();
-      String apellidos = jTextFieldApellidosProveedor.getText();
-      String descripcion = jTextAreaProveedor.getText();
-      String contacto = jTextFieldContactoProveedor.getText();
-      String correo = jTextFieldCorreoProveedor.getText();
-      if (!nombres.equalsIgnoreCase("") && !apellidos.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !contacto.equalsIgnoreCase("")
-              && !correo.equalsIgnoreCase("")) {
-        int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este proveedor?");
-        if (confirmar == JOptionPane.YES_OPTION) {
-          //if(validarSoloNumeros(jTextFieldContactoProveedor))
-          sql = "INSERT INTO proveedor(nombreproveedor,descripcionproveedor,apellidosproveedor,contactoproveedor,correoproveedor) values(?,?,?,?,?)";
-          st = conexion.getConnection().prepareStatement(sql);
-          st.setString(1, nombres);
-          st.setString(2, descripcion);
-          st.setString(3, apellidos);
-          st.setString(4, contacto);
-          st.setString(5, correo);
-          st.executeUpdate();
-          jTextFieldNombresAgregarP1.setText("");
-          jTextFieldApellidosProveedor.setText("");
-          jTextAreaProveedor.setText("");
-          jTextFieldContactoProveedor.setText("");
-          jTextFieldCorreoProveedor.setText("");
-          JOptionPane.showMessageDialog(null, "El nuevo proveedor fue agregado con exito!");
-        }
-      } else {
-        JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
-      }
-    } catch (SQLException ex) {
-      JOptionPane.showMessageDialog(null, "ya hay un proveedor con ese rut");
-    }
-  }
-
-  public void agregarMerma(int ID, int cant, String info, String ventaProduccion, int cantO) {
-    String sql = null;
-    String sql2 = null;
-    String sql3 = null;
-    PreparedStatement st;
-    PreparedStatement st2;
-    PreparedStatement st3;
-    boolean ActStockCorrecto = true;
-    if ((cantO - cant) >= 0) {
-      try {
-        int confirmar = JOptionPane.showConfirmDialog(null, "¿Está seguro desea agregar esta merma de " + ventaProduccion + "?");
-        if (confirmar == JOptionPane.YES_OPTION) {
-          try {
-            if (ventaProduccion.equals("Venta")) {
-              sql = "UPDATE `producto` SET `cantidadproductoventa`=? WHERE `codproducto`=?";
-            } else if (ventaProduccion.equals("Produccion")) {
-              sql = "UPDATE `producto` SET `cantidadproductoproduccion`=? WHERE `codproducto`=?";
+            String fechaInicio = myFormat.format(jd.getDate());
+            JDateChooser jd2 = new JDateChooser();
+            String message2 = "Seleccione fecha Fin :\n";
+            Object[] params2 = {message2, jd2};
+            JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
+            if (jd2.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
+            } else {
+                String fechaFin = myFormat.format(jd2.getDate());
+                String logo = "/Imagenes/logo-yapur.png";
+                Map parametro = new HashMap();
+                parametro.put("fecha1", fechaInicio);
+                parametro.put("fecha2", fechaFin);
+                parametro.put("logo", this.getClass().getResourceAsStream(logo));
+                String path = "/Reportes/Ventas.jasper";
+                reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+                JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+                JasperViewer view = new JasperViewer(jprint, false);
+                view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                view.setVisible(true);
             }
-            st = conexion.getConnection().prepareStatement(sql);
-            st.setInt(1, (cantO - cant));
-            st.setInt(2, ID);
-            st.executeUpdate();
-          } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error al actualizar stock.");
-            System.out.println(ex.getMessage());
-            ActStockCorrecto = false;
-          }
-          if (ActStockCorrecto) {
-            sql = "INSERT INTO merma(cantidadmerma,descripcionmerma,codproducto) values(?,?,?)";
-            st = conexion.getConnection().prepareStatement(sql);
-            st.setString(3, String.valueOf(ID));
-            st.setInt(1, cant);
-            st.setString(2, info);
-            st.executeUpdate();
-            sql2 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
-            st2 = conexion.getConnection().prepareStatement(sql2);
-            sql3 = "SELECT MAX(codmerma) from merma";
-            st3 = conexion.getConnection().prepareStatement(sql3);
-            ResultSet rsAux;
-            rsAux = st3.executeQuery(sql3);
-            int aux = 0;
-            while (rsAux.next()) {
-              aux = rsAux.getInt(1);
-            }
-            st2.setString(1, datos[0]);
-            st2.setString(2, "El usuario: " + datos[0] + " agrego la merma de codigo: " + aux);
-            st2.executeUpdate();
-            jTextFieldCantidadMerma.setText("0");
-            jTextFieldFiltrarPorLetrasMerma.setText("");
-            jTextAreaDescripcionMerma.setText("");
-            jRadioButtonVentaMerma.setSelected(true);
-            this.refrescarTablaListaProductosMerma();
-            JOptionPane.showMessageDialog(null, "Nueva merma ingresada con exito!");
-          }
         }
-      } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(null, "Error al ingresar la merma.");
-        System.out.println(ex.getMessage());
-      }
-    } else {
-      JOptionPane.showMessageDialog(null, "La merma excede el stock actual en el area seleccionada.");
     }
-  }
-
-  public void agregarProducto() throws SQLException {
-    boolean todoBien = false;
-    String nomProducto = jTextFieldNombreAgregarProducto.getText();
-    int cantidadVenta = 0;
-    if (!jTextFieldCantidadVentaAgregarProducto.getText().equalsIgnoreCase("")) {
-      cantidadVenta = Integer.parseInt(jTextFieldCantidadVentaAgregarProducto.getText());
-    }
-    int cantidadProduccion = 0;
-    if (!jTextFieldCantidadProdAgregaProducto.getText().equalsIgnoreCase("")) {
-      cantidadProduccion = Integer.parseInt(jTextFieldCantidadProdAgregaProducto.getText());
-    }
-    String codigoUnico = jTextFieldCodigoProducto.getText();
-    String precioProducto = "" + ((int)(Integer.parseInt(jTextFieldPrecioAgregarProducto.getText()) / 1.19));
-    int tipoProducto = jComboBoxTipoAgregarProducto.getSelectedIndex();
-    int tipoPlanta = jComboBoxAgregarTipoPlanta.getSelectedIndex();
-    int especiePlanta = jComboBoxAgregarEspeciePlanta.getSelectedIndex();
-    String nuevoTipoPlanta = jTextFieldAgregarTipoPlanta.getText();
-    String nuevaEspeciePlanta = jTextFieldAgregarEspeciePlanta.getText();
-    String stock = jTextFieldStockAgregarProducto.getText();
-    String descripcion = jTextAreaDescripcionAgregarProducto.getText();
-    if (!nomProducto.equalsIgnoreCase("") && cantidadVenta != 0 && cantidadProduccion != 0 && !precioProducto.equalsIgnoreCase("")
-            && !stock.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !codigoUnico.equalsIgnoreCase("")) {
-
-      String sqlAux;
-      PreparedStatement stAux;
-      sqlAux = "SELECT COUNT(*) FROM producto P WHERE P.nombreproducto = '" + nomProducto + "'";
-      stAux = conexion.getConnection().prepareStatement(sqlAux);
-      ResultSet rsAux;
-      rsAux = stAux.executeQuery(sqlAux);
-      int cant = 0;
-      while (rsAux.next()) {
-        cant = rsAux.getInt(1);
-      }
-
-      String sqlcontCodigoUnico;
-      PreparedStatement stcontCodigoUnico;
-      sqlcontCodigoUnico = "SELECT COUNT(*) FROM producto P WHERE P.codproducto = '" + codigoUnico + "'";
-      stcontCodigoUnico = conexion.getConnection().prepareStatement(sqlcontCodigoUnico);
-      ResultSet rscontCodigoUnico;
-      rscontCodigoUnico = stcontCodigoUnico.executeQuery(sqlcontCodigoUnico);
-      int cantCodigoUnico = 0;
-      while (rscontCodigoUnico.next()) {
-        cantCodigoUnico = rscontCodigoUnico.getInt(1);
-      }
-
-      if (cant < 1) {
-        if (cantCodigoUnico < 1) {
-          int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este producto?");
-          if (confirmar == JOptionPane.YES_OPTION) {
-            switch (tipoProducto) {
-              case 1:
-                if (jComboBoxAgregarTipoPlanta.getSelectedIndex() != 0) {
-                  //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
-                  int codTipoPlanta = 0;
-                  int codEspeciePlanta = 0;
-                  if (tipoPlanta == 1) {
-                    if (!jTextFieldAgregarTipoPlanta.getText().equalsIgnoreCase("") && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
-                      String sqlAux2;
-                      PreparedStatement stAux2;
-                      sqlAux2 = "SELECT COUNT(*) FROM tipo t WHERE t.nombretipo = '" + nuevoTipoPlanta + "'";
-                      stAux2 = conexion.getConnection().prepareStatement(sqlAux2);
-                      ResultSet rsAux2;
-                      rsAux2 = stAux2.executeQuery(sqlAux2);
-                      int cant2 = 0;
-                      while (rsAux2.next()) {
-                        cant2 = rsAux2.getInt(1);
-                      }
-                      if (cant2 < 1) {
-                        //ingresar tipo de planta
-                        String sql;
-                        PreparedStatement st;
-                        sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
-                        st = conexion.getConnection().prepareStatement(sql);
-                        st.setString(1, nuevoTipoPlanta);
-                        st.executeUpdate();
-                        //obtener codigo de tipo de planta
-                        PreparedStatement st2;
-                        ResultSet rs2;
-                        sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
-                        st2 = conexion.getConnection().prepareStatement(sql);
-                        rs2 = st2.executeQuery(sql);
-                        while (rs2.next()) {
-                          codTipoPlanta = rs2.getInt(1);
-                        }
-                        String sqlAux3;
-                        PreparedStatement stAux3;
-                        sqlAux3 = "SELECT COUNT(*) FROM tipo t ,especie e WHERE e.codtipo = '" + codTipoPlanta + "' AND e.nombreespecie = '" + nuevaEspeciePlanta + "'";
-                        stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
-                        ResultSet rsAux3;
-                        rsAux3 = stAux3.executeQuery(sqlAux3);
-                        int cant3 = 0;
-                        while (rsAux3.next()) {
-                          cant3 = rsAux3.getInt(1);
-                        }
-                        if (cant3 < 1) {
-                          //INGRESAR ESPECIE DE PLANTA
-                          PreparedStatement st3;
-                          sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
-                          st3 = conexion.getConnection().prepareStatement(sql);
-                          st3.setInt(1, codTipoPlanta);
-                          st3.setString(2, nuevaEspeciePlanta);
-                          st3.executeUpdate();
-                          //obtener codigo de especie de planta
-                          PreparedStatement st4;
-                          ResultSet rs4;
-                          sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
-                          st4 = conexion.getConnection().prepareStatement(sql);
-                          rs4 = st4.executeQuery(sql);
-                          while (rs4.next()) {
-                            codEspeciePlanta = rs4.getInt(1);
-                          }
-                          todoBien = true;
-                        } else {
-                          JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
-                        }
-                      } else {
-                        JOptionPane.showMessageDialog(null, "ya se encuentra un tipo con ese nombre");
-                      }
-                    } else {
-                      JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
-                    }
-                  } else //SOLO AGREGAR ESPECIE DE PLANTA
-                  {
-                    if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() != 0) {
-                      if (especiePlanta == 1) {
-                        if (jComboBoxAgregarTipoPlanta.getSelectedIndex() > 1 && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
-                          String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
-                          PreparedStatement st;
-                          ResultSet rs;
-                          String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
-                          st = conexion.getConnection().prepareStatement(sql);
-                          rs = st.executeQuery(sql);
-                          while (rs.next()) {
-                            codTipoPlanta = rs.getInt(1);
-                          }
-
-                          String sqlAux3;
-                          PreparedStatement stAux3;
-                          sqlAux3 = "SELECT COUNT(*) FROM tipo t ,especie e WHERE e.codtipo = '" + codTipoPlanta + "' AND e.nombreespecie = '" + nuevaEspeciePlanta + "'";
-                          stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
-                          ResultSet rsAux3;
-                          rsAux3 = stAux3.executeQuery(sqlAux3);
-                          int cant3 = 0;
-                          while (rsAux3.next()) {
-                            cant3 = rsAux3.getInt(1);
-                          }
-                          if (cant3 < 1) {
-
-                            PreparedStatement st2;
-                            sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
-                            st2 = conexion.getConnection().prepareStatement(sql);
-                            st2.setInt(1, codTipoPlanta);
-                            st2.setString(2, nuevaEspeciePlanta);
-                            st2.executeUpdate();
-
-                            PreparedStatement st4;
-                            ResultSet rs4;
-                            sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
-                            st4 = conexion.getConnection().prepareStatement(sql);
-                            rs4 = st4.executeQuery(sql);
-                            while (rs4.next()) {
-                              codEspeciePlanta = rs4.getInt(1);
-                            }
-                            todoBien = true;
-                          } else {
-                            JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
-                          }
-                        } else {
-                          JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
-                        }
-                      } else {
-                        String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
-                        String nombreEspecie = (String) jComboBoxAgregarEspeciePlanta.getSelectedItem();
-                        PreparedStatement st;
-                        ResultSet rs;
-                        String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
-                        st = conexion.getConnection().prepareStatement(sql);
-                        rs = st.executeQuery(sql);
-                        while (rs.next()) {
-                          codTipoPlanta = rs.getInt(1);
-                        }
-
-                        PreparedStatement st2;
-                        ResultSet rs2;
-                        String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "' and e.nombreespecie = '" + nombreEspecie + "'";
-                        st2 = conexion.getConnection().prepareStatement(sql2);
-                        rs2 = st.executeQuery(sql2);
-                        while (rs2.next()) {
-                          codEspeciePlanta = rs2.getInt(1);
-                        }
-                        todoBien = true;
-                      }
-                    } else {
-                      JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
-                    }
-                  }
-
-                  if (todoBien) {
-                    //ESPECIE Y TIPO YA ESTAN EN LA LISTA
-                    PreparedStatement st5;
-                    String sql = "INSERT INTO `producto`(`codproducto`,`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`) VALUES (?,?,?,?,?,?)";
-                    st5 = conexion.getConnection().prepareStatement(sql);
-                    st5.setString(1, codigoUnico);
-                    st5.setString(2, nomProducto);
-                    st5.setInt(3, cantidadVenta);
-                    st5.setInt(4, cantidadProduccion);
-                    st5.setString(5, descripcion);
-                    st5.setString(6, stock);
-
-                    st5.executeUpdate();
-
-                    String codProduto = "";
-                    PreparedStatement st;
-                    ResultSet rs;
-                    sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
-                    st = conexion.getConnection().prepareStatement(sql);
-                    rs = st.executeQuery(sql);
-                    while (rs.next()) {
-                      codProduto = rs.getString(1);
-                    }
-
-                    PreparedStatement st6;
-                    sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
-                    st6 = conexion.getConnection().prepareStatement(sql);
-                    st6.setString(1, codigoUnico);
-                    st6.setInt(2, codEspeciePlanta);
-                    st6.executeUpdate();
-
-                    PreparedStatement st7;
-                    sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                    st7 = conexion.getConnection().prepareStatement(sql);
-                    st7.setString(1, codProduto);
-                    st7.setString(2, precioProducto);
-                    st7.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
-                    jTextFieldNombreAgregarProducto.setText("");
-                    jTextFieldCantidadVentaAgregarProducto.setText("");
-                    jTextFieldCantidadProdAgregaProducto.setText("");
-                    jTextFieldPrecioAgregarProducto.setText("");
-                    jTextFieldStockAgregarProducto.setText("");
-                    jTextAreaDescripcionAgregarProducto.setText("");
-                    jTextFieldAgregarTipoPlanta.setText("");
-                    jTextFieldAgregarEspeciePlanta.setText("");
-                    jComboBoxTipoAgregarProducto.setSelectedIndex(0);
-                    jTextFieldCodigoProducto.setText("");
-                  }
-                } else {
-                  JOptionPane.showMessageDialog(null, "Algunos campos vacios");
-
-                }
-                break;
-              case 2:
-                PreparedStatement st5;
-                String sql = "INSERT INTO `producto`(`codproducto`,`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`) VALUES (?,?,?,?,?,?)";
-                st5 = conexion.getConnection().prepareStatement(sql);
-                st5.setString(1, codigoUnico);
-                st5.setString(2, nomProducto);
-                st5.setInt(3, cantidadVenta);
-                st5.setInt(4, cantidadProduccion);
-                st5.setString(5, descripcion);
-                st5.setString(6, stock);
-                st5.executeUpdate();
-                String codProduto = "";
+    
+    public void reporteVentasExcel () throws SQLException{
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+        JDateChooser jd = new JDateChooser();
+        String message = "Seleccione fecha Inicio :\n";
+        Object[] params = {message, jd};
+        JOptionPane.showConfirmDialog(null, params, "Fecha Inicio", JOptionPane.PLAIN_MESSAGE);
+        if (jd.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Seleccione un fecha de inicio.");
+        } else {
+            String fechaInicio = myFormat.format(jd.getDate());
+            JDateChooser jd2 = new JDateChooser();
+            String message2 = "Seleccione fecha Fin :\n";
+            Object[] params2 = {message2, jd2};
+            JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
+            if (jd2.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
+            } else {
+                String fechaFin = myFormat.format(jd2.getDate());
+                HSSFWorkbook libro = new HSSFWorkbook();
+                HSSFSheet hoja = libro.createSheet("cheques");
+                HSSFRow fila = hoja.createRow(0);
+                HSSFCell celda = fila.createCell(0);
+                HSSFCell celda2 = fila.createCell(1);
+                HSSFCell celda3 = fila.createCell(2);
+                HSSFCell celda4 = fila.createCell(3);
+                HSSFCell celda5 = fila.createCell(4);
+                HSSFCell celda6 = fila.createCell(5);
+                celda.setCellValue("Codigo");
+                celda2.setCellValue("Total");
+                celda3.setCellValue("Fecha");
+                celda4.setCellValue("Folio");
+                celda5.setCellValue("Metodo de pago");
+                celda6.setCellValue("Tipo de venta");
                 PreparedStatement st;
+                String sql;
                 ResultSet rs;
-                sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
+                sql = "SELECT oc.codordencompra, oc.totalcondescuento,oc.fecha,oc.folio, "
+                        + "c.tipopago,c.metodopago from ordencompra oc, compra c "
+                        + "WHERE oc.fecha BETWEEN '" + fechaInicio + "' AND '" + fechaFin + "' ";
                 st = conexion.getConnection().prepareStatement(sql);
                 rs = st.executeQuery(sql);
+                int i = 1;
                 while (rs.next()) {
-                  codProduto = rs.getString(1);
+                    fila = hoja.createRow(i);
+                    celda = fila.createCell(0);
+                    celda2 = fila.createCell(1);
+                    celda3 = fila.createCell(2);
+                    celda4 = fila.createCell(3);
+                    celda5 = fila.createCell(4);
+                    celda6 = fila.createCell(5);
+                    celda.setCellValue(rs.getInt(1));
+                    celda2.setCellValue(rs.getInt(2));
+                    celda3.setCellValue(rs.getDate(3));
+                    celda4.setCellValue(rs.getString(4));
+                    celda5.setCellValue(rs.getString(5));
+                    celda6.setCellValue(rs.getString(6));
+                    i++;
                 }
-                PreparedStatement st6;
-                sql = "INSERT INTO `accesorio`(`codproducto`) VALUES (?)";
-                st6 = conexion.getConnection().prepareStatement(sql);
-                st6.setString(1, codProduto);
-                st6.executeUpdate();
-                PreparedStatement st7;
-                sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-                st7 = conexion.getConnection().prepareStatement(sql);
-                st7.setString(1, codigoUnico);
-                st7.setString(2, precioProducto);
-                st7.executeUpdate();
-                JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
-                jTextFieldNombreAgregarProducto.setText("");
-                jTextFieldCantidadVentaAgregarProducto.setText("");
-                jTextFieldCantidadProdAgregaProducto.setText("");
-                jTextFieldPrecioAgregarProducto.setText("");
-                jTextFieldStockAgregarProducto.setText("");
-                jTextAreaDescripcionAgregarProducto.setText("");
-                jComboBoxTipoAgregarProducto.setSelectedIndex(0);
-                jTextFieldCodigoProducto.setText("");
-                break;
-              default:
-                JOptionPane.showMessageDialog(null, "Seleccione un tipo de producto");
+                try {
+                    JFileChooser js = new JFileChooser();
+                    js.setApproveButtonText("guardar");
+                    js.showSaveDialog(null);
+                    FileOutputStream archivo = new FileOutputStream(js.getSelectedFile() + ".xls");
+                    libro.write(archivo);
+                    archivo.close();
+                    JOptionPane.showMessageDialog(null, "Archivo generado exitosamente");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Hubo un error al generar el archivo excel");
+                }
+            }
+        }
+    }
+    
+    public void reporteTodosCheques() throws JRException, ParseException {
+        JasperReport reporte;
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+        JDateChooser jd = new JDateChooser();
+        String message = "Seleccione fecha Inicio :\n";
+        Object[] params = {message, jd};
+        JOptionPane.showConfirmDialog(null, params, "Fecha Inicio", JOptionPane.PLAIN_MESSAGE);
+        if (jd.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Seleccione un fecha de inicio.");
+        } else {
+            String fechaInicio = myFormat.format(jd.getDate());
+            JDateChooser jd2 = new JDateChooser();
+            String message2 = "Seleccione fecha Fin :\n";
+            Object[] params2 = {message2, jd2};
+            String logo = "/Imagenes/logo-yapur.png";
+            JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
+            if (jd2.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
+            } else {
+                String fechaFin = myFormat.format(jd2.getDate());
+                Map parametro = new HashMap();
+                parametro.put("fecha1", fechaInicio);
+                parametro.put("fecha2", fechaFin);
+                parametro.put("logo", this.getClass().getResourceAsStream(logo));
+                String path = "/Reportes/Cheques.jasper";
+                reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+                JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+                JasperViewer view = new JasperViewer(jprint, false);
+                view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                view.setVisible(true);
+            }
+        }
+    }
+
+    public void reporteChequesExcel() throws SQLException {
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+        JDateChooser jd = new JDateChooser();
+        String message = "Seleccione fecha Inicio :\n";
+        Object[] params = {message, jd};
+        JOptionPane.showConfirmDialog(null, params, "Fecha Inicio", JOptionPane.PLAIN_MESSAGE);
+        if (jd.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Seleccione un fecha de inicio.");
+        } else {
+            String fechaInicio = myFormat.format(jd.getDate());
+            JDateChooser jd2 = new JDateChooser();
+            String message2 = "Seleccione fecha Fin :\n";
+            Object[] params2 = {message2, jd2};
+            JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
+            if (jd2.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
+            } else {
+                String fechaFin = myFormat.format(jd2.getDate());
+                HSSFWorkbook libro = new HSSFWorkbook();
+                HSSFSheet hoja = libro.createSheet("cheques");
+                HSSFRow fila = hoja.createRow(0);
+                HSSFCell celda = fila.createCell(0);
+                HSSFCell celda2 = fila.createCell(1);
+                HSSFCell celda3 = fila.createCell(2);
+                HSSFCell celda4 = fila.createCell(3);
+                HSSFCell celda5 = fila.createCell(4);
+                HSSFCell celda6 = fila.createCell(5);
+                HSSFCell celda7 = fila.createCell(6);
+                HSSFCell celda8 = fila.createCell(7);
+                celda.setCellValue("Numero cheque");
+                celda2.setCellValue("Emisor");
+                celda3.setCellValue("Banco");
+                celda4.setCellValue("Emision");
+                celda5.setCellValue("Vencimiento");
+                celda6.setCellValue("Numero de cuenta");
+                celda7.setCellValue("Monto");
+                celda8.setCellValue("Cobrado");
+                PreparedStatement st;
+                String sql;
+                ResultSet rs;
+                sql = "SELECT c.numerocheque,CONCAT(c.nombresemisor,' ', c.apellidosemisor) as emisor, c.banco,c.fecharecepcion, "
+                        + "c.fechavencimiento, c.numerocuenta,c.montocheque,(CASE WHEN c.chequescobrados_n = 1 THEN 'si' WHEN c.chequescobrados_n = 0 THEN 'no' END) as estado "
+                        + "FROM cheques c "
+                        + "WHERE c.fecharecepcion BETWEEN '" + fechaInicio + "' AND '" + fechaFin + "' ";
+                st = conexion.getConnection().prepareStatement(sql);
+                rs = st.executeQuery(sql);
+                int i = 1;
+                while (rs.next()) {
+                    fila = hoja.createRow(i);
+                    celda = fila.createCell(0);
+                    celda2 = fila.createCell(1);
+                    celda3 = fila.createCell(2);
+                    celda4 = fila.createCell(3);
+                    celda5 = fila.createCell(4);
+                    celda6 = fila.createCell(5);
+                    celda7 = fila.createCell(6);
+                    celda8 = fila.createCell(7);
+                    celda.setCellValue(rs.getString(1));
+                    celda2.setCellValue(rs.getString(2));
+                    celda3.setCellValue(rs.getString(3));
+                    celda4.setCellValue(rs.getDate(4));
+                    celda5.setCellValue(rs.getDate(5));
+                    celda6.setCellValue(rs.getInt(6));
+                    celda7.setCellValue(rs.getString(7));
+                    celda8.setCellValue(rs.getString(8));
+                    i++;
+                }
+                try {
+                    JFileChooser js = new JFileChooser();
+                    js.setApproveButtonText("guardar");
+                    js.showSaveDialog(null);
+                    FileOutputStream archivo = new FileOutputStream(js.getSelectedFile() + ".xls");
+                    libro.write(archivo);
+                    archivo.close();
+                    JOptionPane.showMessageDialog(null, "Archivo generado exitosamente");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Hubo un error al generar el archivo excel");
+                }
+            }
+        }
+    }
+
+    public static boolean eliminarDelCarrito(Producto[] carro, int x) {
+        if (x < cantProductosCarrito && x >= 0) {
+            carrito[x] = null;
+            for (int i = x; i <= cantProductosCarrito - 1; i++) {
+                carrito[x] = carrito[x + 1];
+            }
+            cantProductosCarrito--;
+            carrito[cantProductosCarrito] = null;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static void limpiarCarrito() {
+        carrito = new Producto[1000];
+        cantProductosCarrito = 0;
+
+    }
+
+    public static void agregarProductoCarrito(Producto p) {
+        boolean encontrado = false;
+        for (int i = 0; i < cantProductosCarrito; i++) {
+            if (carrito[i].getId() == p.getId()) {
+                carrito[i].setCantidad(carrito[i].getCantidad() + p.getCantidad());
+                encontrado = true;
+            }
+        }
+        if (!encontrado) {
+            carrito[cantProductosCarrito] = p;
+            cantProductosCarrito++;
+        }
+        apreto = false;
+        refrescarTablaVenta();
+    }
+
+    public static boolean getEsVenta() {
+        if (jPanelRealizarVenta.isVisible()) {
+            return true;
+        }
+        return false;
+    }
+
+    public static void agregarProductoCarritoPresupuesto(Producto p) {
+        boolean encontrado = false;
+        for (int i = 0; i < cantProductosCarrito; i++) {
+            if (carrito[i].getId() == p.getId()) {
+                carrito[i].setCantidad(carrito[i].getCantidad() + p.getCantidad());
+                encontrado = true;
+            }
+        }
+        if (!encontrado) {
+            carrito[cantProductosCarrito] = p;
+            cantProductosCarrito++;
+        }
+        apreto = false;
+        refrescarTablaPresupuesto();
+    }
+
+    public static void refrescarTablaVenta() {
+        Clear_Table1(jTableVenta);
+        DefaultTableModel modelo = (DefaultTableModel) jTableVenta.getModel();
+        Object[] datos = new Object[8];
+        totalGlobal = 0;
+        for (int i = 0; i < cantProductosCarrito; i++) {
+            datos[0] = carrito[i].getId();
+            datos[1] = carrito[i].getNombre();
+            datos[2] = formatearAEntero("" + carrito[i].getPrecio());
+
+            JButton menos = new JButton("-");
+            if (carrito[i].getCantidad() == 1) {
+                menos.setEnabled(false);
+            }
+            datos[3] = menos;
+            datos[4] = carrito[i].getCantidad();
+            JButton mas = new JButton("+");
+            datos[5] = mas;
+            int total = carrito[i].getCantidad() * carrito[i].getPrecio();
+            datos[6] = formatearAEntero("" + total);
+            JButton eliminar = new JButton("X");
+            datos[7] = eliminar;
+            modelo.addRow(datos);
+            totalGlobal = totalGlobal + total;
+        }
+        jTableVenta.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        jTableVenta.getColumnModel().getColumn(0).setPreferredWidth(75);
+        jTableVenta.getColumnModel().getColumn(1).setPreferredWidth(157);
+        jTableVenta.getColumnModel().getColumn(2).setPreferredWidth(87);
+        jTableVenta.getColumnModel().getColumn(3).setPreferredWidth(45);
+        jTableVenta.getColumnModel().getColumn(4).setPreferredWidth(58);
+        jTableVenta.getColumnModel().getColumn(5).setPreferredWidth(45);
+        jTableVenta.getColumnModel().getColumn(6).setPreferredWidth(94);
+        jTableVenta.getColumnModel().getColumn(7).setPreferredWidth(45);
+        jTableVenta.setModel(modelo);
+        String des = jTextFieldDescuentoVenta.getText();
+        if (des.equalsIgnoreCase("")) {
+            jLabelCalcularNeto.setText(formatearAEntero("" + totalGlobal));
+            int iva = (int) (totalGlobal * 0.19);
+            CalcularIVA.setText(formatearAEntero("" + iva));
+            int total = iva + totalGlobal;
+            jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+        } else {
+            jLabelCalcularNeto.setText(formatearAEntero("" + totalGlobal));
+            int iva = (int) (totalGlobal * 0.19);
+            CalcularIVA.setText(formatearAEntero("" + iva));
+            int neto = pasarAinteger(jLabelCalcularNeto.getText());
+            if (jTextFieldDescuentoVenta.getText().equals("")) {
+                jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+                iva = (int) (totalGlobal * 0.19);
+                CalcularIVA.setText(formatearAEntero("" + iva));
+                jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
+
+            } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
+                if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
+                    int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                    jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    iva = (int) (totalConDescuento * 0.19);
+                    CalcularIVA.setText(formatearAEntero("" + iva));
+                    int total = iva + totalConDescuento;
+                    jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+
+                }
+            } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
+
+                if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
+
+                    int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
+                    jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    iva = (int) (totalConDescuento * 0.19);
+                    CalcularIVA.setText(formatearAEntero("" + iva));
+                    int total = iva + totalConDescuento;
+                    jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+                } else {
+                    JOptionPane.showMessageDialog(null, "Descuento excedido");
+                }
+
+            }
+            if (jTextFieldEfectivo.getText().equals("")) {
+                jLabelVuelto.setText("0");
+            } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
+                jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
+            } else {
+                jLabelVuelto.setText("0");
+            }
+        }
+        if (datos[0] == null) {
+            jTextFieldDescuentoVenta.setEditable(false);
+            jTextFieldDescuentoVenta.setEnabled(false);
+            jTextFieldEfectivo.setEditable(false);
+            jTextFieldEfectivo.setEnabled(false);
+        } else {
+            jTextFieldDescuentoVenta.setEditable(true);
+            jTextFieldDescuentoVenta.setEnabled(true);
+            jTextFieldEfectivo.setEditable(true);
+            jTextFieldEfectivo.setEnabled(true);
+        }
+
+    }
+
+    public static void refrescarTablaPresupuesto() {
+        Clear_Table1(jTablePresupuesto);
+        DefaultTableModel modelo = (DefaultTableModel) jTablePresupuesto.getModel();
+        Object[] datos = new Object[8];
+        totalGlobal = 0;
+        for (int i = 0; i < cantProductosCarrito; i++) {
+            datos[0] = carrito[i].getId();
+            datos[1] = carrito[i].getNombre();
+            datos[2] = formatearAEntero("" + carrito[i].getPrecio());
+
+            JButton menos = new JButton("-");
+            if (carrito[i].getCantidad() == 1) {
+                menos.setEnabled(false);
+            }
+            datos[3] = menos;
+            datos[4] = carrito[i].getCantidad();
+            JButton mas = new JButton("+");
+            datos[5] = mas;
+            int total = carrito[i].getCantidad() * carrito[i].getPrecio();
+            datos[6] = formatearAEntero("" + total);
+            JButton eliminar = new JButton("X");
+            datos[7] = eliminar;
+            modelo.addRow(datos);
+            totalGlobal = totalGlobal + total;
+        }
+        jTablePresupuesto.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        jTablePresupuesto.getColumnModel().getColumn(0).setPreferredWidth(75);
+        jTablePresupuesto.getColumnModel().getColumn(1).setPreferredWidth(157);
+        jTablePresupuesto.getColumnModel().getColumn(2).setPreferredWidth(87);
+        jTablePresupuesto.getColumnModel().getColumn(3).setPreferredWidth(45);
+        jTablePresupuesto.getColumnModel().getColumn(4).setPreferredWidth(58);
+        jTablePresupuesto.getColumnModel().getColumn(5).setPreferredWidth(45);
+        jTablePresupuesto.getColumnModel().getColumn(6).setPreferredWidth(94);
+        jTablePresupuesto.getColumnModel().getColumn(7).setPreferredWidth(50);
+        jTablePresupuesto.setModel(modelo);
+        String des = jTextFieldDescuentoPresupuesto.getText();
+        if (des.equalsIgnoreCase("")) {
+            jLabelCalcularNetoPresupuesto.setText(formatearAEntero("" + totalGlobal));
+            int iva = (int) (totalGlobal * 0.19);
+            CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+            int total = iva + totalGlobal;
+            jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
+        } else {
+            jLabelCalcularNetoPresupuesto.setText(formatearAEntero("" + totalGlobal));
+            int iva = (int) (totalGlobal * 0.19);
+            CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+            int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
+            if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
+                jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+                iva = (int) (totalGlobal * 0.19);
+                CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
+            } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
+                if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
+                    int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
+                    jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    iva = (int) (totalConDescuento * 0.19);
+                    CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                    int total = iva + totalConDescuento;
+                    jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
+
+                }
+            } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
+
+                if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
+
+                    int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
+                    jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                    iva = (int) (totalConDescuento * 0.19);
+                    CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                    int total = iva + totalConDescuento;
+                    jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
+                } else {
+                    JOptionPane.showMessageDialog(null, "Descuento excedido");
+                }
+
+            }
+
+        }
+        if (datos[0] == null) {
+            jTextFieldDescuentoPresupuesto.setEditable(false);
+            jTextFieldDescuentoPresupuesto.setEnabled(false);
+        } else {
+            jTextFieldDescuentoPresupuesto.setEditable(true);
+            jTextFieldDescuentoPresupuesto.setEnabled(true);
+        }
+
+    }
+
+    public void reporteTodosCambios() throws JRException {
+        JasperReport reporte;
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+        JDateChooser jd = new JDateChooser();
+        String message = "Seleccione fecha Inicio :\n";
+        Object[] params = {message, jd};
+        JOptionPane.showConfirmDialog(null, params, "Fecha Inicio", JOptionPane.PLAIN_MESSAGE);
+        if (jd.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Seleccione un fecha de inicio.");
+        } else {
+            String fechaInicio = myFormat.format(jd.getDate());
+            JDateChooser jd2 = new JDateChooser();
+            String message2 = "Seleccione fecha Fin :\n";
+            Object[] params2 = {message2, jd2};
+            String logo = "/Imagenes/logo-yapur.png";
+            JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
+            if (jd2.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
+            } else {
+                String fechaFin = myFormat.format(jd2.getDate());
+                Map parametro = new HashMap();
+                parametro.put("fecha1", fechaInicio);
+                parametro.put("fecha2", fechaFin);
+                String path = "/Reportes/Cambios.jasper";
+                System.out.println(getClass().getResource(logo));
+                parametro.put("logo", this.getClass().getResourceAsStream(logo));
+                reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+                JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+                JasperViewer view = new JasperViewer(jprint, false);
+                view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                view.setVisible(true);
+            }
+        }
+    }
+    
+    public void reporteCambiosExcel () throws SQLException{
+        SimpleDateFormat myFormat = new SimpleDateFormat("yyyy-MM-dd");
+        JDateChooser jd = new JDateChooser();
+        String message = "Seleccione fecha Inicio :\n";
+        Object[] params = {message, jd};
+        JOptionPane.showConfirmDialog(null, params, "Fecha Inicio", JOptionPane.PLAIN_MESSAGE);
+        if (jd.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Seleccione un fecha de inicio.");
+        } else {
+            String fechaInicio = myFormat.format(jd.getDate());
+            JDateChooser jd2 = new JDateChooser();
+            String message2 = "Seleccione fecha Fin :\n";
+            Object[] params2 = {message2, jd2};
+            JOptionPane.showConfirmDialog(null, params2, "Fecha Fin", JOptionPane.PLAIN_MESSAGE);
+            if (jd2.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Seleccione un fecha de fin.");
+            } else {
+                String fechaFin = myFormat.format(jd2.getDate());
+                HSSFWorkbook libro = new HSSFWorkbook();
+                HSSFSheet hoja = libro.createSheet("cheques");
+                HSSFRow fila = hoja.createRow(0);
+                HSSFCell celda = fila.createCell(0);
+                HSSFCell celda2 = fila.createCell(1);
+                HSSFCell celda3 = fila.createCell(2);
+                celda.setCellValue("Codigo");
+                celda2.setCellValue("Fecha");
+                celda3.setCellValue("Descripcion");
+                PreparedStatement st;
+                String sql;
+                ResultSet rs;
+                sql = "SELECT c.idcambio, c.fechacambio,c.descripcioncambio"
+                        + " From cambios c "
+                        + "WHERE c.fechacambio BETWEEN '" + fechaInicio + "' AND '" + fechaFin + "' ";
+                st = conexion.getConnection().prepareStatement(sql);
+                rs = st.executeQuery(sql);
+                int i = 1;
+                while (rs.next()) {
+                    fila = hoja.createRow(i);
+                    celda = fila.createCell(0);
+                    celda2 = fila.createCell(1);
+                    celda3 = fila.createCell(2);
+                    celda.setCellValue(rs.getInt(1));
+                    celda2.setCellValue(rs.getString(2));
+                    celda3.setCellValue(rs.getString(3));
+                    i++;
+                }
+                try {
+                    JFileChooser js = new JFileChooser();
+                    js.setApproveButtonText("guardar");
+                    js.showSaveDialog(null);
+                    FileOutputStream archivo = new FileOutputStream(js.getSelectedFile() + ".xls");
+                    libro.write(archivo);
+                    archivo.close();
+                    JOptionPane.showMessageDialog(null, "Archivo generado exitosamente");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Hubo un error al generar el archivo excel");
+                }
+            }
+        }
+    }
+
+    public boolean registrarVenta() throws SQLException {
+        if (carrito[0] != null) {
+            String tipoPago = "";
+            String metodoPago = "";
+            if (jRadioButtonBoleta.isSelected()) {
+                tipoPago = "Boleta";
+            } else if (jRadioButtonFactura.isSelected()) {
+                tipoPago = "Factura";
+            }
+            boolean restoBien = false;
+            metodoPago = (String) jComboBoxMetodoPago.getSelectedItem();
+            String totalConDescuento = jLabelPrecioAPagar.getText();
+            int totalSinDesc = pasarAinteger(jLabelCalcularNeto.getText()) + pasarAinteger(CalcularIVA.getText());
+            String totalSinDescuento = formatearAEntero("" + totalSinDesc);
+            if (!jTextFieldFolioVenta.getText().equalsIgnoreCase("")) {
+                //si no es cheque
+                if (jComboBoxMetodoPago.getSelectedIndex() != 4) {
+                    //Ingresar orden Compra
+                    if (jComboBoxMetodoPago.getSelectedIndex() == 0) {
+                        int efectivo;
+                        if (!jTextFieldEfectivo.getText().equalsIgnoreCase("")) {
+                            efectivo = pasarAinteger(jTextFieldEfectivo.getText());
+                        } else {
+                            efectivo = 0;
+                        }
+                        int total = pasarAinteger(jLabelPrecioAPagar.getText());
+                        if (efectivo < total) {
+                            JOptionPane.showMessageDialog(null, "Efectivo es menor que el total");
+                        } else {
+                            String sql4;
+                            PreparedStatement st4;
+                            sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
+                            st4 = conexion.getConnection().prepareStatement(sql4);
+                            st4.setInt(1, pasarAinteger(totalConDescuento));
+                            st4.setInt(2, pasarAinteger(totalSinDescuento));
+                            st4.setInt(3, pasarAinteger(jLabelCalcularNeto.getText()));
+                            st4.setInt(4, pasarAinteger(jTextFieldEfectivo.getText()));
+                            st4.setString(5, jTextFieldFolioVenta.getText());
+                            st4.executeUpdate();
+
+                            //obtener id de la compra
+                            String sql2;
+                            Statement st2;
+                            ResultSet rs2;
+                            sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                            st2 = conexion.getConnection().createStatement();
+                            rs2 = st2.executeQuery(sql2);
+                            int codCompra = 0;
+                            while (rs2.next()) {
+                                codCompra = rs2.getInt(1);
+                            }
+
+                            String sql3;
+                            PreparedStatement st3;
+                            //ingresar productos
+                            for (int i = 0; i < cantProductosCarrito; i++) {
+                                sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
+                                st3 = conexion.getConnection().prepareStatement(sql3);
+                                st3.setString(1, String.valueOf(carrito[i].getId()));
+                                st3.setInt(2, codCompra);
+                                st3.setInt(3, carrito[i].getCantidad());
+                                st3.executeUpdate();
+
+                                //obtener cantidades de stock por producto
+                                String sql8;
+                                Statement st8;
+                                ResultSet rs8;
+                                sql8 = "SELECT `cantidadproductoventa`,`cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
+                                st8 = conexion.getConnection().createStatement();
+                                rs8 = st8.executeQuery(sql8);
+                                int cantStock = 0;
+                                int cantStockPro = 0;
+                                while (rs8.next()) {
+                                    cantStock = rs8.getInt(1);
+                                    cantStockPro = rs8.getInt(2);
+                                }
+                                if ((cantStock + cantStockPro) - carrito[i].getCantidad() >= 0) {
+                                    if (carrito[i].getCantidad() > cantStock) {
+                                        String sql9;
+                                        PreparedStatement st9;
+                                        sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+                                        st9 = conexion.getConnection().prepareStatement(sql9);
+                                        st9.setInt(1, 0);
+                                        st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
+                                        st9.setString(3, String.valueOf(carrito[i].getId()));
+                                        st9.executeUpdate();
+                                    } else if (carrito[i].getCantidad() < cantStock) {
+                                        String sql9;
+                                        PreparedStatement st9;
+                                        sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
+                                        st9 = conexion.getConnection().prepareStatement(sql9);
+                                        st9.setInt(1, (cantStock - carrito[i].getCantidad()));
+                                        st9.setString(2, String.valueOf(carrito[i].getId()));
+                                        st9.executeUpdate();
+                                    } else if (carrito[i].getCantidad() == (cantStock + cantStockPro)) {
+                                        String sql9;
+                                        PreparedStatement st9;
+                                        sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+                                        st9 = conexion.getConnection().prepareStatement(sql9);
+                                        st9.setInt(1, 0);
+                                        st9.setInt(2, 0);
+                                        st9.setString(3, String.valueOf(carrito[i].getId()));
+                                        st9.executeUpdate();
+                                    }
+                                }
+                                /*
+                            MOSTRAR MENSAJE? HABRIA QUE CANCELAR LA VENTA---------------------------------------
+                                 */
+
+                            }
+
+                            //Ingresar orden compra
+                            String sql1;
+                            PreparedStatement st1;
+                            sql1 = "INSERT INTO `compra`(`codcompra`, `tipopago`, `metodopago`) VALUES (?,?,?)";
+                            st1 = conexion.getConnection().prepareStatement(sql1);
+                            st1.setInt(1, codCompra);
+                            st1.setString(2, tipoPago);
+                            st1.setString(3, metodoPago);
+                            st1.executeUpdate();
+
+                            String sql9;
+                            PreparedStatement st9;
+                            sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                            st9 = conexion.getConnection().prepareStatement(sql9);
+                            st9.setString(1, datos[0]);
+                            st9.setString(2, "El usuario: " + datos[0] + " realizo la venta de codigo: " + codCompra);
+                            st9.executeUpdate();
+
+                            JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+                            Clear_Table1(jTableVenta);
+                            jLabelCalcularNeto.setText("0");
+                            CalcularIVA.setText("0");
+                            jTextFieldDescuentoVenta.setText("");
+                            jLabelPrecioAPagar.setText("0");
+                            jTextFieldEfectivo.setText("0");
+                            jLabelVuelto.setText("0");
+                            jTextFieldFolioVenta.setText("");
+                            limpiarCarrito();
+                            return true;
+                        }
+                    } else {
+                        String sql4;
+                        PreparedStatement st4;
+                        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
+                        st4 = conexion.getConnection().prepareStatement(sql4);
+                        st4.setInt(1, pasarAinteger(totalConDescuento));
+                        st4.setInt(2, pasarAinteger(totalSinDescuento));
+                        st4.setInt(3, pasarAinteger(jLabelCalcularNeto.getText()));
+                        st4.setInt(4, pasarAinteger(jTextFieldEfectivo.getText()));
+                        st4.setString(5, jTextFieldFolioVenta.getText());
+                        st4.executeUpdate();
+
+                        //obtener id de la compra
+                        String sql2;
+                        Statement st2;
+                        ResultSet rs2;
+                        sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                        st2 = conexion.getConnection().createStatement();
+                        rs2 = st2.executeQuery(sql2);
+                        int codCompra = 0;
+                        while (rs2.next()) {
+                            codCompra = rs2.getInt(1);
+                        }
+
+                        String sql3;
+                        PreparedStatement st3;
+                        //ingresar productos
+                        for (int i = 0; i < cantProductosCarrito; i++) {
+                            sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
+                            st3 = conexion.getConnection().prepareStatement(sql3);
+                            st3.setString(1, String.valueOf(carrito[i].getId()));
+                            st3.setInt(2, codCompra);
+                            st3.setInt(3, carrito[i].getCantidad());
+                            st3.executeUpdate();
+
+                            //obtener cantidades de stock por producto
+                            String sql8;
+                            Statement st8;
+                            ResultSet rs8;
+                            sql8 = "SELECT `cantidadproductoventa`,`cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
+                            st8 = conexion.getConnection().createStatement();
+                            rs8 = st8.executeQuery(sql8);
+                            int cantStock = 0;
+                            int cantStockPro = 0;
+                            while (rs8.next()) {
+                                cantStock = rs8.getInt(1);
+                                cantStockPro = rs8.getInt(2);
+                            }
+                            if ((cantStock + cantStockPro) - carrito[i].getCantidad() >= 0) {
+                                if (carrito[i].getCantidad() > cantStock) {
+                                    String sql9;
+                                    PreparedStatement st9;
+                                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+                                    st9 = conexion.getConnection().prepareStatement(sql9);
+                                    st9.setInt(1, 0);
+                                    st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
+                                    st9.setString(3, String.valueOf(carrito[i].getId()));
+                                    st9.executeUpdate();
+                                } else if (carrito[i].getCantidad() <= cantStock) {
+                                    String sql9;
+                                    PreparedStatement st9;
+                                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
+                                    st9 = conexion.getConnection().prepareStatement(sql9);
+                                    st9.setInt(1, (cantStock - carrito[i].getCantidad()));
+                                    st9.setString(2, String.valueOf(carrito[i].getId()));
+                                    st9.executeUpdate();
+                                } else if (carrito[i].getCantidad() == (cantStock + cantStockPro)) {
+                                    String sql9;
+                                    PreparedStatement st9;
+                                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+                                    st9 = conexion.getConnection().prepareStatement(sql9);
+                                    st9.setInt(1, 0);
+                                    st9.setInt(2, 0);
+                                    st9.setString(3, String.valueOf(carrito[i].getId()));
+                                    st9.executeUpdate();
+                                }
+                            }
+                            /*
+                            MOSTRAR MENSAJE? HABRIA QUE CANCELAR LA VENTA---------------------------------------
+                             */
+
+                        }
+                        //Ingresar orden compra
+                        String sql1;
+                        PreparedStatement st1;
+                        sql1 = "INSERT INTO `compra`(`codcompra`, `tipopago`, `metodopago`) VALUES (?,?,?)";
+                        st1 = conexion.getConnection().prepareStatement(sql1);
+                        st1.setInt(1, codCompra);
+                        st1.setString(2, tipoPago);
+                        st1.setString(3, metodoPago);
+                        st1.executeUpdate();
+
+                        String sql9;
+                        PreparedStatement st9;
+                        sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                        st9 = conexion.getConnection().prepareStatement(sql9);
+                        st9.setString(1, datos[0]);
+                        st9.setString(2, "El usuario: " + datos[0] + " realizo la venta de Codigo: " + codCompra);
+                        st9.executeUpdate();
+
+                        JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+
+                        Clear_Table1(jTableVenta);
+                        jLabelCalcularNeto.setText("0");
+                        CalcularIVA.setText("0");
+                        jTextFieldDescuentoVenta.setText("");
+                        jLabelPrecioAPagar.setText("0");
+                        jTextFieldEfectivo.setText("0");
+                        jLabelVuelto.setText("0");
+                        jTextFieldFolioVenta.setText("");
+                        limpiarCarrito();
+                        return true;
+                    }
+                } else {
+                    int neto = pasarAinteger(jLabelCalcularNeto.getText());
+                    int efectivo = pasarAinteger(jTextFieldEfectivo.getText());
+                    NuevoCheque nuevocheque = new NuevoCheque(conexion, datos, carrito, cantProductosCarrito, totalConDescuento, totalSinDescuento, metodoPago, tipoPago, neto, efectivo, jTextFieldFolioVenta.getText());
+                    nuevocheque.setVisible(true);
+                    Clear_Table1(jTableVenta);
+                    jLabelCalcularNeto.setText("0");
+                    CalcularIVA.setText("0");
+                    jTextFieldDescuentoVenta.setText("");
+                    jLabelPrecioAPagar.setText("0");
+                    jTextFieldEfectivo.setText("0");
+                    jLabelVuelto.setText("0");
+                    jTextFieldFolioVenta.setText("");
+                    limpiarCarrito();
+                    jPanelEditarProducto.show(false);
+                    refrescarTablaListaProductos();
+                    return false;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Folio se encuentra vacio");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Aun no a agregado productos a la venta");
+        }
+        return false;
+    }
+
+    public boolean registrarPresupuesto() throws SQLException {
+        if (carrito[0] != null) {
+            String tipoPago = "";
+            String metodoPago = "";
+            String totalConDescuento = jLabelPrecioAPagarPresupuesto.getText();
+            int totalSinDesc = pasarAinteger(jLabelCalcularNetoPresupuesto.getText()) + pasarAinteger(CalcularIVAPresupuesto.getText());
+            String totalSinDescuento = formatearAEntero("" + totalSinDesc);
+
+            //si no es cheque
+            //Ingresar orden Compra
+            if (jTextFieldDescuentoPresupuesto.getText().equals("0")) {
+                jTextFieldDescuentoPresupuesto.setText("0");
+            }
+
+            if ((jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0 && pasarAinteger(jTextFieldDescuentoPresupuesto.getText()) < 100) || (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1 && pasarAinteger(jTextFieldDescuentoPresupuesto.getText()) < totalSinDesc)) {
+
+                String sql4;
+                PreparedStatement st4;
+                sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
+                st4 = conexion.getConnection().prepareStatement(sql4);
+                st4.setInt(1, pasarAinteger(totalConDescuento));
+                st4.setInt(2, pasarAinteger(totalSinDescuento));
+                st4.setInt(3, pasarAinteger(jLabelCalcularNetoPresupuesto.getText()));
+                st4.setInt(4, 0);
+                st4.setString(5, jTextFieldFolioPresupuesto.getText());
+                st4.executeUpdate();
+
+                //obtener id de la compra
+                String sql2;
+                Statement st2;
+                ResultSet rs2;
+                sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                st2 = conexion.getConnection().createStatement();
+                rs2 = st2.executeQuery(sql2);
+                int codCompra = 0;
+                while (rs2.next()) {
+                    codCompra = rs2.getInt(1);
+                }
+
+                String sql3;
+                PreparedStatement st3;
+                //ingresar productos
+                for (int i = 0; i < cantProductosCarrito; i++) {
+                    sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
+                    st3 = conexion.getConnection().prepareStatement(sql3);
+                    st3.setString(1, String.valueOf(carrito[i].getId()));
+                    st3.setInt(2, codCompra);
+                    st3.setInt(3, carrito[i].getCantidad());
+                    st3.executeUpdate();
+                }
+                //Ingresar orden compra
+                String sql1;
+                PreparedStatement st1;
+                sql1 = "INSERT INTO `presupuesto`(`codpresupuesto`, `descripcion`) VALUES (?, ?)";
+                st1 = conexion.getConnection().prepareStatement(sql1);
+                st1.setInt(1, codCompra);
+                st1.setString(2, jTextAreaDescripcionPresupuesto.getText());
+                st1.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Presupuesto realizado exitosamente");
+                Clear_Table1(jTablePresupuesto);
+                jLabelCalcularNetoPresupuesto.setText("0");
+                CalcularIVAPresupuesto.setText("0");
+                jTextFieldDescuentoPresupuesto.setText("");
+                jLabelPrecioAPagarPresupuesto.setText("0");
+                jTextAreaDescripcionPresupuesto.setText("");
+                jTextFieldFolioPresupuesto.setText("");
+                limpiarCarrito();
+                return true;
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Descuento excedido");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay productos en el carro de presupuesto");
+        }
+
+        return false;
+    }
+
+    public void refrescarTablaBloquearUsuario() {
+        Clear_Table1(jTableBloquearUsuario);
+        JButton bloquear = new JButton("Bloquear");
+        JButton desbloquear = new JButton("Desbloquear");
+        String sql1;
+        Statement st2;
+        ResultSet rs2;
+        String filtro = this.jTextFieldFiltrarRutBloquearUsuario.getText();
+        sql1 = "SELECT u.rutusuario, u.nombreusuario, u.apellidopaterno, u.apellidomaterno, r.nombrerol, u.bloqueadoS_N FROM usuario u, rol r WHERE u.idrol=r.idrol AND u.rutusuario LIKE '%" + filtro + "%'";
+        DefaultTableModel modelo = (DefaultTableModel) jTableBloquearUsuario.getModel();
+        try {
+            st2 = conexion.getConnection().createStatement();
+            rs2 = st2.executeQuery(sql1);
+            Object[] datosQuery = new Object[6];
+
+            while (rs2.next()) {
+
+                datosQuery[0] = rs2.getString(1);
+                datosQuery[1] = rs2.getString(2);
+                datosQuery[2] = rs2.getString(3);
+                datosQuery[3] = rs2.getString(4);
+                datosQuery[4] = rs2.getString(5);
+
+                if (rs2.getBoolean(6)) {
+                    if (datosQuery[0].equals(this.datos[0])) {
+                        JButton elMismo1 = new JButton("Desbloquear");
+                        elMismo1.setEnabled(false);
+                        datosQuery[5] = elMismo1;
+                    } else {
+                        datosQuery[5] = desbloquear;
+                    }
+                } else if (datosQuery[0].equals(this.datos[0])) {
+                    JButton elMismo = new JButton("Bloquear");
+                    elMismo.setEnabled(false);
+                    datosQuery[5] = elMismo;
+
+                } else {
+                    datosQuery[5] = bloquear;
+                }
+                modelo.addRow(datosQuery);
+
+            }
+            jTableBloquearUsuario.setModel(modelo);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void refrescarTablaEditarCheque() {
+        Clear_Table1(jTableEditarCheques);
+        JButton cobrar = new JButton("Cobrar");
+        JButton detalles = new JButton("Detalles");
+        String sql1;
+        Statement st2;
+        ResultSet rs2;
+        String filtroNumero = this.jTextFieldFiltrarNumeroListaDeCheques.getText();
+        java.util.Date fecha1 = this.jDateChooserFiltrarFechaListaDeCheques1.getDate();
+        java.util.Date fecha2 = this.jDateChooserFiltrarFechaListaDeCheques2.getDate();
+        java.sql.Date filtroFecha1;
+        java.sql.Date filtroFecha2;
+        boolean cobrado = this.jRadioButtonFiltrarCobradoListaDeCheques.isSelected();
+        String filtroCobrado;
+        if (cobrado) {
+            filtroCobrado = "1";
+        } else {
+            filtroCobrado = "0";
+        }
+        if (jRadioButtonTodosListaDeCheques.isSelected()) {
+            if (fecha1 != null && fecha2 != null) {
+                filtroFecha1 = new java.sql.Date(fecha1.getTime());
+                filtroFecha2 = new java.sql.Date(fecha2.getTime());
+                sql1 = "SELECT `numerocheque`, `nombresemisor`, `apellidosemisor`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `chequescobrados_n` FROM `cheques` WHERE `numerocheque` LIKE '%" + filtroNumero + "%' AND `fecharecepcion` BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "' order by  chequescobrados_n LIKE 0 DESC";
+            } else {
+                sql1 = "SELECT `numerocheque`, `nombresemisor`, `apellidosemisor`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `chequescobrados_n` FROM `cheques` WHERE `numerocheque` LIKE '%" + filtroNumero + "%' order by  chequescobrados_n LIKE 0 DESC";
+            }
+        } else if (fecha1 != null && fecha2 != null) {
+            filtroFecha1 = new java.sql.Date(fecha1.getTime());
+            filtroFecha2 = new java.sql.Date(fecha2.getTime());
+            sql1 = "SELECT `numerocheque`, `nombresemisor`, `apellidosemisor`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `chequescobrados_n` FROM `cheques` WHERE `numerocheque` LIKE '%" + filtroNumero + "%' AND `fecharecepcion` BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "' AND `chequescobrados_n` = '" + filtroCobrado + "' order by  chequescobrados_n LIKE 0 DESC";
+        } else {
+            sql1 = "SELECT `numerocheque`, `nombresemisor`, `apellidosemisor`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `chequescobrados_n` FROM `cheques` WHERE `numerocheque` LIKE '%" + filtroNumero + "%' AND `chequescobrados_n` = '" + filtroCobrado + "' order by  chequescobrados_n LIKE 0 DESC";
+        }
+        DefaultTableModel modelo = (DefaultTableModel) jTableEditarCheques.getModel();
+        //editar lo de abajo
+        try {
+            st2 = conexion.getConnection().createStatement();
+            rs2 = st2.executeQuery(sql1);
+            Object[] datosQuery = new Object[8];
+
+            while (rs2.next()) {
+
+                datosQuery[0] = rs2.getInt(1);
+                datosQuery[1] = rs2.getString(2);
+                datosQuery[2] = rs2.getString(3);
+                datosQuery[3] = rs2.getDate(4);
+                datosQuery[4] = rs2.getDate(5);
+                datosQuery[5] = rs2.getString(6);
+                datosQuery[6] = detalles;
+                if (!rs2.getBoolean(7)) {
+                    datosQuery[7] = cobrar;
+                } else {
+                    datosQuery[7] = "Cobrado";
+                }
+                modelo.addRow(datosQuery);
+            }
+            jTableEditarCheques.setModel(modelo);
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        if (e.getSource() == jTextFieldRutAgregarU) {
+            if (!jTextFieldRutAgregarU.getText().equals("")) {
+                if (validarRut(FormatearRUT(jTextFieldRutAgregarU.getText()))) {
+                    jTextFieldRutAgregarU.setText(FormatearRUT(jTextFieldRutAgregarU.getText()));
+                    jLabelErrorRut.setText("");
+                } else {
+                    jLabelErrorRut.setText("Rut no valido!");
+                    jTextFieldRutAgregarU.addFocusListener(this);
+                }
+            }
+        }
+
+        if (e.getSource() == jTextFieldMontoCheque) {
+            jTextFieldMontoCheque.setText(formatearAEntero(jTextFieldMontoCheque.getText()));
+
+        }
+    }
+
+    public static String formatearAEntero(String n) {
+        char[] vector = n.toCharArray();
+        String resultado = "";
+        int cont = 0;
+        boolean hizo = false;
+        for (int i = vector.length - 1; i >= 0; i--) {
+            if (vector.length > 3) {
+                hizo = true;
+                if (vector[i] != '.') {
+                    if (cont == 3) {
+                        cont = 0;
+                        resultado = resultado + ".";
+                    }
+                    resultado = resultado + vector[i];
+                    cont++;
+                }
+
+            } else {
+                resultado = n;
                 break;
             }
-          }
+        }
+        String resultadoFinal;
+        if (hizo) {
+            char[] vector2 = resultado.toCharArray();
+            String listo = "";
+            for (int i = vector2.length - 1; i >= 0; i--) {
+                listo = listo + vector2[i];
+            }
+            resultadoFinal = listo;
         } else {
-          JOptionPane.showMessageDialog(null, "ya se encuentra un producto con este codigo");
+            resultadoFinal = n;
         }
-      } else {
-        JOptionPane.showMessageDialog(null, "ya se encuentra un producto con ese nombre");
-      }
+        return resultadoFinal;
 
-    } else {
-      JOptionPane.showMessageDialog(null, "Hay algunos campos que se encuentran vacios");
     }
-  }
 
-  private static void Clear_Table1(JTable tabla) {
-    DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-    for (int i = 0; i < tabla.getRowCount(); i++) {
-      modelo.removeRow(i);
-      i -= 1;
-    }
-  }
-
-  public void rellenarComboBoxTipoPlanta() throws SQLException {
-    Statement st = conexion.getConnection().createStatement();
-    String sql = "SELECT nombretipo FROM `tipo`";
-    ResultSet rs = st.executeQuery(sql);
-    DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-    modelo.addElement("--Opciones--");
-    modelo.addElement("Agregar tipo");
-    while (rs.next()) {
-      modelo.addElement(rs.getString(1));
-    }
-    jComboBoxAgregarTipoPlanta.setModel(modelo);
-    jComboBoxEditarTipoPlanta.setModel(modelo);
-  }
-
-  public void rellenarComboBoxTipoPlantaListado() throws SQLException {
-    Statement st = conexion.getConnection().createStatement();
-    String sql = "SELECT nombretipo FROM `tipo`";
-    ResultSet rs = st.executeQuery(sql);
-    DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-    modelo.addElement("--Seleccionar tipo--");
-    while (rs.next()) {
-      modelo.addElement(rs.getString(1));
-    }
-    jComboBoxTipoListaProductos.setModel(modelo);
-  }
-
-  public void rellenarComboBoxTipoPlantaListadoMerma() throws SQLException {
-    Statement st = conexion.getConnection().createStatement();
-    String sql = "SELECT nombretipo FROM `tipo`";
-    ResultSet rs = st.executeQuery(sql);
-    DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-    modelo.addElement("--Seleccionar tipo--");
-    while (rs.next()) {
-      modelo.addElement(rs.getString(1));
-    }
-    jComboBoxTipoListaProductosMerma.setModel(modelo);
-  }
-
-  public void refrescarTablaListaVentas() {
-    Clear_Table1(jTableListaVentas);
-    String sql;
-    Statement st;
-    ResultSet rs;
-    String filtroCodigo = this.jTextFieldFiltroCodigoListaDeVentas.getText();
-    String filtroMetodoDePago = this.jComboBoxFiltroMetodoPagoListaDeVentas.getSelectedItem().toString();
-    java.util.Date fecha1 = this.jDateChooserFiltroFechaListaDeVentas1.getDate();
-    java.util.Date fecha2 = this.jDateChooserFiltroFechaListaDeVentas2.getDate();
-    java.sql.Date filtroFecha1;
-    java.sql.Date filtroFecha2;
-    if (fecha1 != null && fecha2 != null) {
-      filtroFecha1 = new java.sql.Date(fecha1.getTime());
-      filtroFecha2 = new java.sql.Date(fecha2.getTime());
-      if (!filtroMetodoDePago.equals("-Metodo de Pago-")) {
-        sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra LIKE '%" + filtroCodigo + "%' AND c.metodopago = '" + filtroMetodoDePago + "' AND oc.fecha BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "' order by oc.fecha DESC";
-      } else {
-        sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra LIKE '%" + filtroCodigo + "%' AND oc.fecha BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "'  order by oc.fecha DESC";
-      }
-    } else if (!filtroMetodoDePago.equals("-Metodo de Pago-")) {
-      sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra LIKE '%" + filtroCodigo + "%' AND c.metodopago = '" + filtroMetodoDePago + "'  order by oc.fecha DESC";
-    } else {
-      sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra LIKE '%" + filtroCodigo + "%'  order by oc.fecha DESC";
-    }
-    DefaultTableModel modelo = (DefaultTableModel) jTableListaVentas.getModel();
-    JButton detalles = new JButton("Detalles");
-    JButton cancelar = new JButton("Cancelar");
-
-    try {
-      st = conexion.getConnection().createStatement();
-      rs = st.executeQuery(sql);
-      Object[] datosQuery = new Object[7];
-
-      while (rs.next()) {
-
-        datosQuery[0] = rs.getString(1);
-        datosQuery[2] = rs.getString(2);
-        datosQuery[1] = rs.getDate(3);
-        datosQuery[3] = rs.getString(4);
-        datosQuery[4] = rs.getString(5);
-        datosQuery[5] = detalles;
-        datosQuery[6] = cancelar;
-
-        modelo.addRow(datosQuery);
-      }
-      jTableListaVentas.setModel(modelo);
-
-    } catch (SQLException ex) {
-      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-  public void refrescarListaPresupuestos() {
-    Clear_Table1(jTableListaPresupuestos);
-    String sql;
-    Statement st;
-    ResultSet rs;
-    String filtroCodigo = this.jTextFieldFiltroCodigoListaDeVentas1.getText();
-    java.util.Date fecha1 = this.jDateChooserFiltroFechaListaDeVentas4.getDate();
-    java.util.Date fecha2 = this.jDateChooserFiltroFechaListaDeVentas3.getDate();
-    java.sql.Date filtroFecha1;
-    java.sql.Date filtroFecha2;
-    if (fecha1 != null && fecha2 != null) {
-      filtroFecha1 = new java.sql.Date(fecha1.getTime());
-      filtroFecha2 = new java.sql.Date(fecha2.getTime());
-      sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha FROM ordencompra oc, presupuesto p WHERE oc.codordencompra=p.codpresupuesto AND oc.codordencompra LIKE '%" + filtroCodigo + "%' AND oc.fecha BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "'  order by oc.fecha DESC";
-    } else {
-      sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha FROM ordencompra oc, presupuesto p WHERE oc.codordencompra=p.codpresupuesto AND oc.codordencompra LIKE '%" + filtroCodigo + "%'  order by oc.fecha DESC";
-    }
-    DefaultTableModel modelo = (DefaultTableModel) jTableListaPresupuestos.getModel();
-    JButton detalles = new JButton("Detalles");
-    JButton cancelar = new JButton("Cancelar");
-    try {
-      st = conexion.getConnection().createStatement();
-      rs = st.executeQuery(sql);
-      Object[] datosQuery = new Object[5];
-
-      while (rs.next()) {
-
-        datosQuery[0] = rs.getString(1);
-        datosQuery[2] = rs.getString(2);
-        datosQuery[1] = rs.getDate(3);
-        datosQuery[3] = detalles;
-        datosQuery[4] = cancelar;
-        modelo.addRow(datosQuery);
-      }
-      jTableListaPresupuestos.setModel(modelo);
-
-    } catch (SQLException ex) {
-      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-  public void refrescarTablaProveedores() {
-    Clear_Table1(jTableEditarProveedor1);
-    String sql;
-    Statement st;
-    ResultSet rs;
-    String filtro = this.jTextFieldFiltrarNombreListaProveedores.getText();
-    sql = "SELECT `nombreproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor`, `codproveedor` FROM `proveedor` WHERE `nombreproveedor` LIKE '%" + filtro + "%'";
-    DefaultTableModel modelo = (DefaultTableModel) jTableEditarProveedor1.getModel();
-    JButton detalles = new JButton("Detalles");
-    try {
-      st = conexion.getConnection().createStatement();
-      rs = st.executeQuery(sql);
-      Object[] datosQuery = new Object[6];
-
-      while (rs.next()) {
-
-        datosQuery[0] = rs.getString(1);
-        datosQuery[1] = rs.getString(2);
-        datosQuery[2] = rs.getString(3);
-        datosQuery[3] = rs.getString(4);
-        datosQuery[4] = detalles;
-        datosQuery[5] = rs.getString(5);
-        modelo.addRow(datosQuery);
-
-      }
-      jTableEditarProveedor1.setModel(modelo);
-
-    } catch (SQLException ex) {
-      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-  public void refrescarTablaMermas() {
-    Clear_Table1(jTableListaMermas);
-    String sql;
-    Statement st;
-    ResultSet rs;
-    sql = "SELECT m.fechamerma, p.nombreproducto, m.cantidadmerma, m.descripcionmerma, m.codmerma FROM `merma` AS m , `producto` AS p WHERE m.codproducto = p.codproducto";
-    DefaultTableModel modelo = (DefaultTableModel) jTableListaMermas.getModel();
-    JButton detalles = new JButton("Editar");
-    try {
-      st = conexion.getConnection().createStatement();
-      rs = st.executeQuery(sql);
-      Object[] datosQuery = new Object[6];
-
-      while (rs.next()) {
-
-        datosQuery[0] = rs.getDate(1);
-        datosQuery[1] = rs.getString(2);
-        datosQuery[2] = rs.getString(3);
-        datosQuery[3] = rs.getString(4);
-        datosQuery[4] = detalles;
-        datosQuery[5] = rs.getString(5);
-        modelo.addRow(datosQuery);
-
-      }
-      jTableListaMermas.setModel(modelo);
-
-    } catch (SQLException ex) {
-      System.out.println(ex.getMessage());
-    }
-  }
-
-  public void refrescarTablaEliminarProveedores() {
-    Clear_Table1(this.jTableEliminarProveedor2);
-    String sql;
-    Statement st;
-    ResultSet rs;
-    String filtro = this.jTextFieldFiltrarNombreEliminarProveedores.getText();
-    sql = "SELECT `nombreproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor`, `codproveedor` FROM `proveedor` WHERE `nombreproveedor` LIKE '%" + filtro + "%'";
-    DefaultTableModel modelo = (DefaultTableModel) jTableEliminarProveedor2.getModel();
-    JButton detalles = new JButton("Eliminar");
-    try {
-      st = conexion.getConnection().createStatement();
-      rs = st.executeQuery(sql);
-      Object[] datosQuery = new Object[6];
-
-      while (rs.next()) {
-
-        datosQuery[0] = rs.getString(1);
-        datosQuery[1] = rs.getString(2);
-        datosQuery[2] = rs.getString(3);
-        datosQuery[3] = rs.getString(4);
-        datosQuery[4] = detalles;
-        datosQuery[5] = rs.getString(5);
-        modelo.addRow(datosQuery);
-
-      }
-      jTableEliminarProveedor2.setModel(modelo);
-
-    } catch (SQLException ex) {
-      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-  public void rellenarComboBoxEspeciePlanta() throws SQLException {
-    Statement st = conexion.getConnection().createStatement();
-    String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxAgregarTipoPlanta.getSelectedItem() + "'";
-    String sq2 = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxEditarTipoPlanta.getSelectedItem() + "'";
-    ResultSet rs = st.executeQuery(sql);
-    DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-    modelo.addElement("--Opciones--");
-    modelo.addElement("Agregar especie");
-    while (rs.next()) {
-      modelo.addElement(rs.getString(1));
-    }
-    ResultSet rs2 = st.executeQuery(sq2);
-    DefaultComboBoxModel modelo2 = new DefaultComboBoxModel();
-    modelo2.addElement("--Opciones--");
-    modelo2.addElement("Agregar especie");
-    while (rs2.next()) {
-      modelo2.addElement(rs2.getString(1));
-    }
-    jComboBoxAgregarEspeciePlanta.setModel(modelo);
-    jComboBoxEditarEspeciePlanta.setModel(modelo2);
-
-  }
-
-  public void rellenarComboBoxEspeciePlantaListado() throws SQLException {
-    Statement st = conexion.getConnection().createStatement();
-    String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxTipoListaProductos.getSelectedItem() + "'";
-    ResultSet rs = st.executeQuery(sql);
-    DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-    modelo.addElement("--Seleccionar especie--");
-    while (rs.next()) {
-      modelo.addElement(rs.getString(1));
-    }
-    jComboBoxEspecieProducto.setModel(modelo);
-  }
-
-  public void rellenarComboBoxEspeciePlantaListadoMerma() throws SQLException {
-    Statement st = conexion.getConnection().createStatement();
-    String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxTipoListaProductosMerma.getSelectedItem() + "'";
-    ResultSet rs = st.executeQuery(sql);
-    DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-    modelo.addElement("--Seleccionar especie--");
-    while (rs.next()) {
-      modelo.addElement(rs.getString(1));
-    }
-    jComboBoxEspecieProductoMerma.setModel(modelo);
-  }
-
-  public void validarSoloNumeros(JTextField jtext) {
-    jtext.addKeyListener(new KeyAdapter() {
-      @Override
-      public void keyTyped(KeyEvent e) {
-        char c = e.getKeyChar();
-        if (!Character.isDigit(c)) {
-          e.consume();
+    public static int pasarAinteger(String entero) {
+        char[] numero = entero.toCharArray();
+        String resultado = "";
+        for (int i = 0; i < numero.length; i++) {
+            if (numero[i] != '.') {
+                resultado = resultado + numero[i];
+            }
         }
-      }
-    });
-  }
-
-  public boolean validarRut(String rut) {
-
-    boolean validacion = false;
-    try {
-      rut = rut.toUpperCase();
-      rut = rut.replace(".", "");
-      rut = rut.replace("-", "");
-      int rutAux = Integer.parseInt(rut.substring(0, rut.length() - 1));
-
-      char dv = rut.charAt(rut.length() - 1);
-
-      int m = 0, s = 1;
-      for (; rutAux != 0; rutAux /= 10) {
-        s = (s + rutAux % 10 * (9 - m++ % 6)) % 11;
-      }
-      if (dv == (char) (s != 0 ? s + 47 : 75)) {
-        validacion = true;
-      }
-
-    } catch (java.lang.NumberFormatException e) {
-    } catch (Exception e) {
+        return Integer.parseInt(resultado);
     }
-    return validacion;
-  }
 
-  public String FormatearRUT(String rut) {
-
-    int cont = 0;
-    String format;
-    rut = rut.replace(".", "");
-    rut = rut.replace("-", "");
-    format = "-" + rut.substring(rut.length() - 1);
-    for (int i = rut.length() - 2; i >= 0; i--) {
-      format = rut.substring(i, i + 1) + format;
-      cont++;
-      if (cont == 3 && i != 0) {
-        format = "." + format;
-        cont = 0;
-      }
+    public void agregarProveedor() {
+        String sql;
+        PreparedStatement st;
+        try {
+            String nombres = jTextFieldNombresAgregarP1.getText();
+            String apellidos = jTextFieldApellidosProveedor.getText();
+            String descripcion = jTextAreaProveedor.getText();
+            String contacto = jTextFieldContactoProveedor.getText();
+            String correo = jTextFieldCorreoProveedor.getText();
+            if (!nombres.equalsIgnoreCase("") && !apellidos.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !contacto.equalsIgnoreCase("")
+                    && !correo.equalsIgnoreCase("")) {
+                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este proveedor?");
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    //if(validarSoloNumeros(jTextFieldContactoProveedor))
+                    sql = "INSERT INTO proveedor(nombreproveedor,descripcionproveedor,apellidosproveedor,contactoproveedor,correoproveedor) values(?,?,?,?,?)";
+                    st = conexion.getConnection().prepareStatement(sql);
+                    st.setString(1, nombres);
+                    st.setString(2, descripcion);
+                    st.setString(3, apellidos);
+                    st.setString(4, contacto);
+                    st.setString(5, correo);
+                    st.executeUpdate();
+                    jTextFieldNombresAgregarP1.setText("");
+                    jTextFieldApellidosProveedor.setText("");
+                    jTextAreaProveedor.setText("");
+                    jTextFieldContactoProveedor.setText("");
+                    jTextFieldCorreoProveedor.setText("");
+                    JOptionPane.showMessageDialog(null, "El nuevo proveedor fue agregado con exito!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "ya hay un proveedor con ese rut");
+        }
     }
-    return format;
-  }
 
-  /**
-   * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always regenerated by the Form Editor.
-   */
-  @SuppressWarnings("unchecked")
+    public void agregarMerma(int ID, int cant, String info, String ventaProduccion, int cantO) {
+        String sql = null;
+        String sql2 = null;
+        String sql3 = null;
+        PreparedStatement st;
+        PreparedStatement st2;
+        PreparedStatement st3;
+        boolean ActStockCorrecto = true;
+        if ((cantO - cant) >= 0) {
+            try {
+                int confirmar = JOptionPane.showConfirmDialog(null, "¿Está seguro desea agregar esta merma de " + ventaProduccion + "?");
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    try {
+                        if (ventaProduccion.equals("Venta")) {
+                            sql = "UPDATE `producto` SET `cantidadproductoventa`=? WHERE `codproducto`=?";
+                        } else if (ventaProduccion.equals("Produccion")) {
+                            sql = "UPDATE `producto` SET `cantidadproductoproduccion`=? WHERE `codproducto`=?";
+                        }
+                        st = conexion.getConnection().prepareStatement(sql);
+                        st.setInt(1, (cantO - cant));
+                        st.setInt(2, ID);
+                        st.executeUpdate();
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(null, "Error al actualizar stock.");
+                        System.out.println(ex.getMessage());
+                        ActStockCorrecto = false;
+                    }
+                    if (ActStockCorrecto) {
+                        sql = "INSERT INTO merma(cantidadmerma,descripcionmerma,codproducto) values(?,?,?)";
+                        st = conexion.getConnection().prepareStatement(sql);
+                        st.setString(3, String.valueOf(ID));
+                        st.setInt(1, cant);
+                        st.setString(2, info);
+                        st.executeUpdate();
+                        sql2 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                        st2 = conexion.getConnection().prepareStatement(sql2);
+                        sql3 = "SELECT MAX(codmerma) from merma";
+                        st3 = conexion.getConnection().prepareStatement(sql3);
+                        ResultSet rsAux;
+                        rsAux = st3.executeQuery(sql3);
+                        int aux = 0;
+                        while (rsAux.next()) {
+                            aux = rsAux.getInt(1);
+                        }
+                        st2.setString(1, datos[0]);
+                        st2.setString(2, "El usuario: " + datos[0] + " agrego la merma de codigo: " + aux);
+                        st2.executeUpdate();
+                        jTextFieldCantidadMerma.setText("0");
+                        jTextFieldFiltrarPorLetrasMerma.setText("");
+                        jTextAreaDescripcionMerma.setText("");
+                        jRadioButtonVentaMerma.setSelected(true);
+                        this.refrescarTablaListaProductosMerma();
+                        JOptionPane.showMessageDialog(null, "Nueva merma ingresada con exito!");
+                    }
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error al ingresar la merma.");
+                System.out.println(ex.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "La merma excede el stock actual en el area seleccionada.");
+        }
+    }
+
+    public void agregarProducto() throws SQLException {
+        boolean todoBien = false;
+        String nomProducto = jTextFieldNombreAgregarProducto.getText();
+        int cantidadVenta = 0;
+        if (!jTextFieldCantidadVentaAgregarProducto.getText().equalsIgnoreCase("")) {
+            cantidadVenta = Integer.parseInt(jTextFieldCantidadVentaAgregarProducto.getText());
+        }
+        int cantidadProduccion = 0;
+        if (!jTextFieldCantidadProdAgregaProducto.getText().equalsIgnoreCase("")) {
+            cantidadProduccion = Integer.parseInt(jTextFieldCantidadProdAgregaProducto.getText());
+        }
+        String codigoUnico = jTextFieldCodigoProducto.getText();
+        String precioProducto = "" + ((int) (Integer.parseInt(jTextFieldPrecioAgregarProducto.getText()) / 1.19));
+        int tipoProducto = jComboBoxTipoAgregarProducto.getSelectedIndex();
+        int tipoPlanta = jComboBoxAgregarTipoPlanta.getSelectedIndex();
+        int especiePlanta = jComboBoxAgregarEspeciePlanta.getSelectedIndex();
+        String nuevoTipoPlanta = jTextFieldAgregarTipoPlanta.getText();
+        String nuevaEspeciePlanta = jTextFieldAgregarEspeciePlanta.getText();
+        String stock = jTextFieldStockAgregarProducto.getText();
+        String descripcion = jTextAreaDescripcionAgregarProducto.getText();
+        if (!nomProducto.equalsIgnoreCase("") && cantidadVenta != 0 && cantidadProduccion != 0 && !precioProducto.equalsIgnoreCase("")
+                && !stock.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !codigoUnico.equalsIgnoreCase("")) {
+
+            String sqlAux;
+            PreparedStatement stAux;
+            sqlAux = "SELECT COUNT(*) FROM producto P WHERE P.nombreproducto = '" + nomProducto + "'";
+            stAux = conexion.getConnection().prepareStatement(sqlAux);
+            ResultSet rsAux;
+            rsAux = stAux.executeQuery(sqlAux);
+            int cant = 0;
+            while (rsAux.next()) {
+                cant = rsAux.getInt(1);
+            }
+
+            String sqlcontCodigoUnico;
+            PreparedStatement stcontCodigoUnico;
+            sqlcontCodigoUnico = "SELECT COUNT(*) FROM producto P WHERE P.codproducto = '" + codigoUnico + "'";
+            stcontCodigoUnico = conexion.getConnection().prepareStatement(sqlcontCodigoUnico);
+            ResultSet rscontCodigoUnico;
+            rscontCodigoUnico = stcontCodigoUnico.executeQuery(sqlcontCodigoUnico);
+            int cantCodigoUnico = 0;
+            while (rscontCodigoUnico.next()) {
+                cantCodigoUnico = rscontCodigoUnico.getInt(1);
+            }
+
+            if (cant < 1) {
+                if (cantCodigoUnico < 1) {
+                    int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este producto?");
+                    if (confirmar == JOptionPane.YES_OPTION) {
+                        switch (tipoProducto) {
+                            case 1:
+                                if (jComboBoxAgregarTipoPlanta.getSelectedIndex() != 0) {
+                                    //AGREGAR TIPO DE PLANTA..... POR LO TANTO AGREGAR ESPECIE TAMBIEN
+                                    int codTipoPlanta = 0;
+                                    int codEspeciePlanta = 0;
+                                    if (tipoPlanta == 1) {
+                                        if (!jTextFieldAgregarTipoPlanta.getText().equalsIgnoreCase("") && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
+                                            String sqlAux2;
+                                            PreparedStatement stAux2;
+                                            sqlAux2 = "SELECT COUNT(*) FROM tipo t WHERE t.nombretipo = '" + nuevoTipoPlanta + "'";
+                                            stAux2 = conexion.getConnection().prepareStatement(sqlAux2);
+                                            ResultSet rsAux2;
+                                            rsAux2 = stAux2.executeQuery(sqlAux2);
+                                            int cant2 = 0;
+                                            while (rsAux2.next()) {
+                                                cant2 = rsAux2.getInt(1);
+                                            }
+                                            if (cant2 < 1) {
+                                                //ingresar tipo de planta
+                                                String sql;
+                                                PreparedStatement st;
+                                                sql = "INSERT INTO `tipo`(`nombretipo`) VALUES (?)";
+                                                st = conexion.getConnection().prepareStatement(sql);
+                                                st.setString(1, nuevoTipoPlanta);
+                                                st.executeUpdate();
+                                                //obtener codigo de tipo de planta
+                                                PreparedStatement st2;
+                                                ResultSet rs2;
+                                                sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nuevoTipoPlanta + "'";
+                                                st2 = conexion.getConnection().prepareStatement(sql);
+                                                rs2 = st2.executeQuery(sql);
+                                                while (rs2.next()) {
+                                                    codTipoPlanta = rs2.getInt(1);
+                                                }
+                                                String sqlAux3;
+                                                PreparedStatement stAux3;
+                                                sqlAux3 = "SELECT COUNT(*) FROM tipo t ,especie e WHERE e.codtipo = '" + codTipoPlanta + "' AND e.nombreespecie = '" + nuevaEspeciePlanta + "'";
+                                                stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
+                                                ResultSet rsAux3;
+                                                rsAux3 = stAux3.executeQuery(sqlAux3);
+                                                int cant3 = 0;
+                                                while (rsAux3.next()) {
+                                                    cant3 = rsAux3.getInt(1);
+                                                }
+                                                if (cant3 < 1) {
+                                                    //INGRESAR ESPECIE DE PLANTA
+                                                    PreparedStatement st3;
+                                                    sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                                                    st3 = conexion.getConnection().prepareStatement(sql);
+                                                    st3.setInt(1, codTipoPlanta);
+                                                    st3.setString(2, nuevaEspeciePlanta);
+                                                    st3.executeUpdate();
+                                                    //obtener codigo de especie de planta
+                                                    PreparedStatement st4;
+                                                    ResultSet rs4;
+                                                    sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                                                    st4 = conexion.getConnection().prepareStatement(sql);
+                                                    rs4 = st4.executeQuery(sql);
+                                                    while (rs4.next()) {
+                                                        codEspeciePlanta = rs4.getInt(1);
+                                                    }
+                                                    todoBien = true;
+                                                } else {
+                                                    JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
+                                                }
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "ya se encuentra un tipo con ese nombre");
+                                            }
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
+                                        }
+                                    } else //SOLO AGREGAR ESPECIE DE PLANTA
+                                    {
+                                        if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() != 0) {
+                                            if (especiePlanta == 1) {
+                                                if (jComboBoxAgregarTipoPlanta.getSelectedIndex() > 1 && !jTextFieldAgregarEspeciePlanta.getText().equalsIgnoreCase("")) {
+                                                    String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                                                    PreparedStatement st;
+                                                    ResultSet rs;
+                                                    String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                                                    st = conexion.getConnection().prepareStatement(sql);
+                                                    rs = st.executeQuery(sql);
+                                                    while (rs.next()) {
+                                                        codTipoPlanta = rs.getInt(1);
+                                                    }
+
+                                                    String sqlAux3;
+                                                    PreparedStatement stAux3;
+                                                    sqlAux3 = "SELECT COUNT(*) FROM tipo t ,especie e WHERE e.codtipo = '" + codTipoPlanta + "' AND e.nombreespecie = '" + nuevaEspeciePlanta + "'";
+                                                    stAux3 = conexion.getConnection().prepareStatement(sqlAux3);
+                                                    ResultSet rsAux3;
+                                                    rsAux3 = stAux3.executeQuery(sqlAux3);
+                                                    int cant3 = 0;
+                                                    while (rsAux3.next()) {
+                                                        cant3 = rsAux3.getInt(1);
+                                                    }
+                                                    if (cant3 < 1) {
+
+                                                        PreparedStatement st2;
+                                                        sql = "INSERT INTO `especie`(`codtipo`, `nombreespecie`) VALUES (?,?)";
+                                                        st2 = conexion.getConnection().prepareStatement(sql);
+                                                        st2.setInt(1, codTipoPlanta);
+                                                        st2.setString(2, nuevaEspeciePlanta);
+                                                        st2.executeUpdate();
+
+                                                        PreparedStatement st4;
+                                                        ResultSet rs4;
+                                                        sql = "SELECT e.codespecie FROM especie e WHERE e.nombreespecie= '" + nuevaEspeciePlanta + "'";
+                                                        st4 = conexion.getConnection().prepareStatement(sql);
+                                                        rs4 = st4.executeQuery(sql);
+                                                        while (rs4.next()) {
+                                                            codEspeciePlanta = rs4.getInt(1);
+                                                        }
+                                                        todoBien = true;
+                                                    } else {
+                                                        JOptionPane.showMessageDialog(null, "ya se encuentra una especie con ese nombre");
+                                                    }
+                                                } else {
+                                                    JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
+                                                }
+                                            } else {
+                                                String nombreTipo = (String) jComboBoxAgregarTipoPlanta.getSelectedItem();
+                                                String nombreEspecie = (String) jComboBoxAgregarEspeciePlanta.getSelectedItem();
+                                                PreparedStatement st;
+                                                ResultSet rs;
+                                                String sql = "SELECT t.codtipo FROM tipo t WHERE t.nombretipo= '" + nombreTipo + "'";
+                                                st = conexion.getConnection().prepareStatement(sql);
+                                                rs = st.executeQuery(sql);
+                                                while (rs.next()) {
+                                                    codTipoPlanta = rs.getInt(1);
+                                                }
+
+                                                PreparedStatement st2;
+                                                ResultSet rs2;
+                                                String sql2 = "SELECT e.codespecie FROM especie e WHERE e.codtipo= '" + codTipoPlanta + "' and e.nombreespecie = '" + nombreEspecie + "'";
+                                                st2 = conexion.getConnection().prepareStatement(sql2);
+                                                rs2 = st.executeQuery(sql2);
+                                                while (rs2.next()) {
+                                                    codEspeciePlanta = rs2.getInt(1);
+                                                }
+                                                todoBien = true;
+                                            }
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Hay campos que no estan seleccionados o vacios");
+                                        }
+                                    }
+
+                                    if (todoBien) {
+                                        //ESPECIE Y TIPO YA ESTAN EN LA LISTA
+                                        PreparedStatement st5;
+                                        String sql = "INSERT INTO `producto`(`codproducto`,`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`) VALUES (?,?,?,?,?,?)";
+                                        st5 = conexion.getConnection().prepareStatement(sql);
+                                        st5.setString(1, codigoUnico);
+                                        st5.setString(2, nomProducto);
+                                        st5.setInt(3, cantidadVenta);
+                                        st5.setInt(4, cantidadProduccion);
+                                        st5.setString(5, descripcion);
+                                        st5.setString(6, stock);
+
+                                        st5.executeUpdate();
+
+                                        String codProduto = "";
+                                        PreparedStatement st;
+                                        ResultSet rs;
+                                        sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
+                                        st = conexion.getConnection().prepareStatement(sql);
+                                        rs = st.executeQuery(sql);
+                                        while (rs.next()) {
+                                            codProduto = rs.getString(1);
+                                        }
+
+                                        PreparedStatement st6;
+                                        sql = "INSERT INTO `planta`(`codproducto`, `codespecie`) VALUES(?,?)";
+                                        st6 = conexion.getConnection().prepareStatement(sql);
+                                        st6.setString(1, codigoUnico);
+                                        st6.setInt(2, codEspeciePlanta);
+                                        st6.executeUpdate();
+
+                                        PreparedStatement st7;
+                                        sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                                        st7 = conexion.getConnection().prepareStatement(sql);
+                                        st7.setString(1, codProduto);
+                                        st7.setString(2, precioProducto);
+                                        st7.executeUpdate();
+                                        JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
+                                        jTextFieldNombreAgregarProducto.setText("");
+                                        jTextFieldCantidadVentaAgregarProducto.setText("");
+                                        jTextFieldCantidadProdAgregaProducto.setText("");
+                                        jTextFieldPrecioAgregarProducto.setText("");
+                                        jTextFieldStockAgregarProducto.setText("");
+                                        jTextAreaDescripcionAgregarProducto.setText("");
+                                        jTextFieldAgregarTipoPlanta.setText("");
+                                        jTextFieldAgregarEspeciePlanta.setText("");
+                                        jComboBoxTipoAgregarProducto.setSelectedIndex(0);
+                                        jTextFieldCodigoProducto.setText("");
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Algunos campos vacios");
+
+                                }
+                                break;
+                            case 2:
+                                PreparedStatement st5;
+                                String sql = "INSERT INTO `producto`(`codproducto`,`nombreproducto`, `cantidadproductoventa`, `cantidadproductoproduccion`, `descripcionproducto`,`stockminimo`) VALUES (?,?,?,?,?,?)";
+                                st5 = conexion.getConnection().prepareStatement(sql);
+                                st5.setString(1, codigoUnico);
+                                st5.setString(2, nomProducto);
+                                st5.setInt(3, cantidadVenta);
+                                st5.setInt(4, cantidadProduccion);
+                                st5.setString(5, descripcion);
+                                st5.setString(6, stock);
+                                st5.executeUpdate();
+                                String codProduto = "";
+                                PreparedStatement st;
+                                ResultSet rs;
+                                sql = "SELECT `codproducto` FROM `producto` WHERE nombreproducto= '" + jTextFieldNombreAgregarProducto.getText() + "'";
+                                st = conexion.getConnection().prepareStatement(sql);
+                                rs = st.executeQuery(sql);
+                                while (rs.next()) {
+                                    codProduto = rs.getString(1);
+                                }
+                                PreparedStatement st6;
+                                sql = "INSERT INTO `accesorio`(`codproducto`) VALUES (?)";
+                                st6 = conexion.getConnection().prepareStatement(sql);
+                                st6.setString(1, codProduto);
+                                st6.executeUpdate();
+                                PreparedStatement st7;
+                                sql = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                                st7 = conexion.getConnection().prepareStatement(sql);
+                                st7.setString(1, codigoUnico);
+                                st7.setString(2, precioProducto);
+                                st7.executeUpdate();
+                                JOptionPane.showMessageDialog(null, "El nuevo producto fue agregado con exito!");
+                                jTextFieldNombreAgregarProducto.setText("");
+                                jTextFieldCantidadVentaAgregarProducto.setText("");
+                                jTextFieldCantidadProdAgregaProducto.setText("");
+                                jTextFieldPrecioAgregarProducto.setText("");
+                                jTextFieldStockAgregarProducto.setText("");
+                                jTextAreaDescripcionAgregarProducto.setText("");
+                                jComboBoxTipoAgregarProducto.setSelectedIndex(0);
+                                jTextFieldCodigoProducto.setText("");
+                                break;
+                            default:
+                                JOptionPane.showMessageDialog(null, "Seleccione un tipo de producto");
+                                break;
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "ya se encuentra un producto con este codigo");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "ya se encuentra un producto con ese nombre");
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Hay algunos campos que se encuentran vacios");
+        }
+    }
+
+    private static void Clear_Table1(JTable tabla) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        for (int i = 0; i < tabla.getRowCount(); i++) {
+            modelo.removeRow(i);
+            i -= 1;
+        }
+    }
+
+    public void rellenarComboBoxTipoPlanta() throws SQLException {
+        Statement st = conexion.getConnection().createStatement();
+        String sql = "SELECT nombretipo FROM `tipo`";
+        ResultSet rs = st.executeQuery(sql);
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        modelo.addElement("--Opciones--");
+        modelo.addElement("Agregar tipo");
+        while (rs.next()) {
+            modelo.addElement(rs.getString(1));
+        }
+        jComboBoxAgregarTipoPlanta.setModel(modelo);
+        jComboBoxEditarTipoPlanta.setModel(modelo);
+    }
+
+    public void rellenarComboBoxTipoPlantaListado() throws SQLException {
+        Statement st = conexion.getConnection().createStatement();
+        String sql = "SELECT nombretipo FROM `tipo`";
+        ResultSet rs = st.executeQuery(sql);
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        modelo.addElement("--Seleccionar tipo--");
+        while (rs.next()) {
+            modelo.addElement(rs.getString(1));
+        }
+        jComboBoxTipoListaProductos.setModel(modelo);
+    }
+
+    public void rellenarComboBoxTipoPlantaListadoMerma() throws SQLException {
+        Statement st = conexion.getConnection().createStatement();
+        String sql = "SELECT nombretipo FROM `tipo`";
+        ResultSet rs = st.executeQuery(sql);
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        modelo.addElement("--Seleccionar tipo--");
+        while (rs.next()) {
+            modelo.addElement(rs.getString(1));
+        }
+        jComboBoxTipoListaProductosMerma.setModel(modelo);
+    }
+
+    public void refrescarTablaListaVentas() {
+        Clear_Table1(jTableListaVentas);
+        String sql;
+        Statement st;
+        ResultSet rs;
+        String filtroCodigo = this.jTextFieldFiltroCodigoListaDeVentas.getText();
+        String filtroMetodoDePago = this.jComboBoxFiltroMetodoPagoListaDeVentas.getSelectedItem().toString();
+        java.util.Date fecha1 = this.jDateChooserFiltroFechaListaDeVentas1.getDate();
+        java.util.Date fecha2 = this.jDateChooserFiltroFechaListaDeVentas2.getDate();
+        java.sql.Date filtroFecha1;
+        java.sql.Date filtroFecha2;
+        if (fecha1 != null && fecha2 != null) {
+            filtroFecha1 = new java.sql.Date(fecha1.getTime());
+            filtroFecha2 = new java.sql.Date(fecha2.getTime());
+            if (!filtroMetodoDePago.equals("-Metodo de Pago-")) {
+                sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra LIKE '%" + filtroCodigo + "%' AND c.metodopago = '" + filtroMetodoDePago + "' AND oc.fecha BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "' order by oc.fecha DESC";
+            } else {
+                sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra LIKE '%" + filtroCodigo + "%' AND oc.fecha BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "'  order by oc.fecha DESC";
+            }
+        } else if (!filtroMetodoDePago.equals("-Metodo de Pago-")) {
+            sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra LIKE '%" + filtroCodigo + "%' AND c.metodopago = '" + filtroMetodoDePago + "'  order by oc.fecha DESC";
+        } else {
+            sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha, c.tipopago, c.metodopago FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra LIKE '%" + filtroCodigo + "%'  order by oc.fecha DESC";
+        }
+        DefaultTableModel modelo = (DefaultTableModel) jTableListaVentas.getModel();
+        JButton detalles = new JButton("Detalles");
+        JButton cancelar = new JButton("Cancelar");
+
+        try {
+            st = conexion.getConnection().createStatement();
+            rs = st.executeQuery(sql);
+            Object[] datosQuery = new Object[7];
+
+            while (rs.next()) {
+
+                datosQuery[0] = rs.getString(1);
+                datosQuery[2] = rs.getString(2);
+                datosQuery[1] = rs.getDate(3);
+                datosQuery[3] = rs.getString(4);
+                datosQuery[4] = rs.getString(5);
+                datosQuery[5] = detalles;
+                datosQuery[6] = cancelar;
+
+                modelo.addRow(datosQuery);
+            }
+            jTableListaVentas.setModel(modelo);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void refrescarListaPresupuestos() {
+        Clear_Table1(jTableListaPresupuestos);
+        String sql;
+        Statement st;
+        ResultSet rs;
+        String filtroCodigo = this.jTextFieldFiltroCodigoListaDeVentas1.getText();
+        java.util.Date fecha1 = this.jDateChooserFiltroFechaListaDeVentas4.getDate();
+        java.util.Date fecha2 = this.jDateChooserFiltroFechaListaDeVentas3.getDate();
+        java.sql.Date filtroFecha1;
+        java.sql.Date filtroFecha2;
+        if (fecha1 != null && fecha2 != null) {
+            filtroFecha1 = new java.sql.Date(fecha1.getTime());
+            filtroFecha2 = new java.sql.Date(fecha2.getTime());
+            sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha FROM ordencompra oc, presupuesto p WHERE oc.codordencompra=p.codpresupuesto AND oc.codordencompra LIKE '%" + filtroCodigo + "%' AND oc.fecha BETWEEN '" + filtroFecha1 + "' AND '" + filtroFecha2 + "'  order by oc.fecha DESC";
+        } else {
+            sql = "SELECT oc.codordencompra, oc.totalConDescuento, oc.fecha FROM ordencompra oc, presupuesto p WHERE oc.codordencompra=p.codpresupuesto AND oc.codordencompra LIKE '%" + filtroCodigo + "%'  order by oc.fecha DESC";
+        }
+        DefaultTableModel modelo = (DefaultTableModel) jTableListaPresupuestos.getModel();
+        JButton detalles = new JButton("Detalles");
+        JButton cancelar = new JButton("Cancelar");
+        try {
+            st = conexion.getConnection().createStatement();
+            rs = st.executeQuery(sql);
+            Object[] datosQuery = new Object[5];
+
+            while (rs.next()) {
+
+                datosQuery[0] = rs.getString(1);
+                datosQuery[2] = rs.getString(2);
+                datosQuery[1] = rs.getDate(3);
+                datosQuery[3] = detalles;
+                datosQuery[4] = cancelar;
+                modelo.addRow(datosQuery);
+            }
+            jTableListaPresupuestos.setModel(modelo);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void refrescarTablaProveedores() {
+        Clear_Table1(jTableEditarProveedor1);
+        String sql;
+        Statement st;
+        ResultSet rs;
+        String filtro = this.jTextFieldFiltrarNombreListaProveedores.getText();
+        sql = "SELECT `nombreproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor`, `codproveedor` FROM `proveedor` WHERE `nombreproveedor` LIKE '%" + filtro + "%'";
+        DefaultTableModel modelo = (DefaultTableModel) jTableEditarProveedor1.getModel();
+        JButton detalles = new JButton("Detalles");
+        try {
+            st = conexion.getConnection().createStatement();
+            rs = st.executeQuery(sql);
+            Object[] datosQuery = new Object[6];
+
+            while (rs.next()) {
+
+                datosQuery[0] = rs.getString(1);
+                datosQuery[1] = rs.getString(2);
+                datosQuery[2] = rs.getString(3);
+                datosQuery[3] = rs.getString(4);
+                datosQuery[4] = detalles;
+                datosQuery[5] = rs.getString(5);
+                modelo.addRow(datosQuery);
+
+            }
+            jTableEditarProveedor1.setModel(modelo);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void refrescarTablaMermas() {
+        Clear_Table1(jTableListaMermas);
+        String sql;
+        Statement st;
+        ResultSet rs;
+        sql = "SELECT m.fechamerma, p.nombreproducto, m.cantidadmerma, m.descripcionmerma, m.codmerma FROM `merma` AS m , `producto` AS p WHERE m.codproducto = p.codproducto";
+        DefaultTableModel modelo = (DefaultTableModel) jTableListaMermas.getModel();
+        JButton detalles = new JButton("Editar");
+        try {
+            st = conexion.getConnection().createStatement();
+            rs = st.executeQuery(sql);
+            Object[] datosQuery = new Object[6];
+
+            while (rs.next()) {
+
+                datosQuery[0] = rs.getDate(1);
+                datosQuery[1] = rs.getString(2);
+                datosQuery[2] = rs.getString(3);
+                datosQuery[3] = rs.getString(4);
+                datosQuery[4] = detalles;
+                datosQuery[5] = rs.getString(5);
+                modelo.addRow(datosQuery);
+
+            }
+            jTableListaMermas.setModel(modelo);
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public void refrescarTablaEliminarProveedores() {
+        Clear_Table1(this.jTableEliminarProveedor2);
+        String sql;
+        Statement st;
+        ResultSet rs;
+        String filtro = this.jTextFieldFiltrarNombreEliminarProveedores.getText();
+        sql = "SELECT `nombreproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor`, `codproveedor` FROM `proveedor` WHERE `nombreproveedor` LIKE '%" + filtro + "%'";
+        DefaultTableModel modelo = (DefaultTableModel) jTableEliminarProveedor2.getModel();
+        JButton detalles = new JButton("Eliminar");
+        try {
+            st = conexion.getConnection().createStatement();
+            rs = st.executeQuery(sql);
+            Object[] datosQuery = new Object[6];
+
+            while (rs.next()) {
+
+                datosQuery[0] = rs.getString(1);
+                datosQuery[1] = rs.getString(2);
+                datosQuery[2] = rs.getString(3);
+                datosQuery[3] = rs.getString(4);
+                datosQuery[4] = detalles;
+                datosQuery[5] = rs.getString(5);
+                modelo.addRow(datosQuery);
+
+            }
+            jTableEliminarProveedor2.setModel(modelo);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void rellenarComboBoxEspeciePlanta() throws SQLException {
+        Statement st = conexion.getConnection().createStatement();
+        String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxAgregarTipoPlanta.getSelectedItem() + "'";
+        String sq2 = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxEditarTipoPlanta.getSelectedItem() + "'";
+        ResultSet rs = st.executeQuery(sql);
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        modelo.addElement("--Opciones--");
+        modelo.addElement("Agregar especie");
+        while (rs.next()) {
+            modelo.addElement(rs.getString(1));
+        }
+        ResultSet rs2 = st.executeQuery(sq2);
+        DefaultComboBoxModel modelo2 = new DefaultComboBoxModel();
+        modelo2.addElement("--Opciones--");
+        modelo2.addElement("Agregar especie");
+        while (rs2.next()) {
+            modelo2.addElement(rs2.getString(1));
+        }
+        jComboBoxAgregarEspeciePlanta.setModel(modelo);
+        jComboBoxEditarEspeciePlanta.setModel(modelo2);
+
+    }
+
+    public void rellenarComboBoxEspeciePlantaListado() throws SQLException {
+        Statement st = conexion.getConnection().createStatement();
+        String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxTipoListaProductos.getSelectedItem() + "'";
+        ResultSet rs = st.executeQuery(sql);
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        modelo.addElement("--Seleccionar especie--");
+        while (rs.next()) {
+            modelo.addElement(rs.getString(1));
+        }
+        jComboBoxEspecieProducto.setModel(modelo);
+    }
+
+    public void rellenarComboBoxEspeciePlantaListadoMerma() throws SQLException {
+        Statement st = conexion.getConnection().createStatement();
+        String sql = "SELECT e.nombreespecie FROM especie e, tipo t WHERE e.codtipo= t.codtipo AND t.nombretipo= '" + jComboBoxTipoListaProductosMerma.getSelectedItem() + "'";
+        ResultSet rs = st.executeQuery(sql);
+        DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+        modelo.addElement("--Seleccionar especie--");
+        while (rs.next()) {
+            modelo.addElement(rs.getString(1));
+        }
+        jComboBoxEspecieProductoMerma.setModel(modelo);
+    }
+
+    public void validarSoloNumeros(JTextField jtext) {
+        jtext.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
+    public boolean validarRut(String rut) {
+
+        boolean validacion = false;
+        try {
+            rut = rut.toUpperCase();
+            rut = rut.replace(".", "");
+            rut = rut.replace("-", "");
+            int rutAux = Integer.parseInt(rut.substring(0, rut.length() - 1));
+
+            char dv = rut.charAt(rut.length() - 1);
+
+            int m = 0, s = 1;
+            for (; rutAux != 0; rutAux /= 10) {
+                s = (s + rutAux % 10 * (9 - m++ % 6)) % 11;
+            }
+            if (dv == (char) (s != 0 ? s + 47 : 75)) {
+                validacion = true;
+            }
+
+        } catch (java.lang.NumberFormatException e) {
+        } catch (Exception e) {
+        }
+        return validacion;
+    }
+
+    public String FormatearRUT(String rut) {
+
+        int cont = 0;
+        String format;
+        rut = rut.replace(".", "");
+        rut = rut.replace("-", "");
+        format = "-" + rut.substring(rut.length() - 1);
+        for (int i = rut.length() - 2; i >= 0; i--) {
+            format = rut.substring(i, i + 1) + format;
+            cont++;
+            if (cont == 3 && i != 0) {
+                format = "." + format;
+                cont = 0;
+            }
+        }
+        return format;
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
   // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
   private void initComponents() {
 
@@ -6536,82 +6913,82 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
   }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCambioUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCambioUsuarioActionPerformed
-      Login cambioUsuario = new Login(conexion);
-      cambioUsuario.setVisible(true);
-      dispose();
+        Login cambioUsuario = new Login(conexion);
+        cambioUsuario.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jButtonCambioUsuarioActionPerformed
 
     private void jButtonAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoActionPerformed
-      jTextFieldIDeditarProducto.setText("");
-      jTextFieldIDeditarProducto.setText("");
-      jTextFieldStockEditarProducto.setText("");
-      jTextFieldNombreEditarProducto.setText("");
-      jTextFieldCantidadVentaEditarProducto.setText("");
-      jTextFieldCantidadProdEditarProducto.setText("");
-      jTextFieldPrecioEditarProducto.setText("");
-      jTextAreaEditarProducto.setText("");
-      jTextFieldStockEditarProducto.setText("");
-      cantProdActual.setText("");
-      cantVentaActual.setText("");
-      jPanelEditarProducto.show(false);
-      jPanelEditarProductoForm.show(false);
-      this.jPanelAgregarMerma.show(false);
-      this.jPanelListaMermas.show(false);
-      this.jPanelEditarMerma.show(false);
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        jTextFieldNombreEditarProducto.setText("");
+        jTextFieldCantidadVentaEditarProducto.setText("");
+        jTextFieldCantidadProdEditarProducto.setText("");
+        jTextFieldPrecioEditarProducto.setText("");
+        jTextAreaEditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        cantProdActual.setText("");
+        cantVentaActual.setText("");
+        jPanelEditarProducto.show(false);
+        jPanelEditarProductoForm.show(false);
+        this.jPanelAgregarMerma.show(false);
+        this.jPanelListaMermas.show(false);
+        this.jPanelEditarMerma.show(false);
 
-      jPanel6.setVisible(true);
-      jPanelAgregarProducto.show(true);
+        jPanel6.setVisible(true);
+        jPanelAgregarProducto.show(true);
     }//GEN-LAST:event_jButtonAgregarProductoActionPerformed
 
     private void jTableBloquearUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableBloquearUsuarioMouseClicked
 
-      int column = jTableBloquearUsuario.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTableBloquearUsuario.getRowHeight();
-      if (row < jTableBloquearUsuario.getRowCount() && row >= 0 && column < jTableBloquearUsuario.getColumnCount() && column >= 0) {
-        Object value = jTableBloquearUsuario.getValueAt(row, column);
+        int column = jTableBloquearUsuario.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableBloquearUsuario.getRowHeight();
+        if (row < jTableBloquearUsuario.getRowCount() && row >= 0 && column < jTableBloquearUsuario.getColumnCount() && column >= 0) {
+            Object value = jTableBloquearUsuario.getValueAt(row, column);
 
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
 
-          String rutBloqueo = String.valueOf(jTableBloquearUsuario.getValueAt(jTableBloquearUsuario.getSelectedRow(), 0));
-          String sql = "UPDATE `usuario` SET `bloqueadoS_N`=? WHERE rutusuario=?";
-          if (!rutBloqueo.equals(datos[0])) {
-            try {
-              if (boton.getText().equals("Bloquear")) {
+                String rutBloqueo = String.valueOf(jTableBloquearUsuario.getValueAt(jTableBloquearUsuario.getSelectedRow(), 0));
+                String sql = "UPDATE `usuario` SET `bloqueadoS_N`=? WHERE rutusuario=?";
+                if (!rutBloqueo.equals(datos[0])) {
+                    try {
+                        if (boton.getText().equals("Bloquear")) {
 
-                PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-                st.setBoolean(1, true);
-                st.setString(2, rutBloqueo);
-                if (st.executeUpdate() > 0) {
-                  int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea bloquear a este usuario?");
-                  if (confirmar == JOptionPane.YES_OPTION) {
-                    refrescarTablaBloquearUsuario();
-                    JOptionPane.showMessageDialog(null, "El usuario a sido bloqueado", "Operación Exitosa",
-                            JOptionPane.INFORMATION_MESSAGE);
-                  }
+                            PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                            st.setBoolean(1, true);
+                            st.setString(2, rutBloqueo);
+                            if (st.executeUpdate() > 0) {
+                                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea bloquear a este usuario?");
+                                if (confirmar == JOptionPane.YES_OPTION) {
+                                    refrescarTablaBloquearUsuario();
+                                    JOptionPane.showMessageDialog(null, "El usuario a sido bloqueado", "Operación Exitosa",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                                }
+                            }
+                        } else if (boton.getText().equals("Desbloquear")) {
+
+                            PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                            st.setBoolean(1, false);
+                            st.setString(2, rutBloqueo);
+
+                            if (st.executeUpdate() > 0) {
+                                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea desbloquear a este usuario?");
+                                if (confirmar == JOptionPane.YES_OPTION) {
+                                    refrescarTablaBloquearUsuario();
+                                    JOptionPane.showMessageDialog(null, "El usuario a sido desbloqueado", "Operación Exitosa",
+                                            JOptionPane.INFORMATION_MESSAGE);
+                                }
+                            }
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
-              } else if (boton.getText().equals("Desbloquear")) {
-
-                PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-                st.setBoolean(1, false);
-                st.setString(2, rutBloqueo);
-
-                if (st.executeUpdate() > 0) {
-                  int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea desbloquear a este usuario?");
-                  if (confirmar == JOptionPane.YES_OPTION) {
-                    refrescarTablaBloquearUsuario();
-                    JOptionPane.showMessageDialog(null, "El usuario a sido desbloqueado", "Operación Exitosa",
-                            JOptionPane.INFORMATION_MESSAGE);
-                  }
-                }
-              }
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
             }
-          }
         }
-      }
     }//GEN-LAST:event_jTableBloquearUsuarioMouseClicked
 
     private void jComboBoxTipoEditarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoEditarUsuarioActionPerformed
@@ -6620,94 +6997,601 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
 
     private void jButtonConfirmarEditarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarUsuarioActionPerformed
 
-      String nombresEditar = jTextFieldNombresEditarUsuario.getText();
-      String apellidoMEditar = jTextFieldApellidoMaternoEditarUsuario.getText();
-      String apellidoPEditar = jTextFieldApellidoPaternoEditarUsuario.getText();
-      String contraseñaEditar = jPasswordFieldContraseñaEditarUsuario.getText();
-      String contraseñaEditar2 = jPasswordFieldContraseña2EditarUsuario.getText();
-      if (!nombresEditar.equalsIgnoreCase("") && !contraseñaEditar.equalsIgnoreCase("")
-              && !contraseñaEditar2.equalsIgnoreCase("") && !apellidoPEditar.equalsIgnoreCase("") && !apellidoMEditar.equalsIgnoreCase("")) {
-        if (contraseñaEditar.equals(contraseñaEditar2)) {
-          int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro de editar estos datos?");
-          if (confirmar == JOptionPane.YES_OPTION) {
-            try {
-              String sql = "UPDATE `usuario` SET `nombreusuario`=?,`passwd`=?,`apellidopaterno`=?,`apellidomaterno`=?,`idrol`=? WHERE rutusuario=?";
-              PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-              st.setString(1, nombresEditar);
-              st.setString(2, contraseñaEditar);
-              st.setString(3, apellidoPEditar);
-              st.setString(4, apellidoMEditar);
-              st.setInt(5, jComboBoxTipoEditarUsuario.getSelectedIndex() + 1);
-              st.setString(6, jTextFieldRutEditarUsuario.getText());
-              if (st.executeUpdate() > 0) {
-                jTextFieldNombresEditarUsuario.setText("");
-                jTextFieldApellidoMaternoEditarUsuario.setText("");
-                jTextFieldApellidoPaternoEditarUsuario.setText("");
-                jPasswordFieldContraseñaEditarUsuario.setText("");
-                jPasswordFieldContraseña2EditarUsuario.setText("");
-                JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
-                        JOptionPane.INFORMATION_MESSAGE);
-                jPanelAgregarUsuario.show(false);
-                jPanelEditarUsuario.show(false);
-                jPanelBloquearUsuario.show(false);
-                refrescarTablaEditarUsuario();
-                jPanelListaUsuarios.show(true);
-              }
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        String nombresEditar = jTextFieldNombresEditarUsuario.getText();
+        String apellidoMEditar = jTextFieldApellidoMaternoEditarUsuario.getText();
+        String apellidoPEditar = jTextFieldApellidoPaternoEditarUsuario.getText();
+        String contraseñaEditar = jPasswordFieldContraseñaEditarUsuario.getText();
+        String contraseñaEditar2 = jPasswordFieldContraseña2EditarUsuario.getText();
+        if (!nombresEditar.equalsIgnoreCase("") && !contraseñaEditar.equalsIgnoreCase("")
+                && !contraseñaEditar2.equalsIgnoreCase("") && !apellidoPEditar.equalsIgnoreCase("") && !apellidoMEditar.equalsIgnoreCase("")) {
+            if (contraseñaEditar.equals(contraseñaEditar2)) {
+                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro de editar estos datos?");
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    try {
+                        String sql = "UPDATE `usuario` SET `nombreusuario`=?,`passwd`=?,`apellidopaterno`=?,`apellidomaterno`=?,`idrol`=? WHERE rutusuario=?";
+                        PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                        st.setString(1, nombresEditar);
+                        st.setString(2, contraseñaEditar);
+                        st.setString(3, apellidoPEditar);
+                        st.setString(4, apellidoMEditar);
+                        st.setInt(5, jComboBoxTipoEditarUsuario.getSelectedIndex() + 1);
+                        st.setString(6, jTextFieldRutEditarUsuario.getText());
+                        if (st.executeUpdate() > 0) {
+                            jTextFieldNombresEditarUsuario.setText("");
+                            jTextFieldApellidoMaternoEditarUsuario.setText("");
+                            jTextFieldApellidoPaternoEditarUsuario.setText("");
+                            jPasswordFieldContraseñaEditarUsuario.setText("");
+                            jPasswordFieldContraseña2EditarUsuario.setText("");
+                            JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            jPanelAgregarUsuario.show(false);
+                            jPanelEditarUsuario.show(false);
+                            jPanelBloquearUsuario.show(false);
+                            refrescarTablaEditarUsuario();
+                            jPanelListaUsuarios.show(true);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden!");
             }
-          }
         } else {
-          JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden!");
+            JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
         }
-      } else {
-        JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
-      }
     }//GEN-LAST:event_jButtonConfirmarEditarUsuarioActionPerformed
 
     private void jTableEditarUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEditarUsuarioMouseClicked
-      int column = jTableEditarUsuario.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTableEditarUsuario.getRowHeight();
-      if (row < jTableEditarUsuario.getRowCount() && row >= 0 && column < jTableEditarUsuario.getColumnCount() && column >= 0) {
-        Object value = jTableEditarUsuario.getValueAt(row, column);
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
-          if (boton.getText().equals("Detalles")) {
-            rutAeditar = String.valueOf(jTableEditarUsuario.getValueAt(jTableEditarUsuario.getSelectedRow(), 0));
-            String sql;
-            Statement st;
-            ResultSet rs;
-            sql = "SELECT u.nombreusuario, u.apellidopaterno, u.apellidomaterno, u.passwd, u.idrol FROM usuario u where u.rutusuario=" + "\"" + rutAeditar + "\"";
-            try {
-              st = conexion.getConnection().createStatement();
+        int column = jTableEditarUsuario.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableEditarUsuario.getRowHeight();
+        if (row < jTableEditarUsuario.getRowCount() && row >= 0 && column < jTableEditarUsuario.getColumnCount() && column >= 0) {
+            Object value = jTableEditarUsuario.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                if (boton.getText().equals("Detalles")) {
+                    rutAeditar = String.valueOf(jTableEditarUsuario.getValueAt(jTableEditarUsuario.getSelectedRow(), 0));
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT u.nombreusuario, u.apellidopaterno, u.apellidomaterno, u.passwd, u.idrol FROM usuario u where u.rutusuario=" + "\"" + rutAeditar + "\"";
+                    try {
+                        st = conexion.getConnection().createStatement();
 
-              rs = st.executeQuery(sql);
+                        rs = st.executeQuery(sql);
 
-              while (rs.next()) {
-                jTextFieldRutEditarUsuario.setText(rutAeditar);
-                jTextFieldNombresEditarUsuario.setText(rs.getString(1));
-                jTextFieldApellidoPaternoEditarUsuario.setText(rs.getString(2));
-                jTextFieldApellidoMaternoEditarUsuario.setText(rs.getString(3));
-                jPasswordFieldContraseñaEditarUsuario.setText(rs.getString(4));
-                jPasswordFieldContraseña2EditarUsuario.setText(rs.getString(4));
+                        while (rs.next()) {
+                            jTextFieldRutEditarUsuario.setText(rutAeditar);
+                            jTextFieldNombresEditarUsuario.setText(rs.getString(1));
+                            jTextFieldApellidoPaternoEditarUsuario.setText(rs.getString(2));
+                            jTextFieldApellidoMaternoEditarUsuario.setText(rs.getString(3));
+                            jPasswordFieldContraseñaEditarUsuario.setText(rs.getString(4));
+                            jPasswordFieldContraseña2EditarUsuario.setText(rs.getString(4));
 
-                switch (rs.getString(5)) {
-                  case "1":
-                    jComboBoxTipoEditarUsuario.setSelectedIndex(0);
-                    break;
-                  case "2":
-                    jComboBoxTipoEditarUsuario.setSelectedIndex(1);
-                    break;
-                  default:
-                    jComboBoxTipoEditarUsuario.setSelectedIndex(2);
-                    break;
+                            switch (rs.getString(5)) {
+                                case "1":
+                                    jComboBoxTipoEditarUsuario.setSelectedIndex(0);
+                                    break;
+                                case "2":
+                                    jComboBoxTipoEditarUsuario.setSelectedIndex(1);
+                                    break;
+                                default:
+                                    jComboBoxTipoEditarUsuario.setSelectedIndex(2);
+                                    break;
+                            }
+
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    jTextFieldNombresEditarUsuario.setEditable(false);
+                    jTextFieldNombresEditarUsuario.setEnabled(false);
+                    jTextFieldApellidoPaternoEditarUsuario.setEditable(false);
+                    jTextFieldApellidoPaternoEditarUsuario.setEnabled(false);
+                    jTextFieldApellidoMaternoEditarUsuario.setEditable(false);
+                    jTextFieldApellidoMaternoEditarUsuario.setEnabled(false);
+                    jPasswordFieldContraseñaEditarUsuario.setEditable(false);
+                    jPasswordFieldContraseñaEditarUsuario.setEnabled(false);
+                    jPasswordFieldContraseña2EditarUsuario.setEditable(false);
+                    jPasswordFieldContraseña2EditarUsuario.setEnabled(false);
+                    jComboBoxTipoEditarUsuario.setEditable(false);
+                    jComboBoxTipoEditarUsuario.setEnabled(false);
+                    jButtonConfirmarEditarUsuario.setEnabled(false);
+                    jRadioButtonHabilitarEdicionUsuario.setSelected(false);
+                    jPanelListaUsuarios.show(false);
+                    jPanelAgregarUsuario.show(false);
+                    jPanelEditarUsuario.show(true);
                 }
-
-              }
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }//GEN-LAST:event_jTableEditarUsuarioMouseClicked
+
+    private void jButtonConfirmarAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregarActionPerformed
+        String sql;
+        PreparedStatement st;
+        try {
+            String rutUsuario = jTextFieldRutAgregarU.getText();
+            String nombreUsuario = jTextFieldNombresAgregarU.getText();
+            String contrasena = jPasswordFieldConstraseña.getText();
+            String contrasena2 = jPasswordFieldContraseña2.getText();
+            String apellidoP = jTextFieldApellidoPaternoAgregarU.getText();
+            String apellidoM = jTextFieldApellidoMaternoAgregarU.getText();
+            String rol = (String) jComboBoxTipoUsuarioAgregar.getSelectedItem();
+            if (!rutUsuario.equalsIgnoreCase("") && !nombreUsuario.equalsIgnoreCase("") && !contrasena.equalsIgnoreCase("")
+                    && !contrasena2.equalsIgnoreCase("") && !apellidoP.equalsIgnoreCase("") && !apellidoM.equalsIgnoreCase("")) {
+                int rol1;
+                switch (rol) {
+                    case "Administrador":
+                        rol1 = 1;
+                        break;
+                    case "Vendedor":
+                        rol1 = 2;
+                        break;
+                    default:
+                        rol1 = 3;
+                        break;
+                }
+                if (validarRut(FormatearRUT(rutUsuario))) {
+                    if (contrasena.equals(contrasena2)) {
+                        int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este usuario?");
+                        if (confirmar == JOptionPane.YES_OPTION) {
+                            sql = "INSERT INTO `usuario`(`rutusuario`, `nombreusuario`, `passwd`, `apellidopaterno`, `apellidomaterno`, `bloqueadoS_N`,`idrol`) VALUES (?,?,?,?,?,?,?)";
+                            st = conexion.getConnection().prepareStatement(sql);
+                            st.setString(1, rutUsuario);
+                            st.setString(2, nombreUsuario);
+                            st.setString(3, contrasena);
+                            st.setString(4, apellidoP);
+                            st.setString(5, apellidoM);
+                            st.setBoolean(6, false);
+                            st.setInt(7, rol1);
+                            st.executeUpdate();
+                            jTextFieldRutAgregarU.setText("");
+                            jTextFieldNombresAgregarU.setText("");
+                            jTextFieldApellidoPaternoAgregarU.setText("");
+                            jTextFieldApellidoMaternoAgregarU.setText("");
+                            jPasswordFieldConstraseña.setText("");
+                            jPasswordFieldContraseña2.setText("");
+                            JOptionPane.showMessageDialog(null, "El nuevo usuario fue agregado con exito!");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden!");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "No se puede ingresar un usuario con rut invalido!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Ya hay un usuario con este rut!");
+        }
+    }//GEN-LAST:event_jButtonConfirmarAgregarActionPerformed
+
+    private void jComboBoxTipoUsuarioAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoUsuarioAgregarActionPerformed
+
+    }//GEN-LAST:event_jComboBoxTipoUsuarioAgregarActionPerformed
+
+    private void refrescarTablaEditarUsuario() {
+        Clear_Table1(jTableEditarUsuario);
+        JButton editar = new JButton("Detalles");
+        //Rellenar tabla con usuarios
+        String sql;
+        Statement st;
+        ResultSet rs;
+        String filtro = this.jTextFieldFiltroRutListaUsuarios.getText();
+        sql = "SELECT u.rutusuario, u.nombreusuario, u.apellidopaterno, u.apellidomaterno, r.nombrerol FROM usuario u, rol r WHERE u.idrol=r.idrol AND u.rutusuario LIKE '%" + filtro + "%'";
+        DefaultTableModel modelo = (DefaultTableModel) jTableEditarUsuario.getModel();
+        try {
+            st = conexion.getConnection().createStatement();
+            rs = st.executeQuery(sql);
+            Object[] datosQuery = new Object[6];
+
+            while (rs.next()) {
+
+                datosQuery[0] = rs.getString(1);
+                datosQuery[1] = rs.getString(2);
+                datosQuery[2] = rs.getString(3);
+                datosQuery[3] = rs.getString(4);
+                datosQuery[4] = rs.getString(5);
+                datosQuery[5] = editar;
+                modelo.addRow(datosQuery);
+            }
+            jTableEditarUsuario.setModel(modelo);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void jButtonEditarUsuairoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarUsuairoActionPerformed
+        jPanel4.setVisible(true);
+        jPanelAgregarUsuario.show(false);
+        jPanelEditarUsuario.show(false);
+        jPanelBloquearUsuario.show(false);
+        refrescarTablaEditarUsuario();
+        jPanelListaUsuarios.show(true);
+    }//GEN-LAST:event_jButtonEditarUsuairoActionPerformed
+
+    private void jButtonBloquearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBloquearUsuarioActionPerformed
+        jPanel4.setVisible(true);
+        jPanelAgregarUsuario.show(false);
+        jPanelListaUsuarios.show(false);
+        jPanelEditarUsuario.show(false);
+        refrescarTablaBloquearUsuario();
+        jPanelBloquearUsuario.show(true);
+    }//GEN-LAST:event_jButtonBloquearUsuarioActionPerformed
+
+    private void jButtonAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarUsuarioActionPerformed
+        jPanel4.setVisible(true);
+        jPanelListaUsuarios.show(false);
+        jPanelEditarUsuario.show(false);
+        jPanelBloquearUsuario.show(false);
+        jPanelAgregarUsuario.show(true);
+
+        jTextFieldRutAgregarU.addFocusListener(this);
+    }//GEN-LAST:event_jButtonAgregarUsuarioActionPerformed
+
+    private void jButtonEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarProductoActionPerformed
+        refrescarTablaListaProductos();
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        jTextFieldNombreEditarProducto.setText("");
+        jTextFieldCantidadVentaEditarProducto.setText("");
+        jTextFieldCantidadProdEditarProducto.setText("");
+        jTextFieldPrecioEditarProducto.setText("");
+        jTextAreaEditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        cantProdActual.setText("");
+        cantVentaActual.setText("");
+        try {
+            rellenarComboBoxTipoPlantaListado();
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        jPanelAgregarProducto.show(false);
+        this.jPanelAgregarMerma.show(false);
+        this.jPanelListaMermas.show(false);
+        this.jPanelEditarMerma.show(false);
+        jPanelEditarProductoForm.show(false);
+        jPanel6.setVisible(true);
+        jPanelEditarProducto.show(true);
+    }//GEN-LAST:event_jButtonEditarProductoActionPerformed
+
+    private void jTableEditarProveedor1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEditarProveedor1MouseClicked
+        int column = jTableEditarProveedor1.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableEditarProveedor1.getRowHeight();
+        if (row < jTableEditarProveedor1.getRowCount() && row >= 0 && column < jTableEditarProveedor1.getColumnCount() && column >= 0) {
+            Object value = jTableEditarProveedor1.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                if (boton.getText().equals("Detalles")) {
+                    this.ProveedorSeleccionado = String.valueOf(jTableEditarProveedor1.getModel().getValueAt(jTableEditarProveedor1.getSelectedRow(), 5));
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT `nombreproveedor`, `descripcionproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor` FROM `proveedor` WHERE codproveedor= " + "\"" + this.ProveedorSeleccionado + "\"";
+                    try {
+                        st = conexion.getConnection().createStatement();
+                        rs = st.executeQuery(sql);
+
+                        while (rs.next()) {
+                            jTextFieldEditarNombresProveedor.setText(rs.getString(1));
+                            jTextAreaEditarDescripcionProveedor.setText(rs.getString(2));
+                            jTextFieldEditarApellidosProveedor.setText(rs.getString(3));
+                            jTextFieldEditarContactoProveedor.setText(rs.getString(4));
+                            jTextFieldEditarCorreoProveedor.setText(rs.getString(5));
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    jPanelAgregarProveedor.show(false);
+                    jPanelListaProveedor.show(false);
+                    jPanelEditarProveedor.show(true);
+                    this.jRadioButtonHabilitarEdicionProveedor.setSelected(false);
+                    this.jTextFieldEditarNombresProveedor.setEnabled(false);
+                    this.jTextFieldEditarApellidosProveedor.setEnabled(false);
+                    this.jTextAreaEditarDescripcionProveedor.setEnabled(false);
+                    this.jTextFieldEditarContactoProveedor.setEnabled(false);
+                    this.jTextFieldEditarCorreoProveedor.setEnabled(false);
+                }
+            }
+        }
+    }//GEN-LAST:event_jTableEditarProveedor1MouseClicked
+
+    private void jButtonEditarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarProveedorActionPerformed
+        jPanel9.setVisible(true);
+        jPanelEditarProveedor.show(false);
+        jPanelAgregarProveedor.show(false);
+        jPanelEliminarProveedor.show(false);
+        refrescarTablaProveedores();
+        jPanelListaProveedor.show(true);
+    }//GEN-LAST:event_jButtonEditarProveedorActionPerformed
+
+    private void jButtonBloquearProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBloquearProveedorActionPerformed
+        jPanel9.setVisible(true);
+        this.refrescarTablaEliminarProveedores();
+        jPanelListaProveedor.show(false);
+        jPanelEditarProveedor.show(false);
+        jPanelAgregarProveedor.show(false);
+        jPanelEliminarProveedor.show(true);
+    }//GEN-LAST:event_jButtonBloquearProveedorActionPerformed
+
+    private void jButtonAgregarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProveedorActionPerformed
+        jPanel9.setVisible(true);
+        jPanelListaProveedor.show(false);
+        jPanelEditarProveedor.show(false);
+        jPanelEliminarProveedor.show(false);
+        jPanelAgregarProveedor.show(true);
+    }//GEN-LAST:event_jButtonAgregarProveedorActionPerformed
+
+    private void jButtonConfirmarAgregarProveedor2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregarProveedor2ActionPerformed
+        agregarProveedor();
+    }//GEN-LAST:event_jButtonConfirmarAgregarProveedor2ActionPerformed
+
+    private void jButtonConfirmarEditarProveedor3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarProveedor3ActionPerformed
+        String nombres = this.jTextFieldEditarNombresProveedor.getText();
+        String apellidos = this.jTextFieldEditarApellidosProveedor.getText();
+        String descripcion = this.jTextAreaEditarDescripcionProveedor.getText();
+        String contacto = this.jTextFieldEditarContactoProveedor.getText();
+        String correo = this.jTextFieldEditarCorreoProveedor.getText();
+        if (!nombres.equalsIgnoreCase("") && !apellidos.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !contacto.equalsIgnoreCase("")
+                && !correo.equalsIgnoreCase("")) {
+            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro de editar estos datos?");
+            if (confirmar == JOptionPane.YES_OPTION) {
+                try {
+                    String sql = "UPDATE `proveedor` SET `nombreproveedor`=?,`descripcionproveedor`=?,`apellidosproveedor`=?,`contactoproveedor`=?,`correoproveedor`=? WHERE codproveedor=?";
+                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                    st.setString(1, nombres);
+                    st.setString(2, descripcion);
+                    st.setString(3, apellidos);
+                    st.setString(4, contacto);
+                    st.setString(5, correo);
+                    st.setString(6, this.ProveedorSeleccionado);
+                    if (st.executeUpdate() > 0) {
+                        jTextFieldEditarNombresProveedor.setText("");
+                        jTextFieldEditarApellidosProveedor.setText("");
+                        jTextAreaEditarDescripcionProveedor.setText("");
+                        jTextFieldEditarContactoProveedor.setText("");
+                        jTextFieldEditarCorreoProveedor.setText("");
+                        JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        jPanelEditarProveedor.show(false);
+                        jPanelAgregarProveedor.show(false);
+                        jPanelEliminarProveedor.show(false);
+                        refrescarTablaProveedores();
+                        jPanelListaProveedor.show(true);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
+        }
+    }//GEN-LAST:event_jButtonConfirmarEditarProveedor3ActionPerformed
+
+    private void jTableEliminarProveedor2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEliminarProveedor2MouseClicked
+        int column = this.jTableEliminarProveedor2.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableEliminarProveedor2.getRowHeight();
+        if (row < jTableEliminarProveedor2.getRowCount() && row >= 0 && column < jTableEditarProveedor1.getColumnCount() && column >= 0) {
+            Object value = jTableEliminarProveedor2.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                if (boton.getText().equals("Eliminar")) {
+                    this.ProveedorSeleccionado = String.valueOf(jTableEliminarProveedor2.getModel().getValueAt(jTableEliminarProveedor2.getSelectedRow(), 5));
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "DELETE FROM `proveedor` WHERE codproveedor= " + "\"" + this.ProveedorSeleccionado + "\"";
+                    try {
+                        st = conexion.getConnection().prepareStatement(sql);
+                        st.executeUpdate(sql);
+
+                        JOptionPane.showMessageDialog(null, "Proveedor elminado con exito.", "Operación Exitosa",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    this.refrescarTablaEliminarProveedores();
+                }
+            }
+        }
+    }//GEN-LAST:event_jTableEliminarProveedor2MouseClicked
+
+    private void jButtonEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarChequeActionPerformed
+        this.jTextFieldFiltrarNumeroListaDeCheques.setText("");
+        this.jDateChooserFiltrarFechaListaDeCheques1.setDate(null);
+        this.jDateChooserFiltrarFechaListaDeCheques2.setDate(null);
+        this.jRadioButtonTodosListaDeCheques.setSelected(true);
+        jPanel12.setVisible(true);
+        jPanelAgregarCheque.show(false);
+        jPanelEditarCheque.show(false);
+        refrescarTablaEditarCheque();
+        jTableEditarCheques.setDefaultRenderer(Object.class, new ColorRender());
+        jPanelListaCheque.show(true);
+    }//GEN-LAST:event_jButtonEditarChequeActionPerformed
+
+    private void jButtonAgregarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarChequeActionPerformed
+        jPanel12.setVisible(true);
+        jPanelEditarCheque.show(false);
+        jPanelListaCheque.show(false);
+        jPanelAgregarCheque.show(true);
+    }//GEN-LAST:event_jButtonAgregarChequeActionPerformed
+
+    private void jTableEditarChequesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEditarChequesMouseClicked
+        int column = jTableEditarCheques.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableEditarCheques.getRowHeight();
+        if (row < jTableEditarCheques.getRowCount() && row >= 0 && column < jTableEditarCheques.getColumnCount() && column >= 0) {
+            Object value = jTableEditarCheques.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                if (boton.getText().equals("Detalles")) {
+                    String numeroCheque = String.valueOf(jTableEditarCheques.getValueAt(jTableEditarCheques.getSelectedRow(), 0));
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT c.numerocheque, c.nombresemisor, c.apellidosemisor, c.fecharecepcion, c.fechavencimiento, c.montocheque, c.descripcioncheque, c.banco, c.numerocuenta FROM cheques c where c.numerocheque=" + "\"" + numeroCheque + "\"";
+                    try {
+                        st = conexion.getConnection().createStatement();
+                        rs = st.executeQuery(sql);
+
+                        while (rs.next()) {
+                            jTextFieldNumeroChequeEditar.setText(rs.getString(1));
+                            jTextFieldNombresEditarCheque.setText(rs.getString(2));
+                            jTextFieldApellidosEditarCheque.setText(rs.getString(3));
+                            jDateChooserFechaEmisionEditarCheque.setDate(rs.getDate(4));
+                            jDateChooserFechaVencEditarCheque.setDate(rs.getDate(5));
+                            jTextFieldMontoEditarCheque.setText(rs.getString(6));
+                            jTextPaneDescripcionEditarCheque.setText(rs.getString(7));
+                            jTextFieldBancoEditarCheque.setText(rs.getString(8));
+                            jTextFieldNumeroCuentaEditarCheque.setText(rs.getString(9));
+                            jRadioButtonHabilitarEditarCheque.setSelected(false);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    jTextFieldNumeroChequeEditar.setEditable(false);
+                    jTextFieldNumeroChequeEditar.setEnabled(false);
+                    jTextFieldNombresEditarCheque.setEditable(false);
+                    jTextFieldNombresEditarCheque.setEnabled(false);
+                    jTextFieldApellidosEditarCheque.setEditable(false);
+                    jTextFieldApellidosEditarCheque.setEnabled(false);
+                    jDateChooserFechaEmisionEditarCheque.setEnabled(false);
+                    jDateChooserFechaVencEditarCheque.setEnabled(false);
+                    jTextFieldMontoEditarCheque.setEditable(false);
+                    jTextFieldMontoEditarCheque.setEnabled(false);
+                    jTextPaneDescripcionEditarCheque.setEditable(false);
+                    jTextPaneDescripcionEditarCheque.setEnabled(false);
+                    jButtonConfirmarEditarCheque.setEnabled(false);
+                    jTextFieldBancoEditarCheque.setEditable(false);
+                    jTextFieldBancoEditarCheque.setEnabled(false);
+                    jTextFieldNumeroCuentaEditarCheque.setEditable(false);
+                    jTextFieldNumeroCuentaEditarCheque.setEnabled(false);
+                    jRadioButtonHabilitarEditarCheque.setSelected(false);
+                    jPanelAgregarCheque.show(false);
+                    jPanelListaCheque.show(false);
+                    jPanelEditarCheque.show(true);
+                }
+                String numero = String.valueOf(jTableEditarCheques.getValueAt(jTableEditarCheques.getSelectedRow(), 0));
+                String sql = "UPDATE `cheques` SET `chequescobrados_n`=? WHERE numerocheque=?";
+                try {
+                    if (boton.getText().equals("Cobrar")) {
+                        PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                        st.setBoolean(1, true);
+                        st.setString(2, numero);
+                        if (st.executeUpdate() > 0) {
+                            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea Cobrar este Cheque ?");
+                            if (confirmar == JOptionPane.YES_OPTION) {
+                                this.refrescarTablaEditarCheque();
+                                JOptionPane.showMessageDialog(null, "El Cheque ha sido cobrado", "Operación Exitosa",
+                                        JOptionPane.INFORMATION_MESSAGE);
+                                this.refrescarTablaEditarCheque();
+                            }
+                        }
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_jTableEditarChequesMouseClicked
+
+    private void jButtonConfirmarAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregar3ActionPerformed
+        int numeroCheque = 0;
+        if (!jTextFieldNumeroChequeAgregar.getText().equals("")) {
+            numeroCheque = Integer.parseInt(jTextFieldNumeroChequeAgregar.getText());
+        }
+        String nombresCheque = jTextFieldNombresAgregarCheque.getText();
+        java.util.Date fechaEmisionCheque = null;
+        java.sql.Date sqlEmision = null;
+        if (jDateChooserFechaEmisionAgregarCheque.getDate() != null) {
+            fechaEmisionCheque = jDateChooserFechaEmisionAgregarCheque.getDate();
+            sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
+        }
+        java.util.Date fechaVencCheque = null;
+        java.sql.Date sqlVencimiento = null;
+        if (jDateChooserFechaVencAgregarCheque.getDate() != null) {
+            fechaVencCheque = jDateChooserFechaVencAgregarCheque.getDate();
+            sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
+        }
+        String apellidosCheque = jTextFieldApellidosAgregarCheque.getText();
+        String descripcion = jTextPaneDescripcionAgregarCheque.getText();
+        String monto = jTextFieldMontoCheque.getText();
+        int numeroCuenta = 0;
+        if (!jTextFieldNumeroCuentaAgregarCheque.getText().equalsIgnoreCase("")) {
+            numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaAgregarCheque.getText());
+        }
+        String banco = jTextFieldBancoAgregarCheque.getText();
+        if (numeroCheque != 0 && !nombresCheque.equalsIgnoreCase("") && !apellidosCheque.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")
+                && !monto.equalsIgnoreCase("") && numeroCuenta != 0 && !banco.equalsIgnoreCase("") && sqlEmision != null && sqlVencimiento != null) {
+            if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
+                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este cheque?");
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    try {
+                        String sql = "INSERT INTO `cheques`(`numerocheque`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `descripcioncheque`, `nombresemisor`, `apellidosemisor`, `chequescobrados_n`, `banco`, `numerocuenta` ) VALUES (?,?,?,?,?,?,?,?,?,?)";
+                        PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+
+                        st.setInt(1, numeroCheque);
+                        st.setDate(2, sqlEmision);
+                        st.setDate(3, sqlVencimiento);
+                        st.setString(4, monto);
+                        st.setString(5, descripcion);
+                        st.setString(6, nombresCheque);
+                        st.setString(7, apellidosCheque);
+                        st.setBoolean(8, false);
+                        st.setString(9, banco);
+                        st.setInt(10, numeroCuenta);
+                        st.executeUpdate();
+                        JOptionPane.showMessageDialog(null, "El nuevo cheque fue agregado con exito!");
+                        // TODO add your handling code here:
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    jTextFieldNumeroChequeAgregar.setText("");
+                    jTextFieldNombresAgregarCheque.setText("");
+                    jDateChooserFechaEmisionAgregarCheque.setToolTipText("");
+                    jDateChooserFechaVencAgregarCheque.setToolTipText("");
+                    jTextFieldApellidosAgregarCheque.setText("");
+                    jTextPaneDescripcionAgregarCheque.setText("");
+                    jTextFieldMontoCheque.setText("");
+                    jTextFieldBancoAgregarCheque.setText("");
+                    jTextFieldNumeroCuentaAgregarCheque.setText("");
+                    jDateChooserFechaEmisionAgregarCheque.setCalendar(null);
+                    jDateChooserFechaVencAgregarCheque.setCalendar(null);
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Hay campos sin datos");
+        }
+    }//GEN-LAST:event_jButtonConfirmarAgregar3ActionPerformed
+
+    private void jRadioButtonHabilitarEdicionUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonHabilitarEdicionUsuarioActionPerformed
+        if (jRadioButtonHabilitarEdicionUsuario.isSelected()) {
+            jTextFieldNombresEditarUsuario.setEditable(true);
+            jTextFieldNombresEditarUsuario.setEnabled(true);
+            jTextFieldApellidoPaternoEditarUsuario.setEditable(true);
+            jTextFieldApellidoPaternoEditarUsuario.setEnabled(true);
+            jTextFieldApellidoMaternoEditarUsuario.setEditable(true);
+            jTextFieldApellidoMaternoEditarUsuario.setEnabled(true);
+            jPasswordFieldContraseñaEditarUsuario.setEditable(true);
+            jPasswordFieldContraseñaEditarUsuario.setEnabled(true);
+            jPasswordFieldContraseña2EditarUsuario.setEditable(true);
+            jPasswordFieldContraseña2EditarUsuario.setEnabled(true);
+            jComboBoxTipoEditarUsuario.setEditable(true);
+            jComboBoxTipoEditarUsuario.setEnabled(true);
+            jButtonConfirmarEditarUsuario.setEnabled(true);
+        } else {
 
             jTextFieldNombresEditarUsuario.setEditable(false);
             jTextFieldNombresEditarUsuario.setEnabled(false);
@@ -6722,365 +7606,601 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             jComboBoxTipoEditarUsuario.setEditable(false);
             jComboBoxTipoEditarUsuario.setEnabled(false);
             jButtonConfirmarEditarUsuario.setEnabled(false);
-            jRadioButtonHabilitarEdicionUsuario.setSelected(false);
-            jPanelListaUsuarios.show(false);
-            jPanelAgregarUsuario.show(false);
-            jPanelEditarUsuario.show(true);
-          }
-        }
-      }
-    }//GEN-LAST:event_jTableEditarUsuarioMouseClicked
 
-    private void jButtonConfirmarAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregarActionPerformed
-      String sql;
-      PreparedStatement st;
-      try {
-        String rutUsuario = jTextFieldRutAgregarU.getText();
-        String nombreUsuario = jTextFieldNombresAgregarU.getText();
-        String contrasena = jPasswordFieldConstraseña.getText();
-        String contrasena2 = jPasswordFieldContraseña2.getText();
-        String apellidoP = jTextFieldApellidoPaternoAgregarU.getText();
-        String apellidoM = jTextFieldApellidoMaternoAgregarU.getText();
-        String rol = (String) jComboBoxTipoUsuarioAgregar.getSelectedItem();
-        if (!rutUsuario.equalsIgnoreCase("") && !nombreUsuario.equalsIgnoreCase("") && !contrasena.equalsIgnoreCase("")
-                && !contrasena2.equalsIgnoreCase("") && !apellidoP.equalsIgnoreCase("") && !apellidoM.equalsIgnoreCase("")) {
-          int rol1;
-          switch (rol) {
-            case "Administrador":
-              rol1 = 1;
-              break;
-            case "Vendedor":
-              rol1 = 2;
-              break;
-            default:
-              rol1 = 3;
-              break;
-          }
-          if (validarRut(FormatearRUT(rutUsuario))) {
-            if (contrasena.equals(contrasena2)) {
-              int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este usuario?");
-              if (confirmar == JOptionPane.YES_OPTION) {
-                sql = "INSERT INTO `usuario`(`rutusuario`, `nombreusuario`, `passwd`, `apellidopaterno`, `apellidomaterno`, `bloqueadoS_N`,`idrol`) VALUES (?,?,?,?,?,?,?)";
-                st = conexion.getConnection().prepareStatement(sql);
-                st.setString(1, rutUsuario);
-                st.setString(2, nombreUsuario);
-                st.setString(3, contrasena);
-                st.setString(4, apellidoP);
-                st.setString(5, apellidoM);
-                st.setBoolean(6, false);
-                st.setInt(7, rol1);
-                st.executeUpdate();
-                jTextFieldRutAgregarU.setText("");
-                jTextFieldNombresAgregarU.setText("");
-                jTextFieldApellidoPaternoAgregarU.setText("");
-                jTextFieldApellidoMaternoAgregarU.setText("");
-                jPasswordFieldConstraseña.setText("");
-                jPasswordFieldContraseña2.setText("");
-                JOptionPane.showMessageDialog(null, "El nuevo usuario fue agregado con exito!");
-              }
-            } else {
-              JOptionPane.showMessageDialog(null, "Las contraseñas no coinciden!");
-            }
-          } else {
-            JOptionPane.showMessageDialog(null, "No se puede ingresar un usuario con rut invalido!");
-          }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButtonHabilitarEdicionUsuarioActionPerformed
+
+    private void jTextFieldBancoAgregarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldBancoAgregarChequeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldBancoAgregarChequeActionPerformed
+
+    private void jTextFieldNumeroCuentaAgregarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNumeroCuentaAgregarChequeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldNumeroCuentaAgregarChequeActionPerformed
+
+    private void jRadioButtonHabilitarEdicionProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonHabilitarEdicionProveedorActionPerformed
+        if (this.jRadioButtonHabilitarEdicionProveedor.isSelected()) {
+            this.jTextFieldEditarNombresProveedor.setEnabled(true);
+            this.jTextFieldEditarApellidosProveedor.setEnabled(true);
+            this.jTextAreaEditarDescripcionProveedor.setEnabled(true);
+            this.jTextFieldEditarContactoProveedor.setEnabled(true);
+            this.jTextFieldEditarCorreoProveedor.setEnabled(true);
         } else {
-          JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
-        }
-      } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(null, "Ya hay un usuario con este rut!");
-      }
-    }//GEN-LAST:event_jButtonConfirmarAgregarActionPerformed
-
-    private void jComboBoxTipoUsuarioAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoUsuarioAgregarActionPerformed
-
-    }//GEN-LAST:event_jComboBoxTipoUsuarioAgregarActionPerformed
-
-  private void refrescarTablaEditarUsuario() {
-    Clear_Table1(jTableEditarUsuario);
-    JButton editar = new JButton("Detalles");
-    //Rellenar tabla con usuarios
-    String sql;
-    Statement st;
-    ResultSet rs;
-    String filtro = this.jTextFieldFiltroRutListaUsuarios.getText();
-    sql = "SELECT u.rutusuario, u.nombreusuario, u.apellidopaterno, u.apellidomaterno, r.nombrerol FROM usuario u, rol r WHERE u.idrol=r.idrol AND u.rutusuario LIKE '%" + filtro + "%'";
-    DefaultTableModel modelo = (DefaultTableModel) jTableEditarUsuario.getModel();
-    try {
-      st = conexion.getConnection().createStatement();
-      rs = st.executeQuery(sql);
-      Object[] datosQuery = new Object[6];
-
-      while (rs.next()) {
-
-        datosQuery[0] = rs.getString(1);
-        datosQuery[1] = rs.getString(2);
-        datosQuery[2] = rs.getString(3);
-        datosQuery[3] = rs.getString(4);
-        datosQuery[4] = rs.getString(5);
-        datosQuery[5] = editar;
-        modelo.addRow(datosQuery);
-      }
-      jTableEditarUsuario.setModel(modelo);
-
-    } catch (SQLException ex) {
-      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-    private void jButtonEditarUsuairoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarUsuairoActionPerformed
-      jPanel4.setVisible(true);
-      jPanelAgregarUsuario.show(false);
-      jPanelEditarUsuario.show(false);
-      jPanelBloquearUsuario.show(false);
-      refrescarTablaEditarUsuario();
-      jPanelListaUsuarios.show(true);
-    }//GEN-LAST:event_jButtonEditarUsuairoActionPerformed
-
-    private void jButtonBloquearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBloquearUsuarioActionPerformed
-      jPanel4.setVisible(true);
-      jPanelAgregarUsuario.show(false);
-      jPanelListaUsuarios.show(false);
-      jPanelEditarUsuario.show(false);
-      refrescarTablaBloquearUsuario();
-      jPanelBloquearUsuario.show(true);
-    }//GEN-LAST:event_jButtonBloquearUsuarioActionPerformed
-
-    private void jButtonAgregarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarUsuarioActionPerformed
-      jPanel4.setVisible(true);
-      jPanelListaUsuarios.show(false);
-      jPanelEditarUsuario.show(false);
-      jPanelBloquearUsuario.show(false);
-      jPanelAgregarUsuario.show(true);
-
-      jTextFieldRutAgregarU.addFocusListener(this);
-    }//GEN-LAST:event_jButtonAgregarUsuarioActionPerformed
-
-    private void jButtonEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarProductoActionPerformed
-      refrescarTablaListaProductos();
-      jTextFieldIDeditarProducto.setText("");
-      jTextFieldIDeditarProducto.setText("");
-      jTextFieldStockEditarProducto.setText("");
-      jTextFieldNombreEditarProducto.setText("");
-      jTextFieldCantidadVentaEditarProducto.setText("");
-      jTextFieldCantidadProdEditarProducto.setText("");
-      jTextFieldPrecioEditarProducto.setText("");
-      jTextAreaEditarProducto.setText("");
-      jTextFieldStockEditarProducto.setText("");
-      cantProdActual.setText("");
-      cantVentaActual.setText("");
-      try {
-        rellenarComboBoxTipoPlantaListado();
-      } catch (SQLException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      jPanelAgregarProducto.show(false);
-      this.jPanelAgregarMerma.show(false);
-      this.jPanelListaMermas.show(false);
-      this.jPanelEditarMerma.show(false);
-      jPanelEditarProductoForm.show(false);
-      jPanel6.setVisible(true);
-      jPanelEditarProducto.show(true);
-    }//GEN-LAST:event_jButtonEditarProductoActionPerformed
-
-    private void jTableEditarProveedor1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEditarProveedor1MouseClicked
-      int column = jTableEditarProveedor1.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTableEditarProveedor1.getRowHeight();
-      if (row < jTableEditarProveedor1.getRowCount() && row >= 0 && column < jTableEditarProveedor1.getColumnCount() && column >= 0) {
-        Object value = jTableEditarProveedor1.getValueAt(row, column);
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
-          if (boton.getText().equals("Detalles")) {
-            this.ProveedorSeleccionado = String.valueOf(jTableEditarProveedor1.getModel().getValueAt(jTableEditarProveedor1.getSelectedRow(), 5));
-            String sql;
-            Statement st;
-            ResultSet rs;
-            sql = "SELECT `nombreproveedor`, `descripcionproveedor`, `apellidosproveedor`, `contactoproveedor`, `correoproveedor` FROM `proveedor` WHERE codproveedor= " + "\"" + this.ProveedorSeleccionado + "\"";
-            try {
-              st = conexion.getConnection().createStatement();
-              rs = st.executeQuery(sql);
-
-              while (rs.next()) {
-                jTextFieldEditarNombresProveedor.setText(rs.getString(1));
-                jTextAreaEditarDescripcionProveedor.setText(rs.getString(2));
-                jTextFieldEditarApellidosProveedor.setText(rs.getString(3));
-                jTextFieldEditarContactoProveedor.setText(rs.getString(4));
-                jTextFieldEditarCorreoProveedor.setText(rs.getString(5));
-              }
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            jPanelAgregarProveedor.show(false);
-            jPanelListaProveedor.show(false);
-            jPanelEditarProveedor.show(true);
-            this.jRadioButtonHabilitarEdicionProveedor.setSelected(false);
             this.jTextFieldEditarNombresProveedor.setEnabled(false);
             this.jTextFieldEditarApellidosProveedor.setEnabled(false);
             this.jTextAreaEditarDescripcionProveedor.setEnabled(false);
             this.jTextFieldEditarContactoProveedor.setEnabled(false);
             this.jTextFieldEditarCorreoProveedor.setEnabled(false);
-          }
         }
-      }
-    }//GEN-LAST:event_jTableEditarProveedor1MouseClicked
+    }//GEN-LAST:event_jRadioButtonHabilitarEdicionProveedorActionPerformed
 
-    private void jButtonEditarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarProveedorActionPerformed
-      jPanel9.setVisible(true);
-      jPanelEditarProveedor.show(false);
-      jPanelAgregarProveedor.show(false);
-      jPanelEliminarProveedor.show(false);
-      refrescarTablaProveedores();
-      jPanelListaProveedor.show(true);
-    }//GEN-LAST:event_jButtonEditarProveedorActionPerformed
+    private void jButtonConfirmarAgregarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregarMermaActionPerformed
+        int cantidad = 0;
+        try {
+            cantidad = Integer.parseInt(this.jTextFieldCantidadMerma.getText());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Cantidad debe ser un número.");
+        }
+        int id = -1;
+        int cantVent = -1;
+        int cantProdu = -1;
+        try {
+            id = Integer.parseInt(this.jTableListaProductosMerma.getValueAt(this.jTableListaProductosMerma.getSelectedRow(), 0).toString());
+            cantVent = Integer.parseInt(this.jTableListaProductosMerma.getValueAt(this.jTableListaProductosMerma.getSelectedRow(), 2).toString());
+            cantProdu = Integer.parseInt(this.jTableListaProductosMerma.getValueAt(this.jTableListaProductosMerma.getSelectedRow(), 3).toString());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un producto para la merma.");
+        }
+        String info = this.jTextAreaDescripcionMerma.getText();
+        if (cantidad > 0) {
+            if (id != -1) {
+                if (!info.equals("")) {
+                    if (this.jRadioButtonVentaMerma.isSelected()) {
+                        agregarMerma(id, cantidad, info, "Venta", cantVent);
+                    } else if (this.jRadioButtonproduccionMerma.isSelected()) {
+                        agregarMerma(id, cantidad, info, "Produccion", cantProdu);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debe ingresar un motivo o descripción de la merma.");
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Cantidad debe ser un número mayor que 0.");
+        }
+    }//GEN-LAST:event_jButtonConfirmarAgregarMermaActionPerformed
 
-    private void jButtonBloquearProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBloquearProveedorActionPerformed
-      jPanel9.setVisible(true);
-      this.refrescarTablaEliminarProveedores();
-      jPanelListaProveedor.show(false);
-      jPanelEditarProveedor.show(false);
-      jPanelAgregarProveedor.show(false);
-      jPanelEliminarProveedor.show(true);
-    }//GEN-LAST:event_jButtonBloquearProveedorActionPerformed
+    private void jButtonEditarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarMermaActionPerformed
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        jTextFieldNombreEditarProducto.setText("");
+        jTextFieldCantidadVentaEditarProducto.setText("");
+        jTextFieldCantidadProdEditarProducto.setText("");
+        jTextFieldPrecioEditarProducto.setText("");
+        jTextAreaEditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        cantProdActual.setText("");
+        cantVentaActual.setText("");
+        jPanelEditarProducto.show(false);
+        this.jPanelAgregarMerma.show(false);
+        this.jPanelListaMermas.show(true);
+        this.jPanelEditarMerma.show(false);
+        refrescarTablaMermas();
+        jPanel6.setVisible(true);
+        jPanelAgregarProducto.show(false);
+    }//GEN-LAST:event_jButtonEditarMermaActionPerformed
 
-    private void jButtonAgregarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProveedorActionPerformed
-      jPanel9.setVisible(true);
-      jPanelListaProveedor.show(false);
-      jPanelEditarProveedor.show(false);
-      jPanelEliminarProveedor.show(false);
-      jPanelAgregarProveedor.show(true);
-    }//GEN-LAST:event_jButtonAgregarProveedorActionPerformed
+    private void jComboBoxFiltrarProductoPlantaOAccesorioMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFiltrarProductoPlantaOAccesorioMermaActionPerformed
+        if (jComboBoxFiltrarProductoPlantaOAccesorioMerma.getSelectedIndex() == 0) {
+            try {
+                rellenarComboBoxTipoPlantaListadoMerma();
+            } catch (SQLException ex) {
+                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            jComboBoxTipoListaProductosMerma.setSelectedIndex(0);
+            jComboBoxEspecieProductoMerma.setSelectedIndex(0);
+            jLabelTipoPlantaListaMerma.setVisible(true);
+            jLabelEspecieListaProductosMerma.setVisible(true);
+            jComboBoxTipoListaProductosMerma.setVisible(true);
+            jComboBoxEspecieProductoMerma.setVisible(true);
 
-    private void jButtonConfirmarAgregarProveedor2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregarProveedor2ActionPerformed
-      agregarProveedor();
-    }//GEN-LAST:event_jButtonConfirmarAgregarProveedor2ActionPerformed
+        } else {
 
-    private void jButtonConfirmarEditarProveedor3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarProveedor3ActionPerformed
-      String nombres = this.jTextFieldEditarNombresProveedor.getText();
-      String apellidos = this.jTextFieldEditarApellidosProveedor.getText();
-      String descripcion = this.jTextAreaEditarDescripcionProveedor.getText();
-      String contacto = this.jTextFieldEditarContactoProveedor.getText();
-      String correo = this.jTextFieldEditarCorreoProveedor.getText();
-      if (!nombres.equalsIgnoreCase("") && !apellidos.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !contacto.equalsIgnoreCase("")
-              && !correo.equalsIgnoreCase("")) {
+            jComboBoxTipoListaProductosMerma.setSelectedIndex(0);
+            jComboBoxEspecieProductoMerma.setSelectedIndex(0);
+            jLabelTipoPlantaListaMerma.setVisible(false);
+            jLabelEspecieListaProductosMerma.setVisible(false);
+            jComboBoxTipoListaProductosMerma.setVisible(false);
+            jComboBoxEspecieProductoMerma.setVisible(false);
+        }
+        refrescarTablaListaProductos();
+    }//GEN-LAST:event_jComboBoxFiltrarProductoPlantaOAccesorioMermaActionPerformed
+
+    private void jComboBoxTipoListaProductosMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoListaProductosMermaActionPerformed
+        try {
+            rellenarComboBoxEspeciePlantaListadoMerma();
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        refrescarTablaListaProductosMerma();
+    }//GEN-LAST:event_jComboBoxTipoListaProductosMermaActionPerformed
+
+    private void jTextFieldFiltrarPorLetrasMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasMermaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasMermaActionPerformed
+
+    private void jTextFieldFiltrarPorLetrasMermaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasMermaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasMermaKeyPressed
+
+    private void jTextFieldFiltrarPorLetrasMermaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasMermaKeyReleased
+        refrescarTablaListaProductosMerma();
+    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasMermaKeyReleased
+
+    private void jComboBoxEspecieProductoMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEspecieProductoMermaActionPerformed
+        refrescarTablaListaProductosMerma();
+    }//GEN-LAST:event_jComboBoxEspecieProductoMermaActionPerformed
+
+    private void jTableListaMermasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaMermasMouseClicked
+        int column = jTableListaMermas.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableListaMermas.getRowHeight();
+        if (row < jTableListaMermas.getRowCount() && row >= 0 && column < jTableListaMermas.getColumnCount() && column >= 0) {
+            Object value = jTableListaMermas.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                if (boton.getText().equals("Editar")) {
+                    this.mermaSeleccionada = String.valueOf(jTableListaMermas.getModel().getValueAt(jTableListaMermas.getSelectedRow(), 5));
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT m.fechamerma, p.nombreproducto, m.cantidadmerma, m.descripcionmerma, m.codmerma,p.codproducto FROM `merma` AS m , `producto` AS p WHERE m.codproducto = p.codproducto AND m.codmerma= " + "\"" + this.mermaSeleccionada + "\"";
+                    try {
+                        st = conexion.getConnection().createStatement();
+                        rs = st.executeQuery(sql);
+
+                        while (rs.next()) {
+                            jTextFieldEditarFechaMerma.setText(rs.getString(1));
+                            jTextFieldEditarNombreMerma.setText(rs.getString(2));
+                            jTextFieldEditarCantidadMerma.setText(rs.getString(3));
+                            jTextAreaEditarDescripcionMerma.setText(rs.getString(4));
+                            jTextFieldCodigoProductoMerma.setText(rs.getString(6));
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    jPanelAgregarProducto.show(false);
+                    jPanelEditarProducto.show(false);
+                    this.jPanelAgregarMerma.show(false);
+                    this.jPanelListaMermas.show(false);
+                    this.jPanelEditarMerma.show(true);
+                    jPanelEditarProductoForm.show(false);
+                    jTextFieldCodigoProductoMerma.setEnabled(false);
+                    this.jTextFieldEditarFechaMerma.setEnabled(false);
+                    this.jTextFieldEditarNombreMerma.setEnabled(false);
+                    this.jTextFieldEditarCantidadMerma.setEnabled(false);
+                    this.jTextAreaEditarDescripcionMerma.setEnabled(false);
+                }
+            }
+        }
+    }//GEN-LAST:event_jTableListaMermasMouseClicked
+
+    private void jButtonConfirmarEditarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarMermaActionPerformed
+        String motivo = this.jTextAreaEditarDescripcionMerma.getText();
         int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro de editar estos datos?");
         if (confirmar == JOptionPane.YES_OPTION) {
-          try {
-            String sql = "UPDATE `proveedor` SET `nombreproveedor`=?,`descripcionproveedor`=?,`apellidosproveedor`=?,`contactoproveedor`=?,`correoproveedor`=? WHERE codproveedor=?";
-            PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-            st.setString(1, nombres);
-            st.setString(2, descripcion);
-            st.setString(3, apellidos);
-            st.setString(4, contacto);
-            st.setString(5, correo);
-            st.setString(6, this.ProveedorSeleccionado);
-            if (st.executeUpdate() > 0) {
-              jTextFieldEditarNombresProveedor.setText("");
-              jTextFieldEditarApellidosProveedor.setText("");
-              jTextAreaEditarDescripcionProveedor.setText("");
-              jTextFieldEditarContactoProveedor.setText("");
-              jTextFieldEditarCorreoProveedor.setText("");
-              JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
-                      JOptionPane.INFORMATION_MESSAGE);
-              jPanelEditarProveedor.show(false);
-              jPanelAgregarProveedor.show(false);
-              jPanelEliminarProveedor.show(false);
-              refrescarTablaProveedores();
-              jPanelListaProveedor.show(true);
+            try {
+                String sql = "UPDATE `merma` SET `descripcionmerma`=? WHERE codmerma=?";
+                PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                st.setString(1, motivo);
+                st.setString(2, mermaSeleccionada);
+                if (st.executeUpdate() > 0) {
+                    jTextFieldEditarFechaMerma.setText("");
+                    jTextFieldEditarNombreMerma.setText("");
+                    jTextFieldEditarCantidadMerma.setText("");
+                    jTextAreaEditarDescripcionMerma.setText("");
+                    jTextFieldCodigoProductoMerma.setText("");
+                    JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
             }
-          } catch (SQLException ex) {
+        }
+    }//GEN-LAST:event_jButtonConfirmarEditarMermaActionPerformed
+
+    private void jRadioButtonHabilitarEdicionMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonHabilitarEdicionMermaActionPerformed
+        this.jTextFieldEditarFechaMerma.setEnabled(false);
+        this.jTextFieldEditarNombreMerma.setEnabled(false);
+        this.jTextFieldEditarCantidadMerma.setEnabled(false);
+        if (this.jRadioButtonHabilitarEdicionMerma.isSelected()) {
+            this.jTextAreaEditarDescripcionMerma.setEnabled(true);
+        } else {
+            this.jTextAreaEditarDescripcionMerma.setEnabled(false);
+        }
+    }//GEN-LAST:event_jRadioButtonHabilitarEdicionMermaActionPerformed
+
+    private void jButtonAgregarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarMermaActionPerformed
+        jRadioButtonVentaMerma.setSelected(true);
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldIDeditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        jTextFieldNombreEditarProducto.setText("");
+        jTextFieldCantidadVentaEditarProducto.setText("");
+        jTextFieldCantidadProdEditarProducto.setText("");
+        jTextFieldPrecioEditarProducto.setText("");
+        jTextAreaEditarProducto.setText("");
+        jTextFieldStockEditarProducto.setText("");
+        cantProdActual.setText("");
+        cantVentaActual.setText("");
+        refrescarTablaListaProductosMerma();
+        jPanelEditarProducto.show(false);
+        jPanelEditarProductoForm.show(false);
+        this.jPanelAgregarMerma.show(true);
+        this.jPanelListaMermas.show(false);
+        this.jPanelEditarMerma.show(false);
+        jPanel6.setVisible(true);
+        jPanelAgregarProducto.show(false);
+
+    }//GEN-LAST:event_jButtonAgregarMermaActionPerformed
+
+    private void jTableListaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaProductosMouseClicked
+        int column = jTableListaProductos.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableListaProductos.getRowHeight();
+        if (row < jTableListaProductos.getRowCount() && row >= 0 && column < jTableListaProductos.getColumnCount() && column >= 0) {
+            Object value = jTableListaProductos.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                if (boton.getText().equals("Editar")) {
+                    String id = String.valueOf(jTableListaProductos.getValueAt(jTableListaProductos.getSelectedRow(), 0));
+                    System.out.println(id);
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    if (jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedIndex() == 0) {
+                        sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, ph.precioproductoneto,t.nombretipo ,e.nombreespecie, p.descripcionproducto,p.stockminimo \n"
+                                + "FROM producto p, preciohistoricoproducto ph, planta pl, tipo t, especie e \n "
+                                + "where p.codproducto = ph.codproducto AND pl.codproducto = p.codproducto AND \n"
+                                + "pl.codespecie = e.codespecie AND t.codtipo = e.codtipo AND \n"
+                                + "p.codproducto = " + "\"" + id + "\" AND \n"
+                                + "ph.fechaproducto = (select MAX(fechaproducto) \n"
+                                + "from preciohistoricoproducto AS ph2 \n"
+                                + "where ph.codproducto = ph2.codproducto)";
+                        try {
+                            st = conexion.getConnection().createStatement();
+                            rs = st.executeQuery(sql);
+                            while (rs.next()) {
+                                jTextFieldIDeditarProducto.setText(rs.getString(1));
+                                jTextFieldNombreEditarProducto.setText(rs.getString(2));
+                                jTextFieldCantidadVentaEditarProducto.setText("0");
+                                jTextFieldCantidadProdEditarProducto.setText("0");
+                                cantVentaActual.setText(rs.getString(3));
+                                cantProdActual.setText(rs.getString(4));
+                                jTextFieldPrecioEditarProducto.setText("" + ((int) (Integer.parseInt(rs.getString(5)) * 1.19)));
+                                jComboBoxTipoEditarProducto.setSelectedItem("Planta");
+                                rellenarComboBoxTipoPlanta();
+                                rellenarComboBoxEspeciePlanta();
+                                jComboBoxEditarTipoPlanta.setSelectedItem(rs.getString(6));
+                                jComboBoxEditarEspeciePlanta.setSelectedItem(rs.getString(7));
+                                jTextAreaEditarProducto.setText(rs.getString(8));
+                                jTextFieldStockEditarProducto.setText(rs.getString(9));
+                            }
+                            jTextFieldIDeditarProducto.setVisible(false);
+                            jTextFieldIDeditarProducto.setEnabled(false);
+                            jTextFieldNombreEditarProducto.setEnabled(false);
+                            jTextFieldCantidadVentaEditarProducto.setEnabled(false);
+                            jTextFieldCantidadProdEditarProducto.setEnabled(false);
+                            jTextFieldPrecioEditarProducto.setEnabled(false);
+                            jComboBoxTipoEditarProducto.setEnabled(false);
+                            jComboBoxEditarTipoPlanta.setEnabled(false);
+                            jComboBoxEditarEspeciePlanta.setEnabled(false);
+                            jTextAreaEditarProducto.setEnabled(false);
+                            jTextFieldStockEditarProducto.setEnabled(false);
+                            jPanelAgregarProducto.show(false);
+                            jPanelEditarProducto.show(false);
+                            this.jPanelAgregarMerma.show(false);
+                            this.jPanelListaMermas.show(false);
+                            this.jPanelEditarMerma.show(false);
+                            jPanelEditarProductoForm.show(true);
+                            this.jRadioButton5.setSelected(false);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, ph.precioproductoneto,p.descripcionproducto,p.stockminimo \n"
+                                + "FROM producto p, preciohistoricoproducto ph,accesorio a \n"
+                                + "where p.codproducto = ph.codproducto AND a.codproducto = p.codproducto AND \n"
+                                + "p.codproducto = " + "\"" + id + "\" AND \n"
+                                + "ph.fechaproducto = (select MAX(fechaproducto) \n"
+                                + "from preciohistoricoproducto AS ph2 \n"
+                                + "where ph.codproducto = ph2.codproducto)";
+                        try {
+                            st = conexion.getConnection().createStatement();
+                            rs = st.executeQuery(sql);
+                            while (rs.next()) {
+                                jTextFieldIDeditarProducto.setText(rs.getString(1));
+                                jTextFieldNombreEditarProducto.setText(rs.getString(2));
+                                jTextFieldCantidadVentaEditarProducto.setText("0");
+                                jTextFieldCantidadProdEditarProducto.setText("0");
+                                cantVentaActual.setText(rs.getString(3));
+                                cantProdActual.setText(rs.getString(4));
+                                jTextFieldPrecioEditarProducto.setText(rs.getString(5));
+                                jComboBoxTipoEditarProducto.setSelectedItem("Otros");
+                                jTextAreaEditarProducto.setText(rs.getString(6));
+                                jTextFieldStockEditarProducto.setText(rs.getString(7));
+                            }
+                            jTextFieldIDeditarProducto.setVisible(false);
+                            jTextFieldIDeditarProducto.setEnabled(false);
+                            jTextFieldNombreEditarProducto.setEnabled(false);
+                            jTextFieldCantidadVentaEditarProducto.setEnabled(false);
+                            jTextFieldCantidadProdEditarProducto.setEnabled(false);
+                            jTextFieldPrecioEditarProducto.setEnabled(false);
+                            jComboBoxTipoEditarProducto.setEnabled(false);
+                            jTextAreaEditarProducto.setEnabled(false);
+                            jTextFieldStockEditarProducto.setEnabled(false);
+                            jPanelAgregarProducto.show(false);
+                            jPanelEditarProducto.show(false);
+                            jPanelTipoPlanta1.show(false);
+                            this.jRadioButton5.setSelected(false);
+                            jPanelEditarProductoForm.show(true);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                } else {
+                    JTextField cant = new JTextField();
+                    String[] list = {"Venta", "Produccion"};
+                    JComboBox jcb = new JComboBox(list);
+                    JComboBox jcb2 = new JComboBox(list);
+                    Object[] message = {
+                        "Desde:", jcb,
+                        "cantidad:", cant,
+                        "Hacia:", jcb2,};
+                    String id = String.valueOf(jTableListaProductos.getValueAt(jTableListaProductos.getSelectedRow(), 0));
+                    String sql8;
+                    Statement st8;
+                    ResultSet rs8;
+                    int cantStockVenta = 0;
+                    int cantStockProduccion = 0;
+                    sql8 = "SELECT `cantidadproductoventa`, `cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + id;
+                    try {
+                        st8 = conexion.getConnection().createStatement();
+                        rs8 = st8.executeQuery(sql8);
+                        while (rs8.next()) {
+                            cantStockVenta = rs8.getInt(1);
+                            cantStockProduccion = rs8.getInt(2);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    int option = JOptionPane.showConfirmDialog(null, message, "Mover Stock", JOptionPane.OK_CANCEL_OPTION);
+                    if (option == JOptionPane.OK_OPTION) {
+                        if (jcb.getSelectedIndex() == jcb2.getSelectedIndex()) {
+                            JOptionPane.showMessageDialog(null, "Selecione destinos distintos");
+                        } else {
+                            String De = "";
+                            String para = "";
+                            if (jcb.getSelectedIndex() == 0) {
+                                De = "Venta";
+                                para = "Produccion";
+                            } else {
+                                De = "Produccion";
+                                para = "Venta";
+                            }
+                            int cantidad = Integer.parseInt(cant.getText());
+                            String sql = "UPDATE `producto` SET `cantidadproductoventa`=?,`cantidadproductoproduccion`=? WHERE codproducto = '" + id + "'";
+                            PreparedStatement st;
+                            try {
+                                String cambio = "";
+                                st = conexion.getConnection().prepareStatement(sql);
+                                if (De.equalsIgnoreCase("Venta")) {
+                                    if (cantidad > cantStockVenta) {
+                                        JOptionPane.showMessageDialog(null, "cantidad excede el maximo");
+                                    } else {
+                                        st.setInt(1, cantStockVenta - cantidad);
+                                        st.setInt(2, cantStockProduccion + cantidad);
+                                        JOptionPane.showMessageDialog(null, "Operacion exitosa");
+                                        cambio = "Usuario: " + datos[0] + " movio : " + cantidad + " a produccion del producto: " + id;
+                                        st.executeUpdate();
+                                        String sql9;
+                                        PreparedStatement st9;
+                                        sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                                        st9 = conexion.getConnection().prepareStatement(sql9);
+                                        st9.setString(1, datos[0]);
+                                        st9.setString(2, cambio);
+                                        st9.executeUpdate();
+                                    }
+                                } else if (cantidad > cantStockProduccion) {
+                                    JOptionPane.showMessageDialog(null, "cantidad excede el maximo");
+                                } else {
+                                    st.setInt(1, cantStockVenta + cantidad);
+                                    st.setInt(2, cantStockProduccion - cantidad);
+                                    JOptionPane.showMessageDialog(null, "Operacion exitosa");
+                                    cambio = "Usuario: " + datos[0] + " movio : " + cantidad + " a venta del producto: " + id;
+                                    st.executeUpdate();
+                                    String sql9;
+                                    PreparedStatement st9;
+                                    sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                                    st9 = conexion.getConnection().prepareStatement(sql9);
+                                    st9.setString(1, datos[0]);
+                                    st9.setString(2, cambio);
+                                    st9.executeUpdate();
+                                }
+                            } catch (SQLException ex) {
+                                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        refrescarTablaListaProductos();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Operacion Cancelada");
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_jTableListaProductosMouseClicked
+
+    private void jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed
+        if (jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedIndex() == 0) {
+            try {
+                rellenarComboBoxTipoPlantaListado();
+            } catch (SQLException ex) {
+                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            jComboBoxTipoListaProductos.setSelectedIndex(0);
+            jComboBoxEspecieProducto.setSelectedIndex(0);
+            jLabelTipoPlantaLista.setVisible(true);
+            jLabelEspecieListaProductos.setVisible(true);
+            jComboBoxTipoListaProductos.setVisible(true);
+            jComboBoxEspecieProducto.setVisible(true);
+
+        } else {
+
+            jComboBoxTipoListaProductos.setSelectedIndex(0);
+            jComboBoxEspecieProducto.setSelectedIndex(0);
+            jLabelTipoPlantaLista.setVisible(false);
+            jLabelEspecieListaProductos.setVisible(false);
+            jComboBoxTipoListaProductos.setVisible(false);
+            jComboBoxEspecieProducto.setVisible(false);
+        }
+        refrescarTablaListaProductos();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed
+
+    private void jComboBoxTipoListaProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoListaProductosActionPerformed
+        try {
+            rellenarComboBoxEspeciePlantaListado();
+            // TODO add your handling code here:
+        } catch (SQLException ex) {
             Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-          }
         }
-      } else {
-        JOptionPane.showMessageDialog(null, "Hay campos que se encuentran vacios");
-      }
-    }//GEN-LAST:event_jButtonConfirmarEditarProveedor3ActionPerformed
+        refrescarTablaListaProductos();
+    }//GEN-LAST:event_jComboBoxTipoListaProductosActionPerformed
 
-    private void jTableEliminarProveedor2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEliminarProveedor2MouseClicked
-      int column = this.jTableEliminarProveedor2.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTableEliminarProveedor2.getRowHeight();
-      if (row < jTableEliminarProveedor2.getRowCount() && row >= 0 && column < jTableEditarProveedor1.getColumnCount() && column >= 0) {
-        Object value = jTableEliminarProveedor2.getValueAt(row, column);
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
-          if (boton.getText().equals("Eliminar")) {
-            this.ProveedorSeleccionado = String.valueOf(jTableEliminarProveedor2.getModel().getValueAt(jTableEliminarProveedor2.getSelectedRow(), 5));
-            String sql;
-            Statement st;
-            ResultSet rs;
-            sql = "DELETE FROM `proveedor` WHERE codproveedor= " + "\"" + this.ProveedorSeleccionado + "\"";
-            try {
-              st = conexion.getConnection().prepareStatement(sql);
-              st.executeUpdate(sql);
+    private void jTextFieldFiltrarPorLetrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasActionPerformed
 
-              JOptionPane.showMessageDialog(null, "Proveedor elminado con exito.", "Operación Exitosa",
-                      JOptionPane.INFORMATION_MESSAGE);
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-            }
+    private void jTextFieldFiltrarPorLetrasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasKeyPressed
 
-            this.refrescarTablaEliminarProveedores();
-          }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasKeyPressed
+
+    private void jTextFieldFiltrarPorLetrasKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasKeyReleased
+        refrescarTablaListaProductos();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasKeyReleased
+
+    private void jComboBoxEspecieProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEspecieProductoActionPerformed
+        refrescarTablaListaProductos();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxEspecieProductoActionPerformed
+
+    private void jButtonConfirmarEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarChequeActionPerformed
+        int numeroCheque = 0;
+        if (!jTextFieldNumeroChequeEditar.getText().equals("")) {
+            numeroCheque = Integer.parseInt(jTextFieldNumeroChequeEditar.getText());
         }
-      }
-    }//GEN-LAST:event_jTableEliminarProveedor2MouseClicked
+        String nombresCheque = jTextFieldNombresEditarCheque.getText();
+        java.util.Date fechaEmisionCheque = null;
+        java.sql.Date sqlEmision = null;
+        if (jDateChooserFechaEmisionEditarCheque.getDate() != null) {
+            fechaEmisionCheque = jDateChooserFechaEmisionEditarCheque.getDate();
+            sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
+        }
+        java.util.Date fechaVencCheque = null;
+        java.sql.Date sqlVencimiento = null;
+        if (jDateChooserFechaVencEditarCheque.getDate() != null) {
+            fechaVencCheque = jDateChooserFechaVencEditarCheque.getDate();
+            sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
+        }
+        String apellidosCheque = jTextFieldApellidosEditarCheque.getText();
+        String descripcion = jTextPaneDescripcionEditarCheque.getText();
+        String monto = jTextFieldMontoEditarCheque.getText();
+        int numeroCuenta = 0;
+        if (!jTextFieldNumeroCuentaEditarCheque.getText().equalsIgnoreCase("")) {
+            numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaEditarCheque.getText());
+        }
+        String banco = jTextFieldBancoEditarCheque.getText();
+        if (!nombresCheque.equalsIgnoreCase("") && !apellidosCheque.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")
+                && !monto.equalsIgnoreCase("") && numeroCuenta != 0 && !banco.equalsIgnoreCase("") && sqlEmision != null && sqlVencimiento != null) {
+            if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
+                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea Editar este cheque?");
+                if (confirmar == JOptionPane.YES_OPTION) {
+                    try {
+                        String sql = "UPDATE `cheques` SET `fecharecepcion`=?,"
+                                + "`fechavencimiento`=?,`montocheque`=?,`descripcioncheque`=?,`nombresemisor`=?,"
+                                + "`apellidosemisor`=?,`chequescobrados_n`=?,`banco`=?,`numerocuenta`=? WHERE `numerocheque` = ? ";
+                        PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                        st.setDate(1, sqlEmision);
+                        st.setDate(2, sqlVencimiento);
+                        st.setString(3, monto);
+                        st.setString(4, descripcion);
+                        st.setString(5, nombresCheque);
+                        st.setString(6, apellidosCheque);
+                        st.setBoolean(7, false);
+                        st.setString(8, banco);
+                        st.setInt(9, numeroCuenta);
+                        st.setInt(10, numeroCheque);
+                        if (st.executeUpdate() > 0) {
+                            JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
+                                    JOptionPane.INFORMATION_MESSAGE);
 
-    private void jButtonEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarChequeActionPerformed
-      this.jTextFieldFiltrarNumeroListaDeCheques.setText("");
-      this.jDateChooserFiltrarFechaListaDeCheques1.setDate(null);
-      this.jDateChooserFiltrarFechaListaDeCheques2.setDate(null);
-      this.jRadioButtonTodosListaDeCheques.setSelected(true);
-      jPanel12.setVisible(true);
-      jPanelAgregarCheque.show(false);
-      jPanelEditarCheque.show(false);
-      refrescarTablaEditarCheque();
-      jTableEditarCheques.setDefaultRenderer(Object.class, new ColorRender());
-      jPanelListaCheque.show(true);
-    }//GEN-LAST:event_jButtonEditarChequeActionPerformed
-
-    private void jButtonAgregarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarChequeActionPerformed
-      jPanel12.setVisible(true);
-      jPanelEditarCheque.show(false);
-      jPanelListaCheque.show(false);
-      jPanelAgregarCheque.show(true);
-    }//GEN-LAST:event_jButtonAgregarChequeActionPerformed
-
-    private void jTableEditarChequesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableEditarChequesMouseClicked
-      int column = jTableEditarCheques.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTableEditarCheques.getRowHeight();
-      if (row < jTableEditarCheques.getRowCount() && row >= 0 && column < jTableEditarCheques.getColumnCount() && column >= 0) {
-        Object value = jTableEditarCheques.getValueAt(row, column);
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
-          if (boton.getText().equals("Detalles")) {
-            String numeroCheque = String.valueOf(jTableEditarCheques.getValueAt(jTableEditarCheques.getSelectedRow(), 0));
-            String sql;
-            Statement st;
-            ResultSet rs;
-            sql = "SELECT c.numerocheque, c.nombresemisor, c.apellidosemisor, c.fecharecepcion, c.fechavencimiento, c.montocheque, c.descripcioncheque, c.banco, c.numerocuenta FROM cheques c where c.numerocheque=" + "\"" + numeroCheque + "\"";
-            try {
-              st = conexion.getConnection().createStatement();
-              rs = st.executeQuery(sql);
-
-              while (rs.next()) {
-                jTextFieldNumeroChequeEditar.setText(rs.getString(1));
-                jTextFieldNombresEditarCheque.setText(rs.getString(2));
-                jTextFieldApellidosEditarCheque.setText(rs.getString(3));
-                jDateChooserFechaEmisionEditarCheque.setDate(rs.getDate(4));
-                jDateChooserFechaVencEditarCheque.setDate(rs.getDate(5));
-                jTextFieldMontoEditarCheque.setText(rs.getString(6));
-                jTextPaneDescripcionEditarCheque.setText(rs.getString(7));
-                jTextFieldBancoEditarCheque.setText(rs.getString(8));
-                jTextFieldNumeroCuentaEditarCheque.setText(rs.getString(9));
-                jRadioButtonHabilitarEditarCheque.setSelected(false);
-              }
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                            jTextFieldNumeroChequeEditar.setText("");
+                            jTextFieldNombresEditarCheque.setText("");
+                            jDateChooserFechaEmisionEditarCheque.setDate(null);
+                            jDateChooserFechaVencEditarCheque.setDate(null);
+                            jTextFieldApellidosEditarCheque.setText("");
+                            jTextPaneDescripcionEditarCheque.setText("");
+                            jTextFieldMontoEditarCheque.setText("");
+                            jTextFieldNumeroCuentaEditarCheque.setText("");
+                            jTextFieldBancoEditarCheque.setText("");
+                            jRadioButtonHabilitarEditarCheque.setSelected(false);
+                            this.jTextFieldFiltrarNumeroListaDeCheques.setText("");
+                            this.jDateChooserFiltrarFechaListaDeCheques1.setDate(null);
+                            this.jDateChooserFiltrarFechaListaDeCheques2.setDate(null);
+                            this.jRadioButtonTodosListaDeCheques.setSelected(true);
+                            jPanelAgregarCheque.show(false);
+                            jPanelEditarCheque.show(false);
+                            refrescarTablaEditarCheque();
+                            jTableEditarCheques.setDefaultRenderer(Object.class, new ColorRender());
+                            jPanelListaCheque.show(true);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "hay campos que se encuentran salidos");
+        }
+    }//GEN-LAST:event_jButtonConfirmarEditarChequeActionPerformed
+
+    private void jRadioButtonHabilitarEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonHabilitarEditarChequeActionPerformed
+        if (jRadioButtonHabilitarEditarCheque.isSelected()) {
+            jTextFieldNumeroChequeEditar.setEditable(false);
+            jTextFieldNumeroChequeEditar.setEnabled(true);
+            jTextFieldNombresEditarCheque.setEditable(true);
+            jTextFieldNombresEditarCheque.setEnabled(true);
+            jTextFieldApellidosEditarCheque.setEditable(true);
+            jTextFieldApellidosEditarCheque.setEnabled(true);
+            jDateChooserFechaEmisionEditarCheque.setEnabled(true);
+            jDateChooserFechaVencEditarCheque.setEnabled(true);
+            jTextFieldMontoEditarCheque.setEditable(true);
+            jTextFieldMontoEditarCheque.setEnabled(true);
+            jTextPaneDescripcionEditarCheque.setEditable(true);
+            jTextPaneDescripcionEditarCheque.setEnabled(true);
+            jButtonConfirmarEditarCheque.setEnabled(true);
+            jTextFieldBancoEditarCheque.setEditable(true);
+            jTextFieldBancoEditarCheque.setEnabled(true);
+            jTextFieldNumeroCuentaEditarCheque.setEditable(true);
+            jTextFieldNumeroCuentaEditarCheque.setEnabled(true);
+        } else {
             jTextFieldNumeroChequeEditar.setEditable(false);
             jTextFieldNumeroChequeEditar.setEnabled(false);
             jTextFieldNombresEditarCheque.setEditable(false);
@@ -7098,818 +8218,75 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             jTextFieldBancoEditarCheque.setEnabled(false);
             jTextFieldNumeroCuentaEditarCheque.setEditable(false);
             jTextFieldNumeroCuentaEditarCheque.setEnabled(false);
-            jRadioButtonHabilitarEditarCheque.setSelected(false);
-            jPanelAgregarCheque.show(false);
-            jPanelListaCheque.show(false);
-            jPanelEditarCheque.show(true);
-          }
-          String numero = String.valueOf(jTableEditarCheques.getValueAt(jTableEditarCheques.getSelectedRow(), 0));
-          String sql = "UPDATE `cheques` SET `chequescobrados_n`=? WHERE numerocheque=?";
-          try {
-            if (boton.getText().equals("Cobrar")) {
-              PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-              st.setBoolean(1, true);
-              st.setString(2, numero);
-              if (st.executeUpdate() > 0) {
-                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea Cobrar este Cheque ?");
-                if (confirmar == JOptionPane.YES_OPTION) {
-                  this.refrescarTablaEditarCheque();
-                  JOptionPane.showMessageDialog(null, "El Cheque ha sido cobrado", "Operación Exitosa",
-                          JOptionPane.INFORMATION_MESSAGE);
-                  this.refrescarTablaEditarCheque();
-                }
-              }
-            }
-          } catch (SQLException ex) {
-            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-          }
         }
-      }
-    }//GEN-LAST:event_jTableEditarChequesMouseClicked
-
-    private void jButtonConfirmarAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregar3ActionPerformed
-      int numeroCheque = 0;
-      if (!jTextFieldNumeroChequeAgregar.getText().equals("")) {
-        numeroCheque = Integer.parseInt(jTextFieldNumeroChequeAgregar.getText());
-      }
-      String nombresCheque = jTextFieldNombresAgregarCheque.getText();
-      java.util.Date fechaEmisionCheque = null;
-      java.sql.Date sqlEmision = null;
-      if (jDateChooserFechaEmisionAgregarCheque.getDate() != null) {
-        fechaEmisionCheque = jDateChooserFechaEmisionAgregarCheque.getDate();
-        sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
-      }
-      java.util.Date fechaVencCheque = null;
-      java.sql.Date sqlVencimiento = null;
-      if (jDateChooserFechaVencAgregarCheque.getDate() != null) {
-        fechaVencCheque = jDateChooserFechaVencAgregarCheque.getDate();
-        sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
-      }
-      String apellidosCheque = jTextFieldApellidosAgregarCheque.getText();
-      String descripcion = jTextPaneDescripcionAgregarCheque.getText();
-      String monto = jTextFieldMontoCheque.getText();
-      int numeroCuenta = 0;
-      if (!jTextFieldNumeroCuentaAgregarCheque.getText().equalsIgnoreCase("")) {
-        numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaAgregarCheque.getText());
-      }
-      String banco = jTextFieldBancoAgregarCheque.getText();
-      if (numeroCheque != 0 && !nombresCheque.equalsIgnoreCase("") && !apellidosCheque.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")
-              && !monto.equalsIgnoreCase("") && numeroCuenta != 0 && !banco.equalsIgnoreCase("") && sqlEmision != null && sqlVencimiento != null) {
-        if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
-          int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este cheque?");
-          if (confirmar == JOptionPane.YES_OPTION) {
-            try {
-              String sql = "INSERT INTO `cheques`(`numerocheque`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `descripcioncheque`, `nombresemisor`, `apellidosemisor`, `chequescobrados_n`, `banco`, `numerocuenta` ) VALUES (?,?,?,?,?,?,?,?,?,?)";
-              PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-
-              st.setInt(1, numeroCheque);
-              st.setDate(2, sqlEmision);
-              st.setDate(3, sqlVencimiento);
-              st.setString(4, monto);
-              st.setString(5, descripcion);
-              st.setString(6, nombresCheque);
-              st.setString(7, apellidosCheque);
-              st.setBoolean(8, false);
-              st.setString(9, banco);
-              st.setInt(10, numeroCuenta);
-              st.executeUpdate();
-              JOptionPane.showMessageDialog(null, "El nuevo cheque fue agregado con exito!");
-              // TODO add your handling code here:
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            jTextFieldNumeroChequeAgregar.setText("");
-            jTextFieldNombresAgregarCheque.setText("");
-            jDateChooserFechaEmisionAgregarCheque.setToolTipText("");
-            jDateChooserFechaVencAgregarCheque.setToolTipText("");
-            jTextFieldApellidosAgregarCheque.setText("");
-            jTextPaneDescripcionAgregarCheque.setText("");
-            jTextFieldMontoCheque.setText("");
-            jTextFieldBancoAgregarCheque.setText("");
-            jTextFieldNumeroCuentaAgregarCheque.setText("");
-            jDateChooserFechaEmisionAgregarCheque.setCalendar(null);
-            jDateChooserFechaVencAgregarCheque.setCalendar(null);
-
-          } else {
-            JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
-          }
-        }
-      } else {
-        JOptionPane.showMessageDialog(null, "Hay campos sin datos");
-      }
-    }//GEN-LAST:event_jButtonConfirmarAgregar3ActionPerformed
-
-    private void jRadioButtonHabilitarEdicionUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonHabilitarEdicionUsuarioActionPerformed
-      if (jRadioButtonHabilitarEdicionUsuario.isSelected()) {
-        jTextFieldNombresEditarUsuario.setEditable(true);
-        jTextFieldNombresEditarUsuario.setEnabled(true);
-        jTextFieldApellidoPaternoEditarUsuario.setEditable(true);
-        jTextFieldApellidoPaternoEditarUsuario.setEnabled(true);
-        jTextFieldApellidoMaternoEditarUsuario.setEditable(true);
-        jTextFieldApellidoMaternoEditarUsuario.setEnabled(true);
-        jPasswordFieldContraseñaEditarUsuario.setEditable(true);
-        jPasswordFieldContraseñaEditarUsuario.setEnabled(true);
-        jPasswordFieldContraseña2EditarUsuario.setEditable(true);
-        jPasswordFieldContraseña2EditarUsuario.setEnabled(true);
-        jComboBoxTipoEditarUsuario.setEditable(true);
-        jComboBoxTipoEditarUsuario.setEnabled(true);
-        jButtonConfirmarEditarUsuario.setEnabled(true);
-      } else {
-
-        jTextFieldNombresEditarUsuario.setEditable(false);
-        jTextFieldNombresEditarUsuario.setEnabled(false);
-        jTextFieldApellidoPaternoEditarUsuario.setEditable(false);
-        jTextFieldApellidoPaternoEditarUsuario.setEnabled(false);
-        jTextFieldApellidoMaternoEditarUsuario.setEditable(false);
-        jTextFieldApellidoMaternoEditarUsuario.setEnabled(false);
-        jPasswordFieldContraseñaEditarUsuario.setEditable(false);
-        jPasswordFieldContraseñaEditarUsuario.setEnabled(false);
-        jPasswordFieldContraseña2EditarUsuario.setEditable(false);
-        jPasswordFieldContraseña2EditarUsuario.setEnabled(false);
-        jComboBoxTipoEditarUsuario.setEditable(false);
-        jComboBoxTipoEditarUsuario.setEnabled(false);
-        jButtonConfirmarEditarUsuario.setEnabled(false);
-
-      }
-      // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButtonHabilitarEdicionUsuarioActionPerformed
-
-    private void jTextFieldBancoAgregarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldBancoAgregarChequeActionPerformed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldBancoAgregarChequeActionPerformed
-
-    private void jTextFieldNumeroCuentaAgregarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNumeroCuentaAgregarChequeActionPerformed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldNumeroCuentaAgregarChequeActionPerformed
-
-    private void jRadioButtonHabilitarEdicionProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonHabilitarEdicionProveedorActionPerformed
-      if (this.jRadioButtonHabilitarEdicionProveedor.isSelected()) {
-        this.jTextFieldEditarNombresProveedor.setEnabled(true);
-        this.jTextFieldEditarApellidosProveedor.setEnabled(true);
-        this.jTextAreaEditarDescripcionProveedor.setEnabled(true);
-        this.jTextFieldEditarContactoProveedor.setEnabled(true);
-        this.jTextFieldEditarCorreoProveedor.setEnabled(true);
-      } else {
-        this.jTextFieldEditarNombresProveedor.setEnabled(false);
-        this.jTextFieldEditarApellidosProveedor.setEnabled(false);
-        this.jTextAreaEditarDescripcionProveedor.setEnabled(false);
-        this.jTextFieldEditarContactoProveedor.setEnabled(false);
-        this.jTextFieldEditarCorreoProveedor.setEnabled(false);
-      }
-    }//GEN-LAST:event_jRadioButtonHabilitarEdicionProveedorActionPerformed
-
-    private void jButtonConfirmarAgregarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregarMermaActionPerformed
-      int cantidad = 0;
-      try {
-        cantidad = Integer.parseInt(this.jTextFieldCantidadMerma.getText());
-      } catch (Exception ex) {
-        JOptionPane.showMessageDialog(null, "Cantidad debe ser un número.");
-      }
-      int id = -1;
-      int cantVent = -1;
-      int cantProdu = -1;
-      try {
-        id = Integer.parseInt(this.jTableListaProductosMerma.getValueAt(this.jTableListaProductosMerma.getSelectedRow(), 0).toString());
-        cantVent = Integer.parseInt(this.jTableListaProductosMerma.getValueAt(this.jTableListaProductosMerma.getSelectedRow(), 2).toString());
-        cantProdu = Integer.parseInt(this.jTableListaProductosMerma.getValueAt(this.jTableListaProductosMerma.getSelectedRow(), 3).toString());
-      } catch (Exception ex) {
-        JOptionPane.showMessageDialog(null, "Debe seleccionar un producto para la merma.");
-      }
-      String info = this.jTextAreaDescripcionMerma.getText();
-      if (cantidad > 0) {
-        if (id != -1) {
-          if (!info.equals("")) {
-            if (this.jRadioButtonVentaMerma.isSelected()) {
-              agregarMerma(id, cantidad, info, "Venta", cantVent);
-            } else if (this.jRadioButtonproduccionMerma.isSelected()) {
-              agregarMerma(id, cantidad, info, "Produccion", cantProdu);
-            }
-          } else {
-            JOptionPane.showMessageDialog(null, "Debe ingresar un motivo o descripción de la merma.");
-          }
-        }
-      } else {
-        JOptionPane.showMessageDialog(null, "Cantidad debe ser un número mayor que 0.");
-      }
-    }//GEN-LAST:event_jButtonConfirmarAgregarMermaActionPerformed
-
-    private void jButtonEditarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarMermaActionPerformed
-      jTextFieldIDeditarProducto.setText("");
-      jTextFieldIDeditarProducto.setText("");
-      jTextFieldStockEditarProducto.setText("");
-      jTextFieldNombreEditarProducto.setText("");
-      jTextFieldCantidadVentaEditarProducto.setText("");
-      jTextFieldCantidadProdEditarProducto.setText("");
-      jTextFieldPrecioEditarProducto.setText("");
-      jTextAreaEditarProducto.setText("");
-      jTextFieldStockEditarProducto.setText("");
-      cantProdActual.setText("");
-      cantVentaActual.setText("");
-      jPanelEditarProducto.show(false);
-      this.jPanelAgregarMerma.show(false);
-      this.jPanelListaMermas.show(true);
-      this.jPanelEditarMerma.show(false);
-      refrescarTablaMermas();
-      jPanel6.setVisible(true);
-      jPanelAgregarProducto.show(false);
-    }//GEN-LAST:event_jButtonEditarMermaActionPerformed
-
-    private void jComboBoxFiltrarProductoPlantaOAccesorioMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFiltrarProductoPlantaOAccesorioMermaActionPerformed
-      if (jComboBoxFiltrarProductoPlantaOAccesorioMerma.getSelectedIndex() == 0) {
-        try {
-          rellenarComboBoxTipoPlantaListadoMerma();
-        } catch (SQLException ex) {
-          Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        jComboBoxTipoListaProductosMerma.setSelectedIndex(0);
-        jComboBoxEspecieProductoMerma.setSelectedIndex(0);
-        jLabelTipoPlantaListaMerma.setVisible(true);
-        jLabelEspecieListaProductosMerma.setVisible(true);
-        jComboBoxTipoListaProductosMerma.setVisible(true);
-        jComboBoxEspecieProductoMerma.setVisible(true);
-
-      } else {
-
-        jComboBoxTipoListaProductosMerma.setSelectedIndex(0);
-        jComboBoxEspecieProductoMerma.setSelectedIndex(0);
-        jLabelTipoPlantaListaMerma.setVisible(false);
-        jLabelEspecieListaProductosMerma.setVisible(false);
-        jComboBoxTipoListaProductosMerma.setVisible(false);
-        jComboBoxEspecieProductoMerma.setVisible(false);
-      }
-      refrescarTablaListaProductos();
-    }//GEN-LAST:event_jComboBoxFiltrarProductoPlantaOAccesorioMermaActionPerformed
-
-    private void jComboBoxTipoListaProductosMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoListaProductosMermaActionPerformed
-      try {
-        rellenarComboBoxEspeciePlantaListadoMerma();
-      } catch (SQLException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      refrescarTablaListaProductosMerma();
-    }//GEN-LAST:event_jComboBoxTipoListaProductosMermaActionPerformed
-
-    private void jTextFieldFiltrarPorLetrasMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasMermaActionPerformed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasMermaActionPerformed
-
-    private void jTextFieldFiltrarPorLetrasMermaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasMermaKeyPressed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasMermaKeyPressed
-
-    private void jTextFieldFiltrarPorLetrasMermaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasMermaKeyReleased
-      refrescarTablaListaProductosMerma();
-    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasMermaKeyReleased
-
-    private void jComboBoxEspecieProductoMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEspecieProductoMermaActionPerformed
-      refrescarTablaListaProductosMerma();
-    }//GEN-LAST:event_jComboBoxEspecieProductoMermaActionPerformed
-
-    private void jTableListaMermasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaMermasMouseClicked
-      int column = jTableListaMermas.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTableListaMermas.getRowHeight();
-      if (row < jTableListaMermas.getRowCount() && row >= 0 && column < jTableListaMermas.getColumnCount() && column >= 0) {
-        Object value = jTableListaMermas.getValueAt(row, column);
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
-          if (boton.getText().equals("Editar")) {
-            this.mermaSeleccionada = String.valueOf(jTableListaMermas.getModel().getValueAt(jTableListaMermas.getSelectedRow(), 5));
-            String sql;
-            Statement st;
-            ResultSet rs;
-            sql = "SELECT m.fechamerma, p.nombreproducto, m.cantidadmerma, m.descripcionmerma, m.codmerma,p.codproducto FROM `merma` AS m , `producto` AS p WHERE m.codproducto = p.codproducto AND m.codmerma= " + "\"" + this.mermaSeleccionada + "\"";
-            try {
-              st = conexion.getConnection().createStatement();
-              rs = st.executeQuery(sql);
-
-              while (rs.next()) {
-                jTextFieldEditarFechaMerma.setText(rs.getString(1));
-                jTextFieldEditarNombreMerma.setText(rs.getString(2));
-                jTextFieldEditarCantidadMerma.setText(rs.getString(3));
-                jTextAreaEditarDescripcionMerma.setText(rs.getString(4));
-                jTextFieldCodigoProductoMerma.setText(rs.getString(6));
-              }
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            jPanelAgregarProducto.show(false);
-            jPanelEditarProducto.show(false);
-            this.jPanelAgregarMerma.show(false);
-            this.jPanelListaMermas.show(false);
-            this.jPanelEditarMerma.show(true);
-            jPanelEditarProductoForm.show(false);
-            jTextFieldCodigoProductoMerma.setEnabled(false);
-            this.jTextFieldEditarFechaMerma.setEnabled(false);
-            this.jTextFieldEditarNombreMerma.setEnabled(false);
-            this.jTextFieldEditarCantidadMerma.setEnabled(false);
-            this.jTextAreaEditarDescripcionMerma.setEnabled(false);
-          }
-        }
-      }
-    }//GEN-LAST:event_jTableListaMermasMouseClicked
-
-    private void jButtonConfirmarEditarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarMermaActionPerformed
-      String motivo = this.jTextAreaEditarDescripcionMerma.getText();
-      int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro de editar estos datos?");
-      if (confirmar == JOptionPane.YES_OPTION) {
-        try {
-          String sql = "UPDATE `merma` SET `descripcionmerma`=? WHERE codmerma=?";
-          PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-          st.setString(1, motivo);
-          st.setString(2, mermaSeleccionada);
-          if (st.executeUpdate() > 0) {
-            jTextFieldEditarFechaMerma.setText("");
-            jTextFieldEditarNombreMerma.setText("");
-            jTextFieldEditarCantidadMerma.setText("");
-            jTextAreaEditarDescripcionMerma.setText("");
-            jTextFieldCodigoProductoMerma.setText("");
-            JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
-                    JOptionPane.INFORMATION_MESSAGE);
-          }
-        } catch (SQLException ex) {
-          Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-      }
-    }//GEN-LAST:event_jButtonConfirmarEditarMermaActionPerformed
-
-    private void jRadioButtonHabilitarEdicionMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonHabilitarEdicionMermaActionPerformed
-      this.jTextFieldEditarFechaMerma.setEnabled(false);
-      this.jTextFieldEditarNombreMerma.setEnabled(false);
-      this.jTextFieldEditarCantidadMerma.setEnabled(false);
-      if (this.jRadioButtonHabilitarEdicionMerma.isSelected()) {
-        this.jTextAreaEditarDescripcionMerma.setEnabled(true);
-      } else {
-        this.jTextAreaEditarDescripcionMerma.setEnabled(false);
-      }
-    }//GEN-LAST:event_jRadioButtonHabilitarEdicionMermaActionPerformed
-
-    private void jButtonAgregarMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarMermaActionPerformed
-      jRadioButtonVentaMerma.setSelected(true);
-      jTextFieldIDeditarProducto.setText("");
-      jTextFieldIDeditarProducto.setText("");
-      jTextFieldStockEditarProducto.setText("");
-      jTextFieldNombreEditarProducto.setText("");
-      jTextFieldCantidadVentaEditarProducto.setText("");
-      jTextFieldCantidadProdEditarProducto.setText("");
-      jTextFieldPrecioEditarProducto.setText("");
-      jTextAreaEditarProducto.setText("");
-      jTextFieldStockEditarProducto.setText("");
-      cantProdActual.setText("");
-      cantVentaActual.setText("");
-      refrescarTablaListaProductosMerma();
-      jPanelEditarProducto.show(false);
-      jPanelEditarProductoForm.show(false);
-      this.jPanelAgregarMerma.show(true);
-      this.jPanelListaMermas.show(false);
-      this.jPanelEditarMerma.show(false);
-      jPanel6.setVisible(true);
-      jPanelAgregarProducto.show(false);
-
-    }//GEN-LAST:event_jButtonAgregarMermaActionPerformed
-
-    private void jTableListaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaProductosMouseClicked
-      int column = jTableListaProductos.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTableListaProductos.getRowHeight();
-      if (row < jTableListaProductos.getRowCount() && row >= 0 && column < jTableListaProductos.getColumnCount() && column >= 0) {
-        Object value = jTableListaProductos.getValueAt(row, column);
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
-          if (boton.getText().equals("Editar")) {
-            String id = String.valueOf(jTableListaProductos.getValueAt(jTableListaProductos.getSelectedRow(), 0));
-            System.out.println(id);
-            String sql;
-            Statement st;
-            ResultSet rs;
-            if (jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedIndex() == 0) {
-              sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, ph.precioproductoneto,t.nombretipo ,e.nombreespecie, p.descripcionproducto,p.stockminimo \n"
-                      + "FROM producto p, preciohistoricoproducto ph, planta pl, tipo t, especie e \n "
-                      + "where p.codproducto = ph.codproducto AND pl.codproducto = p.codproducto AND \n"
-                      + "pl.codespecie = e.codespecie AND t.codtipo = e.codtipo AND \n"
-                      + "p.codproducto = " + "\"" + id + "\" AND \n"
-                      + "ph.fechaproducto = (select MAX(fechaproducto) \n"
-                      + "from preciohistoricoproducto AS ph2 \n"
-                      + "where ph.codproducto = ph2.codproducto)";
-              try {
-                st = conexion.getConnection().createStatement();
-                rs = st.executeQuery(sql);
-                while (rs.next()) {
-                  jTextFieldIDeditarProducto.setText(rs.getString(1));
-                  jTextFieldNombreEditarProducto.setText(rs.getString(2));
-                  jTextFieldCantidadVentaEditarProducto.setText("0");
-                  jTextFieldCantidadProdEditarProducto.setText("0");
-                  cantVentaActual.setText(rs.getString(3));
-                  cantProdActual.setText(rs.getString(4));
-                  jTextFieldPrecioEditarProducto.setText("" + ((int)(Integer.parseInt(rs.getString(5)) * 1.19)));
-                  jComboBoxTipoEditarProducto.setSelectedItem("Planta");
-                  rellenarComboBoxTipoPlanta();
-                  rellenarComboBoxEspeciePlanta();
-                  jComboBoxEditarTipoPlanta.setSelectedItem(rs.getString(6));
-                  jComboBoxEditarEspeciePlanta.setSelectedItem(rs.getString(7));
-                  jTextAreaEditarProducto.setText(rs.getString(8));
-                  jTextFieldStockEditarProducto.setText(rs.getString(9));
-                }
-                jTextFieldIDeditarProducto.setVisible(false);
-                jTextFieldIDeditarProducto.setEnabled(false);
-                jTextFieldNombreEditarProducto.setEnabled(false);
-                jTextFieldCantidadVentaEditarProducto.setEnabled(false);
-                jTextFieldCantidadProdEditarProducto.setEnabled(false);
-                jTextFieldPrecioEditarProducto.setEnabled(false);
-                jComboBoxTipoEditarProducto.setEnabled(false);
-                jComboBoxEditarTipoPlanta.setEnabled(false);
-                jComboBoxEditarEspeciePlanta.setEnabled(false);
-                jTextAreaEditarProducto.setEnabled(false);
-                jTextFieldStockEditarProducto.setEnabled(false);
-                jPanelAgregarProducto.show(false);
-                jPanelEditarProducto.show(false);
-                this.jPanelAgregarMerma.show(false);
-                this.jPanelListaMermas.show(false);
-                this.jPanelEditarMerma.show(false);
-                jPanelEditarProductoForm.show(true);
-                this.jRadioButton5.setSelected(false);
-              } catch (SQLException ex) {
-                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-              }
-            } else {
-              sql = "SELECT p.codproducto,p.nombreproducto, p.cantidadproductoventa, p.cantidadproductoproduccion, ph.precioproductoneto,p.descripcionproducto,p.stockminimo \n"
-                      + "FROM producto p, preciohistoricoproducto ph,accesorio a \n"
-                      + "where p.codproducto = ph.codproducto AND a.codproducto = p.codproducto AND \n"
-                      + "p.codproducto = " + "\"" + id + "\" AND \n"
-                      + "ph.fechaproducto = (select MAX(fechaproducto) \n"
-                      + "from preciohistoricoproducto AS ph2 \n"
-                      + "where ph.codproducto = ph2.codproducto)";
-              try {
-                st = conexion.getConnection().createStatement();
-                rs = st.executeQuery(sql);
-                while (rs.next()) {
-                  jTextFieldIDeditarProducto.setText(rs.getString(1));
-                  jTextFieldNombreEditarProducto.setText(rs.getString(2));
-                  jTextFieldCantidadVentaEditarProducto.setText("0");
-                  jTextFieldCantidadProdEditarProducto.setText("0");
-                  cantVentaActual.setText(rs.getString(3));
-                  cantProdActual.setText(rs.getString(4));
-                  jTextFieldPrecioEditarProducto.setText(rs.getString(5));
-                  jComboBoxTipoEditarProducto.setSelectedItem("Otros");
-                  jTextAreaEditarProducto.setText(rs.getString(6));
-                  jTextFieldStockEditarProducto.setText(rs.getString(7));
-                }
-                jTextFieldIDeditarProducto.setVisible(false);
-                jTextFieldIDeditarProducto.setEnabled(false);
-                jTextFieldNombreEditarProducto.setEnabled(false);
-                jTextFieldCantidadVentaEditarProducto.setEnabled(false);
-                jTextFieldCantidadProdEditarProducto.setEnabled(false);
-                jTextFieldPrecioEditarProducto.setEnabled(false);
-                jComboBoxTipoEditarProducto.setEnabled(false);
-                jTextAreaEditarProducto.setEnabled(false);
-                jTextFieldStockEditarProducto.setEnabled(false);
-                jPanelAgregarProducto.show(false);
-                jPanelEditarProducto.show(false);
-                jPanelTipoPlanta1.show(false);
-                this.jRadioButton5.setSelected(false);
-                jPanelEditarProductoForm.show(true);
-              } catch (SQLException ex) {
-                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-              }
-            }
-          } else {
-            JTextField cant = new JTextField();
-            String[] list = {"Venta", "Produccion"};
-            JComboBox jcb = new JComboBox(list);
-            JComboBox jcb2 = new JComboBox(list);
-            Object[] message = {
-              "Desde:", jcb,
-              "cantidad:", cant,
-              "Hacia:", jcb2,};
-            String id = String.valueOf(jTableListaProductos.getValueAt(jTableListaProductos.getSelectedRow(), 0));
-            String sql8;
-            Statement st8;
-            ResultSet rs8;
-            int cantStockVenta = 0;
-            int cantStockProduccion = 0;
-            sql8 = "SELECT `cantidadproductoventa`, `cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + id;
-            try {
-              st8 = conexion.getConnection().createStatement();
-              rs8 = st8.executeQuery(sql8);
-              while (rs8.next()) {
-                cantStockVenta = rs8.getInt(1);
-                cantStockProduccion = rs8.getInt(2);
-              }
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            int option = JOptionPane.showConfirmDialog(null, message, "Mover Stock", JOptionPane.OK_CANCEL_OPTION);
-            if (option == JOptionPane.OK_OPTION) {
-              if (jcb.getSelectedIndex() == jcb2.getSelectedIndex()) {
-                JOptionPane.showMessageDialog(null, "Selecione destinos distintos");
-              } else {
-                String De = "";
-                String para = "";
-                if (jcb.getSelectedIndex() == 0) {
-                  De = "Venta";
-                  para = "Produccion";
-                } else {
-                  De = "Produccion";
-                  para = "Venta";
-                }
-                int cantidad = Integer.parseInt(cant.getText());
-                String sql = "UPDATE `producto` SET `cantidadproductoventa`=?,`cantidadproductoproduccion`=? WHERE codproducto = '" + id + "'";
-                PreparedStatement st;
-                try {
-                  String cambio = "";
-                  st = conexion.getConnection().prepareStatement(sql);
-                  if (De.equalsIgnoreCase("Venta")) {
-                    if (cantidad > cantStockVenta) {
-                      JOptionPane.showMessageDialog(null, "cantidad excede el maximo");
-                    } else {
-                      st.setInt(1, cantStockVenta - cantidad);
-                      st.setInt(2, cantStockProduccion + cantidad);
-                      JOptionPane.showMessageDialog(null, "Operacion exitosa");
-                      cambio = "Usuario: " + datos[0] + " movio : " + cantidad + " a produccion del producto: " + id;
-                      st.executeUpdate();
-                      String sql9;
-                      PreparedStatement st9;
-                      sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
-                      st9 = conexion.getConnection().prepareStatement(sql9);
-                      st9.setString(1, datos[0]);
-                      st9.setString(2, cambio);
-                      st9.executeUpdate();
-                    }
-                  } else if (cantidad > cantStockProduccion) {
-                    JOptionPane.showMessageDialog(null, "cantidad excede el maximo");
-                  } else {
-                    st.setInt(1, cantStockVenta + cantidad);
-                    st.setInt(2, cantStockProduccion - cantidad);
-                    JOptionPane.showMessageDialog(null, "Operacion exitosa");
-                    cambio = "Usuario: " + datos[0] + " movio : " + cantidad + " a venta del producto: " + id;
-                    st.executeUpdate();
-                    String sql9;
-                    PreparedStatement st9;
-                    sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
-                    st9 = conexion.getConnection().prepareStatement(sql9);
-                    st9.setString(1, datos[0]);
-                    st9.setString(2, cambio);
-                    st9.executeUpdate();
-                  }
-                } catch (SQLException ex) {
-                  Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-                }
-              }
-              refrescarTablaListaProductos();
-            } else {
-              JOptionPane.showMessageDialog(null, "Operacion Cancelada");
-            }
-          }
-        }
-      }
-    }//GEN-LAST:event_jTableListaProductosMouseClicked
-
-    private void jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed
-      if (jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedIndex() == 0) {
-        try {
-          rellenarComboBoxTipoPlantaListado();
-        } catch (SQLException ex) {
-          Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        jComboBoxTipoListaProductos.setSelectedIndex(0);
-        jComboBoxEspecieProducto.setSelectedIndex(0);
-        jLabelTipoPlantaLista.setVisible(true);
-        jLabelEspecieListaProductos.setVisible(true);
-        jComboBoxTipoListaProductos.setVisible(true);
-        jComboBoxEspecieProducto.setVisible(true);
-
-      } else {
-
-        jComboBoxTipoListaProductos.setSelectedIndex(0);
-        jComboBoxEspecieProducto.setSelectedIndex(0);
-        jLabelTipoPlantaLista.setVisible(false);
-        jLabelEspecieListaProductos.setVisible(false);
-        jComboBoxTipoListaProductos.setVisible(false);
-        jComboBoxEspecieProducto.setVisible(false);
-      }
-      refrescarTablaListaProductos();
-      // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxFiltrarProductoPlantaOAccesorioActionPerformed
-
-    private void jComboBoxTipoListaProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoListaProductosActionPerformed
-      try {
-        rellenarComboBoxEspeciePlantaListado();
-        // TODO add your handling code here:
-      } catch (SQLException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      refrescarTablaListaProductos();
-    }//GEN-LAST:event_jComboBoxTipoListaProductosActionPerformed
-
-    private void jTextFieldFiltrarPorLetrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasActionPerformed
-      // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasActionPerformed
-
-    private void jTextFieldFiltrarPorLetrasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasKeyPressed
-
-      // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasKeyPressed
-
-    private void jTextFieldFiltrarPorLetrasKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarPorLetrasKeyReleased
-      refrescarTablaListaProductos();
-      // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldFiltrarPorLetrasKeyReleased
-
-    private void jComboBoxEspecieProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEspecieProductoActionPerformed
-      refrescarTablaListaProductos();
-      // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxEspecieProductoActionPerformed
-
-    private void jButtonConfirmarEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarChequeActionPerformed
-      int numeroCheque = 0;
-      if (!jTextFieldNumeroChequeEditar.getText().equals("")) {
-        numeroCheque = Integer.parseInt(jTextFieldNumeroChequeEditar.getText());
-      }
-      String nombresCheque = jTextFieldNombresEditarCheque.getText();
-      java.util.Date fechaEmisionCheque = null;
-      java.sql.Date sqlEmision = null;
-      if (jDateChooserFechaEmisionEditarCheque.getDate() != null) {
-        fechaEmisionCheque = jDateChooserFechaEmisionEditarCheque.getDate();
-        sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
-      }
-      java.util.Date fechaVencCheque = null;
-      java.sql.Date sqlVencimiento = null;
-      if (jDateChooserFechaVencEditarCheque.getDate() != null) {
-        fechaVencCheque = jDateChooserFechaVencEditarCheque.getDate();
-        sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
-      }
-      String apellidosCheque = jTextFieldApellidosEditarCheque.getText();
-      String descripcion = jTextPaneDescripcionEditarCheque.getText();
-      String monto = jTextFieldMontoEditarCheque.getText();
-      int numeroCuenta = 0;
-      if (!jTextFieldNumeroCuentaEditarCheque.getText().equalsIgnoreCase("")) {
-        numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaEditarCheque.getText());
-      }
-      String banco = jTextFieldBancoEditarCheque.getText();
-      if (!nombresCheque.equalsIgnoreCase("") && !apellidosCheque.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")
-              && !monto.equalsIgnoreCase("") && numeroCuenta != 0 && !banco.equalsIgnoreCase("") && sqlEmision != null && sqlVencimiento != null) {
-        if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
-          int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea Editar este cheque?");
-          if (confirmar == JOptionPane.YES_OPTION) {
-            try {
-              String sql = "UPDATE `cheques` SET `fecharecepcion`=?,"
-                      + "`fechavencimiento`=?,`montocheque`=?,`descripcioncheque`=?,`nombresemisor`=?,"
-                      + "`apellidosemisor`=?,`chequescobrados_n`=?,`banco`=?,`numerocuenta`=? WHERE `numerocheque` = ? ";
-              PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-              st.setDate(1, sqlEmision);
-              st.setDate(2, sqlVencimiento);
-              st.setString(3, monto);
-              st.setString(4, descripcion);
-              st.setString(5, nombresCheque);
-              st.setString(6, apellidosCheque);
-              st.setBoolean(7, false);
-              st.setString(8, banco);
-              st.setInt(9, numeroCuenta);
-              st.setInt(10, numeroCheque);
-              if (st.executeUpdate() > 0) {
-                JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
-                        JOptionPane.INFORMATION_MESSAGE);
-
-                jTextFieldNumeroChequeEditar.setText("");
-                jTextFieldNombresEditarCheque.setText("");
-                jDateChooserFechaEmisionEditarCheque.setDate(null);
-                jDateChooserFechaVencEditarCheque.setDate(null);
-                jTextFieldApellidosEditarCheque.setText("");
-                jTextPaneDescripcionEditarCheque.setText("");
-                jTextFieldMontoEditarCheque.setText("");
-                jTextFieldNumeroCuentaEditarCheque.setText("");
-                jTextFieldBancoEditarCheque.setText("");
-                jRadioButtonHabilitarEditarCheque.setSelected(false);
-                this.jTextFieldFiltrarNumeroListaDeCheques.setText("");
-                this.jDateChooserFiltrarFechaListaDeCheques1.setDate(null);
-                this.jDateChooserFiltrarFechaListaDeCheques2.setDate(null);
-                this.jRadioButtonTodosListaDeCheques.setSelected(true);
-                jPanelAgregarCheque.show(false);
-                jPanelEditarCheque.show(false);
-                refrescarTablaEditarCheque();
-                jTableEditarCheques.setDefaultRenderer(Object.class, new ColorRender());
-                jPanelListaCheque.show(true);
-              }
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-            }
-          }
-        } else {
-          JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
-        }
-      } else {
-        JOptionPane.showMessageDialog(null, "hay campos que se encuentran salidos");
-      }
-    }//GEN-LAST:event_jButtonConfirmarEditarChequeActionPerformed
-
-    private void jRadioButtonHabilitarEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonHabilitarEditarChequeActionPerformed
-      if (jRadioButtonHabilitarEditarCheque.isSelected()) {
-        jTextFieldNumeroChequeEditar.setEditable(false);
-        jTextFieldNumeroChequeEditar.setEnabled(true);
-        jTextFieldNombresEditarCheque.setEditable(true);
-        jTextFieldNombresEditarCheque.setEnabled(true);
-        jTextFieldApellidosEditarCheque.setEditable(true);
-        jTextFieldApellidosEditarCheque.setEnabled(true);
-        jDateChooserFechaEmisionEditarCheque.setEnabled(true);
-        jDateChooserFechaVencEditarCheque.setEnabled(true);
-        jTextFieldMontoEditarCheque.setEditable(true);
-        jTextFieldMontoEditarCheque.setEnabled(true);
-        jTextPaneDescripcionEditarCheque.setEditable(true);
-        jTextPaneDescripcionEditarCheque.setEnabled(true);
-        jButtonConfirmarEditarCheque.setEnabled(true);
-        jTextFieldBancoEditarCheque.setEditable(true);
-        jTextFieldBancoEditarCheque.setEnabled(true);
-        jTextFieldNumeroCuentaEditarCheque.setEditable(true);
-        jTextFieldNumeroCuentaEditarCheque.setEnabled(true);
-      } else {
-        jTextFieldNumeroChequeEditar.setEditable(false);
-        jTextFieldNumeroChequeEditar.setEnabled(false);
-        jTextFieldNombresEditarCheque.setEditable(false);
-        jTextFieldNombresEditarCheque.setEnabled(false);
-        jTextFieldApellidosEditarCheque.setEditable(false);
-        jTextFieldApellidosEditarCheque.setEnabled(false);
-        jDateChooserFechaEmisionEditarCheque.setEnabled(false);
-        jDateChooserFechaVencEditarCheque.setEnabled(false);
-        jTextFieldMontoEditarCheque.setEditable(false);
-        jTextFieldMontoEditarCheque.setEnabled(false);
-        jTextPaneDescripcionEditarCheque.setEditable(false);
-        jTextPaneDescripcionEditarCheque.setEnabled(false);
-        jButtonConfirmarEditarCheque.setEnabled(false);
-        jTextFieldBancoEditarCheque.setEditable(false);
-        jTextFieldBancoEditarCheque.setEnabled(false);
-        jTextFieldNumeroCuentaEditarCheque.setEditable(false);
-        jTextFieldNumeroCuentaEditarCheque.setEnabled(false);
-      }
     }//GEN-LAST:event_jRadioButtonHabilitarEditarChequeActionPerformed
 
     private void jTextFieldBancoEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldBancoEditarChequeActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldBancoEditarChequeActionPerformed
 
     private void jTextFieldNumeroCuentaEditarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNumeroCuentaEditarChequeActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldNumeroCuentaEditarChequeActionPerformed
 
     private void jComboBoxTipoAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoAgregarProductoActionPerformed
-      if (jComboBoxTipoAgregarProducto.getSelectedIndex() == 1) {
-        try {
-          rellenarComboBoxTipoPlanta();
-        } catch (SQLException ex) {
-          Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        if (jComboBoxTipoAgregarProducto.getSelectedIndex() == 1) {
+            try {
+                rellenarComboBoxTipoPlanta();
+            } catch (SQLException ex) {
+                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            jPanelTipoPlanta.setVisible(true);
+            jTextFieldAgregarTipoPlanta.setEnabled(false);
+            jTextFieldAgregarEspeciePlanta.setEnabled(false);
+        } else {
+            jPanelTipoPlanta.setVisible(false);
         }
-        jPanelTipoPlanta.setVisible(true);
-        jTextFieldAgregarTipoPlanta.setEnabled(false);
-        jTextFieldAgregarEspeciePlanta.setEnabled(false);
-      } else {
-        jPanelTipoPlanta.setVisible(false);
-      }
 
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxTipoAgregarProductoActionPerformed
 
     private void jTextFieldAgregarTipoPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldAgregarTipoPlantaActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldAgregarTipoPlantaActionPerformed
 
     private void jComboBoxAgregarTipoPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAgregarTipoPlantaActionPerformed
-      if (jComboBoxAgregarTipoPlanta.getSelectedIndex() == 1) {
-        jComboBoxAgregarEspeciePlanta.setEnabled(false);
+        if (jComboBoxAgregarTipoPlanta.getSelectedIndex() == 1) {
+            jComboBoxAgregarEspeciePlanta.setEnabled(false);
 
-        jTextFieldAgregarTipoPlanta.setEnabled(true);
-        jTextFieldAgregarEspeciePlanta.setEnabled(true);
+            jTextFieldAgregarTipoPlanta.setEnabled(true);
+            jTextFieldAgregarEspeciePlanta.setEnabled(true);
 
-      } else {
-        try {
-          rellenarComboBoxEspeciePlanta();
-        } catch (SQLException ex) {
-          Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } else {
+            try {
+                rellenarComboBoxEspeciePlanta();
+            } catch (SQLException ex) {
+                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            jComboBoxAgregarEspeciePlanta.setEnabled(true);
+            jTextFieldAgregarTipoPlanta.setEnabled(false);
+            jTextFieldAgregarEspeciePlanta.setEnabled(false);
         }
-        jComboBoxAgregarEspeciePlanta.setEnabled(true);
-        jTextFieldAgregarTipoPlanta.setEnabled(false);
-        jTextFieldAgregarEspeciePlanta.setEnabled(false);
-      }
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxAgregarTipoPlantaActionPerformed
 
     private void jComboBoxAgregarEspeciePlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAgregarEspeciePlantaActionPerformed
-      if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() == 1) {
-        jTextFieldAgregarEspeciePlanta.setEnabled(true);
-      } else {
-        jTextFieldAgregarEspeciePlanta.setEnabled(false);
-      }
-      // TODO add your handling code here:
+        if (jComboBoxAgregarEspeciePlanta.getSelectedIndex() == 1) {
+            jTextFieldAgregarEspeciePlanta.setEnabled(true);
+        } else {
+            jTextFieldAgregarEspeciePlanta.setEnabled(false);
+        }
+        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxAgregarEspeciePlantaActionPerformed
 
     private void jButtonConfirmarAgregarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregarProductoActionPerformed
-      try {
-        agregarProducto();
+        try {
+            agregarProducto();
+            // TODO add your handling code here:
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         // TODO add your handling code here:
-      } catch (SQLException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      // TODO add your handling code here:
     }//GEN-LAST:event_jButtonConfirmarAgregarProductoActionPerformed
 
     private void jTableListaProductosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaProductosMouseEntered
@@ -7917,639 +8294,639 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jTableListaProductosMouseEntered
 
     private void jRadioButtonVentaMermaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonVentaMermaActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButtonVentaMermaActionPerformed
 
     private void jTextFieldFiltroRutListaUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldFiltroRutListaUsuariosActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldFiltroRutListaUsuariosActionPerformed
 
     private void jTextFieldFiltroRutListaUsuariosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltroRutListaUsuariosKeyReleased
-      refrescarTablaEditarUsuario();
+        refrescarTablaEditarUsuario();
     }//GEN-LAST:event_jTextFieldFiltroRutListaUsuariosKeyReleased
 
     private void jTextFieldFiltrarRutBloquearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarRutBloquearUsuarioActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldFiltrarRutBloquearUsuarioActionPerformed
 
     private void jTextFieldFiltrarRutBloquearUsuarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarRutBloquearUsuarioKeyReleased
-      refrescarTablaBloquearUsuario();
+        refrescarTablaBloquearUsuario();
     }//GEN-LAST:event_jTextFieldFiltrarRutBloquearUsuarioKeyReleased
 
     private void jTextFieldFiltrarNombreListaProveedoresKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarNombreListaProveedoresKeyReleased
-      refrescarTablaProveedores();
+        refrescarTablaProveedores();
     }//GEN-LAST:event_jTextFieldFiltrarNombreListaProveedoresKeyReleased
 
     private void jTextFieldFiltrarNombreEliminarProveedoresKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarNombreEliminarProveedoresKeyReleased
-      refrescarTablaEliminarProveedores();
+        refrescarTablaEliminarProveedores();
     }//GEN-LAST:event_jTextFieldFiltrarNombreEliminarProveedoresKeyReleased
 
     private void jButtonRealizarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealizarVentaActionPerformed
-      limpiarCarrito();
-      refrescarTablaVenta();
-      refrescarTablaPresupuesto();
-      jPanel7.setVisible(true);
-      jPanelListaVentas.show(false);
-      jPanelDetallesVenta.show(false);
-      jPanelRealizarPresupuesto.show(false);
-      this.jPanelListaPresupuestos.show(false);
-      jPanelDetallesPresupuesto.show(false);
-      jPanelRealizarVenta.show(true);
-      this.jRadioButtonBoleta.setSelected(true);
-      // TODO add your handling code here:
+        limpiarCarrito();
+        refrescarTablaVenta();
+        refrescarTablaPresupuesto();
+        jPanel7.setVisible(true);
+        jPanelListaVentas.show(false);
+        jPanelDetallesVenta.show(false);
+        jPanelRealizarPresupuesto.show(false);
+        this.jPanelListaPresupuestos.show(false);
+        jPanelDetallesPresupuesto.show(false);
+        jPanelRealizarVenta.show(true);
+        this.jRadioButtonBoleta.setSelected(true);
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButtonRealizarVentaActionPerformed
 
     private void jButtonRealizarPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealizarPresupuestoActionPerformed
-      limpiarCarrito();
-      refrescarTablaVenta();
-      refrescarTablaPresupuesto();
-      jPanel7.setVisible(true);
-      jPanelListaVentas.show(false);
-      jPanelDetallesVenta.show(false);
-      jPanelRealizarVenta.show(false);
-      jPanelListaPresupuestos.show(false);
-      jPanelDetallesPresupuesto.show(false);
-      jPanelRealizarPresupuesto.show(true);
+        limpiarCarrito();
+        refrescarTablaVenta();
+        refrescarTablaPresupuesto();
+        jPanel7.setVisible(true);
+        jPanelListaVentas.show(false);
+        jPanelDetallesVenta.show(false);
+        jPanelRealizarVenta.show(false);
+        jPanelListaPresupuestos.show(false);
+        jPanelDetallesPresupuesto.show(false);
+        jPanelRealizarPresupuesto.show(true);
 
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButtonRealizarPresupuestoActionPerformed
 
     private void jButtonListaVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListaVentasActionPerformed
-      this.jTextFieldFiltroCodigoListaDeVentas.setText("");
-      this.jDateChooserFiltroFechaListaDeVentas1.setDate(null);
-      this.jDateChooserFiltroFechaListaDeVentas2.setDate(null);
-      this.jComboBoxFiltroMetodoPagoListaDeVentas.setSelectedIndex(0);
-      refrescarTablaListaVentas();
-      this.jPanel7.setVisible(true);
-      this.jPanelRealizarVenta.show(false);
-      jPanelDetallesVenta.show(false);
-      jPanelDetallesPresupuesto.show(false);
-      jPanelRealizarPresupuesto.show(false);
-      this.jPanelListaPresupuestos.show(false);
-      this.jPanelListaVentas.show(true);
-      // TODO add your handling code here:
+        this.jTextFieldFiltroCodigoListaDeVentas.setText("");
+        this.jDateChooserFiltroFechaListaDeVentas1.setDate(null);
+        this.jDateChooserFiltroFechaListaDeVentas2.setDate(null);
+        this.jComboBoxFiltroMetodoPagoListaDeVentas.setSelectedIndex(0);
+        refrescarTablaListaVentas();
+        this.jPanel7.setVisible(true);
+        this.jPanelRealizarVenta.show(false);
+        jPanelDetallesVenta.show(false);
+        jPanelDetallesPresupuesto.show(false);
+        jPanelRealizarPresupuesto.show(false);
+        this.jPanelListaPresupuestos.show(false);
+        this.jPanelListaVentas.show(true);
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButtonListaVentasActionPerformed
 
     private void jTextFieldCodVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCodVentaActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldCodVentaActionPerformed
 
     private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton4ActionPerformed
 
     private void jTableDetallesVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDetallesVentaMouseClicked
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTableDetallesVentaMouseClicked
 
     private void jTableDetallesVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableDetallesVentaKeyPressed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTableDetallesVentaKeyPressed
 
     private void jButtonImpimirBoletaVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImpimirBoletaVentaActionPerformed
-      JasperReport reporte;
-      String path = "/Reportes/Boleta.jasper";
-      String logo = "/Imagenes/logo-yapur.png";
-      Map parametro = new HashMap();
-      parametro.put("logo", this.getClass().getResourceAsStream(logo));
-      parametro.put("codcompra", Integer.parseInt(jTextFieldCodVenta.getText()));
-      try {
-        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+        JasperReport reporte;
+        String path = "/Reportes/Boleta.jasper";
+        String logo = "/Imagenes/logo-yapur.png";
+        Map parametro = new HashMap();
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
+        parametro.put("codcompra", Integer.parseInt(jTextFieldCodVenta.getText()));
+        try {
+            reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
 
-        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-        JasperViewer view = new JasperViewer(jprint, false);
-        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        view.setVisible(true);
-      } catch (JRException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      // TODO add your handling code here:
+            JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+            JasperViewer view = new JasperViewer(jprint, false);
+            view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            view.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButtonImpimirBoletaVentaActionPerformed
 
     private void jTableListaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaVentasMouseClicked
 
-      int column = jTableListaVentas.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTableListaVentas.getRowHeight();
-      if (row < jTableListaVentas.getRowCount() && row >= 0 && column < jTableListaVentas.getColumnCount() && column >= 0) {
-        Object value = jTableListaVentas.getValueAt(row, column);
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
-          int codVentaSeleccionada = Integer.parseInt(String.valueOf(jTableListaVentas.getModel().getValueAt(jTableListaVentas.getSelectedRow(), 0)));
+        int column = jTableListaVentas.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableListaVentas.getRowHeight();
+        if (row < jTableListaVentas.getRowCount() && row >= 0 && column < jTableListaVentas.getColumnCount() && column >= 0) {
+            Object value = jTableListaVentas.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                int codVentaSeleccionada = Integer.parseInt(String.valueOf(jTableListaVentas.getModel().getValueAt(jTableListaVentas.getSelectedRow(), 0)));
 
-          if (boton.getText().equals("Detalles")) {
-            Clear_Table1(jTableDetallesVenta);
-            String sql;
-            Statement st;
-            ResultSet rs;
-            sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo, c.tipopago, c.metodopago,oc.folio FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra=" + "\"" + codVentaSeleccionada + "\"";
-            try {
-              st = conexion.getConnection().createStatement();
-              rs = st.executeQuery(sql);
+                if (boton.getText().equals("Detalles")) {
+                    Clear_Table1(jTableDetallesVenta);
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo, c.tipopago, c.metodopago,oc.folio FROM ordencompra oc, compra c WHERE oc.codordencompra=c.codcompra AND oc.codordencompra=" + "\"" + codVentaSeleccionada + "\"";
+                    try {
+                        st = conexion.getConnection().createStatement();
+                        rs = st.executeQuery(sql);
 
-              while (rs.next()) {
-                jTextFieldCodVenta.setText("" + rs.getInt(1));
-                jDateChooserFechaVenta.setDate(rs.getDate(4));
-                DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-                modelo.addElement(rs.getString(7));
-                if (rs.getString(7).equals("Boleta")) {
-                  jRadioButton3.setSelected(true);
-                  jRadioButton4.setSelected(false);
+                        while (rs.next()) {
+                            jTextFieldCodVenta.setText("" + rs.getInt(1));
+                            jDateChooserFechaVenta.setDate(rs.getDate(4));
+                            DefaultComboBoxModel modelo = new DefaultComboBoxModel();
+                            modelo.addElement(rs.getString(7));
+                            if (rs.getString(7).equals("Boleta")) {
+                                jRadioButton3.setSelected(true);
+                                jRadioButton4.setSelected(false);
 
-                } else {
-                  jRadioButton3.setSelected(false);
-                  jRadioButton4.setSelected(true);
+                            } else {
+                                jRadioButton3.setSelected(false);
+                                jRadioButton4.setSelected(true);
+                            }
+                            //jComboBoxTipoDePago.setModel(modelo);
+                            jComboBoxTipoDePago.addItem(rs.getString(8));
+                            jComboBoxTipoDePago.setSelectedItem(rs.getString(8));
+                            jTextFieldFolioDetalleVenta.setText(rs.getString(9));
+                            jTextFieldFolioDetalleVenta.setEnabled(false);
+                        }
+
+                        String sql1;
+                        Statement st1;
+                        ResultSet rs1;
+                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto AND ph2.fechaproducto<oc.fecha)";
+                        st1 = conexion.getConnection().createStatement();
+                        rs1 = st1.executeQuery(sql1);
+                        DefaultTableModel modelo = (DefaultTableModel) jTableDetallesVenta.getModel();
+                        Object[] array = new Object[5];
+                        while (rs1.next()) {
+                            array[0] = rs1.getInt(2);
+                            array[1] = rs1.getString(1);
+                            array[2] = rs1.getString(5);
+                            array[3] = rs1.getInt(4);
+                            array[4] = rs1.getString(3);
+                            modelo.addRow(array);
+                        }
+                        jTableDetallesVenta.setModel(modelo);
+
+                        String sql2;
+                        Statement st2;
+                        ResultSet rs2;
+                        sql2 = "SELECT `totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` FROM `ordencompra` WHERE codordencompra=" + codVentaSeleccionada;
+                        st2 = conexion.getConnection().createStatement();
+                        rs2 = st2.executeQuery(sql2);
+
+                        while (rs2.next()) {
+                            jLabelCalcularNetoDetallesVenta.setText(rs2.getString(3));
+                            jLabelDescuentoDetallesVenta.setText(formatearAEntero("" + (pasarAinteger(rs2.getString(1)) - (pasarAinteger(rs2.getString(2))))));
+                            jLabelPrecioAPagarDetallesVenta.setText(rs2.getString(2));
+                            jLabelEfectivoDetallesVenta1.setText("" + rs2.getInt(4));
+                            if (rs2.getInt(4) != 0) {
+                                jLabelVueltoDetallesVenta.setText("" + (rs2.getInt(4) - pasarAinteger(rs2.getString(1))));
+                            } else {
+                                jLabelVueltoDetallesVenta.setText("0");
+                            }
+                        }
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    jRadioButton3.setEnabled(false);
+                    jRadioButton4.setEnabled(false);
+                    jTextFieldCodVenta.setEnabled(false);
+                    jTextFieldCodVenta.setEditable(false);
+                    jDateChooserFechaVenta.setEnabled(false);
+                    jComboBoxTipoDePago.setEnabled(false);
+                    jPanelListaVentas.show(false);
+                    jPanelRealizarVenta.show(false);
+                    jPanelListaPresupuestos.show(false);
+                    jPanelRealizarPresupuesto.show(false);
+                    jPanelDetallesPresupuesto.show(false);
+                    jPanelDetallesVenta.show(true);
+
+                } else if (boton.getText().equals("Cancelar")) {
+                    int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea Cancelar esta venta?");
+                    if (confirmar == JOptionPane.YES_OPTION) {
+
+                        try {
+
+                            String sql8;
+                            Statement st8;
+                            ResultSet rs8;
+                            sql8 = "SELECT `codproducto`FROM `productoordencompra` WHERE `codordencompra`=" + codVentaSeleccionada;
+                            st8 = conexion.getConnection().createStatement();
+                            rs8 = st8.executeQuery(sql8);
+                            int codProducto = 0;
+                            while (rs8.next()) {
+                                codProducto = rs8.getInt(1);
+
+                                String sql7;
+                                Statement st7;
+                                ResultSet rs7;
+                                sql7 = "SELECT `cantidadproductoventa` FROM `producto` WHERE `codproducto`=" + codProducto;
+                                st7 = conexion.getConnection().createStatement();
+                                rs7 = st7.executeQuery(sql7);
+                                int cantStock = 0;
+                                while (rs7.next()) {
+                                    cantStock = rs7.getInt(1);
+                                }
+
+                                String sql5;
+                                Statement st5;
+                                ResultSet rs5;
+                                sql5 = "SELECT `cantidadproductoordencompra` FROM `productoordencompra` WHERE `codproducto`=" + codProducto + " AND `codordencompra`=" + codVentaSeleccionada;
+                                st5 = conexion.getConnection().createStatement();
+                                rs5 = st5.executeQuery(sql5);
+                                int cantVenta = 0;
+                                while (rs5.next()) {
+                                    cantVenta = rs5.getInt(1);
+                                }
+
+                                String sql9;
+                                PreparedStatement st9;
+                                sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
+                                st9 = conexion.getConnection().prepareStatement(sql9);
+                                st9.setInt(1, (cantStock + cantVenta));
+                                st9.setInt(2, codProducto);
+                                st9.executeUpdate();
+                            }
+
+                            String sql;
+                            Statement st;
+                            ResultSet rs;
+                            sql = "DELETE FROM `compra` WHERE `codcompra`=" + "\"" + codVentaSeleccionada + "\"";
+                            st = conexion.getConnection().prepareStatement(sql);
+                            st.executeUpdate(sql);
+
+                            String sql2;
+                            Statement st2;
+                            ResultSet rs2;
+                            sql2 = "DELETE FROM `productoordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
+                            st2 = conexion.getConnection().prepareStatement(sql2);
+                            st2.executeUpdate(sql2);
+
+                            String sql3;
+                            Statement st3;
+                            ResultSet rs3;
+                            sql3 = "DELETE FROM `ordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
+                            st3 = conexion.getConnection().prepareStatement(sql3);
+                            st3.executeUpdate(sql3);
+
+                            String sqlaux2;
+                            String sqlaux3;
+                            PreparedStatement staux2;
+                            PreparedStatement staux3;
+                            sqlaux2 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                            staux2 = conexion.getConnection().prepareStatement(sqlaux2);
+                            sqlaux3 = "SELECT MAX(codordencompra) from ordencompra";
+                            staux3 = conexion.getConnection().prepareStatement(sqlaux3);
+                            ResultSet rsAux;
+                            rsAux = staux3.executeQuery(sqlaux3);
+                            int aux = 0;
+                            while (rsAux.next()) {
+                                aux = rsAux.getInt(1);
+                            }
+                            staux2.setString(1, datos[0]);
+                            staux2.setString(2, "El usuario " + datos[0] + " cancelo la compra de codigo: " + aux);
+                            staux2.executeUpdate();
+                            refrescarTablaListaProductos();
+                        } catch (SQLException ex) {
+                            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        JOptionPane.showMessageDialog(null, "La venta a sido cancelada", "Operación Exitosa",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        refrescarTablaListaVentas();
+                    }
                 }
-                //jComboBoxTipoDePago.setModel(modelo);
-                jComboBoxTipoDePago.addItem(rs.getString(8));
-                jComboBoxTipoDePago.setSelectedItem(rs.getString(8));
-                jTextFieldFolioDetalleVenta.setText(rs.getString(9));
-                jTextFieldFolioDetalleVenta.setEnabled(false);
-              }
-
-              String sql1;
-              Statement st1;
-              ResultSet rs1;
-              sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto AND ph2.fechaproducto<oc.fecha)";
-              st1 = conexion.getConnection().createStatement();
-              rs1 = st1.executeQuery(sql1);
-              DefaultTableModel modelo = (DefaultTableModel) jTableDetallesVenta.getModel();
-              Object[] array = new Object[5];
-              while (rs1.next()) {
-                array[0] = rs1.getInt(2);
-                array[1] = rs1.getString(1);
-                array[2] = rs1.getString(5);
-                array[3] = rs1.getInt(4);
-                array[4] = rs1.getString(3);
-                modelo.addRow(array);
-              }
-              jTableDetallesVenta.setModel(modelo);
-
-              String sql2;
-              Statement st2;
-              ResultSet rs2;
-              sql2 = "SELECT `totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` FROM `ordencompra` WHERE codordencompra=" + codVentaSeleccionada;
-              st2 = conexion.getConnection().createStatement();
-              rs2 = st2.executeQuery(sql2);
-
-              while (rs2.next()) {
-                jLabelCalcularNetoDetallesVenta.setText(rs2.getString(3));
-                jLabelDescuentoDetallesVenta.setText(formatearAEntero("" + (pasarAinteger(rs2.getString(1)) - (pasarAinteger(rs2.getString(2))))));
-                jLabelPrecioAPagarDetallesVenta.setText(rs2.getString(2));
-                jLabelEfectivoDetallesVenta1.setText("" + rs2.getInt(4));
-                if (rs2.getInt(4) != 0) {
-                  jLabelVueltoDetallesVenta.setText("" + (rs2.getInt(4) - pasarAinteger(rs2.getString(1))));
-                } else {
-                  jLabelVueltoDetallesVenta.setText("0");
-                }
-              }
-
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            jRadioButton3.setEnabled(false);
-            jRadioButton4.setEnabled(false);
-            jTextFieldCodVenta.setEnabled(false);
-            jTextFieldCodVenta.setEditable(false);
-            jDateChooserFechaVenta.setEnabled(false);
-            jComboBoxTipoDePago.setEnabled(false);
-            jPanelListaVentas.show(false);
-            jPanelRealizarVenta.show(false);
-            jPanelListaPresupuestos.show(false);
-            jPanelRealizarPresupuesto.show(false);
-            jPanelDetallesPresupuesto.show(false);
-            jPanelDetallesVenta.show(true);
-
-          } else if (boton.getText().equals("Cancelar")) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea Cancelar esta venta?");
-            if (confirmar == JOptionPane.YES_OPTION) {
-
-              try {
-
-                String sql8;
-                Statement st8;
-                ResultSet rs8;
-                sql8 = "SELECT `codproducto`FROM `productoordencompra` WHERE `codordencompra`=" + codVentaSeleccionada;
-                st8 = conexion.getConnection().createStatement();
-                rs8 = st8.executeQuery(sql8);
-                int codProducto = 0;
-                while (rs8.next()) {
-                  codProducto = rs8.getInt(1);
-
-                  String sql7;
-                  Statement st7;
-                  ResultSet rs7;
-                  sql7 = "SELECT `cantidadproductoventa` FROM `producto` WHERE `codproducto`=" + codProducto;
-                  st7 = conexion.getConnection().createStatement();
-                  rs7 = st7.executeQuery(sql7);
-                  int cantStock = 0;
-                  while (rs7.next()) {
-                    cantStock = rs7.getInt(1);
-                  }
-
-                  String sql5;
-                  Statement st5;
-                  ResultSet rs5;
-                  sql5 = "SELECT `cantidadproductoordencompra` FROM `productoordencompra` WHERE `codproducto`=" + codProducto + " AND `codordencompra`=" + codVentaSeleccionada;
-                  st5 = conexion.getConnection().createStatement();
-                  rs5 = st5.executeQuery(sql5);
-                  int cantVenta = 0;
-                  while (rs5.next()) {
-                    cantVenta = rs5.getInt(1);
-                  }
-
-                  String sql9;
-                  PreparedStatement st9;
-                  sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
-                  st9 = conexion.getConnection().prepareStatement(sql9);
-                  st9.setInt(1, (cantStock + cantVenta));
-                  st9.setInt(2, codProducto);
-                  st9.executeUpdate();
-                }
-
-                String sql;
-                Statement st;
-                ResultSet rs;
-                sql = "DELETE FROM `compra` WHERE `codcompra`=" + "\"" + codVentaSeleccionada + "\"";
-                st = conexion.getConnection().prepareStatement(sql);
-                st.executeUpdate(sql);
-
-                String sql2;
-                Statement st2;
-                ResultSet rs2;
-                sql2 = "DELETE FROM `productoordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
-                st2 = conexion.getConnection().prepareStatement(sql2);
-                st2.executeUpdate(sql2);
-
-                String sql3;
-                Statement st3;
-                ResultSet rs3;
-                sql3 = "DELETE FROM `ordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
-                st3 = conexion.getConnection().prepareStatement(sql3);
-                st3.executeUpdate(sql3);
-
-                String sqlaux2;
-                String sqlaux3;
-                PreparedStatement staux2;
-                PreparedStatement staux3;
-                sqlaux2 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
-                staux2 = conexion.getConnection().prepareStatement(sqlaux2);
-                sqlaux3 = "SELECT MAX(codordencompra) from ordencompra";
-                staux3 = conexion.getConnection().prepareStatement(sqlaux3);
-                ResultSet rsAux;
-                rsAux = staux3.executeQuery(sqlaux3);
-                int aux = 0;
-                while (rsAux.next()) {
-                  aux = rsAux.getInt(1);
-                }
-                staux2.setString(1, datos[0]);
-                staux2.setString(2, "El usuario " + datos[0] + " cancelo la compra de codigo: " + aux);
-                staux2.executeUpdate();
-                refrescarTablaListaProductos();
-              } catch (SQLException ex) {
-                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-              }
-
-              JOptionPane.showMessageDialog(null, "La venta a sido cancelada", "Operación Exitosa",
-                      JOptionPane.INFORMATION_MESSAGE);
-              refrescarTablaListaVentas();
-            }
-          }
         }
-      }
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTableListaVentasMouseClicked
 
     private void jTableListaVentasKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableListaVentasKeyPressed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTableListaVentasKeyPressed
 
     private void jTablePresupuestoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTablePresupuestoMouseClicked
-      int column = jTablePresupuesto.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTablePresupuesto.getRowHeight();
-      if (row < jTablePresupuesto.getRowCount() && row >= 0 && column < jTablePresupuesto.getColumnCount() && column >= 0) {
-        Object value = jTablePresupuesto.getValueAt(row, column);
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
-          int fila = jTablePresupuesto.getSelectedRow();
-          if (boton.getText().equals("-")) {
-            if (carrito[fila].getCantidad() > 1) {
-              carrito[fila].setCantidad(carrito[fila].getCantidad() - 1);
+        int column = jTablePresupuesto.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTablePresupuesto.getRowHeight();
+        if (row < jTablePresupuesto.getRowCount() && row >= 0 && column < jTablePresupuesto.getColumnCount() && column >= 0) {
+            Object value = jTablePresupuesto.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                int fila = jTablePresupuesto.getSelectedRow();
+                if (boton.getText().equals("-")) {
+                    if (carrito[fila].getCantidad() > 1) {
+                        carrito[fila].setCantidad(carrito[fila].getCantidad() - 1);
+                    }
+                } else if (boton.getText().equals("+")) {
+                    carrito[fila].setCantidad(carrito[fila].getCantidad() + 1);
+                } else if (boton.getText().equals("X")) {
+                    eliminarDelCarrito(carrito, fila);
+                }
+                refrescarTablaPresupuesto();
             }
-          } else if (boton.getText().equals("+")) {
-            carrito[fila].setCantidad(carrito[fila].getCantidad() + 1);
-          } else if (boton.getText().equals("X")) {
-            eliminarDelCarrito(carrito, fila);
-          }
-          refrescarTablaPresupuesto();
         }
-      }
 
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTablePresupuestoMouseClicked
 
     private void jTablePresupuestoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTablePresupuestoKeyPressed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTablePresupuestoKeyPressed
 
     private void jButtonAgregarProductoAPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoAPresupuestoActionPerformed
-      if (!seleccionarProducto.isVisible()) {
-        SeleccionarProducto.refrescarTabla();
-        seleccionarProducto.setTitle("Seleccionar producto");
-        seleccionarProducto.setLocationRelativeTo(null);
-        seleccionarProducto.setResizable(false);
-        seleccionarProducto.setVisible(true);
-        seleccionarProducto.setSize(440, 715);
-      }// TODO add your handling code here:
+        if (!seleccionarProducto.isVisible()) {
+            SeleccionarProducto.refrescarTabla();
+            seleccionarProducto.setTitle("Seleccionar producto");
+            seleccionarProducto.setLocationRelativeTo(null);
+            seleccionarProducto.setResizable(false);
+            seleccionarProducto.setVisible(true);
+            seleccionarProducto.setSize(440, 715);
+        }// TODO add your handling code here:
     }//GEN-LAST:event_jButtonAgregarProductoAPresupuestoActionPerformed
 
     private void jButtonConfirmarPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarPresupuestoActionPerformed
-      try {
-        if (registrarPresupuesto()) {
-          JasperReport reporte;
-          String path = "/Reportes/Presupuesto.jasper";
-          String sql2;
-          Statement st2;
-          ResultSet rs2;
-          sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
-          st2 = conexion.getConnection().createStatement();
-          rs2 = st2.executeQuery(sql2);
-          int codCompra = 0;
-          while (rs2.next()) {
-            codCompra = rs2.getInt(1);
-          }
-          String logo = "/Imagenes/logo-yapur.png";
-          Map parametro = new HashMap();
-          parametro.put("codcompra", codCompra);
-          parametro.put("logo", this.getClass().getResourceAsStream(logo));
-          reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-          JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-          JasperViewer view = new JasperViewer(jprint, false);
-          view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-          view.setVisible(true);
+        try {
+            if (registrarPresupuesto()) {
+                JasperReport reporte;
+                String path = "/Reportes/Presupuesto.jasper";
+                String sql2;
+                Statement st2;
+                ResultSet rs2;
+                sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                st2 = conexion.getConnection().createStatement();
+                rs2 = st2.executeQuery(sql2);
+                int codCompra = 0;
+                while (rs2.next()) {
+                    codCompra = rs2.getInt(1);
+                }
+                String logo = "/Imagenes/logo-yapur.png";
+                Map parametro = new HashMap();
+                parametro.put("codcompra", codCompra);
+                parametro.put("logo", this.getClass().getResourceAsStream(logo));
+                reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+                JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+                JasperViewer view = new JasperViewer(jprint, false);
+                view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                view.setVisible(true);
+            }
+            // TODO add your handling code here:
+        } catch (SQLException | JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         // TODO add your handling code here:
-      } catch (SQLException | JRException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      // TODO add your handling code here:
     }//GEN-LAST:event_jButtonConfirmarPresupuestoActionPerformed
 
     private void jTextFieldDescuentoPresupuestoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoPresupuestoKeyPressed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldDescuentoPresupuestoKeyPressed
 
     private void jTextFieldDescuentoPresupuestoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoPresupuestoKeyReleased
-      int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
-      int iva = pasarAinteger(CalcularIVAPresupuesto.getText());
-      if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
-        jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
-        iva = (int) (totalGlobal * 0.19);
-        CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-        jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
-      } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
-        if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
-          int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
-          jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
+        int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
+        int iva = pasarAinteger(CalcularIVAPresupuesto.getText());
+        if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
+            jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+            iva = (int) (totalGlobal * 0.19);
+            CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+            jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
+        } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
+            if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
+                int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
+                jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
+
+            }
+        } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
+
+            if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
+
+                int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
+                jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
+            } else {
+                JOptionPane.showMessageDialog(null, "Descuento excedido");
+            }
 
         }
-      } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
 
-        if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
-
-          int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
-          jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
-        } else {
-          JOptionPane.showMessageDialog(null, "Descuento excedido");
-        }
-
-      }
-
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldDescuentoPresupuestoKeyReleased
 
     private void jComboBoxDescuentoPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDescuentoPresupuestoActionPerformed
-      int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
-      int iva = pasarAinteger(CalcularIVAPresupuesto.getText());
-      if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
-        jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
-        iva = (int) (totalGlobal * 0.19);
-        CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-        jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
-      } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
-        if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
-          int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
-          jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
+        int neto = pasarAinteger(jLabelCalcularNetoPresupuesto.getText());
+        int iva = pasarAinteger(CalcularIVAPresupuesto.getText());
+        if (jTextFieldDescuentoPresupuesto.getText().equals("")) {
+            jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+            iva = (int) (totalGlobal * 0.19);
+            CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+            jLabelPrecioAPagarPresupuesto.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
+        } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 0) { //selecciona porcentaje
+            if (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) <= 100) {
+                int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()) / 100)));
+                jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
+
+            }
+        } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
+
+            if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
+
+                int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
+                jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
+            } else {
+                JOptionPane.showMessageDialog(null, "Descuento excedido");
+            }
 
         }
-      } else if (jComboBoxDescuentoPresupuesto.getSelectedIndex() == 1) {//selecciona pesos
 
-        if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()))) > 0) {
-
-          int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoPresupuesto.getText()));
-          jLabelCalcularNetoPresupuesto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVAPresupuesto.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagarPresupuesto.setText(formatearAEntero("" + total));
-        } else {
-          JOptionPane.showMessageDialog(null, "Descuento excedido");
-        }
-
-      }
-
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxDescuentoPresupuestoActionPerformed
 
     private void jTableListaPresupuestosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaPresupuestosMouseClicked
 
-      int column = jTableListaPresupuestos.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTableListaPresupuestos.getRowHeight();
-      if (row < jTableListaPresupuestos.getRowCount() && row >= 0 && column < jTableListaPresupuestos.getColumnCount() && column >= 0) {
-        Object value = jTableListaPresupuestos.getValueAt(row, column);
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
-          int codVentaSeleccionada = Integer.parseInt(String.valueOf(jTableListaPresupuestos.getModel().getValueAt(jTableListaPresupuestos.getSelectedRow(), 0)));
+        int column = jTableListaPresupuestos.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableListaPresupuestos.getRowHeight();
+        if (row < jTableListaPresupuestos.getRowCount() && row >= 0 && column < jTableListaPresupuestos.getColumnCount() && column >= 0) {
+            Object value = jTableListaPresupuestos.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                int codVentaSeleccionada = Integer.parseInt(String.valueOf(jTableListaPresupuestos.getModel().getValueAt(jTableListaPresupuestos.getSelectedRow(), 0)));
 
-          if (boton.getText().equals("Detalles")) {
-            Clear_Table1(jTableDetallesPresupuesto);
-            String sql;
-            Statement st;
-            ResultSet rs;
-            sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo, p.descripcion,oc.folio FROM ordencompra oc, presupuesto p WHERE oc.codordencompra= " + "\"" + codVentaSeleccionada + "\" AND p.codpresupuesto=oc.codordencompra";
-            try {
-              st = conexion.getConnection().createStatement();
-              rs = st.executeQuery(sql);
+                if (boton.getText().equals("Detalles")) {
+                    Clear_Table1(jTableDetallesPresupuesto);
+                    String sql;
+                    Statement st;
+                    ResultSet rs;
+                    sql = "SELECT oc.codordencompra, oc.totalcondescuento, oc.totalsindescuento, oc.fecha, oc.totalneto, oc.efectivo, p.descripcion,oc.folio FROM ordencompra oc, presupuesto p WHERE oc.codordencompra= " + "\"" + codVentaSeleccionada + "\" AND p.codpresupuesto=oc.codordencompra";
+                    try {
+                        st = conexion.getConnection().createStatement();
+                        rs = st.executeQuery(sql);
 
-              while (rs.next()) {
-                jTextFieldCodPresupuesto.setText("" + rs.getInt(1));
-                jDateChooserFechaPresupuesto.setDate(rs.getDate(4));
-                jTextAreaDescripcionDetallesPresupuesto.setText(rs.getString(7));
-                jTextFieldFolioDetallePresupuesto.setText(rs.getString(8));
-              }
-              jTextFieldFolioDetallePresupuesto.setEnabled(false);
-              String sql1;
-              Statement st1;
-              ResultSet rs1;
-              sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto AND ph2.fechaproducto<oc.fecha)";
-              st1 = conexion.getConnection().createStatement();
-              rs1 = st1.executeQuery(sql1);
-              DefaultTableModel modelo = (DefaultTableModel) jTableDetallesPresupuesto.getModel();
-              Object[] array = new Object[5];
-              while (rs1.next()) {
-                array[0] = rs1.getInt(2);
-                array[1] = rs1.getString(1);
-                array[2] = rs1.getString(5);
-                array[3] = rs1.getInt(4);
-                array[4] = rs1.getString(3);
-                modelo.addRow(array);
-              }
-              jTableDetallesPresupuesto.setModel(modelo);
+                        while (rs.next()) {
+                            jTextFieldCodPresupuesto.setText("" + rs.getInt(1));
+                            jDateChooserFechaPresupuesto.setDate(rs.getDate(4));
+                            jTextAreaDescripcionDetallesPresupuesto.setText(rs.getString(7));
+                            jTextFieldFolioDetallePresupuesto.setText(rs.getString(8));
+                        }
+                        jTextFieldFolioDetallePresupuesto.setEnabled(false);
+                        String sql1;
+                        Statement st1;
+                        ResultSet rs1;
+                        sql1 = "SELECT p.nombreproducto,p.codproducto, ph.precioproductoneto*po.cantidadproductoordencompra ,po.cantidadproductoordencompra, ph.precioproductoneto from productoordencompra po, producto p,preciohistoricoproducto ph, ordencompra oc WHERE oc.codordencompra=po.codordencompra AND po.codproducto= p.codproducto and ph.codproducto = p.codproducto and po.codordencompra=" + codVentaSeleccionada + " and ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto AND ph2.fechaproducto<oc.fecha)";
+                        st1 = conexion.getConnection().createStatement();
+                        rs1 = st1.executeQuery(sql1);
+                        DefaultTableModel modelo = (DefaultTableModel) jTableDetallesPresupuesto.getModel();
+                        Object[] array = new Object[5];
+                        while (rs1.next()) {
+                            array[0] = rs1.getInt(2);
+                            array[1] = rs1.getString(1);
+                            array[2] = rs1.getString(5);
+                            array[3] = rs1.getInt(4);
+                            array[4] = rs1.getString(3);
+                            modelo.addRow(array);
+                        }
+                        jTableDetallesPresupuesto.setModel(modelo);
 
-              String sql2;
-              Statement st2;
-              ResultSet rs2;
-              sql2 = "SELECT `totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` FROM `ordencompra` WHERE codordencompra=" + codVentaSeleccionada;
-              st2 = conexion.getConnection().createStatement();
-              rs2 = st2.executeQuery(sql2);
+                        String sql2;
+                        Statement st2;
+                        ResultSet rs2;
+                        sql2 = "SELECT `totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo` FROM `ordencompra` WHERE codordencompra=" + codVentaSeleccionada;
+                        st2 = conexion.getConnection().createStatement();
+                        rs2 = st2.executeQuery(sql2);
 
-              while (rs2.next()) {
-                jLabelCalcularNetoDetallesPresupuesto.setText(rs2.getString(3));
-                jLabelDescuentoDetallesPresupuesto.setText(formatearAEntero("" + (pasarAinteger(rs2.getString(2)) - pasarAinteger(rs2.getString(1)))));
-                jLabelPrecioAPagarDetallesPresupuesto.setText(rs2.getString(2));
-              }
+                        while (rs2.next()) {
+                            jLabelCalcularNetoDetallesPresupuesto.setText(rs2.getString(3));
+                            jLabelDescuentoDetallesPresupuesto.setText(formatearAEntero("" + (pasarAinteger(rs2.getString(2)) - pasarAinteger(rs2.getString(1)))));
+                            jLabelPrecioAPagarDetallesPresupuesto.setText(rs2.getString(2));
+                        }
 
-            } catch (SQLException ex) {
-              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    jTextFieldCodPresupuesto.setEnabled(false);
+                    jTextFieldCodPresupuesto.setEditable(false);
+                    jDateChooserFechaPresupuesto.setEnabled(false);
+                    jPanelListaVentas.show(false);
+                    jPanelRealizarVenta.show(false);
+                    jPanelListaPresupuestos.show(false);
+                    jPanelRealizarPresupuesto.show(false);
+                    jPanelDetallesVenta.show(false);
+                    jPanelDetallesPresupuesto.show(true);
+
+                } else if (boton.getText().equals("Cancelar")) {
+                    int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea Cancelar este presupuesto?");
+                    if (confirmar == JOptionPane.YES_OPTION) {
+
+                        try {
+                            String sql;
+                            Statement st;
+                            ResultSet rs;
+                            sql = "DELETE FROM `presupuesto` WHERE `codpresupuesto`=" + "\"" + codVentaSeleccionada + "\"";
+                            st = conexion.getConnection().prepareStatement(sql);
+                            st.executeUpdate(sql);
+
+                            String sql2;
+                            Statement st2;
+                            ResultSet rs2;
+                            sql2 = "DELETE FROM `productoordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
+                            st2 = conexion.getConnection().prepareStatement(sql2);
+                            st2.executeUpdate(sql2);
+
+                            String sql3;
+                            Statement st3;
+                            ResultSet rs3;
+                            sql3 = "DELETE FROM `ordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
+                            st3 = conexion.getConnection().prepareStatement(sql3);
+                            st3.executeUpdate(sql3);
+
+                        } catch (SQLException ex) {
+                            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        JOptionPane.showMessageDialog(null, "El presupuesto a sido cancelado", "Operación Exitosa",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        refrescarListaPresupuestos();
+                    }
+                }
             }
-
-            jTextFieldCodPresupuesto.setEnabled(false);
-            jTextFieldCodPresupuesto.setEditable(false);
-            jDateChooserFechaPresupuesto.setEnabled(false);
-            jPanelListaVentas.show(false);
-            jPanelRealizarVenta.show(false);
-            jPanelListaPresupuestos.show(false);
-            jPanelRealizarPresupuesto.show(false);
-            jPanelDetallesVenta.show(false);
-            jPanelDetallesPresupuesto.show(true);
-
-          } else if (boton.getText().equals("Cancelar")) {
-            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro que desea Cancelar este presupuesto?");
-            if (confirmar == JOptionPane.YES_OPTION) {
-
-              try {
-                String sql;
-                Statement st;
-                ResultSet rs;
-                sql = "DELETE FROM `presupuesto` WHERE `codpresupuesto`=" + "\"" + codVentaSeleccionada + "\"";
-                st = conexion.getConnection().prepareStatement(sql);
-                st.executeUpdate(sql);
-
-                String sql2;
-                Statement st2;
-                ResultSet rs2;
-                sql2 = "DELETE FROM `productoordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
-                st2 = conexion.getConnection().prepareStatement(sql2);
-                st2.executeUpdate(sql2);
-
-                String sql3;
-                Statement st3;
-                ResultSet rs3;
-                sql3 = "DELETE FROM `ordencompra` WHERE `codordencompra`=" + "\"" + codVentaSeleccionada + "\"";
-                st3 = conexion.getConnection().prepareStatement(sql3);
-                st3.executeUpdate(sql3);
-
-              } catch (SQLException ex) {
-                Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-              }
-
-              JOptionPane.showMessageDialog(null, "El presupuesto a sido cancelado", "Operación Exitosa",
-                      JOptionPane.INFORMATION_MESSAGE);
-              refrescarListaPresupuestos();
-            }
-          }
         }
-      }
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTableListaPresupuestosMouseClicked
 
     private void jTextFieldCodPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCodPresupuestoActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldCodPresupuestoActionPerformed
 
     private void jTableDetallesPresupuestoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDetallesPresupuestoMouseClicked
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTableDetallesPresupuestoMouseClicked
 
     private void jTableDetallesPresupuestoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableDetallesPresupuestoKeyPressed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTableDetallesPresupuestoKeyPressed
 
     private void jButtonImpimirBoletaPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImpimirBoletaPresupuestoActionPerformed
-      JasperReport reporte;
-      String path = "/Reportes/Presupuesto.jasper";
-      String logo = "/Imagenes/logo-yapur.png";
-      Map parametro = new HashMap();
-      parametro.put("codcompra", Integer.parseInt(jTextFieldCodPresupuesto.getText()));
-      parametro.put("logo", this.getClass().getResourceAsStream(logo));
-      try {
-        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-        JasperViewer view = new JasperViewer(jprint, false);
-        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        view.setVisible(true);
-      } catch (JRException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
+        JasperReport reporte;
+        String path = "/Reportes/Presupuesto.jasper";
+        String logo = "/Imagenes/logo-yapur.png";
+        Map parametro = new HashMap();
+        parametro.put("codcompra", Integer.parseInt(jTextFieldCodPresupuesto.getText()));
+        parametro.put("logo", this.getClass().getResourceAsStream(logo));
+        try {
+            reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+            JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+            JasperViewer view = new JasperViewer(jprint, false);
+            view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            view.setVisible(true);
+        } catch (JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButtonImpimirBoletaPresupuestoActionPerformed
 
     private void jButtonListaPresupuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListaPresupuestosActionPerformed
-      refrescarListaPresupuestos();
-      this.jPanel7.setVisible(true);
-      this.jPanelRealizarVenta.show(false);
-      jPanelDetallesVenta.show(false);
-      jPanelRealizarPresupuesto.show(false);
-      jPanelDetallesPresupuesto.show(false);
-      this.jPanelListaVentas.show(false);
-      this.jPanelListaPresupuestos.show(true);
-      // TODO add your handling code here:
+        refrescarListaPresupuestos();
+        this.jPanel7.setVisible(true);
+        this.jPanelRealizarVenta.show(false);
+        jPanelDetallesVenta.show(false);
+        jPanelRealizarPresupuesto.show(false);
+        jPanelDetallesPresupuesto.show(false);
+        this.jPanelListaVentas.show(false);
+        this.jPanelListaPresupuestos.show(true);
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButtonListaPresupuestosActionPerformed
 
     private void jPanelVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelVentasMouseClicked
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jPanelVentasMouseClicked
 
     private void jTextFieldFiltrarNumeroListaDeChequesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltrarNumeroListaDeChequesKeyReleased
-      this.refrescarTablaEditarCheque();
+        this.refrescarTablaEditarCheque();
     }//GEN-LAST:event_jTextFieldFiltrarNumeroListaDeChequesKeyReleased
 
     private void jRadioButtonFiltrarCobradoListaDeChequesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFiltrarCobradoListaDeChequesActionPerformed
-      this.refrescarTablaEditarCheque();
-    }//GEN-LAST:event_jRadioButtonFiltrarCobradoListaDeChequesActionPerformed
-  boolean tempo = false;
-    private void jDateChooserFiltrarFechaListaDeCheques2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooserFiltrarFechaListaDeCheques2PropertyChange
-      if (tempo) {
         this.refrescarTablaEditarCheque();
-      } else {
-        tempo = true;
-      }
+    }//GEN-LAST:event_jRadioButtonFiltrarCobradoListaDeChequesActionPerformed
+    boolean tempo = false;
+    private void jDateChooserFiltrarFechaListaDeCheques2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooserFiltrarFechaListaDeCheques2PropertyChange
+        if (tempo) {
+            this.refrescarTablaEditarCheque();
+        } else {
+            tempo = true;
+        }
     }//GEN-LAST:event_jDateChooserFiltrarFechaListaDeCheques2PropertyChange
 
     private void jDateChooserFiltrarFechaListaDeCheques2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jDateChooserFiltrarFechaListaDeCheques2MouseReleased
@@ -8557,408 +8934,477 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jDateChooserFiltrarFechaListaDeCheques2MouseReleased
 
     private void jDateChooserFiltrarFechaListaDeCheques1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jDateChooserFiltrarFechaListaDeCheques1MouseReleased
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jDateChooserFiltrarFechaListaDeCheques1MouseReleased
-  boolean tempo2 = false;
+    boolean tempo2 = false;
     private void jDateChooserFiltrarFechaListaDeCheques1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooserFiltrarFechaListaDeCheques1PropertyChange
-      if (tempo2) {
-        this.refrescarTablaEditarCheque();
-      } else {
-        tempo2 = true;
-      }
+        if (tempo2) {
+            this.refrescarTablaEditarCheque();
+        } else {
+            tempo2 = true;
+        }
     }//GEN-LAST:event_jDateChooserFiltrarFechaListaDeCheques1PropertyChange
 
     private void jButtonlimpiarFiltrosListachequesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonlimpiarFiltrosListachequesActionPerformed
-      this.jTextFieldFiltrarNumeroListaDeCheques.setText("");
-      this.jDateChooserFiltrarFechaListaDeCheques1.setDate(null);
-      this.jDateChooserFiltrarFechaListaDeCheques2.setDate(null);
-      this.jRadioButtonTodosListaDeCheques.setSelected(true);
-      this.refrescarTablaEditarCheque();
+        this.jTextFieldFiltrarNumeroListaDeCheques.setText("");
+        this.jDateChooserFiltrarFechaListaDeCheques1.setDate(null);
+        this.jDateChooserFiltrarFechaListaDeCheques2.setDate(null);
+        this.jRadioButtonTodosListaDeCheques.setSelected(true);
+        this.refrescarTablaEditarCheque();
     }//GEN-LAST:event_jButtonlimpiarFiltrosListachequesActionPerformed
 
     private void jRadioButtonSinCobrarlistaDeChequesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonSinCobrarlistaDeChequesActionPerformed
-      this.refrescarTablaEditarCheque();
+        this.refrescarTablaEditarCheque();
     }//GEN-LAST:event_jRadioButtonSinCobrarlistaDeChequesActionPerformed
 
     private void jRadioButtonTodosListaDeChequesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonTodosListaDeChequesActionPerformed
-      this.refrescarTablaEditarCheque();
+        this.refrescarTablaEditarCheque();
     }//GEN-LAST:event_jRadioButtonTodosListaDeChequesActionPerformed
 
     private void jComboBoxFiltroMetodoPagoListaDeVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFiltroMetodoPagoListaDeVentasActionPerformed
-      this.refrescarTablaListaVentas();
+        this.refrescarTablaListaVentas();
     }//GEN-LAST:event_jComboBoxFiltroMetodoPagoListaDeVentasActionPerformed
 
     private void jTextFieldFiltroCodigoListaDeVentasKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltroCodigoListaDeVentasKeyReleased
-      this.refrescarTablaListaVentas();
+        this.refrescarTablaListaVentas();
     }//GEN-LAST:event_jTextFieldFiltroCodigoListaDeVentasKeyReleased
-  boolean tempo3 = false;
+    boolean tempo3 = false;
     private void jDateChooserFiltroFechaListaDeVentas1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooserFiltroFechaListaDeVentas1PropertyChange
-      if (tempo3) {
-        this.refrescarTablaListaVentas();
-      } else {
-        tempo3 = true;
-      }
+        if (tempo3) {
+            this.refrescarTablaListaVentas();
+        } else {
+            tempo3 = true;
+        }
     }//GEN-LAST:event_jDateChooserFiltroFechaListaDeVentas1PropertyChange
-  boolean tempo4 = false;
+    boolean tempo4 = false;
     private void jDateChooserFiltroFechaListaDeVentas2PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooserFiltroFechaListaDeVentas2PropertyChange
-      if (tempo4) {
-        this.refrescarTablaListaVentas();
-      } else {
-        tempo4 = true;
-      }
+        if (tempo4) {
+            this.refrescarTablaListaVentas();
+        } else {
+            tempo4 = true;
+        }
     }//GEN-LAST:event_jDateChooserFiltroFechaListaDeVentas2PropertyChange
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-      this.jTextFieldFiltroCodigoListaDeVentas.setText("");
-      this.jDateChooserFiltroFechaListaDeVentas1.setDate(null);
-      this.jDateChooserFiltroFechaListaDeVentas2.setDate(null);
-      this.jComboBoxFiltroMetodoPagoListaDeVentas.setSelectedIndex(0);
-      this.refrescarTablaListaVentas();
+        this.jTextFieldFiltroCodigoListaDeVentas.setText("");
+        this.jDateChooserFiltroFechaListaDeVentas1.setDate(null);
+        this.jDateChooserFiltroFechaListaDeVentas2.setDate(null);
+        this.jComboBoxFiltroMetodoPagoListaDeVentas.setSelectedIndex(0);
+        this.refrescarTablaListaVentas();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButtonAgregarProveedor1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProveedor1ActionPerformed
-      try {
-        // TODO add your handling code here:
-        reporteTodosProveedores();
-      } catch (JRException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
+        try {
+            String message = "Seleccione Formato de Reporte: ";
+            String[] list = {"PDF", "Excel"};
+            JComboBox jcb = new JComboBox(list);
+            Object[] params = {message, jcb};
+            JOptionPane.showConfirmDialog(null, params, "Tipo de reporte", JOptionPane.PLAIN_MESSAGE);
+            if (jcb.getSelectedIndex() == 0) {
+                reporteTodosProveedores();
+            } else {
+                reporteProveedoresExcel();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButtonAgregarProveedor1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-      try {
-        reporteTodosCheques();
-      } catch (JRException | ParseException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
+        try {
+            String message = "Seleccione Formato de Reporte: ";
+            String[] list = {"PDF", "Excel"};
+            JComboBox jcb = new JComboBox(list);
+            Object[] params = {message, jcb};
+            JOptionPane.showConfirmDialog(null, params, "Tipo de reporte", JOptionPane.PLAIN_MESSAGE);
+            if (jcb.getSelectedIndex() == 0) {
+                reporteTodosCheques();
+            } else {
+                reporteChequesExcel();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-      try {
-        reporteTodosUsuario();
-      } catch (JRException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
+        try {
+            String message = "Seleccione Formato de Reporte: ";
+            String[] list = {"PDF", "Excel"};
+            JComboBox jcb = new JComboBox(list);
+            Object[] params = {message, jcb};
+            JOptionPane.showConfirmDialog(null, params, "Tipo de reporte", JOptionPane.PLAIN_MESSAGE);
+            if (jcb.getSelectedIndex() == 0) {
+                reporteTodosUsuario();
+            } else {
+                reporteUsuariosExcel();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-      try {
-        reporteTodosInventario();
-      } catch (JRException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
+        try {
+            String message = "Seleccione Formato de Reporte: ";
+            String[] list = {"PDF", "Excel"};
+            JComboBox jcb = new JComboBox(list);
+            Object[] params = {message, jcb};
+            JOptionPane.showConfirmDialog(null, params, "Tipo de reporte", JOptionPane.PLAIN_MESSAGE);
+            if (jcb.getSelectedIndex() == 0) {
+                reporteTodosInventario();
+            } else {
+                reporteInventarioExcel();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-      try {
-        reporteTodosVentas();
-      } catch (JRException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
+        try {
+            String message = "Seleccione Formato de Reporte: ";
+            String[] list = {"PDF", "Excel"};
+            JComboBox jcb = new JComboBox(list);
+            Object[] params = {message, jcb};
+            JOptionPane.showConfirmDialog(null, params, "Tipo de reporte", JOptionPane.PLAIN_MESSAGE);
+            if (jcb.getSelectedIndex() == 0) {
+                reporteTodosVentas();
+            } else {
+                reporteVentasExcel();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-      try {
-        reporteTodosCambios();
-      } catch (JRException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
+        try {
+            String message = "Seleccione Formato de Reporte: ";
+            String[] list = {"PDF", "Excel"};
+            JComboBox jcb = new JComboBox(list);
+            Object[] params = {message, jcb};
+            JOptionPane.showConfirmDialog(null, params, "Tipo de reporte", JOptionPane.PLAIN_MESSAGE);
+            if (jcb.getSelectedIndex() == 0) {
+                reporteTodosCambios();
+            } else {
+                reporteCambiosExcel();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton7ActionPerformed
-  boolean tempo7 = false;
+    boolean tempo7 = false;
     private void jDateChooserFiltroFechaListaDeVentas3PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooserFiltroFechaListaDeVentas3PropertyChange
-      if (tempo7) {
-        refrescarListaPresupuestos();
-      } else {
-        tempo7 = true;
-      }
-      // TODO add your handling code here:
+        if (tempo7) {
+            refrescarListaPresupuestos();
+        } else {
+            tempo7 = true;
+        }
+        // TODO add your handling code here:
     }//GEN-LAST:event_jDateChooserFiltroFechaListaDeVentas3PropertyChange
-  boolean tempo6 = false;
+    boolean tempo6 = false;
     private void jDateChooserFiltroFechaListaDeVentas4PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jDateChooserFiltroFechaListaDeVentas4PropertyChange
 
-      if (tempo6) {
-        refrescarListaPresupuestos();
-      } else {
-        tempo = true;
-      }
-      // TODO add your handling code here:
+        if (tempo6) {
+            refrescarListaPresupuestos();
+        } else {
+            tempo = true;
+        }
+        // TODO add your handling code here:
     }//GEN-LAST:event_jDateChooserFiltroFechaListaDeVentas4PropertyChange
 
     private void jTextFieldFiltroCodigoListaDeVentas1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltroCodigoListaDeVentas1KeyReleased
-      refrescarListaPresupuestos();
-      // TODO add your handling code here:
+        refrescarListaPresupuestos();
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldFiltroCodigoListaDeVentas1KeyReleased
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-      this.jTextFieldFiltroCodigoListaDeVentas1.setText("");
-      this.jDateChooserFiltroFechaListaDeVentas3.setDate(null);
-      this.jDateChooserFiltroFechaListaDeVentas4.setDate(null);
-      refrescarListaPresupuestos();
-      // TODO add your handling code here:
+        this.jTextFieldFiltroCodigoListaDeVentas1.setText("");
+        this.jDateChooserFiltroFechaListaDeVentas3.setDate(null);
+        this.jDateChooserFiltroFechaListaDeVentas4.setDate(null);
+        refrescarListaPresupuestos();
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton5ActionPerformed
-      if (jRadioButton5.isSelected()) {
-        jTextFieldNombreEditarProducto.setEnabled(true);
-        jTextFieldCantidadVentaEditarProducto.setEnabled(true);
-        jTextFieldCantidadProdEditarProducto.setEnabled(true);
-        jTextFieldPrecioEditarProducto.setEnabled(true);
-        jTextAreaEditarProducto.setEnabled(true);
-        jTextFieldStockEditarProducto.setEnabled(true);
-      } else {
-        jTextFieldNombreEditarProducto.setEnabled(false);
-        jTextFieldCantidadVentaEditarProducto.setEnabled(false);
-        jTextFieldCantidadProdEditarProducto.setEnabled(false);
-        jTextFieldPrecioEditarProducto.setEnabled(false);
-        jTextAreaEditarProducto.setEnabled(false);
-        jTextFieldStockEditarProducto.setEnabled(false);
-      }
+        if (jRadioButton5.isSelected()) {
+            jTextFieldNombreEditarProducto.setEnabled(true);
+            jTextFieldCantidadVentaEditarProducto.setEnabled(true);
+            jTextFieldCantidadProdEditarProducto.setEnabled(true);
+            jTextFieldPrecioEditarProducto.setEnabled(true);
+            jTextAreaEditarProducto.setEnabled(true);
+            jTextFieldStockEditarProducto.setEnabled(true);
+        } else {
+            jTextFieldNombreEditarProducto.setEnabled(false);
+            jTextFieldCantidadVentaEditarProducto.setEnabled(false);
+            jTextFieldCantidadProdEditarProducto.setEnabled(false);
+            jTextFieldPrecioEditarProducto.setEnabled(false);
+            jTextAreaEditarProducto.setEnabled(false);
+            jTextFieldStockEditarProducto.setEnabled(false);
+        }
     }//GEN-LAST:event_jRadioButton5ActionPerformed
 
     private void jButtonConfirmarEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarEditarProductoActionPerformed
-      String nombreproducto = jTextFieldNombreEditarProducto.getText();
-      String cantVentas = jTextFieldCantidadVentaEditarProducto.getText();
-      String cantPro = jTextFieldCantidadProdEditarProducto.getText();
-      String precio = "" + ((int)(Integer.parseInt(jTextFieldPrecioEditarProducto.getText()) / 1.19));
-      String cod = jTextFieldIDeditarProducto.getText();
-      String descripcion = jTextAreaEditarProducto.getText();
-      String stock = jTextFieldStockEditarProducto.getText();
-      if (!nombreproducto.equalsIgnoreCase("") && !cantVentas.equalsIgnoreCase("") && !cantPro.equalsIgnoreCase("")
-              && !precio.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !stock.equalsIgnoreCase("")) {
+        String nombreproducto = jTextFieldNombreEditarProducto.getText();
+        String cantVentas = jTextFieldCantidadVentaEditarProducto.getText();
+        String cantPro = jTextFieldCantidadProdEditarProducto.getText();
+        String precio = "" + ((int) (Integer.parseInt(jTextFieldPrecioEditarProducto.getText()) / 1.19));
+        String cod = jTextFieldIDeditarProducto.getText();
+        String descripcion = jTextAreaEditarProducto.getText();
+        String stock = jTextFieldStockEditarProducto.getText();
+        if (!nombreproducto.equalsIgnoreCase("") && !cantVentas.equalsIgnoreCase("") && !cantPro.equalsIgnoreCase("")
+                && !precio.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("") && !stock.equalsIgnoreCase("")) {
 
-        int total = Integer.parseInt(cantPro) + Integer.parseInt(cantVentas);
+            int total = Integer.parseInt(cantPro) + Integer.parseInt(cantVentas);
 
-        int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea editar este producto?");
-        if (confirmar == JOptionPane.YES_OPTION) {
-          try {
-            String sql = "UPDATE `producto` SET `nombreproducto`=?,`cantidadproductoventa`=?,`cantidadproductoproduccion`=?,`descripcionproducto`=?  , `stockminimo` = ? WHERE codproducto = '" + cod + "'";
-            String sq2 = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
-            String sql3 = "SELECT ph.precioproductoneto,p.cantidadproductoventa,p.cantidadproductoproduccion \n"
-                    + "FROM producto p, preciohistoricoproducto ph \n"
-                    + "where p.codproducto = ph.codproducto AND \n"
-                    + "p.codproducto = " + "\"" + cod + "\" AND \n"
-                    + "ph.fechaproducto = (select MAX(fechaproducto) \n"
-                    + "from preciohistoricoproducto AS ph2 \n"
-                    + "where ph.codproducto = ph2.codproducto)";
-            PreparedStatement st3 = conexion.getConnection().prepareStatement(sql3);
-            ResultSet rs;
-            rs = st3.executeQuery(sql3);
-            int precioAnterior = 0;
-            int cantVentaAnterior = 0;
-            int cantProduAnterior = 0;
-            String codigoUnico = "";
-            while (rs.next()) {
-              precioAnterior = rs.getInt(1);
-              cantVentaAnterior = rs.getInt(2);
-              cantProduAnterior = rs.getInt(3);
+            int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea editar este producto?");
+            if (confirmar == JOptionPane.YES_OPTION) {
+                try {
+                    String sql = "UPDATE `producto` SET `nombreproducto`=?,`cantidadproductoventa`=?,`cantidadproductoproduccion`=?,`descripcionproducto`=?  , `stockminimo` = ? WHERE codproducto = '" + cod + "'";
+                    String sq2 = "INSERT INTO `preciohistoricoproducto`(`codproducto`, `precioproductoneto`) VALUES (?,?)";
+                    String sql3 = "SELECT ph.precioproductoneto,p.cantidadproductoventa,p.cantidadproductoproduccion \n"
+                            + "FROM producto p, preciohistoricoproducto ph \n"
+                            + "where p.codproducto = ph.codproducto AND \n"
+                            + "p.codproducto = " + "\"" + cod + "\" AND \n"
+                            + "ph.fechaproducto = (select MAX(fechaproducto) \n"
+                            + "from preciohistoricoproducto AS ph2 \n"
+                            + "where ph.codproducto = ph2.codproducto)";
+                    PreparedStatement st3 = conexion.getConnection().prepareStatement(sql3);
+                    ResultSet rs;
+                    rs = st3.executeQuery(sql3);
+                    int precioAnterior = 0;
+                    int cantVentaAnterior = 0;
+                    int cantProduAnterior = 0;
+                    String codigoUnico = "";
+                    while (rs.next()) {
+                        precioAnterior = rs.getInt(1);
+                        cantVentaAnterior = rs.getInt(2);
+                        cantProduAnterior = rs.getInt(3);
+                    }
+
+                    PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+                    if (precioAnterior != Integer.parseInt(precio)) {
+                        PreparedStatement st2 = conexion.getConnection().prepareStatement(sq2);
+                        st2.setInt(1, Integer.parseInt(cod));
+                        st2.setString(2, precio);
+                        st2.executeUpdate();
+
+                        String sql9;
+                        PreparedStatement st9;
+                        sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+                        st9 = conexion.getConnection().prepareStatement(sql9);
+                        st9.setString(1, datos[0]);
+                        st9.setString(2, "El usuario: " + datos[0] + " cambio el precio del producto: " + cod + " a: $" + precio);
+                        st9.executeUpdate();
+
+                    }
+                    st.setString(1, nombreproducto);
+                    st.setInt(2, cantVentaAnterior + Integer.parseInt(cantVentas));
+                    st.setInt(3, cantProduAnterior + Integer.parseInt(cantPro));
+                    st.setString(4, descripcion);
+                    st.setString(5, stock);
+                    st.executeUpdate();
+                    // TODO add your handling code here:
+                    if (st.executeUpdate() > 0) {
+                        JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        refrescarTablaListaProductos();
+                        jPanelAgregarProducto.show(false);
+                        this.jPanelAgregarMerma.show(false);
+                        this.jPanelListaMermas.show(false);
+                        this.jPanelEditarMerma.show(false);
+                        jPanelEditarProductoForm.show(false);
+                        jPanelEditarProducto.show(true);
+                        if (jComboBoxTipoEditarProducto.getSelectedIndex() == 0) {
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldStockEditarProducto.setText("");
+                            jTextFieldNombreEditarProducto.setText("");
+                            jTextFieldCantidadVentaEditarProducto.setText("");
+                            jTextFieldCantidadProdEditarProducto.setText("");
+                            jTextFieldPrecioEditarProducto.setText("");
+                            jTextAreaEditarProducto.setText("");
+                            jTextFieldStockEditarProducto.setText("");
+                            cantProdActual.setText("");
+                            cantVentaActual.setText("");
+                        } else {
+                            jTextFieldStockEditarProducto.setText("");
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldIDeditarProducto.setText("");
+                            jTextFieldNombreEditarProducto.setText("");
+                            jTextAreaEditarProducto.setText("");
+                            jTextFieldCantidadVentaEditarProducto.setText("");
+                            jTextFieldCantidadProdEditarProducto.setText("");
+                            jTextFieldPrecioEditarProducto.setText("");
+                            jTextFieldStockEditarProducto.setText("");
+                            cantProdActual.setText("");
+                            cantVentaActual.setText("");
+                        }
+                    }
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
 
-            PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-            if (precioAnterior != Integer.parseInt(precio)) {
-              PreparedStatement st2 = conexion.getConnection().prepareStatement(sq2);
-              st2.setInt(1, Integer.parseInt(cod));
-              st2.setString(2, precio);
-              st2.executeUpdate();
-
-              String sql9;
-              PreparedStatement st9;
-              sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
-              st9 = conexion.getConnection().prepareStatement(sql9);
-              st9.setString(1, datos[0]);
-              st9.setString(2, "El usuario: " + datos[0] + " cambio el precio del producto: " + cod + " a: $" + precio);
-              st9.executeUpdate();
-
-            }
-            st.setString(1, nombreproducto);
-            st.setInt(2, cantVentaAnterior + Integer.parseInt(cantVentas));
-            st.setInt(3, cantProduAnterior + Integer.parseInt(cantPro));
-            st.setString(4, descripcion);
-            st.setString(5, stock);
-            st.executeUpdate();
-            // TODO add your handling code here:
-            if (st.executeUpdate() > 0) {
-              JOptionPane.showMessageDialog(null, "Los datos han sido modificados con éxito", "Operación Exitosa",
-                      JOptionPane.INFORMATION_MESSAGE);
-              refrescarTablaListaProductos();
-              jPanelAgregarProducto.show(false);
-              this.jPanelAgregarMerma.show(false);
-              this.jPanelListaMermas.show(false);
-              this.jPanelEditarMerma.show(false);
-              jPanelEditarProductoForm.show(false);
-              jPanelEditarProducto.show(true);
-              if (jComboBoxTipoEditarProducto.getSelectedIndex() == 0) {
-                jTextFieldIDeditarProducto.setText("");
-                jTextFieldIDeditarProducto.setText("");
-                jTextFieldStockEditarProducto.setText("");
-                jTextFieldNombreEditarProducto.setText("");
-                jTextFieldCantidadVentaEditarProducto.setText("");
-                jTextFieldCantidadProdEditarProducto.setText("");
-                jTextFieldPrecioEditarProducto.setText("");
-                jTextAreaEditarProducto.setText("");
-                jTextFieldStockEditarProducto.setText("");
-                cantProdActual.setText("");
-                cantVentaActual.setText("");
-              } else {
-                jTextFieldStockEditarProducto.setText("");
-                jTextFieldIDeditarProducto.setText("");
-                jTextFieldIDeditarProducto.setText("");
-                jTextFieldNombreEditarProducto.setText("");
-                jTextAreaEditarProducto.setText("");
-                jTextFieldCantidadVentaEditarProducto.setText("");
-                jTextFieldCantidadProdEditarProducto.setText("");
-                jTextFieldPrecioEditarProducto.setText("");
-                jTextFieldStockEditarProducto.setText("");
-                cantProdActual.setText("");
-                cantVentaActual.setText("");
-              }
-            }
-
-          } catch (SQLException ex) {
-            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-          }
+        } else {
+            JOptionPane.showMessageDialog(null, " hay campos que se encuentran vacios");
         }
-
-      } else {
-        JOptionPane.showMessageDialog(null, " hay campos que se encuentran vacios");
-      }
     }//GEN-LAST:event_jButtonConfirmarEditarProductoActionPerformed
 
     private void jComboBoxTipoEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoEditarProductoActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxTipoEditarProductoActionPerformed
 
     private void jTextFieldIDeditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIDeditarProductoActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldIDeditarProductoActionPerformed
 
     private void jComboBoxEditarTipoPlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEditarTipoPlantaActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxEditarTipoPlantaActionPerformed
 
     private void jComboBoxEditarEspeciePlantaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEditarEspeciePlantaActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxEditarEspeciePlantaActionPerformed
 
     private void jTextFieldCantidadProdEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCantidadProdEditarProductoActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldCantidadProdEditarProductoActionPerformed
 
     private void jTextFieldCantidadVentaEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCantidadVentaEditarProductoActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldCantidadVentaEditarProductoActionPerformed
 
     private void jTextFieldEfectivoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldEfectivoKeyReleased
-      if (jTextFieldEfectivo.getText().equals("")) {
-        jLabelVuelto.setText("0");
-      } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
-        jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
-      } else {
-        jLabelVuelto.setText("0");
-      }
-      // TODO add your handling code here:
+        if (jTextFieldEfectivo.getText().equals("")) {
+            jLabelVuelto.setText("0");
+        } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
+            jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
+        } else {
+            jLabelVuelto.setText("0");
+        }
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldEfectivoKeyReleased
 
     private void jTextFieldEfectivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldEfectivoActionPerformed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldEfectivoActionPerformed
 
     private void jComboBoxDescuentoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDescuentoVentaActionPerformed
-      int neto = pasarAinteger(jLabelCalcularNeto.getText());
-      int iva = pasarAinteger(CalcularIVA.getText());
-      if (jTextFieldDescuentoVenta.getText().equals("")) {
-        jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
-        iva = (int) (totalGlobal * 0.19);
-        CalcularIVA.setText(formatearAEntero("" + iva));
-        jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
+        int neto = pasarAinteger(jLabelCalcularNeto.getText());
+        int iva = pasarAinteger(CalcularIVA.getText());
+        if (jTextFieldDescuentoVenta.getText().equals("")) {
+            jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+            iva = (int) (totalGlobal * 0.19);
+            CalcularIVA.setText(formatearAEntero("" + iva));
+            jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
 
-      } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
-        if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
-          int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
-          jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVA.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
+            if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
+                int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVA.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+
+            }
+        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
+
+            if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
+
+                int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
+                jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVA.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+            } else {
+                JOptionPane.showMessageDialog(null, "Descuento excedido");
+            }
 
         }
-      } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
-
-        if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
-
-          int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
-          jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVA.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+        if (jTextFieldEfectivo.getText().equals("")) {
+            jLabelVuelto.setText("0");
+        } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
+            jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
         } else {
-          JOptionPane.showMessageDialog(null, "Descuento excedido");
+            jLabelVuelto.setText("0");
         }
-
-      }
-      if (jTextFieldEfectivo.getText().equals("")) {
-        jLabelVuelto.setText("0");
-      } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
-        jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
-      } else {
-        jLabelVuelto.setText("0");
-      }
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxDescuentoVentaActionPerformed
 
     private void jComboBoxMetodoPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxMetodoPagoActionPerformed
-      if (jComboBoxMetodoPago.getSelectedIndex() != 0) {
-        jTextFieldEfectivo.setEditable(false);
-        jTextFieldEfectivo.setEnabled(false);
-      } else {
-        jTextFieldEfectivo.setEditable(true);
-        jTextFieldEfectivo.setEnabled(true);
-      }
-      jTextFieldEfectivo.setText("0");
-      // T
-      // TODO add your handling code here:
+        if (jComboBoxMetodoPago.getSelectedIndex() != 0) {
+            jTextFieldEfectivo.setEditable(false);
+            jTextFieldEfectivo.setEnabled(false);
+        } else {
+            jTextFieldEfectivo.setEditable(true);
+            jTextFieldEfectivo.setEnabled(true);
+        }
+        jTextFieldEfectivo.setText("0");
+        // T
+        // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxMetodoPagoActionPerformed
 
     private void jTextFieldDescuentoVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoVentaKeyReleased
-      int neto = pasarAinteger(jLabelCalcularNeto.getText());
-      int iva = pasarAinteger(CalcularIVA.getText());
-      if (jTextFieldDescuentoVenta.getText().equals("")) {
-        jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
-        iva = (int) (totalGlobal * 0.19);
-        CalcularIVA.setText(formatearAEntero("" + iva));
-        jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
-      } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
-        if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
-          int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
-          System.out.println(totalConDescuento);
-          jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVA.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+        int neto = pasarAinteger(jLabelCalcularNeto.getText());
+        int iva = pasarAinteger(CalcularIVA.getText());
+        if (jTextFieldDescuentoVenta.getText().equals("")) {
+            jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalGlobal)));
+            iva = (int) (totalGlobal * 0.19);
+            CalcularIVA.setText(formatearAEntero("" + iva));
+            jLabelPrecioAPagar.setText("" + formatearAEntero(String.valueOf((totalGlobal + iva))));
+        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 0) { //selecciona porcentaje
+            if (Integer.parseInt(jTextFieldDescuentoVenta.getText()) <= 100) {
+                int totalConDescuento = (int) ((double) (totalGlobal) - (double) ((totalGlobal) * (double) ((double) Integer.parseInt(jTextFieldDescuentoVenta.getText()) / 100)));
+                System.out.println(totalConDescuento);
+                jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVA.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+            }
+        } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
+
+            if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
+
+                int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
+                jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
+                iva = (int) (totalConDescuento * 0.19);
+                CalcularIVA.setText(formatearAEntero("" + iva));
+                int total = iva + totalConDescuento;
+                jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+            } else {
+                JOptionPane.showMessageDialog(null, "Descuento excedido");
+            }
+
         }
-      } else if (jComboBoxDescuentoVenta.getSelectedIndex() == 1) {//selecciona pesos
-
-        if (((totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()))) > 0) {
-
-          int totalConDescuento = (totalGlobal) - (Integer.parseInt(jTextFieldDescuentoVenta.getText()));
-          jLabelCalcularNeto.setText("" + formatearAEntero(String.valueOf(totalConDescuento)));
-          iva = (int) (totalConDescuento * 0.19);
-          CalcularIVA.setText(formatearAEntero("" + iva));
-          int total = iva + totalConDescuento;
-          jLabelPrecioAPagar.setText(formatearAEntero("" + total));
+        if (jTextFieldEfectivo.getText().equals("")) {
+            jLabelVuelto.setText("0");
+        } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
+            jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
         } else {
-          JOptionPane.showMessageDialog(null, "Descuento excedido");
+            jLabelVuelto.setText("0");
         }
-
-      }
-      if (jTextFieldEfectivo.getText().equals("")) {
-        jLabelVuelto.setText("0");
-      } else if ((pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText())) > 0) {
-        jLabelVuelto.setText(formatearAEntero("" + (pasarAinteger(jTextFieldEfectivo.getText()) - pasarAinteger(jLabelPrecioAPagar.getText()))));
-      } else {
-        jLabelVuelto.setText("0");
-      }
     }//GEN-LAST:event_jTextFieldDescuentoVentaKeyReleased
 
     private void jTextFieldDescuentoVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldDescuentoVentaKeyPressed
@@ -8966,274 +9412,274 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }//GEN-LAST:event_jTextFieldDescuentoVentaKeyPressed
 
     private void jRadioButtonFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFacturaActionPerformed
-      if (jRadioButtonFactura.isSelected()) {
-        jRadioButtonBoleta.setSelected(false);
-      } else {
-        jRadioButtonBoleta.setSelected(true);
-      }
+        if (jRadioButtonFactura.isSelected()) {
+            jRadioButtonBoleta.setSelected(false);
+        } else {
+            jRadioButtonBoleta.setSelected(true);
+        }
     }//GEN-LAST:event_jRadioButtonFacturaActionPerformed
 
     private void jRadioButtonBoletaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonBoletaActionPerformed
-      if (jRadioButtonBoleta.isSelected()) {
-        jRadioButtonFactura.setSelected(false);
-      } else {
-        jRadioButtonFactura.setSelected(true);
-      }
+        if (jRadioButtonBoleta.isSelected()) {
+            jRadioButtonFactura.setSelected(false);
+        } else {
+            jRadioButtonFactura.setSelected(true);
+        }
     }//GEN-LAST:event_jRadioButtonBoletaActionPerformed
 
     private void jButtonConfirmarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarVentaActionPerformed
-      try {
-        if (registrarVenta()) {
-          refrescarTablaListaProductos();
-          JasperReport reporte;
-          String path = "/Reportes/Boleta.jasper";
-          String sql2;
-          Statement st2;
-          ResultSet rs2;
-          sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
-          st2 = conexion.getConnection().createStatement();
-          rs2 = st2.executeQuery(sql2);
-          int codCompra = 0;
-          while (rs2.next()) {
-            codCompra = rs2.getInt(1);
-          }
-          String logo = "/Imagenes/logo-yapur.png";
-          Map parametro = new HashMap();
-          parametro.put("codcompra", codCompra);
-          parametro.put("logo", this.getClass().getResourceAsStream(logo));
-          reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-          JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-          JasperViewer view = new JasperViewer(jprint, false);
-          view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-          view.setVisible(true);
-        } else {
-          refrescarTablaListaProductos();
+        try {
+            if (registrarVenta()) {
+                refrescarTablaListaProductos();
+                JasperReport reporte;
+                String path = "/Reportes/Boleta.jasper";
+                String sql2;
+                Statement st2;
+                ResultSet rs2;
+                sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+                st2 = conexion.getConnection().createStatement();
+                rs2 = st2.executeQuery(sql2);
+                int codCompra = 0;
+                while (rs2.next()) {
+                    codCompra = rs2.getInt(1);
+                }
+                String logo = "/Imagenes/logo-yapur.png";
+                Map parametro = new HashMap();
+                parametro.put("codcompra", codCompra);
+                parametro.put("logo", this.getClass().getResourceAsStream(logo));
+                reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+                JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+                JasperViewer view = new JasperViewer(jprint, false);
+                view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+                view.setVisible(true);
+            } else {
+                refrescarTablaListaProductos();
+            }
+            // TODO add your handling code here:
+        } catch (SQLException | JRException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        // TODO add your handling code here:
-      } catch (SQLException | JRException ex) {
-        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-      }
     }//GEN-LAST:event_jButtonConfirmarVentaActionPerformed
 
     private void jButtonAgregarProductoAVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarProductoAVentaActionPerformed
 
-      if (!seleccionarProducto.isVisible()) {
-        SeleccionarProducto.refrescarTabla();
-        seleccionarProducto.setAlwaysOnTop(false);
-        seleccionarProducto.setTitle("Seleccionar producto");
-        seleccionarProducto.setLocationRelativeTo(null);
-        seleccionarProducto.setResizable(false);
-        seleccionarProducto.setVisible(true);
-        seleccionarProducto.setSize(440, 715);
-      }
+        if (!seleccionarProducto.isVisible()) {
+            SeleccionarProducto.refrescarTabla();
+            seleccionarProducto.setAlwaysOnTop(false);
+            seleccionarProducto.setTitle("Seleccionar producto");
+            seleccionarProducto.setLocationRelativeTo(null);
+            seleccionarProducto.setResizable(false);
+            seleccionarProducto.setVisible(true);
+            seleccionarProducto.setSize(440, 715);
+        }
     }//GEN-LAST:event_jButtonAgregarProductoAVentaActionPerformed
 
     private void jTableVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableVentaKeyPressed
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTableVentaKeyPressed
 
     private void jTableVentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableVentaMouseClicked
-      int column = jTableVenta.getColumnModel().getColumnIndexAtX(evt.getX());
-      int row = evt.getY() / jTableVenta.getRowHeight();
-      if (row < jTableVenta.getRowCount() && row >= 0 && column < jTableVenta.getColumnCount() && column >= 0) {
-        Object value = jTableVenta.getValueAt(row, column);
-        if (value instanceof JButton) {
-          ((JButton) value).doClick();
-          JButton boton = (JButton) value;
-          int fila = jTableVenta.getSelectedRow();
-          if (boton.getText().equals("-")) {
-            if (carrito[fila].getCantidad() > 1) {
-              carrito[fila].setCantidad(carrito[fila].getCantidad() - 1);
+        int column = jTableVenta.getColumnModel().getColumnIndexAtX(evt.getX());
+        int row = evt.getY() / jTableVenta.getRowHeight();
+        if (row < jTableVenta.getRowCount() && row >= 0 && column < jTableVenta.getColumnCount() && column >= 0) {
+            Object value = jTableVenta.getValueAt(row, column);
+            if (value instanceof JButton) {
+                ((JButton) value).doClick();
+                JButton boton = (JButton) value;
+                int fila = jTableVenta.getSelectedRow();
+                if (boton.getText().equals("-")) {
+                    if (carrito[fila].getCantidad() > 1) {
+                        carrito[fila].setCantidad(carrito[fila].getCantidad() - 1);
+                    }
+                } else if (boton.getText().equals("+")) {
+                    carrito[fila].setCantidad(carrito[fila].getCantidad() + 1);
+                } else if (boton.getText().equals("X")) {
+                    eliminarDelCarrito(carrito, fila);
+                }
+                refrescarTablaVenta();
             }
-          } else if (boton.getText().equals("+")) {
-            carrito[fila].setCantidad(carrito[fila].getCantidad() + 1);
-          } else if (boton.getText().equals("X")) {
-            eliminarDelCarrito(carrito, fila);
-          }
-          refrescarTablaVenta();
         }
-      }
-      // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jTableVentaMouseClicked
 
   private void jTextFieldNombreEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNombreEditarProductoActionPerformed
-    // TODO add your handling code here:
+      // TODO add your handling code here:
   }//GEN-LAST:event_jTextFieldNombreEditarProductoActionPerformed
 
-  /**
-   * @param args the command line arguments
-   */
-  public static void main(String args[]) {
-    /* Set the Nimbus look and feel */
-    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+    /**
+     * @param args the command line arguments
      */
-    try {
-      for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-        if ("Nimbus".equals(info.getName())) {
-          javax.swing.UIManager.setLookAndFeel(info.getClassName());
-          break;
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(PanelMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-      }
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-      java.util.logging.Logger.getLogger(PanelMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        //</editor-fold>
+
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new PanelMenu().setVisible(true);
+        });
     }
-    //</editor-fold>
 
-    //</editor-fold>
+    @Override
+    public Image getIconImage() {
+        Image retValue = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("Imagenes/logo-yapur.png"));
 
-    /* Create and display the form */
-    java.awt.EventQueue.invokeLater(() -> {
-      new PanelMenu().setVisible(true);
-    });
-  }
+        return retValue;
+    }
 
-  @Override
-  public Image getIconImage() {
-    Image retValue = Toolkit.getDefaultToolkit().
-            getImage(ClassLoader.getSystemResource("Imagenes/logo-yapur.png"));
-
-    return retValue;
-  }
-
-  public void refrescarTablaListaProductos() {
-    Clear_Table1(jTableListaProductos);
-    JButton info = new JButton("Editar");
-    JButton info2 = new JButton("Mover Stock");
-    String sql1;
-    Statement st2;
-    ResultSet rs2;
-    String producto = this.jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedItem().toString();
-    String tipo = this.jComboBoxTipoListaProductos.getSelectedItem().toString();
-    String especie;
-    String filtroNombre = this.jTextFieldFiltrarPorLetras.getText();
-    switch (producto) {
-      case "Planta":
-        if (this.jComboBoxEspecieProducto.getSelectedItem() != null) {
-          especie = this.jComboBoxEspecieProducto.getSelectedItem().toString();
-        } else {
-          especie = "--Seleccionar especie--";
+    public void refrescarTablaListaProductos() {
+        Clear_Table1(jTableListaProductos);
+        JButton info = new JButton("Editar");
+        JButton info2 = new JButton("Mover Stock");
+        String sql1;
+        Statement st2;
+        ResultSet rs2;
+        String producto = this.jComboBoxFiltrarProductoPlantaOAccesorio.getSelectedItem().toString();
+        String tipo = this.jComboBoxTipoListaProductos.getSelectedItem().toString();
+        String especie;
+        String filtroNombre = this.jTextFieldFiltrarPorLetras.getText();
+        switch (producto) {
+            case "Planta":
+                if (this.jComboBoxEspecieProducto.getSelectedItem() != null) {
+                    especie = this.jComboBoxEspecieProducto.getSelectedItem().toString();
+                } else {
+                    especie = "--Seleccionar especie--";
+                }
+                if (tipo.equals("--Seleccionar tipo--")) {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, ph.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                            + "FROM producto P, preciohistoricoproducto ph, planta pl "
+                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = ph.codproducto AND ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                } else if (especie.equals("--Seleccionar especie--")) {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                            + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
+                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                } else {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto, P.stockminimo "
+                            + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
+                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                }
+                break;
+            case "Accesorio":
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                        + "FROM producto P, preciohistoricoproducto PH, accesorio a "
+                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                break;
+            default:
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                        + "FROM producto P, preciohistoricoproducto PH "
+                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                break;
         }
-        if (tipo.equals("--Seleccionar tipo--")) {
-          sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, ph.precioproductoneto, P.descripcionproducto,P.stockminimo "
-                  + "FROM producto P, preciohistoricoproducto ph, planta pl "
-                  + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = ph.codproducto AND ph.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS ph2 WHERE ph.codproducto = ph2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-        } else if (especie.equals("--Seleccionar especie--")) {
-          sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
-                  + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
-                  + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-        } else {
-          sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto, P.stockminimo "
-                  + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
-                  + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+        DefaultTableModel modelo = (DefaultTableModel) jTableListaProductos.getModel();
+        //editar lo de abajo
+        try {
+            st2 = conexion.getConnection().createStatement();
+            rs2 = st2.executeQuery(sql1);
+            Object[] datosQuery = new Object[8];
+
+            while (rs2.next()) {
+
+                datosQuery[0] = rs2.getInt(1);
+                datosQuery[1] = rs2.getString(2);
+                datosQuery[2] = rs2.getInt(3);
+                datosQuery[3] = rs2.getInt(4);
+                datosQuery[4] = rs2.getString(7);
+                datosQuery[5] = formatearAEntero(rs2.getString(5));
+                datosQuery[6] = info;
+                datosQuery[7] = info2;
+                modelo.addRow(datosQuery);
+            }
+            jTableListaProductos.setModel(modelo);
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        break;
-      case "Accesorio":
-        sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
-                + "FROM producto P, preciohistoricoproducto PH, accesorio a "
-                + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-        break;
-      default:
-        sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
-                + "FROM producto P, preciohistoricoproducto PH "
-                + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-        break;
     }
-    DefaultTableModel modelo = (DefaultTableModel) jTableListaProductos.getModel();
-    //editar lo de abajo
-    try {
-      st2 = conexion.getConnection().createStatement();
-      rs2 = st2.executeQuery(sql1);
-      Object[] datosQuery = new Object[8];
 
-      while (rs2.next()) {
-
-        datosQuery[0] = rs2.getInt(1);
-        datosQuery[1] = rs2.getString(2);
-        datosQuery[2] = rs2.getInt(3);
-        datosQuery[3] = rs2.getInt(4);
-        datosQuery[4] = rs2.getString(7);
-        datosQuery[5] = formatearAEntero(rs2.getString(5));
-        datosQuery[6] = info;
-        datosQuery[7] = info2;
-        modelo.addRow(datosQuery);
-      }
-      jTableListaProductos.setModel(modelo);
-    } catch (SQLException ex) {
-      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-  public void refrescarTablaListaProductosMerma() {
-    Clear_Table1(jTableListaProductosMerma);
-    JButton info = new JButton("Editar");
-    String sql1;
-    Statement st2;
-    ResultSet rs2;
-    String producto = this.jComboBoxFiltrarProductoPlantaOAccesorioMerma.getSelectedItem().toString();
-    String tipo = this.jComboBoxTipoListaProductosMerma.getSelectedItem().toString();
-    String especie;
-    String filtroNombre = this.jTextFieldFiltrarPorLetrasMerma.getText();
-    switch (producto) {
-      case "Planta":
-        if (this.jComboBoxEspecieProductoMerma.getSelectedItem() != null) {
-          especie = this.jComboBoxEspecieProductoMerma.getSelectedItem().toString();
-        } else {
-          especie = "--Seleccionar especie--";
+    public void refrescarTablaListaProductosMerma() {
+        Clear_Table1(jTableListaProductosMerma);
+        JButton info = new JButton("Editar");
+        String sql1;
+        Statement st2;
+        ResultSet rs2;
+        String producto = this.jComboBoxFiltrarProductoPlantaOAccesorioMerma.getSelectedItem().toString();
+        String tipo = this.jComboBoxTipoListaProductosMerma.getSelectedItem().toString();
+        String especie;
+        String filtroNombre = this.jTextFieldFiltrarPorLetrasMerma.getText();
+        switch (producto) {
+            case "Planta":
+                if (this.jComboBoxEspecieProductoMerma.getSelectedItem() != null) {
+                    especie = this.jComboBoxEspecieProductoMerma.getSelectedItem().toString();
+                } else {
+                    especie = "--Seleccionar especie--";
+                }
+                if (tipo.equals("--Seleccionar tipo--")) {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                            + "FROM producto P, preciohistoricoproducto PH, planta pl "
+                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                } else if (especie.equals("--Seleccionar especie--")) {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                            + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
+                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                } else {
+                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto, P.stockminimo "
+                            + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
+                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                }
+                break;
+            case "Accesorio":
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                        + "FROM producto P, preciohistoricoproducto PH, accesorio a "
+                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                break;
+            default:
+                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
+                        + "FROM producto P, preciohistoricoproducto PH "
+                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+                break;
         }
-        if (tipo.equals("--Seleccionar tipo--")) {
-          sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
-                  + "FROM producto P, preciohistoricoproducto PH, planta pl "
-                  + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-        } else if (especie.equals("--Seleccionar especie--")) {
-          sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
-                  + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
-                  + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-        } else {
-          sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto, P.stockminimo "
-                  + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
-                  + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+        DefaultTableModel modelo = (DefaultTableModel) jTableListaProductosMerma.getModel();
+        //editar lo de abajo
+        try {
+            st2 = conexion.getConnection().createStatement();
+            rs2 = st2.executeQuery(sql1);
+            Object[] datosQuery = new Object[5];
+
+            while (rs2.next()) {
+
+                datosQuery[0] = rs2.getInt(1);
+                datosQuery[1] = rs2.getString(2);
+                datosQuery[2] = rs2.getInt(3);
+                datosQuery[3] = rs2.getInt(4);
+                datosQuery[4] = formatearAEntero(rs2.getString(5));
+                modelo.addRow(datosQuery);
+            }
+            jTableListaProductosMerma.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            jTableListaProductosMerma.getColumnModel().getColumn(0).setPreferredWidth(61);
+            jTableListaProductosMerma.getColumnModel().getColumn(1).setPreferredWidth(300);
+            jTableListaProductosMerma.getColumnModel().getColumn(2).setPreferredWidth(151);
+            jTableListaProductosMerma.getColumnModel().getColumn(3).setPreferredWidth(151);
+            jTableListaProductosMerma.getColumnModel().getColumn(4).setPreferredWidth(152);
+            jTableListaProductosMerma.setModel(modelo);
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        break;
-      case "Accesorio":
-        sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
-                + "FROM producto P, preciohistoricoproducto PH, accesorio a "
-                + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-        break;
-      default:
-        sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto,P.stockminimo "
-                + "FROM producto P, preciohistoricoproducto PH "
-                + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-        break;
     }
-    DefaultTableModel modelo = (DefaultTableModel) jTableListaProductosMerma.getModel();
-    //editar lo de abajo
-    try {
-      st2 = conexion.getConnection().createStatement();
-      rs2 = st2.executeQuery(sql1);
-      Object[] datosQuery = new Object[5];
-
-      while (rs2.next()) {
-
-        datosQuery[0] = rs2.getInt(1);
-        datosQuery[1] = rs2.getString(2);
-        datosQuery[2] = rs2.getInt(3);
-        datosQuery[3] = rs2.getInt(4);
-        datosQuery[4] = formatearAEntero(rs2.getString(5));
-        modelo.addRow(datosQuery);
-      }
-      jTableListaProductosMerma.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-      jTableListaProductosMerma.getColumnModel().getColumn(0).setPreferredWidth(61);
-      jTableListaProductosMerma.getColumnModel().getColumn(1).setPreferredWidth(300);
-      jTableListaProductosMerma.getColumnModel().getColumn(2).setPreferredWidth(151);
-      jTableListaProductosMerma.getColumnModel().getColumn(3).setPreferredWidth(151);
-      jTableListaProductosMerma.getColumnModel().getColumn(4).setPreferredWidth(152);
-      jTableListaProductosMerma.setModel(modelo);
-    } catch (SQLException ex) {
-      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.ButtonGroup BoletaOFactura;
@@ -9671,9 +10117,9 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
   private javax.swing.JTextPane jTextPaneDescripcionEditarCheque;
   // End of variables declaration//GEN-END:variables
 
-  @Override
-  public void focusGained(FocusEvent e) {
-    //To change body of generated methods, choose Tools | Templates.
-  }
+    @Override
+    public void focusGained(FocusEvent e) {
+        //To change body of generated methods, choose Tools | Templates.
+    }
 
 }
