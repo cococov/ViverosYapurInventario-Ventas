@@ -10,24 +10,24 @@ import java.net.ServerSocket;
 
 public class ProyectoYapur {
 
-    private static ServerSocket SERVER_SOCKET;
+  private static ServerSocket SERVER_SOCKET;
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(ProyectoYapur.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        Login inicio = new Login();
-
-        try {
-            SERVER_SOCKET = new ServerSocket(1334);
-            inicio.setVisible(true);
-        } catch (IOException ex) {
-            System.exit(0);
-        }
-
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+      Logger.getLogger(ProyectoYapur.class.getName()).log(Level.SEVERE, null, ex);
     }
+
+    Login inicio = new Login();
+
+    try {
+      SERVER_SOCKET = new ServerSocket(1334);
+      inicio.setVisible(true);
+    } catch (IOException ex) {
+      System.exit(0);
+    }
+
+  }
 }

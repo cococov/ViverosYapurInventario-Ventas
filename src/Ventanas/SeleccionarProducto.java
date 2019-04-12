@@ -25,181 +25,178 @@ import proyectoyapur.Render;
  */
 public final class SeleccionarProducto extends javax.swing.JFrame {
 
-    private static ConnectarBD conexion;
-    private int column;
-    private int row;
+  private static ConnectarBD conexion;
+  private int column;
+  private int row;
 
-    /**
-     * Creates new form SeleccionarProducto
-     *
-     * @param conexion
-     * @param datos
-     */
-    public SeleccionarProducto(ConnectarBD conexion, String datos[]) {
-        initComponents();
-        this.conexion = conexion;
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        this.jTableproductos.setDefaultRenderer(Object.class, new Render());
-        refrescarTipo();
-        refrescarTabla();
-        validarSoloNumeros(jTextFieldCantidad);
-    }
+  /**
+   * Creates new form SeleccionarProducto
+   *
+   * @param conexion
+   * @param datos
+   */
+  public SeleccionarProducto(ConnectarBD conexion, String datos[]) {
+    initComponents();
+    this.conexion = conexion;
+    this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    this.jTableproductos.setDefaultRenderer(Object.class, new Render());
+    refrescarTipo();
+    refrescarTabla();
+    validarSoloNumeros(jTextFieldCantidad);
+  }
 
-    
-    public void validarSoloNumeros(JTextField jtext) {
-        jtext.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                if (!Character.isDigit(c)) {
-                    e.consume();
-                }
-            }
-        });
-    }
-    
-    public SeleccionarProducto() {
-        initComponents();
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    }
-
-    public void refrescarTipo() {
-        this.jComboBoxTipo.removeAllItems();
-        this.jComboBoxTipo.addItem("--Seleccionar tipo--");
-        String sql;
-        Statement st;
-        ResultSet rs;
-        sql = "SELECT t.nombretipo "
-                + "FROM tipo t";
-        try {
-            st = conexion.getConnection().createStatement();
-            rs = st.executeQuery(sql);
-
-            while (rs.next()) {
-                this.jComboBoxTipo.addItem(rs.getString(1));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+  public void validarSoloNumeros(JTextField jtext) {
+    jtext.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (!Character.isDigit(c)) {
+          e.consume();
         }
+      }
+    });
+  }
+
+  public SeleccionarProducto() {
+    initComponents();
+    this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+  }
+
+  public void refrescarTipo() {
+    this.jComboBoxTipo.removeAllItems();
+    this.jComboBoxTipo.addItem("--Seleccionar tipo--");
+    String sql;
+    Statement st;
+    ResultSet rs;
+    sql = "SELECT t.nombretipo "
+            + "FROM tipo t";
+    try {
+      st = conexion.getConnection().createStatement();
+      rs = st.executeQuery(sql);
+
+      while (rs.next()) {
+        this.jComboBoxTipo.addItem(rs.getString(1));
+      }
+    } catch (SQLException ex) {
+      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
     }
+  }
 
-    public void refrescarEspecie() {
-        this.jComboBoxEspecie.removeAllItems();
-        this.jComboBoxEspecie.addItem("--Seleccionar especie--");
-        String sql;
-        Statement st;
-        ResultSet rs;
-        String tipo = this.jComboBoxTipo.getSelectedItem().toString();
-        sql = "SELECT e.nombreespecie "
-                + "FROM tipo t, especie e "
-                + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo = e.codtipo";
-        try {
-            st = conexion.getConnection().createStatement();
-            rs = st.executeQuery(sql);
+  public void refrescarEspecie() {
+    this.jComboBoxEspecie.removeAllItems();
+    this.jComboBoxEspecie.addItem("--Seleccionar especie--");
+    String sql;
+    Statement st;
+    ResultSet rs;
+    String tipo = this.jComboBoxTipo.getSelectedItem().toString();
+    sql = "SELECT e.nombreespecie "
+            + "FROM tipo t, especie e "
+            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo = e.codtipo";
+    try {
+      st = conexion.getConnection().createStatement();
+      rs = st.executeQuery(sql);
 
-            while (rs.next()) {
-                this.jComboBoxEspecie.addItem(rs.getString(1));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+      while (rs.next()) {
+        this.jComboBoxEspecie.addItem(rs.getString(1));
+      }
+    } catch (SQLException ex) {
+      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+    }
+  }
+
+  @Override
+  public Image getIconImage() {
+    Image retValue = Toolkit.getDefaultToolkit().
+            getImage(ClassLoader.getSystemResource("Imagenes/logo-yapur.png"));
+
+    return retValue;
+  }
+
+  public static void refrescarTabla() {
+    Clear_Table1(jTableproductos);
+    JButton info = new JButton("Info");
+    String sql1;
+    Statement st2;
+    ResultSet rs2;
+    String producto = SeleccionarProducto.jComboBoxProducto.getSelectedItem().toString();
+    String tipo = SeleccionarProducto.jComboBoxTipo.getSelectedItem().toString();
+    String especie;
+    String filtroNombre = SeleccionarProducto.jTextFieldFiltroNombre.getText();
+    switch (producto) {
+      case "Planta":
+        if (SeleccionarProducto.jComboBoxEspecie.getSelectedItem() != null) {
+          especie = SeleccionarProducto.jComboBoxEspecie.getSelectedItem().toString();
+        } else {
+          especie = "--Seleccionar especie--";
         }
-    }
-
-    @Override
-    public Image getIconImage() {
-        Image retValue = Toolkit.getDefaultToolkit().
-                getImage(ClassLoader.getSystemResource("Imagenes/logo-yapur.png"));
-
-        return retValue;
-    }
-
-    public static void refrescarTabla() {
-        Clear_Table1(jTableproductos);
-        JButton info = new JButton("Info");
-        String sql1;
-        Statement st2;
-        ResultSet rs2;
-        String producto = SeleccionarProducto.jComboBoxProducto.getSelectedItem().toString();
-        String tipo = SeleccionarProducto.jComboBoxTipo.getSelectedItem().toString();
-        String especie;
-        String filtroNombre = SeleccionarProducto.jTextFieldFiltroNombre.getText();
-        switch (producto) {
-            case "Planta":
-                if (SeleccionarProducto.jComboBoxEspecie.getSelectedItem() != null) {
-                    especie = SeleccionarProducto.jComboBoxEspecie.getSelectedItem().toString();
-                } else {
-                    especie = "--Seleccionar especie--";
-                }
-                if (tipo.equals("--Seleccionar tipo--")) {
-                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                            + "FROM producto P, preciohistoricoproducto PH, planta pl "
-                            + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-                } else if (especie.equals("--Seleccionar especie--")) {
-                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                            + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
-                            + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-                } else {
-                    sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                            + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
-                            + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-                }
-                break;
-            case "Accesorio":
-                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                        + "FROM producto P, preciohistoricoproducto PH, accesorio a "
-                        + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-                break;
-            default:
-                sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
-                        + "FROM producto P, preciohistoricoproducto PH "
-                        + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
-                break;
+        if (tipo.equals("--Seleccionar tipo--")) {
+          sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                  + "FROM producto P, preciohistoricoproducto PH, planta pl "
+                  + "WHERE  pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+        } else if (especie.equals("--Seleccionar especie--")) {
+          sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                  + "FROM producto P, preciohistoricoproducto PH, tipo t, especie e, planta pl "
+                  + "WHERE t.nombretipo = " + "\"" + tipo + "\"" + " AND t.codtipo =  e.codtipo AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+        } else {
+          sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                  + "FROM producto P, preciohistoricoproducto PH, especie e, planta pl "
+                  + "WHERE e.nombreespecie = " + "\"" + especie + "\"" + " AND e.codespecie = pl.codespecie AND pl.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
         }
-        DefaultTableModel modelo = (DefaultTableModel) jTableproductos.getModel();
-        //editar lo de abajo
-        try {
-            st2 = conexion.getConnection().createStatement();
-            rs2 = st2.executeQuery(sql1);
-            Object[] datos = new Object[6];
+        break;
+      case "Accesorio":
+        sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                + "FROM producto P, preciohistoricoproducto PH, accesorio a "
+                + "WHERE  a.codproducto = P.codproducto AND P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+        break;
+      default:
+        sql1 = "SELECT P.codproducto, P.nombreproducto, P.cantidadproductoventa, P.cantidadproductoproduccion, PH.precioproductoneto, P.descripcionproducto "
+                + "FROM producto P, preciohistoricoproducto PH "
+                + "WHERE  P.codproducto = PH.codproducto AND PH.fechaproducto = (Select MAX(fechaproducto) FROM preciohistoricoproducto AS PH2 WHERE PH.codproducto = PH2.codproducto) AND (P.nombreproducto LIKE '%" + filtroNombre + "%' OR P.codproducto LIKE '%" + filtroNombre + "%')";
+        break;
+    }
+    DefaultTableModel modelo = (DefaultTableModel) jTableproductos.getModel();
+    //editar lo de abajo
+    try {
+      st2 = conexion.getConnection().createStatement();
+      rs2 = st2.executeQuery(sql1);
+      Object[] datos = new Object[6];
 
-            while (rs2.next()) {
+      while (rs2.next()) {
 
-                datos[0] = rs2.getInt(1);
-                datos[1] = rs2.getString(2);
-                datos[2] = rs2.getInt(3);
-                datos[3] = rs2.getInt(4);
-                datos[4] = PanelMenu.formatearAEntero("" + rs2.getString(5));
-                datos[5] = info;
-                modelo.addRow(datos);
-            }
-            jTableproductos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            jTableproductos.getColumnModel().getColumn(0).setPreferredWidth(48);
-            jTableproductos.getColumnModel().getColumn(1).setPreferredWidth(118);
-            jTableproductos.getColumnModel().getColumn(2).setPreferredWidth(51);
-            jTableproductos.getColumnModel().getColumn(3).setPreferredWidth(62);
-            jTableproductos.getColumnModel().getColumn(4).setPreferredWidth(68);
-            jTableproductos.getColumnModel().getColumn(5).setPreferredWidth(65);
-            jTableproductos.setModel(modelo);
-        } catch (SQLException ex) {
-            Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        datos[0] = rs2.getInt(1);
+        datos[1] = rs2.getString(2);
+        datos[2] = rs2.getInt(3);
+        datos[3] = rs2.getInt(4);
+        datos[4] = PanelMenu.formatearAEntero("" + rs2.getString(5));
+        datos[5] = info;
+        modelo.addRow(datos);
+      }
+      jTableproductos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+      jTableproductos.getColumnModel().getColumn(0).setPreferredWidth(48);
+      jTableproductos.getColumnModel().getColumn(1).setPreferredWidth(118);
+      jTableproductos.getColumnModel().getColumn(2).setPreferredWidth(51);
+      jTableproductos.getColumnModel().getColumn(3).setPreferredWidth(62);
+      jTableproductos.getColumnModel().getColumn(4).setPreferredWidth(68);
+      jTableproductos.getColumnModel().getColumn(5).setPreferredWidth(65);
+      jTableproductos.setModel(modelo);
+    } catch (SQLException ex) {
+      Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
     }
 
-    private static void Clear_Table1(JTable tabla) {
-        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-        for (int i = 0; i < tabla.getRowCount(); i++) {
-            modelo.removeRow(i);
-            i -= 1;
-        }
-    }
+  }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
+  private static void Clear_Table1(JTable tabla) {
+    DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+    for (int i = 0; i < tabla.getRowCount(); i++) {
+      modelo.removeRow(i);
+      i -= 1;
+    }
+  }
+
+  /**
+   * This method is called from within the constructor to initialize the form. WARNING: Do NOT modify this code. The content of this method is always regenerated by the Form Editor.
+   */
+  @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -469,152 +466,152 @@ public final class SeleccionarProducto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextFieldCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCantidadActionPerformed
-        // TODO add your handling code here:
+      // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldCantidadActionPerformed
 
     private void jButtonAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAgregarActionPerformed
-        if (row < this.jTableproductos.getRowCount() && row >= 0 && column < this.jTableproductos.getColumnCount() && column >= 0) {
-            int ID = Integer.parseInt(this.jTableproductos.getValueAt(row, 0).toString());
-            String nombre = this.jTableproductos.getValueAt(row, 1).toString();
-            int cantidadVentas = Integer.parseInt(this.jTableproductos.getValueAt(row, 2).toString());
-            int cantidadProduccion = Integer.parseInt(this.jTableproductos.getValueAt(row, 3).toString());
-            int precio = PanelMenu.pasarAinteger(this.jTableproductos.getValueAt(row, 4).toString());
-            int cantidad = Integer.parseInt(this.jTextFieldCantidad.getText());
-            Producto[] carritoActual = PanelMenu.carrito;
-            boolean esta = false;
-            int cantEsta = 0;
-            for (int i = 0; i < PanelMenu.cantProductosCarrito; i++) {
-                if (carritoActual[i].getId() == ID) {
-                    esta = true;
-                    cantEsta = carritoActual[i].getCantidad();
-                    break;
-                }
-            }
-            if (!esta) {
-                Producto p = new Producto(ID, nombre, cantidad, precio);
-                if (PanelMenu.getEsVenta()) {
-                    if (cantidad <= (cantidadVentas + cantidadProduccion)) {
-                        PanelMenu.agregarProductoCarrito(p);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Stock es insuficiente");
-                    }
-                } else {
-                    PanelMenu.agregarProductoCarritoPresupuesto(p);
-                }
-            } else {
-                cantidad = cantidad+cantEsta;
-                Producto p = new Producto(ID, nombre, cantidad, precio);
-                if (PanelMenu.getEsVenta()) {
-                    if (cantidad <= (cantidadVentas + cantidadProduccion)) {
-                        PanelMenu.agregarProductoCarrito(p);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Stock es insuficiente");
-                    }
-                } else {
-                    PanelMenu.agregarProductoCarritoPresupuesto(p);
-                }
-            }
-            jTextFieldCantidad.setText("1");
+      if (row < this.jTableproductos.getRowCount() && row >= 0 && column < this.jTableproductos.getColumnCount() && column >= 0) {
+        int ID = Integer.parseInt(this.jTableproductos.getValueAt(row, 0).toString());
+        String nombre = this.jTableproductos.getValueAt(row, 1).toString();
+        int cantidadVentas = Integer.parseInt(this.jTableproductos.getValueAt(row, 2).toString());
+        int cantidadProduccion = Integer.parseInt(this.jTableproductos.getValueAt(row, 3).toString());
+        int precio = PanelMenu.pasarAinteger(this.jTableproductos.getValueAt(row, 4).toString());
+        int cantidad = Integer.parseInt(this.jTextFieldCantidad.getText());
+        Producto[] carritoActual = PanelMenu.carrito;
+        boolean esta = false;
+        int cantEsta = 0;
+        for (int i = 0; i < PanelMenu.cantProductosCarrito; i++) {
+          if (carritoActual[i].getId() == ID) {
+            esta = true;
+            cantEsta = carritoActual[i].getCantidad();
+            break;
+          }
         }
+        if (!esta) {
+          Producto p = new Producto(ID, nombre, cantidad, precio);
+          if (PanelMenu.getEsVenta()) {
+            if (cantidad <= (cantidadVentas + cantidadProduccion)) {
+              PanelMenu.agregarProductoCarrito(p);
+            } else {
+              JOptionPane.showMessageDialog(null, "Stock es insuficiente");
+            }
+          } else {
+            PanelMenu.agregarProductoCarritoPresupuesto(p);
+          }
+        } else {
+          cantidad = cantidad + cantEsta;
+          Producto p = new Producto(ID, nombre, cantidad, precio);
+          if (PanelMenu.getEsVenta()) {
+            if (cantidad <= (cantidadVentas + cantidadProduccion)) {
+              PanelMenu.agregarProductoCarrito(p);
+            } else {
+              JOptionPane.showMessageDialog(null, "Stock es insuficiente");
+            }
+          } else {
+            PanelMenu.agregarProductoCarritoPresupuesto(p);
+          }
+        }
+        jTextFieldCantidad.setText("1");
+      }
     }//GEN-LAST:event_jButtonAgregarActionPerformed
 
     private void jComboBoxProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxProductoActionPerformed
-        String producto = this.jComboBoxProducto.getSelectedItem().toString();
+      String producto = this.jComboBoxProducto.getSelectedItem().toString();
 
-        switch (producto) {
-            case "Planta":
-                this.jPanelTipo.setVisible(true);
-                this.setSize(this.getWidth(), 715);
-                break;
-            case "Accesorio":
-                this.jPanelTipo.setVisible(false);
-                this.setSize(this.getWidth(), 615);
-                break;
-            default:
-                this.jPanelTipo.setVisible(false);
-                this.setSize(this.getWidth(), 715);
-                break;
-        }
-        refrescarTabla();
+      switch (producto) {
+        case "Planta":
+          this.jPanelTipo.setVisible(true);
+          this.setSize(this.getWidth(), 715);
+          break;
+        case "Accesorio":
+          this.jPanelTipo.setVisible(false);
+          this.setSize(this.getWidth(), 615);
+          break;
+        default:
+          this.jPanelTipo.setVisible(false);
+          this.setSize(this.getWidth(), 715);
+          break;
+      }
+      refrescarTabla();
     }//GEN-LAST:event_jComboBoxProductoActionPerformed
 
     private void jButtonCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarActionPerformed
-        this.dispose();
+      this.dispose();
     }//GEN-LAST:event_jButtonCerrarActionPerformed
 
     private void jTableproductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableproductosMouseClicked
-        column = this.jTableproductos.getColumnModel().getColumnIndexAtX(evt.getX());
-        row = evt.getY() / this.jTableproductos.getRowHeight();
-        if (row < this.jTableproductos.getRowCount() && row >= 0 && column < this.jTableproductos.getColumnCount() && column >= 0) {
-            Object value = this.jTableproductos.getValueAt(row, column);
-            if (value instanceof JButton) {
-                ((JButton) value).doClick();
-                JButton boton = (JButton) value;
-                if (boton.getText().equals("Info")) {
-                    String ID = String.valueOf(this.jTableproductos.getValueAt(this.jTableproductos.getSelectedRow(), 0));
-                    String sql;
-                    Statement st;
-                    ResultSet rs;
-                    sql = "SELECT p.descripcionproducto "
-                            + "FROM producto p "
-                            + "WHERE p.codproducto=" + "\"" + ID + "\"";
-                    try {
-                        st = conexion.getConnection().createStatement();
-                        rs = st.executeQuery(sql);
+      column = this.jTableproductos.getColumnModel().getColumnIndexAtX(evt.getX());
+      row = evt.getY() / this.jTableproductos.getRowHeight();
+      if (row < this.jTableproductos.getRowCount() && row >= 0 && column < this.jTableproductos.getColumnCount() && column >= 0) {
+        Object value = this.jTableproductos.getValueAt(row, column);
+        if (value instanceof JButton) {
+          ((JButton) value).doClick();
+          JButton boton = (JButton) value;
+          if (boton.getText().equals("Info")) {
+            String ID = String.valueOf(this.jTableproductos.getValueAt(this.jTableproductos.getSelectedRow(), 0));
+            String sql;
+            Statement st;
+            ResultSet rs;
+            sql = "SELECT p.descripcionproducto "
+                    + "FROM producto p "
+                    + "WHERE p.codproducto=" + "\"" + ID + "\"";
+            try {
+              st = conexion.getConnection().createStatement();
+              rs = st.executeQuery(sql);
 
-                        while (rs.next()) {
-                            this.jTextAreaInfoProducto.setText(rs.getString(1));
-                        }
-                    } catch (SQLException ex) {
-                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+              while (rs.next()) {
+                this.jTextAreaInfoProducto.setText(rs.getString(1));
+              }
+            } catch (SQLException ex) {
+              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
             }
+          }
         }
+      }
     }//GEN-LAST:event_jTableproductosMouseClicked
 
     private void jTextFieldFiltroNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldFiltroNombreKeyReleased
-        refrescarTabla();
-        // TODO add your handling code here:
+      refrescarTabla();
+      // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldFiltroNombreKeyReleased
 
     private void jComboBoxEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEspecieActionPerformed
-        refrescarTabla();
+      refrescarTabla();
     }//GEN-LAST:event_jComboBoxEspecieActionPerformed
 
     private void jComboBoxTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoActionPerformed
-        refrescarTabla();
-        refrescarEspecie();
+      refrescarTabla();
+      refrescarEspecie();
     }//GEN-LAST:event_jComboBoxTipoActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+  /**
+   * @param args the command line arguments
+   */
+  public static void main(String args[]) {
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SeleccionarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+     */
+    try {
+      for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+        if ("Nimbus".equals(info.getName())) {
+          javax.swing.UIManager.setLookAndFeel(info.getClassName());
+          break;
         }
-        //</editor-fold>
-
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new SeleccionarProducto().setVisible(true);
-        });
+      }
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+      java.util.logging.Logger.getLogger(SeleccionarProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
+
+    //</editor-fold>
+
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(() -> {
+      new SeleccionarProducto().setVisible(true);
+    });
+  }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAgregar;

@@ -4,49 +4,50 @@ package Clases;
  *
  * @author Juan K
  */
-public  class Producto {
-    private int id;
-    private String nombre;
-    private int cantidad;
-    private int precio;
+public class Producto {
 
-    public Producto(int id, String nombre, int cantidad, int precio) {
-        this.id = id;
-        this.nombre = nombre;
-        this.cantidad = cantidad;
-        this.precio = precio;
-    }
+  private int id;
+  private String nombre;
+  private int cantidad;
+  private int precio;
 
-    public int getId() {
-        return id;
-    }
+  public Producto(int id, String nombre, int cantidad, int precio) {
+    this.id = id;
+    this.nombre = nombre;
+    this.cantidad = cantidad;
+    this.precio = precio;
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getNombre() {
-        return nombre;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+  public String getNombre() {
+    return nombre;
+  }
 
-    public int getCantidad() {
-        return cantidad;
-    }
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
 
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
+  public int getCantidad() {
+    return cantidad;
+  }
 
-    public int getPrecio() {
-        return precio;
-    }
+  public void setCantidad(int cantidad) {
+    this.cantidad = cantidad;
+  }
 
-    public void setPrecio(int precio) {
-        this.precio = precio;
-    }
-    
+  public int getPrecio() {
+    return precio;
+  }
+
+  public void setPrecio(int precio) {
+    this.precio = precio;
+  }
+
 }

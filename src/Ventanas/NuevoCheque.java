@@ -28,57 +28,57 @@ import proyectoyapur.ConnectarBD;
 
 public class NuevoCheque extends javax.swing.JFrame {
 
-    private ConnectarBD conexion;
-    private String datos[];
-    private Producto[] carrito;
-    private int cantProductosCarrito;
-    private String totalConDescuento;
-    private String totalSinDescuento;
-    private String metodoPago;
-    private String tipoPago;
-    private int neto;
-    private int efectivo;
-    private String folio;
+  private ConnectarBD conexion;
+  private String datos[];
+  private Producto[] carrito;
+  private int cantProductosCarrito;
+  private String totalConDescuento;
+  private String totalSinDescuento;
+  private String metodoPago;
+  private String tipoPago;
+  private int neto;
+  private int efectivo;
+  private String folio;
 
-    public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo, String folio) {
-        initComponents();
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        this.conexion = conexion;
-        this.datos = datos;
-        this.carrito = carrito;
-        this.cantProductosCarrito = cantProductosCarrito;
-        this.totalConDescuento = totalConDescuento;
-        this.totalSinDescuento = totalSinDescuento;
-        this.metodoPago = metodoPago;
-        this.tipoPago = tipoPago;
-        this.jTextFieldMontoCheque.setText(totalConDescuento);
-        this.jTextFieldMontoCheque.setEnabled(false);
-        this.jTextFieldMontoCheque.setEditable(false);
-        this.neto = neto;
-        this.folio = folio;
-        this.efectivo = efectivo;
-        validarSoloNumeros(jTextFieldMontoCheque);
-        validarSoloNumeros(jTextFieldNumeroChequeAgregar);
-        validarSoloNumeros(jTextFieldNumeroCuentaAgregarCheque);
-    }
+  public NuevoCheque(ConnectarBD conexion, String datos[], Producto[] carrito, int cantProductosCarrito, String totalConDescuento, String totalSinDescuento, String metodoPago, String tipoPago, int neto, int efectivo, String folio) {
+    initComponents();
+    this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    this.conexion = conexion;
+    this.datos = datos;
+    this.carrito = carrito;
+    this.cantProductosCarrito = cantProductosCarrito;
+    this.totalConDescuento = totalConDescuento;
+    this.totalSinDescuento = totalSinDescuento;
+    this.metodoPago = metodoPago;
+    this.tipoPago = tipoPago;
+    this.jTextFieldMontoCheque.setText(totalConDescuento);
+    this.jTextFieldMontoCheque.setEnabled(false);
+    this.jTextFieldMontoCheque.setEditable(false);
+    this.neto = neto;
+    this.folio = folio;
+    this.efectivo = efectivo;
+    validarSoloNumeros(jTextFieldMontoCheque);
+    validarSoloNumeros(jTextFieldNumeroChequeAgregar);
+    validarSoloNumeros(jTextFieldNumeroCuentaAgregarCheque);
+  }
 
-    private NuevoCheque() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+  private NuevoCheque() {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
 
-    public void validarSoloNumeros(JTextField jtext) {
-        jtext.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                if (!Character.isDigit(c)) {
-                    e.consume();
-                }
-            }
-        });
-    }
+  public void validarSoloNumeros(JTextField jtext) {
+    jtext.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (!Character.isDigit(c)) {
+          e.consume();
+        }
+      }
+    });
+  }
 
-    @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -293,237 +293,237 @@ public class NuevoCheque extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ingresarVenta() throws SQLException {
-        String sql4;
-        PreparedStatement st4;
-        sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
-        st4 = conexion.getConnection().prepareStatement(sql4);
-        st4.setInt(1, PanelMenu.pasarAinteger(totalConDescuento));
-        st4.setInt(2, PanelMenu.pasarAinteger(totalSinDescuento));
-        st4.setInt(3, neto);
-        st4.setInt(4, efectivo);
-        st4.setString(5, folio);
-        st4.executeUpdate();
+  private void ingresarVenta() throws SQLException {
+    String sql4;
+    PreparedStatement st4;
+    sql4 = "INSERT INTO `ordencompra`(`totalcondescuento`, `totalsindescuento`, `totalneto`, `efectivo`,`folio` ) VALUES (?,?,?,?,?)";
+    st4 = conexion.getConnection().prepareStatement(sql4);
+    st4.setInt(1, PanelMenu.pasarAinteger(totalConDescuento));
+    st4.setInt(2, PanelMenu.pasarAinteger(totalSinDescuento));
+    st4.setInt(3, neto);
+    st4.setInt(4, efectivo);
+    st4.setString(5, folio);
+    st4.executeUpdate();
 
-        //obtener id de la compra
-        String sql2;
-        Statement st2;
-        ResultSet rs2;
-        sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
-        st2 = conexion.getConnection().createStatement();
-        rs2 = st2.executeQuery(sql2);
-        int codCompra = 0;
-        while (rs2.next()) {
-            codCompra = rs2.getInt(1);
-        }
-        //si no es cheque
-
-        String sql3;
-        PreparedStatement st3;
-        //ingresar productos
-        for (int i = 0; i < cantProductosCarrito; i++) {
-            sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
-            st3 = conexion.getConnection().prepareStatement(sql3);
-            st3.setInt(1, carrito[i].getId());
-            st3.setInt(2, codCompra);
-            st3.setInt(3, carrito[i].getCantidad());
-            st3.executeUpdate();
-
-            String sql8;
-            Statement st8;
-            ResultSet rs8;
-            sql8 = "SELECT `cantidadproductoventa`,`cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
-            st8 = conexion.getConnection().createStatement();
-            rs8 = st8.executeQuery(sql8);
-            int cantStock = 0;
-            int cantStockPro = 0;
-            while (rs8.next()) {
-                cantStock = rs8.getInt(1);
-                cantStockPro = rs8.getInt(2);
-            }
-            if ((cantStock + cantStockPro) - carrito[i].getCantidad() >= 0) {
-                if (carrito[i].getCantidad() > cantStock) {
-                    String sql9;
-                    PreparedStatement st9;
-                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
-                    st9 = conexion.getConnection().prepareStatement(sql9);
-                    st9.setInt(1, 0);
-                    st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
-                    st9.setString(3, String.valueOf(carrito[i].getId()));
-                    st9.executeUpdate();
-                } else if (carrito[i].getCantidad() <= cantStock) {
-                    String sql9;
-                    PreparedStatement st9;
-                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
-                    st9 = conexion.getConnection().prepareStatement(sql9);
-                    st9.setInt(1, (cantStock - carrito[i].getCantidad()));
-                    st9.setString(2, String.valueOf(carrito[i].getId()));
-                    st9.executeUpdate();
-                } else if (carrito[i].getCantidad() == (cantStock + cantStockPro)) {
-                    String sql9;
-                    PreparedStatement st9;
-                    sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
-                    st9 = conexion.getConnection().prepareStatement(sql9);
-                    st9.setInt(1, 0);
-                    st9.setInt(2, 0);
-                    st9.setString(3, String.valueOf(carrito[i].getId()));
-                    st9.executeUpdate();
-                }
-            }
-        }
-        //Ingresar orden compra
-        String sql1;
-        PreparedStatement st1;
-        sql1 = "INSERT INTO `compra`(`codcompra`, `tipopago`, `metodopago`) VALUES (?,?,?)";
-        st1 = conexion.getConnection().prepareStatement(sql1);
-        st1.setInt(1, codCompra);
-        st1.setString(2, tipoPago);
-        st1.setString(3, metodoPago);
-        st1.executeUpdate();
-
-        String sql9;
-        PreparedStatement st9;
-        sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
-        st9 = conexion.getConnection().prepareStatement(sql9);
-        st9.setString(1, datos[0]);
-        st9.setString(2, "El usuario: " + datos[0] + " realizo la venta ID: " + codCompra);
-        st9.executeUpdate();
+    //obtener id de la compra
+    String sql2;
+    Statement st2;
+    ResultSet rs2;
+    sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+    st2 = conexion.getConnection().createStatement();
+    rs2 = st2.executeQuery(sql2);
+    int codCompra = 0;
+    while (rs2.next()) {
+      codCompra = rs2.getInt(1);
     }
+    //si no es cheque
+
+    String sql3;
+    PreparedStatement st3;
+    //ingresar productos
+    for (int i = 0; i < cantProductosCarrito; i++) {
+      sql3 = "INSERT INTO `productoordencompra`(`codproducto`, `codordencompra`, `cantidadproductoordencompra`) VALUES (?,?,?)";
+      st3 = conexion.getConnection().prepareStatement(sql3);
+      st3.setInt(1, carrito[i].getId());
+      st3.setInt(2, codCompra);
+      st3.setInt(3, carrito[i].getCantidad());
+      st3.executeUpdate();
+
+      String sql8;
+      Statement st8;
+      ResultSet rs8;
+      sql8 = "SELECT `cantidadproductoventa`,`cantidadproductoproduccion` FROM `producto` WHERE `codproducto`=" + carrito[i].getId();
+      st8 = conexion.getConnection().createStatement();
+      rs8 = st8.executeQuery(sql8);
+      int cantStock = 0;
+      int cantStockPro = 0;
+      while (rs8.next()) {
+        cantStock = rs8.getInt(1);
+        cantStockPro = rs8.getInt(2);
+      }
+      if ((cantStock + cantStockPro) - carrito[i].getCantidad() >= 0) {
+        if (carrito[i].getCantidad() > cantStock) {
+          String sql9;
+          PreparedStatement st9;
+          sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+          st9 = conexion.getConnection().prepareStatement(sql9);
+          st9.setInt(1, 0);
+          st9.setInt(2, cantStockPro - (carrito[i].getCantidad() - cantStock));
+          st9.setString(3, String.valueOf(carrito[i].getId()));
+          st9.executeUpdate();
+        } else if (carrito[i].getCantidad() <= cantStock) {
+          String sql9;
+          PreparedStatement st9;
+          sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ? WHERE `codproducto`= ?";
+          st9 = conexion.getConnection().prepareStatement(sql9);
+          st9.setInt(1, (cantStock - carrito[i].getCantidad()));
+          st9.setString(2, String.valueOf(carrito[i].getId()));
+          st9.executeUpdate();
+        } else if (carrito[i].getCantidad() == (cantStock + cantStockPro)) {
+          String sql9;
+          PreparedStatement st9;
+          sql9 = "UPDATE `producto` SET `cantidadproductoventa`= ?,`cantidadproductoproduccion`= ? WHERE `codproducto`= ?";
+          st9 = conexion.getConnection().prepareStatement(sql9);
+          st9.setInt(1, 0);
+          st9.setInt(2, 0);
+          st9.setString(3, String.valueOf(carrito[i].getId()));
+          st9.executeUpdate();
+        }
+      }
+    }
+    //Ingresar orden compra
+    String sql1;
+    PreparedStatement st1;
+    sql1 = "INSERT INTO `compra`(`codcompra`, `tipopago`, `metodopago`) VALUES (?,?,?)";
+    st1 = conexion.getConnection().prepareStatement(sql1);
+    st1.setInt(1, codCompra);
+    st1.setString(2, tipoPago);
+    st1.setString(3, metodoPago);
+    st1.executeUpdate();
+
+    String sql9;
+    PreparedStatement st9;
+    sql9 = "INSERT INTO `cambios`(`rutusuario`, `descripcioncambio`) VALUES (?,?)";
+    st9 = conexion.getConnection().prepareStatement(sql9);
+    st9.setString(1, datos[0]);
+    st9.setString(2, "El usuario: " + datos[0] + " realizo la venta ID: " + codCompra);
+    st9.executeUpdate();
+  }
 
     private void jButtonConfirmarAgregar3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfirmarAgregar3ActionPerformed
-        int numeroCheque = 0;
-        if (!jTextFieldNumeroChequeAgregar.getText().equals("")) {
-            numeroCheque = Integer.parseInt(jTextFieldNumeroChequeAgregar.getText());
-        }
-        String nombresCheque = jTextFieldNombresAgregarCheque.getText();
-        java.util.Date fechaEmisionCheque = null;
-        java.sql.Date sqlEmision = null;
-        if (jDateChooserFechaEmisionAgregarCheque.getDate() != null) {
-            fechaEmisionCheque = jDateChooserFechaEmisionAgregarCheque.getDate();
-            sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
-        }
-        java.util.Date fechaVencCheque = null;
-        java.sql.Date sqlVencimiento = null;
-        if (jDateChooserFechaVencAgregarCheque.getDate() != null) {
-            fechaVencCheque = jDateChooserFechaVencAgregarCheque.getDate();
-            sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
-        }
-        String apellidosCheque = jTextFieldApellidosAgregarCheque.getText();
-        String descripcion = jTextPaneDescripcionAgregarCheque.getText();
-        String monto = jTextFieldMontoCheque.getText();
-        int numeroCuenta = 0;
-        if (!jTextFieldNumeroCuentaAgregarCheque.getText().equalsIgnoreCase("")) {
-            numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaAgregarCheque.getText());
-        }
-        String banco = jTextFieldBancoAgregarCheque.getText();
-        if (numeroCheque != 0 && !nombresCheque.equalsIgnoreCase("") && !apellidosCheque.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")
-                && !monto.equalsIgnoreCase("") && numeroCuenta != 0 && !banco.equalsIgnoreCase("") && sqlEmision != null && sqlVencimiento != null) {
-            if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
-                int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este cheque?");
-                if (confirmar == JOptionPane.YES_OPTION) {
-                    try {
-                        String sql = "INSERT INTO `cheques`(`numerocheque`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `descripcioncheque`, `nombresemisor`, `apellidosemisor`, `chequescobrados_n`, `banco`, `numerocuenta` ) VALUES (?,?,?,?,?,?,?,?,?,?)";
-                        PreparedStatement st = conexion.getConnection().prepareStatement(sql);
+      int numeroCheque = 0;
+      if (!jTextFieldNumeroChequeAgregar.getText().equals("")) {
+        numeroCheque = Integer.parseInt(jTextFieldNumeroChequeAgregar.getText());
+      }
+      String nombresCheque = jTextFieldNombresAgregarCheque.getText();
+      java.util.Date fechaEmisionCheque = null;
+      java.sql.Date sqlEmision = null;
+      if (jDateChooserFechaEmisionAgregarCheque.getDate() != null) {
+        fechaEmisionCheque = jDateChooserFechaEmisionAgregarCheque.getDate();
+        sqlEmision = new java.sql.Date(fechaEmisionCheque.getTime());
+      }
+      java.util.Date fechaVencCheque = null;
+      java.sql.Date sqlVencimiento = null;
+      if (jDateChooserFechaVencAgregarCheque.getDate() != null) {
+        fechaVencCheque = jDateChooserFechaVencAgregarCheque.getDate();
+        sqlVencimiento = new java.sql.Date(fechaVencCheque.getTime());
+      }
+      String apellidosCheque = jTextFieldApellidosAgregarCheque.getText();
+      String descripcion = jTextPaneDescripcionAgregarCheque.getText();
+      String monto = jTextFieldMontoCheque.getText();
+      int numeroCuenta = 0;
+      if (!jTextFieldNumeroCuentaAgregarCheque.getText().equalsIgnoreCase("")) {
+        numeroCuenta = Integer.parseInt(jTextFieldNumeroCuentaAgregarCheque.getText());
+      }
+      String banco = jTextFieldBancoAgregarCheque.getText();
+      if (numeroCheque != 0 && !nombresCheque.equalsIgnoreCase("") && !apellidosCheque.equalsIgnoreCase("") && !descripcion.equalsIgnoreCase("")
+              && !monto.equalsIgnoreCase("") && numeroCuenta != 0 && !banco.equalsIgnoreCase("") && sqlEmision != null && sqlVencimiento != null) {
+        if (fechaEmisionCheque.compareTo(fechaVencCheque) < 0) {
+          int confirmar = JOptionPane.showConfirmDialog(null, "¿Esta seguro desea agregar este cheque?");
+          if (confirmar == JOptionPane.YES_OPTION) {
+            try {
+              String sql = "INSERT INTO `cheques`(`numerocheque`, `fecharecepcion`, `fechavencimiento`, `montocheque`, `descripcioncheque`, `nombresemisor`, `apellidosemisor`, `chequescobrados_n`, `banco`, `numerocuenta` ) VALUES (?,?,?,?,?,?,?,?,?,?)";
+              PreparedStatement st = conexion.getConnection().prepareStatement(sql);
 
-                        st.setInt(1, numeroCheque);
-                        st.setDate(2, sqlEmision);
-                        st.setDate(3, sqlVencimiento);
-                        st.setString(4, monto);
-                        st.setString(5, descripcion);
-                        st.setString(6, nombresCheque);
-                        st.setString(7, apellidosCheque);
-                        st.setBoolean(8, false);
-                        st.setString(9, banco);
-                        st.setInt(10, numeroCuenta);
-                        st.executeUpdate();
-                        JOptionPane.showMessageDialog(null, "El nuevo cheque fue agregado con exito!");
-                        ingresarVenta();
-                        JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
-                        JasperReport reporte;
-                        String path = "/Reportes/Boleta.jasper";
-                        String sql2;
-                        Statement st2;
-                        ResultSet rs2;
-                        sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
-                        st2 = conexion.getConnection().createStatement();
-                        rs2 = st2.executeQuery(sql2);
-                        int codCompra = 0;
-                        while (rs2.next()) {
-                            codCompra = rs2.getInt(1);
-                        }
-                        Map parametro = new HashMap();
-                        String logo = "/Imagenes/logo-yapur.png";
-                        parametro.put("logo", this.getClass().getResourceAsStream(logo));
-                        parametro.put("codcompra", codCompra);
-                        reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
-                        JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
-                        JasperViewer view = new JasperViewer(jprint, false);
-                        view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-                        view.setVisible(true);
-                        dispose();
+              st.setInt(1, numeroCheque);
+              st.setDate(2, sqlEmision);
+              st.setDate(3, sqlVencimiento);
+              st.setString(4, monto);
+              st.setString(5, descripcion);
+              st.setString(6, nombresCheque);
+              st.setString(7, apellidosCheque);
+              st.setBoolean(8, false);
+              st.setString(9, banco);
+              st.setInt(10, numeroCuenta);
+              st.executeUpdate();
+              JOptionPane.showMessageDialog(null, "El nuevo cheque fue agregado con exito!");
+              ingresarVenta();
+              JOptionPane.showMessageDialog(null, "Venta realizada exitosamente");
+              JasperReport reporte;
+              String path = "/Reportes/Boleta.jasper";
+              String sql2;
+              Statement st2;
+              ResultSet rs2;
+              sql2 = "SELECT MAX(codordencompra) FROM ordencompra";
+              st2 = conexion.getConnection().createStatement();
+              rs2 = st2.executeQuery(sql2);
+              int codCompra = 0;
+              while (rs2.next()) {
+                codCompra = rs2.getInt(1);
+              }
+              Map parametro = new HashMap();
+              String logo = "/Imagenes/logo-yapur.png";
+              parametro.put("logo", this.getClass().getResourceAsStream(logo));
+              parametro.put("codcompra", codCompra);
+              reporte = (JasperReport) JRLoader.loadObject(getClass().getResource(path));
+              JasperPrint jprint = JasperFillManager.fillReport(reporte, parametro, conexion.getConnection());
+              JasperViewer view = new JasperViewer(jprint, false);
+              view.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+              view.setVisible(true);
+              dispose();
 
-                        // TODO add your handling code here:
-                    } catch (SQLException ex) {
-                        Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (JRException ex) {
-                        Logger.getLogger(NuevoCheque.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    dispose();
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
+              // TODO add your handling code here:
+            } catch (SQLException ex) {
+              Logger.getLogger(PanelMenu.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (JRException ex) {
+              Logger.getLogger(NuevoCheque.class.getName()).log(Level.SEVERE, null, ex);
             }
+            dispose();
+          }
         } else {
-            JOptionPane.showMessageDialog(null, "Hay campos sin datos");
+          JOptionPane.showMessageDialog(null, "La fecha de vencimiento debe ser mayor a la de emisión!");
         }
+      } else {
+        JOptionPane.showMessageDialog(null, "Hay campos sin datos");
+      }
     }//GEN-LAST:event_jButtonConfirmarAgregar3ActionPerformed
 
     private void jTextFieldBancoAgregarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldBancoAgregarChequeActionPerformed
-        // TODO add your handling code here:
+      // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldBancoAgregarChequeActionPerformed
 
     private void jTextFieldNumeroCuentaAgregarChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNumeroCuentaAgregarChequeActionPerformed
-        // TODO add your handling code here:
+      // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldNumeroCuentaAgregarChequeActionPerformed
 
-    @Override
-    public Image getIconImage() {
-        Image retValue = Toolkit.getDefaultToolkit().
-                getImage(ClassLoader.getSystemResource("Imagenes/logo-yapur.png"));
+  @Override
+  public Image getIconImage() {
+    Image retValue = Toolkit.getDefaultToolkit().
+            getImage(ClassLoader.getSystemResource("Imagenes/logo-yapur.png"));
 
-        return retValue;
-    }
+    return retValue;
+  }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+  /**
+   * @param args the command line arguments
+   */
+  public static void main(String args[]) {
+    /* Set the Nimbus look and feel */
+    //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+    /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NuevoCheque.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+     */
+    try {
+      for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+        if ("Nimbus".equals(info.getName())) {
+          javax.swing.UIManager.setLookAndFeel(info.getClassName());
+          break;
         }
-        //</editor-fold>
-        //</editor-fold>
-
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new NuevoCheque().setVisible(true);
-        });
+      }
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+      java.util.logging.Logger.getLogger(NuevoCheque.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
+    //</editor-fold>
+    //</editor-fold>
+
+    //</editor-fold>
+    //</editor-fold>
+
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(() -> {
+      new NuevoCheque().setVisible(true);
+    });
+  }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonConfirmarAgregar3;
