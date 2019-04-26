@@ -1421,7 +1421,8 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
     }
 
     public static String formatearAEntero(String n) {
-        char[] vector = n.toCharArray();
+      n = "" + ((int) Double.parseDouble(n));      
+      char[] vector = n.toCharArray();
         String resultado = "";
         int cont = 0;
         boolean hizo = false;
@@ -1581,7 +1582,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
             cantidadProduccion = Integer.parseInt(jTextFieldCantidadProdAgregaProducto.getText());
         }
         String codigoUnico = jTextFieldCodigoProducto.getText();
-        String precioProducto = "" + ((int) (Integer.parseInt(jTextFieldPrecioAgregarProducto.getText()) / 1.19));
+        String precioProducto = "" + ((Integer.parseInt(jTextFieldPrecioAgregarProducto.getText()) / 1.19));
         int tipoProducto = jComboBoxTipoAgregarProducto.getSelectedIndex();
         int tipoPlanta = jComboBoxAgregarTipoPlanta.getSelectedIndex();
         int especiePlanta = jComboBoxAgregarEspeciePlanta.getSelectedIndex();
@@ -7879,7 +7880,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 jTextFieldCantidadProdEditarProducto.setText("0");
                                 cantVentaActual.setText(rs.getString(3));
                                 cantProdActual.setText(rs.getString(4));
-                                jTextFieldPrecioEditarProducto.setText("" + ((int) (Integer.parseInt(rs.getString(5)) * 1.19)));
+                                jTextFieldPrecioEditarProducto.setText("" + ((int) (Double.parseDouble(rs.getString(5)) * 1.19)));
                                 jComboBoxTipoEditarProducto.setSelectedItem("Planta");
                                 rellenarComboBoxTipoPlanta();
                                 rellenarComboBoxEspeciePlanta();
@@ -9165,7 +9166,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
         String nombreproducto = jTextFieldNombreEditarProducto.getText();
         String cantVentas = jTextFieldCantidadVentaEditarProducto.getText();
         String cantPro = jTextFieldCantidadProdEditarProducto.getText();
-        String precio = "" + ((int) (Integer.parseInt(jTextFieldPrecioEditarProducto.getText()) / 1.19));
+        String precio = "" + ((Integer.parseInt(jTextFieldPrecioEditarProducto.getText()) / 1.19));
         String cod = jTextFieldIDeditarProducto.getText();
         String descripcion = jTextAreaEditarProducto.getText();
         String stock = jTextFieldStockEditarProducto.getText();
@@ -9200,7 +9201,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                     }
 
                     PreparedStatement st = conexion.getConnection().prepareStatement(sql);
-                    if (precioAnterior != Integer.parseInt(precio)) {
+                    if (precioAnterior != Double.parseDouble(precio)) {
                         PreparedStatement st2 = conexion.getConnection().prepareStatement(sq2);
                         st2.setInt(1, Integer.parseInt(cod));
                         st2.setString(2, precio);
