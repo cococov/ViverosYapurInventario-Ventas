@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 public class ProyectoYapur {
+  
+  public static int VERSION = 1;
 
   private static ServerSocket SERVER_SOCKET;
 
@@ -24,6 +26,7 @@ public class ProyectoYapur {
 
     try {
       SERVER_SOCKET = new ServerSocket(1334);
+      inicio.setTitle("Viveros Yapur - Revisión " + ProyectoYapur.VERSION);
       inicio.setVisible(true);
     } catch (IOException ex) {
       System.exit(0);

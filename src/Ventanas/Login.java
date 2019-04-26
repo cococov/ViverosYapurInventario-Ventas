@@ -14,6 +14,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import javax.swing.JOptionPane;
+import proyectoyapur.ProyectoYapur;
 
 public class Login extends javax.swing.JFrame implements FocusListener {
 
@@ -204,6 +205,7 @@ public class Login extends javax.swing.JFrame implements FocusListener {
               if (jPasswordFieldContraseña.getText().equals(datos[4])) {
                 esta2 = true;
                 PanelMenu panel = new PanelMenu(conexion, datos);
+                panel.setTitle("Viveros Yapur - Revisión " + ProyectoYapur.VERSION);
                 panel.setVisible(true);
                 dispose();
               } else {
