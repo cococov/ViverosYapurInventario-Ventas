@@ -7928,7 +7928,7 @@ public final class PanelMenu extends javax.swing.JFrame implements FocusListener
                                 jTextFieldCantidadProdEditarProducto.setText("0");
                                 cantVentaActual.setText(rs.getString(3));
                                 cantProdActual.setText(rs.getString(4));
-                                jTextFieldPrecioEditarProducto.setText(rs.getString(5));
+                                jTextFieldPrecioEditarProducto.setText("" + ((int) (Double.parseDouble(rs.getString(5)) * 1.19)));
                                 jComboBoxTipoEditarProducto.setSelectedItem("Otros");
                                 jTextAreaEditarProducto.setText(rs.getString(6));
                                 jTextFieldStockEditarProducto.setText(rs.getString(7));
